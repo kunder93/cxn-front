@@ -15,7 +15,6 @@ const PersonalCard = () => {
     const userRoles = useAppSelector((state) => state.users.userRoles)
     return (
         <Card style={{ width: '15rem' }}>
-          <Card.Img variant="top" src="https://pic.onlinewebfonts.com/svg/img_957.png" />
           <Card.Body>
             <Card.Title>INFORMACIÓN PERSONAL</Card.Title>
             
@@ -48,7 +47,4 @@ const PersonalCard = () => {
         </Card>
       );
     }
-
-
-
 export default PersonalCard
