@@ -2,8 +2,7 @@ import React from 'react'
 import axios from 'axios'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Formik, FormikHelpers, FormikProps, Form, Field, FieldProps } from 'formik'
-import { COMPANIES_URL, SIGN_UP_URL } from '../resources/server_urls'
-import { useNavigate } from 'react-router-dom'
+import { COMPANIES_URL } from '../resources/server_urls'
 import { useState } from 'react'
 import { Alert, Button, Col, Container, Row } from 'react-bootstrap'
 import { CreateCompanyValidationSchema } from '../pages/validation/FormValidationSchemas'
@@ -39,8 +38,7 @@ export interface LoginFormValues {
 }
 
 export const CreateCompanyForm: React.FC<any> = () => {
-    const initialValues: LoginFormValues = { nifCif: '', name: '', identityTaxNumber: '', address: ''}
-    const navigate = useNavigate()
+    const initialValues: LoginFormValues = { nifCif: '', name: '', identityTaxNumber: '', address: '' }
     const [alertMessage, setAlertMessage] = useState('')
     const closeAlert = () => {
         setAlertMessage('')
@@ -49,8 +47,7 @@ export const CreateCompanyForm: React.FC<any> = () => {
         <Formik
             initialValues={initialValues}
             onSubmit={(values, actions) => {
-                const userData = { nifCif: values.nifCif, name: values.name, 
-                                    identityTaxNumber: values.identityTaxNumber, address: values.address}
+                const userData = { nifCif: values.nifCif, name: values.name, identityTaxNumber: values.identityTaxNumber, address: values.address }
                 axios
                     .post<ICompany>(COMPANIES_URL, userData)
                     .then((response) => {
@@ -98,7 +95,13 @@ export const CreateCompanyForm: React.FC<any> = () => {
                         <Row>
                             <Col>
                                 <BootstrapForm.Label htmlFor="identityTaxNumber">Nombre:</BootstrapForm.Label>
-                                <Field as={BootstrapForm.Control} id="identityTaxNumber" name="identityTaxNumber" type="text" placeholder="Numero de identificacion fiscal" />
+                                <Field
+                                    as={BootstrapForm.Control}
+                                    id="identityTaxNumber"
+                                    name="identityTaxNumber"
+                                    type="text"
+                                    placeholder="Numero de identificacion fiscal"
+                                />
                             </Col>
                         </Row>
                         <Row>

@@ -2,12 +2,11 @@ import { Field, Form, Formik, FormikHelpers } from 'formik'
 import React from 'react'
 import { Container, Row, Col, Button } from 'react-bootstrap'
 import { ICompany } from './Types/Types'
-
+import BootstrapForm from 'react-bootstrap/Form'
 const EditCompanyForm = () => {
     return (
         <>
             <div>
-                <h4>New data:</h4>
                 <Formik
                     initialValues={{
                         nifCif: '',
@@ -22,41 +21,41 @@ const EditCompanyForm = () => {
                         }, 500)
                     }}
                 >
-                    <Form>
+                    <BootstrapForm as={Form}>
                         <Container>
                             <Row>
                                 <Col>
                                     {' '}
-                                    <label htmlFor="nifCif">Nif Cif</label>
+                                    <BootstrapForm.Label htmlFor="nifCif">NIF o CIF</BootstrapForm.Label>
                                 </Col>
                                 <Col>
                                     {' '}
-                                    <Field id="nifCif" name="nifCif" placeholder="Nif or cif" />
+                                    <Field as={BootstrapForm.Control} id="nifCif" name="nifCif" placeholder="Nif or cif" />
                                 </Col>
                             </Row>
                             <Row>
                                 <Col>
                                     {' '}
-                                    <label htmlFor="name">Name</label>
+                                    <BootstrapForm.Label htmlFor="name">Nombre</BootstrapForm.Label>
                                 </Col>
                                 <Col>
-                                    <Field id="name" name="name" placeholder="Company name" />
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <label htmlFor="identityTaxNumber">identity Tax Number</label>
-                                </Col>
-                                <Col>
-                                    <Field id="identityTaxNumber" name="identityTaxNumber" placeholder="identityTaxNumber" />
+                                    <Field as={BootstrapForm.Control} id="name" name="name" placeholder="Company name" />
                                 </Col>
                             </Row>
                             <Row>
                                 <Col>
-                                    <label htmlFor="address">address</label>
+                                    <BootstrapForm.Label htmlFor="identityTaxNumber">Nº identificacion fiscal</BootstrapForm.Label>
                                 </Col>
                                 <Col>
-                                    <Field id="address" name="address" placeholder="Address" />
+                                    <Field as={BootstrapForm.Control} id="identityTaxNumber" name="identityTaxNumber" placeholder="identityTaxNumber" />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <BootstrapForm.Label htmlFor="address">Direccion</BootstrapForm.Label>
+                                </Col>
+                                <Col>
+                                    <Field as={BootstrapForm.Control} id="address" name="address" placeholder="Address" />
                                 </Col>
                             </Row>
                         </Container>
@@ -67,7 +66,7 @@ const EditCompanyForm = () => {
                                 </Button>
                             </Col>
                         </Row>
-                    </Form>
+                    </BootstrapForm>
                 </Formik>
             </div>
         </>
