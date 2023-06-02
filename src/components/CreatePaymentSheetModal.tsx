@@ -2,8 +2,9 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import React from 'react'
 import InvoiceForm from './CreateInvoiceForm';
+import CreatePaymentSheetForm from './CreatePaymentSheetForm';
 
-function CreateInvoiceModal(props:any) {
+function CreatePaymentSheetModal(props:any) {
   return (
     <Modal
       {...props}
@@ -13,11 +14,11 @@ function CreateInvoiceModal(props:any) {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          Create invoice
+          Create payment sheet
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-     < InvoiceForm></InvoiceForm>
+     < CreatePaymentSheetForm></CreatePaymentSheetForm>
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={props.onHide}>Close</Button>
@@ -26,4 +27,4 @@ function CreateInvoiceModal(props:any) {
   );
 }
 
-export default CreateInvoiceModal
+export default CreatePaymentSheetModal

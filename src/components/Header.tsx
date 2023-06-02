@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -10,7 +10,6 @@ import { ROUTES } from '../resources/routes-constants'
 import logo from '../images/LogoCXN.svg'
 import { NavDropdown } from 'react-bootstrap';
 import styled from 'styled-components';
-
 
 const NavLogo = styled.img`
     filter:  invert(100%) saturate(80%) brightness(70%);
@@ -34,6 +33,26 @@ const Header = () => {
 
   
   function CollapsibleNavigationBar() {
+    const navigate = useNavigate()
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [showTimeoutId, setShowTimeoutId] = useState<NodeJS.Timeout>();
+
+    const handleMouseOver = () => {
+      // Set a timeout of 1 second before showing the dropdown
+      const timeoutId = setTimeout(() => {
+        setShowDropdown(true);
+      }, 1000);
+      // Store the timeout id in state to clear it later
+      setShowTimeoutId(timeoutId);
+    };
+    const handleMouseLeave = () => {
+    // Clear the timeout if the mouse leaves the dropdown
+    if (showTimeoutId) {
+      clearTimeout(showTimeoutId);
+      setShowTimeoutId(undefined);
+      setShowDropdown(false)
+    }
+  };
     return (
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
         <Container>
@@ -57,7 +76,12 @@ const Header = () => {
                 </NavDropdown.Item>
               </NavDropdown>
               
-              <NavDropdown title="Escuela" id="collasible-nav-dropdown">
+              <NavDropdown  title="Escuela" id="collasible-nav-dropdown"  
+              show={showDropdown}
+              onMouseOver={handleMouseOver}
+              onMouseLeave={handleMouseLeave}
+              onClick={()=>navigate(ROUTES.SCHOOL)}
+              >
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">
                   Another action
@@ -106,9 +130,6 @@ const Header = () => {
   
 
 
-  const logoHandler = () => {
-    navigate(ROUTES.HOMEPAGE_ROUTE)
-  }
 
   return (
     <div>

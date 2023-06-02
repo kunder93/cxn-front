@@ -2,7 +2,6 @@ import React from 'react'
 import RootComponent from './RootComponent'
 import Header from './components/Header'
 import Footer from './components/Footer'
-import { Container } from 'react-bootstrap'
 import './App.css'
 import { Provider } from 'react-redux'
 import store from './store/store'
@@ -14,11 +13,11 @@ const App: React.FC = () => {
         <Provider store={store}>
             <BrowserRouter>
                 <Header/>
-                <main>
-                    <Container>
-                        <RootComponent/>
-                    </Container>    
-                </main>
+                    <main>
+                        
+                            <RootComponent/>
+                           
+                    </main>
                 <Footer/>
             </BrowserRouter>
         </Provider>

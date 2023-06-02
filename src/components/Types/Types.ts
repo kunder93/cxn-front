@@ -1,4 +1,81 @@
 
+export interface IUserData {
+    name: string
+    firstSurname: string
+    secondSurname: string
+    gende: string
+    birthDate: Date
+    email: string
+    userRoles: string
+}
+
+export interface IUsersListData {
+    usersList: IUserData[]
+}
+
+export interface ISelfVehicle{
+    places: string,
+    distance: string,
+    kmPrice: string
+}
+
+export interface IFoodHousing{
+    amountDays: number,
+    dayPrice: string,
+    overnight: boolean
+}
+
+export interface IRegularTransport{
+    category: string,
+    description: string,
+    invoice: IInvoice
+}
+
+export interface IRegularTransportList{
+    regularTransportList: IRegularTransport[]
+}
+
+export interface IPaymentSheet{
+    paymentSheetIdentifier: number,
+    userName: string,
+    userFirstSurname: string,
+    userSecondSurname: string,
+    userDNI: string,
+    userDomicile: string,
+    reason: string,
+    place: string,
+    startDate: Date,
+    endDate: Date,
+    selfVehicle: ISelfVehicle,
+    regularTransportList: IRegularTransportList
+    foodHousing: IFoodHousing
+    
+}
+
+export interface IPaymentSheetList{
+    paymentSheetList: IPaymentSheet[]
+}
+
+export interface ICountriesList{
+    countryList: ICountryData[]
+}
+
+export interface ICountryData{
+    shortName:string
+    fullName:string
+    numericCode:number
+    alpha2Code:string
+    alpha3Code:string
+}
+
+export interface ISubCountryData{
+    name:string
+    kindSubdivisionName: string
+    code: string
+}
+export interface ISubCountriesList{
+    subCountryList: ISubCountryData[]
+}
 
 export interface IInvoice{
     number: number,

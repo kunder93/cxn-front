@@ -9,6 +9,9 @@ import './styles/main.sass'
 import ProfilePage from './pages/ProfilePage'
 import CompaniesManagerPage from './pages/CompaniesManagerPage'
 import InvoicesManagerPage from './pages/InvoicesManagerPage'
+import PaymentSheetManagerPage from './pages/PaymentSheetManagerPage'
+import PaymentSheetPDFGenerator from './components/PaymentSheetPDFGenerator'
+import SchoolPage from './pages/SchoolPage'
 const RootComponent: React.FC = () => { 
     return (
             <Routes>
@@ -19,6 +22,9 @@ const RootComponent: React.FC = () => {
                 <Route path={ROUTES.MYPROFILE_ROUTE} element={<ProfilePage/>} />
                 <Route path={ROUTES.COMPANIES_MANAGER_ROUTE} element={<CompaniesManagerPage/>} />
                 <Route path={ROUTES.INVOICES_MANAGER_ROUTE} element={<InvoicesManagerPage/>}/>
+                <Route path={ROUTES.PAYMENT_SHEET_MANAGER_ROUTE} element={<PaymentSheetManagerPage/>}/>
+                <Route path={ROUTES.PDF_DOCUMENT} element={<PaymentSheetPDFGenerator />}/>
+                <Route path={ROUTES.SCHOOL} element={<SchoolPage/>}/>
             </Routes>
     )
 }

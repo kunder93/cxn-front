@@ -2,6 +2,60 @@ import {useAppSelector } from '../store/hooks'
 import React, { useState } from 'react'
 import Carousel from 'react-bootstrap/Carousel';
 import logo from '../images/LogoCXN.svg'
+import { Card, Container, ListGroup } from 'react-bootstrap';
+import styled from 'styled-components';
+
+
+const MainContainer = styled(Container)`
+  display: flex;
+  flex-direction: column;
+`;
+
+const CardsContainer = styled(Container)`
+  display: flex;
+  flex-direction: row;
+`;
+
+
+const StyledCarousel = styled(Carousel)`
+  .carousel-item {
+    height: 400px;
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+`
+
+function CardExample() {
+  return (
+    <Card style={{ width: '18rem' }}>
+      <Card.Img variant="top" src={logo} />
+      <Card.Body>
+        <Card.Title>Card Title</Card.Title>
+        <Card.Text>
+          Some quick example text to build on the card title and make up the
+          bulk of the cards content.
+        </Card.Text>
+      </Card.Body>
+      <ListGroup className="list-group-flush">
+        <ListGroup.Item>Cras justo odio</ListGroup.Item>
+        <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
+        <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
+      </ListGroup>
+      <Card.Body>
+        <Card.Link href="#">Card Link</Card.Link>
+        <Card.Link href="#">Another Link</Card.Link>
+      </Card.Body>
+    </Card>
+  );
+}
+
+
+
+
+
 const HomePage = () => {
 
 
@@ -14,34 +68,31 @@ const HomePage = () => {
     };
   
     return (
-      <Carousel variant="dark" activeIndex={index} onSelect={handleSelect}>
-        <Carousel.Item>
-        <img src={logo} width={500} height={500} alt="Logo" />
+      <StyledCarousel variant="dark" activeIndex={index} onSelect={handleSelect}>
+        <Carousel.Item >
+          <img src={logo} alt="Logo" />
           <Carousel.Caption>
          
-            <h3>First slide label</h3>
-            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+            <h3>Titulo del primer carusel</h3>
+            <p>Parrafo del primer carusel. Blablabla mas cosas que contar y decir.</p>
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item>
-        <img src={logo} width={100} height={300} alt="Logo" />
-  
+          <img src={logo} alt="Logo" /> 
           <Carousel.Caption>
-            <h3>Second slide label</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <h3>Titulo del segundo carusel</h3>
+            <p>Parrafo del segundo carusel. Blablabla mas cosas que contar y decir.</p>
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item>
-        <img src={logo} width={300} height={300} alt="Logo" />
+        <img src={logo} alt="Logo" />
   
           <Carousel.Caption>
-            <h3>Third slide label</h3>
-            <p>
-              Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-            </p>
+            <h3>Titulo del tercer carusel</h3>
+            <p>Parrafo del tercer carusel. Blablabla mas cosas que contar y decir.</p>
           </Carousel.Caption>
         </Carousel.Item>
-      </Carousel>
+      </StyledCarousel>
     );
   }
 
@@ -68,9 +119,17 @@ const HomePage = () => {
     userJwt ? (
     <h1>Welcome {parseJwt(userJwt).sub} !!</h1> ) 
     : (
-      <div>
-    <h1>Welcome to the Home Page !!</h1>
-    <ControlledCarousel></ControlledCarousel> </div> )  
+      <MainContainer>
+        <h1>Welcome to the Home Page !!</h1>
+        <ControlledCarousel></ControlledCarousel> 
+        <CardsContainer>
+          <CardExample></CardExample>
+          <CardExample></CardExample>
+          <CardExample></CardExample>
+          <CardExample></CardExample>
+        </CardsContainer>
+      </MainContainer> 
+      )  
     
   )
 }

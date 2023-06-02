@@ -22,6 +22,10 @@ const ProfilePage = () => {
         navigate(ROUTES.INVOICES_MANAGER_ROUTE)
     }
 
+    const handlePaymentSheetManagerButton = () =>{
+        navigate(ROUTES.PAYMENT_SHEET_MANAGER_ROUTE)
+    }
+
     useEffect(() => {
         axios
             .get('http://localhost:8080/api/user', {
@@ -45,6 +49,7 @@ const ProfilePage = () => {
             <PersonalCard />
             <Button variant="primary" onClick={handleCompaniesManagerButton}>Companies Manager</Button>
             <Button variant="primary" onClick={handleInvoicesManagerButton}>Invoices Manager</Button>
+            <Button variant="primary" onClick={handlePaymentSheetManagerButton}>Payment Sheet Manager</Button>
         </div>
     ) : (
         <h1>Welcome to the ProfilePage !!</h1>
