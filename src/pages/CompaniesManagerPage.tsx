@@ -1,24 +1,13 @@
 import React,{ useState }from 'react'
 import { Button } from 'react-bootstrap'
 
-import CompanyTable from '../components/CompaniesTable'
-import MyVerticallyCenteredModal from '../components/CreateCompanyModal'
+import CompanyTable from '../components/Companies/CompaniesTable'
+import MyVerticallyCenteredModal from '../components/Companies/CreateCompanyModal'
 import {useAxiosGetCompanies} from '../utility/CustomAxios'
 import {COMPANIES_URL} from './../resources/server_urls'
 import { BuildingAdd } from 'react-bootstrap-icons';
-import styled from 'styled-components'
+import { StyledButton } from '../components/Companies/CompaniesStyles'
 
-  const StyledButton = styled(Button)`
-    color: #000000;
-    font-size: 1em;
-    margin: 1em;
-    padding: 0.25em 1em;
-    border: 10px solid palevioletred;
-    border-radius: 10px;
-    border-color: #0d6efd;
-    background-color: #0d6efd;
-    
-  `
 
 
 

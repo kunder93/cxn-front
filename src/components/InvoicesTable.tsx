@@ -5,7 +5,7 @@ import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'reac
 import { Button, Col, Container, Modal, Row } from 'react-bootstrap'
 import { INVOICES_URL } from '../resources/server_urls'
 import axios from 'axios'
-import EditCompanyForm from './EditCompanyForm'
+import EditCompanyForm from './Companies/EditCompanyForm'
 import { Pencil, Trash3 } from 'react-bootstrap-icons'
 import Table from 'react-bootstrap/Table'
 type Props = {

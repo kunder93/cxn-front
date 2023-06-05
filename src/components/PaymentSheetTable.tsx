@@ -5,7 +5,7 @@ import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'reac
 import { Button } from 'react-bootstrap'
 import { COMPANIES_URL } from '../resources/server_urls'
 import axios from 'axios'
-import EditCompanyModal from './EditCompanyModal'
+import EditCompanyModal from './Companies/EditCompanyModal'
 import { Trash3, Pencil, FiletypePdf } from 'react-bootstrap-icons'
 import styled from 'styled-components'
 import {Table} from 'react-bootstrap'

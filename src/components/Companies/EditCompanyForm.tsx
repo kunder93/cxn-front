@@ -1,7 +1,7 @@
 import { Field, Form, Formik, FormikHelpers } from 'formik'
 import React from 'react'
 import { Container, Row, Col, Button } from 'react-bootstrap'
-import { ICompany } from './Types/Types'
+import { ICompany } from '../Types/Types'
 import BootstrapForm from 'react-bootstrap/Form'
 const EditCompanyForm = () => {
     return (
@@ -9,9 +9,8 @@ const EditCompanyForm = () => {
             <div>
                 <Formik
                     initialValues={{
-                        nifCif: '',
+                        nif: '',
                         name: '',
-                        identityTaxNumber: '',
                         address: ''
                     }}
                     onSubmit={(values: ICompany, { setSubmitting }: FormikHelpers<ICompany>) => {
@@ -26,11 +25,11 @@ const EditCompanyForm = () => {
                             <Row>
                                 <Col>
                                     {' '}
-                                    <BootstrapForm.Label htmlFor="nifCif">NIF o CIF</BootstrapForm.Label>
+                                    <BootstrapForm.Label htmlFor="nif">NIF</BootstrapForm.Label>
                                 </Col>
                                 <Col>
                                     {' '}
-                                    <Field as={BootstrapForm.Control} id="nifCif" name="nifCif" placeholder="Nif or cif" />
+                                    <Field as={BootstrapForm.Control} id="nif" name="nif" placeholder="NIF" />
                                 </Col>
                             </Row>
                             <Row>
@@ -40,14 +39,6 @@ const EditCompanyForm = () => {
                                 </Col>
                                 <Col>
                                     <Field as={BootstrapForm.Control} id="name" name="name" placeholder="Company name" />
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <BootstrapForm.Label htmlFor="identityTaxNumber">Nº identificacion fiscal</BootstrapForm.Label>
-                                </Col>
-                                <Col>
-                                    <Field as={BootstrapForm.Control} id="identityTaxNumber" name="identityTaxNumber" placeholder="identityTaxNumber" />
                                 </Col>
                             </Row>
                             <Row>

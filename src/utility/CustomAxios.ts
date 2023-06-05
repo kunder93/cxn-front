@@ -1,8 +1,9 @@
 import axios, {  } from 'axios';
 import { useEffect, useState } from 'react';
-import { LoginFormValues } from '../components/LoginForm';
-import { ICompany, ICountryData, IInvoice, IPaymentSheet, ISubCountryData, IUsersListData } from '../components/Types/Types';
+import { ICountryData, IInvoice, IPaymentSheet, ISubCountryData, IUsersListData } from '../components/Types/Types';
 import { GET_ALL_COUNTRIES_URL, GET_SUBCOUNTRIES_URL } from '../resources/server_urls';
+import { ICompany } from '../components/Companies/Types';
+import { LoginFormValues } from '../components/LoginForm';
   
 type companiesAxiosResponse = {
   companiesList:ICompany[]

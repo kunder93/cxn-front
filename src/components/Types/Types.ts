@@ -89,9 +89,8 @@ export interface IInvoice{
 
 
 export interface ICompany{
-        nifCif: string,
+        nif: string,
         name: string,
-        identityTaxNumber: string,
         address: string 
 }
 

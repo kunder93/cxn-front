@@ -5,7 +5,6 @@ import { Formik, FormikHelpers, FormikProps, Form, Field, FieldProps } from 'for
 import { PAYMENT_SHEET_URL } from '../resources/server_urls'
 import { useState } from 'react'
 import { Alert, Button, Col, Container, Row } from 'react-bootstrap'
-import { CreateCompanyValidationSchema } from '../pages/validation/FormValidationSchemas'
 import BootstrapForm from 'react-bootstrap/Form'
 import styled from 'styled-components'
 import { ExclamationTriangle } from 'react-bootstrap-icons'

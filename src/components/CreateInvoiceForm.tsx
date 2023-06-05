@@ -16,8 +16,8 @@ interface Values {
     expeditionDate: string
     advancePaymentDate: string
     taxExempt: string
-    sellerCifNif: string
-    buyerCifNif: string
+    sellerNif: string
+    buyerNif: string
 }
 
 interface MyValues {
@@ -84,7 +84,7 @@ const CreateInvoiceForm = () => {
     const navigate = useNavigate()
     const mylista: MyList = []
     data.companiesList.forEach((company) => {
-        mylista.push({ label: company.nifCif, value: company.nifCif } as MyValues)
+        mylista.push({ label: company.nif, value: company.nif } as MyValues)
     })
     return (
         <div>
@@ -95,8 +95,8 @@ const CreateInvoiceForm = () => {
                     expeditionDate: '',
                     advancePaymentDate: '',
                     taxExempt: 'false',
-                    sellerCifNif: '',
-                    buyerCifNif: ''
+                    sellerNif: '',
+                    buyerNif: ''
                 }}
                 onSubmit={(values: Values, { setSubmitting }: FormikHelpers<Values>) => {
                     setSubmitting(false)
@@ -155,18 +155,18 @@ const CreateInvoiceForm = () => {
                         </Row>
                         <Row>
                             <Col md="auto">
-                                <BootstrapForm.Label htmlFor="sellerCifNif">Invoice seller cif or nif </BootstrapForm.Label>
+                                <BootstrapForm.Label htmlFor="sellerNif">Invoice seller cif or nif </BootstrapForm.Label>
                             </Col>
                             <Col md="auto">
-                                <FormikReactSelect name="sellerCifNif" isMulti={false} options={mylista} />
+                                <FormikReactSelect name="sellerNif" isMulti={false} options={mylista} />
                             </Col>{' '}
                         </Row>
                         <Row>
                             <Col md="auto">
-                                <BootstrapForm.Label htmlFor="buyerCifNif">Invoice buyer cif or nif </BootstrapForm.Label>
+                                <BootstrapForm.Label htmlFor="buyerNif">Invoice buyer cif or nif </BootstrapForm.Label>
                             </Col>
                             <Col md="auto">
-                                <FormikReactSelect name="buyerCifNif" isMulti={false} options={mylista} />
+                                <FormikReactSelect name="buyerNif" isMulti={false} options={mylista} />
                             </Col>
                         </Row>
                         <Row>

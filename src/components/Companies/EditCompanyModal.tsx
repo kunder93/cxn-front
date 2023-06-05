@@ -12,16 +12,13 @@ function EditCompanyModal(props: any) {
                 <Container >
                     <Row >
                         <Col><span>Cif - Nif: </span></Col>
-                        <Col><span>{props.row.nifCif} </span></Col>
+                        <Col><span>{props.row.nif} </span></Col>
                     </Row >
                     <Row>
                         <Col><span>Name:</span></Col>
                         <Col><span>{props.row.name} </span></Col>
                     </Row>
-                    <Row>
-                        <Col><span>Identity Tax Number:</span></Col>
-                        <Col><span>{props.row.identityTaxNumber} </span></Col>
-                    </Row>
+
                     <Row>
                         <Col><span>Address:</span></Col>
                         <Col><span>{props.row.address} </span></Col>

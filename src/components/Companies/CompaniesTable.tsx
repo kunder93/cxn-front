@@ -1,42 +1,36 @@
 /* eslint-disable react/jsx-key */
 import React, { useMemo, useState } from 'react'
-import { ICompany } from './Types/Types'
+
 import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'react-table'
 import { Button } from 'react-bootstrap'
-import { COMPANIES_URL } from '../resources/server_urls'
+import { COMPANIES_URL } from '../../resources/server_urls'
 import axios from 'axios'
 import EditCompanyModal from './EditCompanyModal'
 import { Trash3, Pencil } from 'react-bootstrap-icons'
 import {Table} from 'react-bootstrap'
-
-type Props = {
-    data: ICompany[]
-}
+import { CompanyTableProps, ICompany } from './Types'
 
 
 
-function CompanyTable(props: Props) {
+
+
+function CompanyTable(props: CompanyTableProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const [data, setData] = useState(useMemo(() => props.data, [])) //Caching data
     const [editModal, setEditModal] = useState(false)
     const [selectedRow, setSelectedRow] = useState({})
-    console.log(props.data)
     const columns: Column<ICompany>[] = useMemo(
         () => [
             {
-                Header: 'Nif - Cif',
-                accessor: 'nifCif'
+                Header: 'NIF',
+                accessor: 'nif'
             },
             {
-                Header: 'name',
+                Header: 'Nombre',
                 accessor: 'name'
             },
             {
-                Header: 'identityTaxNumber',
-                accessor: 'identityTaxNumber'
-            },
-            {
-                Header: 'address',
+                Header: 'Dirección',
                 accessor: 'address'
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -50,12 +44,12 @@ function CompanyTable(props: Props) {
         const modifiedClone: ICompany[] = clone.splice(props.row.index, 1)
         const row = modifiedClone[0]
         axios
-            .delete(COMPANIES_URL + '/' + row.nifCif)
+            .delete(COMPANIES_URL + '/' + row.nif)
             .then((response) => {
                 setData(clone)
             })
-            .catch((error) => console.log(error))
-            .finally(() => console.log('final'))
+            .catch((error) => '')
+            .finally(() => '')
     }
 
     function EditButtonClickHandler(props: any) {
