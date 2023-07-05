@@ -25,7 +25,7 @@ export const CreateCompanyFormButtonsContainer = styled(Col)`
 
 export const FloatingNotificationContainer = styled.div`
   position: fixed;
-  top: 50%;
+  top: 10%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 9999;

@@ -2,13 +2,13 @@ import React from 'react'
 import axios from 'axios'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Formik, FormikHelpers, FormikProps, Form, Field, FieldProps } from 'formik'
-import { PAYMENT_SHEET_URL } from '../resources/server_urls'
+import { PAYMENT_SHEET_URL } from '../../resources/server_urls'
 import { useState } from 'react'
 import { Alert, Button, Col, Container, Row } from 'react-bootstrap'
 import BootstrapForm from 'react-bootstrap/Form'
 import styled from 'styled-components'
 import { ExclamationTriangle } from 'react-bootstrap-icons'
-import { ISelfVehicle } from './Types/Types'
+import { ISelfVehicle } from '../Types/Types'
 
 const ErrorMessage = styled.div`
     color: red;
@@ -31,7 +31,7 @@ const ErrorTriangle = styled(ExclamationTriangle)`
 
 
 export const AddSelfVehicleForm: React.FC<any> = (props:any) => {
-    const initialValues: ISelfVehicle = { places: '', distance: '', kmPrice: '' }
+    const initialValues: ISelfVehicle = { places: '', distance: 0, kmPrice: 0 }
     const [alertMessage, setAlertMessage] = useState('')
     const closeAlert = () => {
         setAlertMessage('')

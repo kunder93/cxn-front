@@ -1,95 +1,19 @@
 /* eslint-disable react/jsx-key */
 import React, { useMemo, useState } from 'react'
-import { IInvoice } from './Types/Types'
+import { IInvoice } from '../Types/Types'
 import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'react-table'
-import { Button, Col, Container, Modal, Row } from 'react-bootstrap'
-import { INVOICES_URL } from '../resources/server_urls'
+import { Button, Container } from 'react-bootstrap'
+import { INVOICES_URL } from '../../resources/server_urls'
 import axios from 'axios'
-import EditCompanyForm from './Companies/EditCompanyForm'
 import { Pencil, Trash3 } from 'react-bootstrap-icons'
 import Table from 'react-bootstrap/Table'
+import CreateInvoiceModal from './CreateInvoiceModal'
+import EditInvoiceModal from './EditInvoiceModal'
 type Props = {
     data: IInvoice[]
 }
 
-function EditCompanyModal(props: any) {
-    return (
-        <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">Editar Factura</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <h4>Actual data: </h4>
-                <Container fluid>
-                    <Row>
-                        <Col>
-                            <div>Número:</div>
-                        </Col>
-                        <Col>
-                            <span>{props.row.number}</span>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <div>Serie:</div>
-                        </Col>
-                        <Col>
-                            <span>{props.row.series}</span>
-                        </Col>
-                    </Row>
 
-                    <Row>
-                        <Col>
-                            <div>Fecha de expedición:</div>
-                        </Col>
-                        <Col>
-                            <span>{props.row.expeditionDate}</span>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <div>Fecha de pago anticipado:</div>
-                        </Col>
-                        <Col>
-                            <span>{props.row.advancePaymentDate}</span>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <div>Cif-Nif del comprador:</div>
-                        </Col>
-                        <Col>
-                            <span>{props.row.buyerNifCif}</span>
-                        </Col>
-                    </Row>
-
-                    <Row>
-                        <Col>
-                            <div>Cif-Nif del vendedor:</div>
-                        </Col>
-                        <Col>
-                            <span>{props.row.sellerNifCif}</span>
-                        </Col>
-                    </Row>
-
-                    <Row>
-                        <Col>
-                            <div>Exención de impuestos:</div>
-                        </Col>
-                        <Col>
-                            <span>{props.row.taxExempt ? 'Si' : 'No'}</span>
-                        </Col>
-                    </Row>
-                </Container>
-                <h4>New data:</h4>
-                <EditCompanyForm></EditCompanyForm>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button onClick={props.onHide}>Close</Button>
-            </Modal.Footer>
-        </Modal>
-    )
-}
 
 function InvoicesTable(props: Props) {
     console.log(props.data)
@@ -100,38 +24,54 @@ function InvoicesTable(props: Props) {
     const columns: Column<IInvoice>[] = useMemo(
         () => [
             {
-                Header: 'Number',
+                Header: 'Numero',
                 accessor: 'number'
             },
             {
-                Header: 'series',
+                Header: 'Serie',
                 accessor: 'series'
             },
             {
-                Header: 'expedition Date',
+                Header: 'Fecha expedición',
                 accessor: 'expeditionDate'
             },
             {
-                Header: 'advance Payment Date',
+                Header: 'Fecha pago anticipado',
                 accessor: 'advancePaymentDate'
             },
             {
-                Header: 'Tax Exempt',
-                accessor: (d) => d.taxExempt.toString()
+                Header: 'Exento impuestos',
+                accessor: (d) => (d.taxExempt ? 'SI' : 'NO')
             },
             {
-                Header: 'Seller',
-                accessor: 'sellerNifCif'
+                Header: 'Vendedor NIF',
+                accessor: 'sellerNif'
             },
             {
-                Header: 'Buyer',
-                accessor: 'buyerNifCif'
+                Header: 'Comprador NIF',
+                accessor: 'buyerNif'
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [data]
     )
+
+
+    function AddDataRowHandler(props: any) {
+        // eslint-disable-next-line prefer-const
+        let clone = [...data]
+        const modifiedClone: IInvoice[] = clone.splice(props.row.index, 1)
+        const row = modifiedClone[0]
+        axios
+            .delete(INVOICES_URL + '/' + row.series + '/' + row.number)
+            .then((/*response*/) => {
+                setData(clone)
+            })
+            .catch((error) => console.log(error))
+            .finally(() => console.log('final'))
+    }
+
 
     function DeleteButtonClickHandler(props: any) {
         // eslint-disable-next-line prefer-const
@@ -181,8 +121,9 @@ function InvoicesTable(props: Props) {
             ])
         }
     )
+    const [modalShow, setModalShow] = useState(false)
     return (
-        <>
+        <Container>
             <Table striped bordered hover responsive {...getTableProps()}>
                 <thead>
                     {
@@ -242,8 +183,12 @@ function InvoicesTable(props: Props) {
                 <p> Total de registros: {preGlobalFilteredRows.length}</p>
             </div>
             <input type="text" value={state.globalFilter} onChange={(event) => setGlobalFilter(event.target.value)} />
-            <EditCompanyModal show={editModal} onHide={() => setEditModal(false)} row={selectedRow} />
-        </>
+            <EditInvoiceModal show={editModal} onHide={() => setEditModal(false)} row={selectedRow} />
+            <Button variant="primary" onClick={() => setModalShow(true)}>
+                Create new Invoice
+            </Button>
+            <CreateInvoiceModal show={modalShow} onHide={() => setModalShow(false)} data = {data} addDataFunction = {setData} />
+        </Container>
     )
 }
 

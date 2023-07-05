@@ -95,7 +95,7 @@ const XuntaLogoStyled = styled(LogoXunta)`
 
 const Footer = () => {
     return (
-        <FooterContainer>
+        <FooterContainer >
             <SpoonsorFooterContainer>
                 <a href="https://www.naron.es/">
                     <EscudoNaronLogoStyled></EscudoNaronLogoStyled>

@@ -106,3 +106,18 @@ export const CreateCompanyValidationSchema = Yup.object().shape({
         .min(COMPANY_ADDRESS_MIN_LENGTH, 'Demasiado corto, minimo ' + COMPANY_ADDRESS_MIN_LENGTH + ' caracteres.')
         .max(COMPANY_ADDRESS_MAX_LENGTH, 'Demasiado largo, máximo ' + COMPANY_ADDRESS_MAX_LENGTH + ' caracteres.')
 })
+
+
+
+
+
+
+export const CreateInvoiceValidationSchema = Yup.object().shape({
+    number: Yup.number().required('Se requiere número de factura.'),
+    series: Yup.string().required('Se requiere serie de factura.'),
+    expeditionDate: Yup.date().required('Se requiere fecha de expedición.'),
+    advancePaymentDate: Yup.date(),
+    taxExempt: Yup.boolean(),
+    sellerNif: Yup.string().required('Se requiere Vendedor.'),
+    buyerNif: Yup.string().required('Se requiere Comprador.')
+})

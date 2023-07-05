@@ -7,5 +7,6 @@ export const ROUTES = {
     INVOICES_MANAGER_ROUTE: '/invoices',
     PAYMENT_SHEET_MANAGER_ROUTE: '/paymentSheets',
     PDF_DOCUMENT: '/pdfDocument',
-    SCHOOL: '/escuela'
+    SCHOOL: '/escuela',
+    THECLUB: '/club'
 }

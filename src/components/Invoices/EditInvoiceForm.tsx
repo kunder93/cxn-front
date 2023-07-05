@@ -1,20 +1,23 @@
 import { Field, Form, Formik, FormikHelpers } from 'formik'
 import React from 'react'
-import { Container, Row, Col, Button } from 'react-bootstrap'
-
 import BootstrapForm from 'react-bootstrap/Form'
-import { ICompany } from './Types'
-const EditCompanyForm = () => {
+import { Container, Row, Col, Button } from 'react-bootstrap'
+import { IInvoice } from '../Types/Types'
+const EditInvoiceForm = () => {
     return (
         <>
             <div>
                 <Formik
                     initialValues={{
-                        nif: '',
-                        name: '',
-                        address: ''
+                        number: 0,
+                        series: '',
+                        expeditionDate: new Date,
+                        advancePaymentDate: new Date,
+                        taxExempt: false,
+                        sellerNif: '',
+                        buyerNif: ''
                     }}
-                    onSubmit={(values: ICompany, { setSubmitting }: FormikHelpers<ICompany>) => {
+                    onSubmit={(values: IInvoice, { setSubmitting }: FormikHelpers<IInvoice>) => {
                         setTimeout(() => {
                             alert(JSON.stringify(values, null, 2))
                             setSubmitting(false)
@@ -65,4 +68,5 @@ const EditCompanyForm = () => {
     )
 }
 
-export default EditCompanyForm
+
+export default EditInvoiceForm

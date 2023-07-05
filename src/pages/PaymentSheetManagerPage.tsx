@@ -3,8 +3,8 @@ import { Button } from 'react-bootstrap'
 
 import {useAxiosGetPaymentSheets} from '../utility/CustomAxios'
 import {PAYMENT_SHEET_URL} from '../resources/server_urls'
-import PaymentSheetTable from '../components/PaymentSheetTable'
-import CreatePaymentSheetModal from '../components/CreatePaymentSheetModal'
+import PaymentSheetTable from '../components/PaymentSheet/PaymentSheetTable'
+import CreatePaymentSheetModal from '../components/PaymentSheet/CreatePaymentSheetModal'
 
   function PaymentSheetManagerPage() {
     const [createPaymentSheetModalShow, setCreatePaymentSheetModalShow] = useState(false);

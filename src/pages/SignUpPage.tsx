@@ -22,7 +22,7 @@ const SignUpPage = () => (
         <Page>
         
             <SignUpFormTittle>
-                <h2>Formulario de registro:</h2>
+                <h2>Formulario petición de registro como socio:</h2>
             </SignUpFormTittle>
             
         <Container>

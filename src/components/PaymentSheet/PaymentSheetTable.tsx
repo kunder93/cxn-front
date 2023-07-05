@@ -1,24 +1,18 @@
 /* eslint-disable react/jsx-key */
 import React, { useMemo, useState } from 'react'
-import { ICompany, IPaymentSheet, IPaymentSheetList } from './Types/Types'
+import {  IPaymentSheet } from '../Types/Types'
 import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'react-table'
 import { Button } from 'react-bootstrap'
-import { COMPANIES_URL } from '../resources/server_urls'
+import { COMPANIES_URL } from '../../resources/server_urls'
 import axios from 'axios'
-import EditCompanyModal from './Companies/EditCompanyModal'
 import { Trash3, Pencil, FiletypePdf } from 'react-bootstrap-icons'
-import styled from 'styled-components'
 import {Table} from 'react-bootstrap'
-import ReactPDF, { PDFViewer } from '@react-pdf/renderer'
-import MyDocument from './PaymentSheetPDFGenerator'
 import { useNavigate } from 'react-router-dom'
-import { ROUTES } from '../resources/routes-constants'
+import { ROUTES } from '../../resources/routes-constants'
 import AddDataPaymentSheetModal from './PaymentSheetAddDataModal'
 type Props = {
     data: IPaymentSheet[]
 }
-
-
 
 function PaymentSheetTable(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -36,23 +30,11 @@ function PaymentSheetTable(props: Props) {
             },
             {
                 Header: 'Nombre',
-                accessor: 'userName'
-            },
-            {
-                Header: 'Apellido 1',
-                accessor: 'userFirstSurname'
-            },
-            {
-                Header: 'Apellido 2',
-                accessor: 'userSecondSurname'
-            },
+                accessor: (d) => (d.userName + ' ' +  d.userFirstSurname + ' ' + d.userSecondSurname)
+            }, 
             {
                 Header: 'DNI',
                 accessor: 'userDNI'
-            },
-            {
-                Header: 'Dirección',
-                accessor: 'userDomicile'
             },
             {
                 Header: 'Motivo',
@@ -70,35 +52,6 @@ function PaymentSheetTable(props: Props) {
                 Header: 'Fecha fin',
                 accessor: 'endDate'
             },
-            {
-                Header: 'Recorrido',
-                accessor: 'selfVehicle.places'
-            },
-            {
-                Header: 'Distancia',
-                accessor: 'selfVehicle.distance'
-            },
-            {
-                Header: 'Precio/Km',
-                accessor: 'selfVehicle.kmPrice'
-            },
-            {
-                Header: 'transporte regular:',
-                accessor: 'regularTransportList.size()'
-            },
-            {
-                Header: 'Food-Housing Days',
-                accessor: 'foodHousing.amountDays'
-            },
-            {
-                Header: 'Food-Housing day price',
-                accessor: 'foodHousing.dayPrice'
-            },
-            {
-                Header: 'Food-Housing overnight',
-                accessor: (d) => d.foodHousing ? d.foodHousing.overnight.toString() : "False"
-            }
-
             // eslint-disable-next-line react-hooks/exhaustive-deps
         ],
         [data]
@@ -145,7 +98,13 @@ function PaymentSheetTable(props: Props) {
         const row = modifiedClone[0]
         navigate(ROUTES.PDF_DOCUMENT, { state: {userName: row.userName, 
             userFirstSurname: row.userFirstSurname, userSecondSurname: row.userSecondSurname, 
-            userDomicile: row.userDomicile, userDNI: row.userDNI,
+            postalCode: row.postalCode, userDNI: row.userDNI,
+            apartmentNumber: row.apartmentNumber,
+            building: row.building,
+            street: row.street,
+            city: row.city,
+            countryName: row.countryName,
+            countrySubdivisionName: row.countrySubdivisionName,
             reason: row.reason, place: row.place, startDate: row.startDate, endDate: row.endDate,
             selfVehicle: row.selfVehicle, regularTransportList: row.regularTransportList,
             foodHousing: row.foodHousing            

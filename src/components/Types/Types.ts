@@ -15,13 +15,13 @@ export interface IUsersListData {
 
 export interface ISelfVehicle{
     places: string,
-    distance: string,
-    kmPrice: string
+    distance: number,
+    kmPrice: number
 }
 
 export interface IFoodHousing{
     amountDays: number,
-    dayPrice: string,
+    dayPrice: number,
     overnight: boolean
 }
 
@@ -41,7 +41,13 @@ export interface IPaymentSheet{
     userFirstSurname: string,
     userSecondSurname: string,
     userDNI: string,
-    userDomicile: string,
+    postalCode: string,
+    apartmentNumber: string,
+    building: string,
+    street: string,
+    city: string,
+    countryName: string,
+    countrySubdivisionName: string,
     reason: string,
     place: string,
     startDate: Date,
@@ -83,16 +89,11 @@ export interface IInvoice{
     expeditionDate: Date,
     advancePaymentDate: Date,
     taxExempt: boolean,
-    sellerNifCif: string,
-    buyerNifCif: string
+    sellerNif: string,
+    buyerNif: string
 }
 
 
-export interface ICompany{
-        nif: string,
-        name: string,
-        address: string 
-}
 
 
 export interface INewUserForm {

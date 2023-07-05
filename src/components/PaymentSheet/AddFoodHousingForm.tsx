@@ -2,14 +2,14 @@ import React from 'react'
 import axios from 'axios'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Formik, FormikHelpers, FormikProps, Form, Field, FieldProps } from 'formik'
-import { COMPANIES_URL, PAYMENT_SHEET_URL } from '../resources/server_urls'
+import { COMPANIES_URL, PAYMENT_SHEET_URL } from '../../resources/server_urls'
 import { useState } from 'react'
 import { Alert, Button, Col, Container, Row } from 'react-bootstrap'
-import { CreateCompanyValidationSchema } from '../pages/validation/FormValidationSchemas'
+import { CreateCompanyValidationSchema } from '../../pages/validation/FormValidationSchemas'
 import BootstrapForm from 'react-bootstrap/Form'
 import styled from 'styled-components'
 import { ExclamationTriangle } from 'react-bootstrap-icons'
-import { ICompany, IFoodHousing, ISelfVehicle } from './Types/Types'
+import { IFoodHousing } from '../Types/Types'
 
 const ErrorMessage = styled.div`
     color: red;
@@ -31,7 +31,7 @@ const ErrorTriangle = styled(ExclamationTriangle)`
 `
 
 export const AddFoodHousingForm: React.FC<any> = (props:any) => {
-    const initialValues: IFoodHousing = { amountDays: 0, dayPrice: '', overnight: false }
+    const initialValues: IFoodHousing = { amountDays: 0, dayPrice: 0, overnight: false }
     const [alertMessage, setAlertMessage] = useState('')
     const closeAlert = () => {
         setAlertMessage('')
