@@ -1,159 +1,116 @@
 /* eslint-disable react/jsx-key */
 import React, { useMemo, useState } from 'react'
-import { IInvoice } from './Types/Types'
+import {  IPaymentSheet } from '../Types/Types'
 import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'react-table'
-import { Button, Col, Container, Modal, Row } from 'react-bootstrap'
-import { INVOICES_URL } from '../resources/server_urls'
+import { Button } from 'react-bootstrap'
+import { COMPANIES_URL } from '../../resources/server_urls'
 import axios from 'axios'
-import EditCompanyForm from './EditCompanyForm'
-import { Pencil, Trash3 } from 'react-bootstrap-icons'
-import Table from 'react-bootstrap/Table'
+import { Trash3, Pencil, FiletypePdf } from 'react-bootstrap-icons'
+import {Table} from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
+import { ROUTES } from '../../resources/routes-constants'
+import AddDataPaymentSheetModal from './PaymentSheetAddDataModal'
 type Props = {
-    data: IInvoice[]
+    data: IPaymentSheet[]
 }
 
-function EditCompanyModal(props: any) {
-    return (
-        <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">Editar Factura</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <h4>Actual data: </h4>
-                <Container fluid>
-                    <Row>
-                        <Col>
-                            <div>Número:</div>
-                        </Col>
-                        <Col>
-                            <span>{props.row.number}</span>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <div>Serie:</div>
-                        </Col>
-                        <Col>
-                            <span>{props.row.series}</span>
-                        </Col>
-                    </Row>
-
-                    <Row>
-                        <Col>
-                            <div>Fecha de expedición:</div>
-                        </Col>
-                        <Col>
-                            <span>{props.row.expeditionDate}</span>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <div>Fecha de pago anticipado:</div>
-                        </Col>
-                        <Col>
-                            <span>{props.row.advancePaymentDate}</span>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <div>Cif-Nif del comprador:</div>
-                        </Col>
-                        <Col>
-                            <span>{props.row.buyerNifCif}</span>
-                        </Col>
-                    </Row>
-
-                    <Row>
-                        <Col>
-                            <div>Cif-Nif del vendedor:</div>
-                        </Col>
-                        <Col>
-                            <span>{props.row.sellerNifCif}</span>
-                        </Col>
-                    </Row>
-
-                    <Row>
-                        <Col>
-                            <div>Exención de impuestos:</div>
-                        </Col>
-                        <Col>
-                            <span>{props.row.taxExempt ? 'Si' : 'No'}</span>
-                        </Col>
-                    </Row>
-                </Container>
-                <h4>New data:</h4>
-                <EditCompanyForm></EditCompanyForm>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button onClick={props.onHide}>Close</Button>
-            </Modal.Footer>
-        </Modal>
-    )
-}
-
-function InvoicesTable(props: Props) {
-    console.log(props.data)
+function PaymentSheetTable(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const [data, setData] = useState(useMemo(() => props.data, [])) //Caching data
-    const [editModal, setEditModal] = useState(false)
+    const [addPaymentSheetDataModal, setAddPaymentSheetDataModal] = useState(false)
+    const navigate = useNavigate()
     const [selectedRow, setSelectedRow] = useState({})
-    const columns: Column<IInvoice>[] = useMemo(
+    console.log(props.data)
+    // const columns: Column<IPaymentSheet>[] = useMemo(
+    const columns: Column<any>[] = useMemo(
         () => [
             {
-                Header: 'Number',
-                accessor: 'number'
+                Header: 'Id',
+                accessor: 'paymentSheetIdentifier'
             },
             {
-                Header: 'series',
-                accessor: 'series'
+                Header: 'Nombre',
+                accessor: (d) => (d.userName + ' ' +  d.userFirstSurname + ' ' + d.userSecondSurname)
+            }, 
+            {
+                Header: 'DNI',
+                accessor: 'userDNI'
             },
             {
-                Header: 'expedition Date',
-                accessor: 'expeditionDate'
+                Header: 'Motivo',
+                accessor: 'reason'
             },
             {
-                Header: 'advance Payment Date',
-                accessor: 'advancePaymentDate'
+                Header: 'Lugar',
+                accessor: 'place'
             },
             {
-                Header: 'Tax Exempt',
-                accessor: (d) => d.taxExempt.toString()
+                Header: 'Fecha inicio',
+                accessor: 'startDate'
             },
             {
-                Header: 'Seller',
-                accessor: 'sellerNifCif'
+                Header: 'Fecha fin',
+                accessor: 'endDate'
             },
-            {
-                Header: 'Buyer',
-                accessor: 'buyerNifCif'
-            }
             // eslint-disable-next-line react-hooks/exhaustive-deps
         ],
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [data]
     )
 
     function DeleteButtonClickHandler(props: any) {
         // eslint-disable-next-line prefer-const
         let clone = [...data]
-        const modifiedClone: IInvoice[] = clone.splice(props.row.index, 1)
+        const modifiedClone: IPaymentSheet[] = clone.splice(props.row.index, 1)
         const row = modifiedClone[0]
+        
         axios
-            .delete(INVOICES_URL + '/' + row.series + '/' + row.number)
-            .then((/*response*/) => {
+            .delete(COMPANIES_URL + '/' + "row.nifCif")
+            .then((response) => {
                 setData(clone)
             })
             .catch((error) => console.log(error))
             .finally(() => console.log('final'))
     }
 
-    function EditButtonClickHandler(props: any) {
+    function AddDataButtonClickHandler(props: any) {
         // eslint-disable-next-line prefer-const
         let clone = [...data]
-
-        const a = clone[props.row.index]
+        const a:IPaymentSheet = clone[props.row.index]
         setSelectedRow(a)
-        setEditModal(true)
+        setAddPaymentSheetDataModal(true)
+        /*
+                    axios
+                    .delete(COMPANIES_URL + '/' + row.nifCif)
+                    .then((response) => {setData(clone)
+                        console.log(response)})
+                    .catch((error) => console.log(error))
+                    .finally(() => console.log('final'));
+                    */
+    }
+
+
+
+
+    function ShowPDFButtonClickHandler(props: any)  {
+        // eslint-disable-next-line prefer-const
+        let clone = [...data]
+        const modifiedClone: IPaymentSheet[] = clone.splice(props.row.index, 1)
+        const row = modifiedClone[0]
+        navigate(ROUTES.PDF_DOCUMENT, { state: {userName: row.userName, 
+            userFirstSurname: row.userFirstSurname, userSecondSurname: row.userSecondSurname, 
+            postalCode: row.postalCode, userDNI: row.userDNI,
+            apartmentNumber: row.apartmentNumber,
+            building: row.building,
+            street: row.street,
+            city: row.city,
+            countryName: row.countryName,
+            countrySubdivisionName: row.countrySubdivisionName,
+            reason: row.reason, place: row.place, startDate: row.startDate, endDate: row.endDate,
+            selfVehicle: row.selfVehicle, regularTransportList: row.regularTransportList,
+            foodHousing: row.foodHousing            
+        
+        }})
+        return ('')
     }
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, preGlobalFilteredRows, setGlobalFilter, state } = useTable(
@@ -169,11 +126,14 @@ function InvoicesTable(props: Props) {
                     Header: () => <div> OPTIONS</div>,
                     Cell: (tableProps: any) => (
                         <div>
-                            <Button variant="info" onClick={() => EditButtonClickHandler(tableProps)}>
-                                <Pencil title="Editar" />
+                            <Button variant="info" onClick={() => AddDataButtonClickHandler(tableProps)}>
+                                <Pencil title="Editar"/>
                             </Button>
                             <Button variant="danger" onClick={() => DeleteButtonClickHandler(tableProps)}>
                                 <Trash3 title="Borrar" />
+                            </Button>
+                            <Button variant="secondary" onClick={() => ShowPDFButtonClickHandler(tableProps)}>
+                                <FiletypePdf title="PDF" />
                             </Button>
                         </div>
                     )
@@ -183,7 +143,7 @@ function InvoicesTable(props: Props) {
     )
     return (
         <>
-            <Table striped bordered hover responsive {...getTableProps()}>
+             <Table  striped bordered hover responsive {...getTableProps()}>
                 <thead>
                     {
                         // Loop over the header rows
@@ -225,7 +185,6 @@ function InvoicesTable(props: Props) {
                                                 <td {...cell.getCellProps()}>
                                                     {
                                                         // Render the cell contents
-
                                                         cell.render('Cell')
                                                     }
                                                 </td>
@@ -242,9 +201,8 @@ function InvoicesTable(props: Props) {
                 <p> Total de registros: {preGlobalFilteredRows.length}</p>
             </div>
             <input type="text" value={state.globalFilter} onChange={(event) => setGlobalFilter(event.target.value)} />
-            <EditCompanyModal show={editModal} onHide={() => setEditModal(false)} row={selectedRow} />
+            <AddDataPaymentSheetModal show={addPaymentSheetDataModal} onHide={() => setAddPaymentSheetDataModal(false)} row={selectedRow} />
         </>
     )
 }
-
-export default InvoicesTable
+export default PaymentSheetTable

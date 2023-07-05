@@ -2,8 +2,8 @@ import 'react-app-polyfill/ie11'
 import * as React from 'react'
 import { Formik, Field, Form, FormikHelpers, useField, useFormikContext } from 'formik'
 import Select from 'react-select'
-import { COMPANIES_URL, INVOICES_URL } from '../resources/server_urls'
-import { useAxiosGetCompanies } from '../utility/CustomAxios'
+import { GET_ALL_USERS_URL, PAYMENT_SHEET_URL } from '../../resources/server_urls'
+import { useAxiosGetAllUsersData } from '../../utility/CustomAxios'
 import { StateManagerProps } from 'react-select/dist/declarations/src/useStateManager'
 import axios from 'axios'
 import BootstrapForm from 'react-bootstrap/Form'
@@ -11,13 +11,11 @@ import { Container, Row, Col, Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 
 interface Values {
-    number: string
-    series: string
-    expeditionDate: string
-    advancePaymentDate: string
-    taxExempt: string
-    sellerCifNif: string
-    buyerCifNif: string
+    userEmail: string
+    reason: string
+    place: string
+    startDate: string
+    endDate: string
 }
 
 interface MyValues {
@@ -80,28 +78,27 @@ const FormikReactSelect = (props: Props) => {
 }
 
 const CreateInvoiceForm = () => {
-    const { data, error, loaded } = useAxiosGetCompanies(COMPANIES_URL)
+    const { data, error, loaded } = useAxiosGetAllUsersData(GET_ALL_USERS_URL)
     const navigate = useNavigate()
     const mylista: MyList = []
-    data.companiesList.forEach((company) => {
-        mylista.push({ label: company.nifCif, value: company.nifCif } as MyValues)
+    data.usersList.forEach((user) => {
+        mylista.push({ label: user.name + ' ' + user.firstSurname + ' ' + user.secondSurname, value: user.email } as MyValues)
     })
+    console.log(mylista + 'Y')
     return (
         <div>
             <Formik
                 initialValues={{
-                    number: '',
-                    series: '',
-                    expeditionDate: '',
-                    advancePaymentDate: '',
-                    taxExempt: 'false',
-                    sellerCifNif: '',
-                    buyerCifNif: ''
+                    userEmail: '',
+                    reason: '',
+                    place: '',
+                    startDate: '',
+                    endDate: ''
                 }}
                 onSubmit={(values: Values, { setSubmitting }: FormikHelpers<Values>) => {
                     setSubmitting(false)
                     axios
-                        .post(INVOICES_URL, values)
+                        .post(PAYMENT_SHEET_URL, values)
                         .then(function (response) {
                             console.log(response)
                             navigate(0)
@@ -115,60 +112,46 @@ const CreateInvoiceForm = () => {
                     <Container as={BootstrapForm.Group} fluid>
                         <Row>
                             <Col md="auto">
-                                <BootstrapForm.Label htmlFor="number">Invoice number</BootstrapForm.Label>
+                                <BootstrapForm.Label htmlFor="userEmail">Seleccione quien recibe el pago:</BootstrapForm.Label>
                             </Col>
                             <Col md="auto">
-                                <Field as={BootstrapForm.Control} id="number" name="number" type="number" placeholder="Put invoice number" />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md="auto">
-                                <BootstrapForm.Label htmlFor="series">Invoice series</BootstrapForm.Label>
-                            </Col>
-                            <Col md="auto">
-                                <Field as={BootstrapForm.Control} id="series" name="series" type="text" placeholder="Put invoice series" />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md="auto">
-                                <BootstrapForm.Label htmlFor="expeditionDate">Invoice expedition date </BootstrapForm.Label>
-                            </Col>
-                            <Col md="auto">
-                                <Field as={BootstrapForm.Control} id="expeditionDate" name="expeditionDate" type="date" />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md="auto">
-                                <BootstrapForm.Label htmlFor="advancePaymentDate">Invoice advance payment date </BootstrapForm.Label>
-                            </Col>
-                            <Col md="auto">
-                                <Field as={BootstrapForm.Control} id="advancePaymentDate" name="advancePaymentDate" type="date" />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md="auto">
-                                <BootstrapForm.Label htmlFor="taxExempt">Invoice tax exempt </BootstrapForm.Label>
-                            </Col>
-                            <Col md="auto">
-                                <Field as={BootstrapForm.Check} id="taxExempt" name="taxExempt" />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md="auto">
-                                <BootstrapForm.Label htmlFor="sellerCifNif">Invoice seller cif or nif </BootstrapForm.Label>
-                            </Col>
-                            <Col md="auto">
-                                <FormikReactSelect name="sellerCifNif" isMulti={false} options={mylista} />
+                                <FormikReactSelect name="userEmail" isMulti={false} options={mylista} />
                             </Col>{' '}
                         </Row>
+
                         <Row>
                             <Col md="auto">
-                                <BootstrapForm.Label htmlFor="buyerCifNif">Invoice buyer cif or nif </BootstrapForm.Label>
+                                <BootstrapForm.Label htmlFor="reason">Motivo do abono:</BootstrapForm.Label>
                             </Col>
                             <Col md="auto">
-                                <FormikReactSelect name="buyerCifNif" isMulti={false} options={mylista} />
+                                <Field as={BootstrapForm.Control} id="reason" name="reason" type="text" placeholder="La causa/evento que produce el pago." />
                             </Col>
                         </Row>
+                        <Row>
+                            <Col md="auto">
+                                <BootstrapForm.Label htmlFor="place">Lugar e pais:</BootstrapForm.Label>
+                            </Col>
+                            <Col md="auto">
+                                <Field as={BootstrapForm.Control} id="place" name="place" type="text" placeholder="Lugar e pais." />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md="auto">
+                                <BootstrapForm.Label htmlFor="startDate">Fecha comienzo actividad: </BootstrapForm.Label>
+                            </Col>
+                            <Col md="auto">
+                                <Field as={BootstrapForm.Control} id="startDate" name="startDate" type="date" />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md="auto">
+                                <BootstrapForm.Label htmlFor="endDate">Fecha fin de la actividad: </BootstrapForm.Label>
+                            </Col>
+                            <Col md="auto">
+                                <Field as={BootstrapForm.Control} id="endDate" name="endDate" type="date" />
+                            </Col>
+                        </Row>
+
                         <Row>
                             <Col className="d-flex flex-row-reverse bd-highlight">
                                 <Button variant="primary" type="submit">

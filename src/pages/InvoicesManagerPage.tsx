@@ -1,27 +1,14 @@
-import React,{ useState }from 'react'
-import { Button } from 'react-bootstrap'
+import React from 'react'
 
-import InvoicesTable from '../components/InvoicesTable'
-import MyVerticallyCenteredModal from '../components/CreateInvoiceModal'
-import {useAxiosGetInvoices} from '../utility/CustomAxios'
-import {INVOICES_URL} from '../resources/server_urls'
+import InvoicesTable from '../components/Invoices/InvoicesTable'
 
-  function CompanyManagerPage() {
-    const [modalShow, setModalShow] = useState(false);
+import { useAxiosGetInvoices } from '../utility/CustomAxios'
+import { INVOICES_URL } from '../resources/server_urls'
+
+function CompanyManagerPage() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { data, error, loaded } = useAxiosGetInvoices(
-      INVOICES_URL)
-      console.log("HOLIIII"+data.invoicesList)
-    return (
-        <div>
-          {loaded? <InvoicesTable data={data.invoicesList}/> : ''}
-          <Button variant="primary"  onClick = {()=> setModalShow(true)} >Create new Invoice</Button>
-          <MyVerticallyCenteredModal
-            show={modalShow}
-            onHide={() => setModalShow(false)}
-          />
-        </div>
-    )
-  }
+    const { data, error, loaded } = useAxiosGetInvoices(INVOICES_URL)
+    return <div>{loaded && <InvoicesTable data={data.invoicesList} />}</div>
+}
 
 export default CompanyManagerPage

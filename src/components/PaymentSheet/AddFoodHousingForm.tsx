@@ -2,14 +2,14 @@ import React from 'react'
 import axios from 'axios'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Formik, FormikHelpers, FormikProps, Form, Field, FieldProps } from 'formik'
-import { COMPANIES_URL } from '../resources/server_urls'
+import { COMPANIES_URL, PAYMENT_SHEET_URL } from '../../resources/server_urls'
 import { useState } from 'react'
 import { Alert, Button, Col, Container, Row } from 'react-bootstrap'
-import { CreateCompanyValidationSchema } from '../pages/validation/FormValidationSchemas'
+import { CreateCompanyValidationSchema } from '../../pages/validation/FormValidationSchemas'
 import BootstrapForm from 'react-bootstrap/Form'
 import styled from 'styled-components'
 import { ExclamationTriangle } from 'react-bootstrap-icons'
-import { ICompany } from './Types/Types'
+import { IFoodHousing } from '../Types/Types'
 
 const ErrorMessage = styled.div`
     color: red;
@@ -30,15 +30,8 @@ const ErrorTriangle = styled(ExclamationTriangle)`
     width: 10%;
 `
 
-export interface LoginFormValues {
-    nifCif: string
-    name: string
-    identityTaxNumber: string
-    address: string
-}
-
-export const CreateCompanyForm: React.FC<any> = () => {
-    const initialValues: LoginFormValues = { nifCif: '', name: '', identityTaxNumber: '', address: '' }
+export const AddFoodHousingForm: React.FC<any> = (props:any) => {
+    const initialValues: IFoodHousing = { amountDays: 0, dayPrice: 0, overnight: false }
     const [alertMessage, setAlertMessage] = useState('')
     const closeAlert = () => {
         setAlertMessage('')
@@ -47,9 +40,9 @@ export const CreateCompanyForm: React.FC<any> = () => {
         <Formik
             initialValues={initialValues}
             onSubmit={(values, actions) => {
-                const userData = { nifCif: values.nifCif, name: values.name, identityTaxNumber: values.identityTaxNumber, address: values.address }
+                const foodHousingData = { amountDays: values.amountDays, dayPrice: values.dayPrice, overnight: values.overnight }
                 axios
-                    .post<ICompany>(COMPANIES_URL, userData)
+                    .post<any>(PAYMENT_SHEET_URL + "/" + props.data + "/addFoodHousing", foodHousingData)
                     .then((response) => {
                         console.log(response)
                     })
@@ -68,7 +61,7 @@ export const CreateCompanyForm: React.FC<any> = () => {
                 //console.log('submited Login')
                 actions.setSubmitting(false)
             }}
-            validationSchema={CreateCompanyValidationSchema}
+            //validationSchema={CreateCompanyValidationSchema}
             validateOnChange={true}
         >
             {({ errors, touched }) => (
@@ -76,53 +69,37 @@ export const CreateCompanyForm: React.FC<any> = () => {
                     <Container as={BootstrapForm.Group}>
                         <Row>
                             <Col>
-                                <BootstrapForm.Label htmlFor="nifCif">Nif o Cif:</BootstrapForm.Label>
-                                <Field as={BootstrapForm.Control} id="nifCif" name="nifCif" type="text" placeholder="El NIF o CIF" />
+                                <BootstrapForm.Label htmlFor="amountDays">Cantidad de dias:</BootstrapForm.Label>
+                                <Field as={BootstrapForm.Control} id="amountDays" name="amountDays" type="number" placeholder="Cantidad de dias." />
                             </Col>
                         </Row>
                         <Row>
-                            <Col>{errors.nifCif && touched.nifCif ? <ErrorMessage>{errors.nifCif}</ErrorMessage> : ''}</Col>
+                            <Col>{errors.amountDays && touched.amountDays ? <ErrorMessage>{errors.amountDays}</ErrorMessage> : ''}</Col>
                         </Row>
                         <Row>
                             <Col>
-                                <BootstrapForm.Label htmlFor="name">Nombre:</BootstrapForm.Label>
-                                <Field as={BootstrapForm.Control} id="name" type="text" name="name" placeholder="El nombre" />
+                                <BootstrapForm.Label htmlFor="dayPrice">Precio por día:</BootstrapForm.Label>
+                                <Field as={BootstrapForm.Control} id="dayPrice" type="number" name="dayPrice" placeholder="Cantidad de cada día." />
                             </Col>
                         </Row>
                         <Row>
-                            <Col>{errors.name && touched.name ? <ErrorMessage>{errors.name}</ErrorMessage> : ''}</Col>
+                            <Col>{errors.dayPrice && touched.dayPrice ? <ErrorMessage>{errors.dayPrice}</ErrorMessage> : ''}</Col>
                         </Row>
+                        
+
                         <Row>
-                            <Col>
-                                <BootstrapForm.Label htmlFor="identityTaxNumber">Nombre:</BootstrapForm.Label>
-                                <Field
-                                    as={BootstrapForm.Control}
-                                    id="identityTaxNumber"
-                                    name="identityTaxNumber"
-                                    type="text"
-                                    placeholder="Numero de identificacion fiscal"
-                                />
+                            <Col md="auto">
+                                <BootstrapForm.Label htmlFor="overnight">Con pernocta? </BootstrapForm.Label>
+                            </Col>
+                            <Col md="auto">
+                                <Field as={BootstrapForm.Check} id="overnight" name="overnight" />
                             </Col>
                         </Row>
                         <Row>
-                            <Col>{errors.identityTaxNumber && touched.identityTaxNumber ? <ErrorMessage>{errors.identityTaxNumber}</ErrorMessage> : ''}</Col>
+                            <Col>{errors.overnight && touched.overnight ? <ErrorMessage>{errors.overnight}</ErrorMessage> : ''}</Col>
                         </Row>
-                        <Row>
-                            <Col>
-                                <BootstrapForm.Label htmlFor="address">Direccion:</BootstrapForm.Label>
-                                <Field as={BootstrapForm.Control} id="address" name="address" type="text" placeholder="La direccion" />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>{errors.address && touched.address ? <ErrorMessage>{errors.address}</ErrorMessage> : ''}</Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Button type="submit" disabled={errors.nifCif || errors.name || errors.identityTaxNumber || errors.address ? true : false}>
-                                    Registrar
-                                </Button>
-                            </Col>
-                        </Row>
+
+                        <Button type="submit">Añadir comida - alojamiento</Button>
                     </Container>
                     {
                         <Container>
@@ -147,4 +124,4 @@ export const CreateCompanyForm: React.FC<any> = () => {
     )
 }
 
-export default CreateCompanyForm
+export default AddFoodHousingForm

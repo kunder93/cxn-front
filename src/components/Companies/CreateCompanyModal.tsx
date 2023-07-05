@@ -7,7 +7,7 @@ function MyVerticallyCenteredModal(props: any) {
     return (
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">Create company</Modal.Title>
+                <Modal.Title id="contained-modal-title-vcenter">Registrar empresa:</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <CreateCompanyForm></CreateCompanyForm>
