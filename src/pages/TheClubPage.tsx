@@ -4,6 +4,7 @@ import { Accordion, Container } from 'react-bootstrap'
 import { GeoAlt, GeoAltFill } from 'react-bootstrap-icons';
 import Card from 'react-bootstrap/Card'
 import styled from 'styled-components';
+import ContactForm from '../components/ContactForm';
 const TheClubPage = () => {
     const parseJwt = (token: string) => {
         const base64Url = token.split('.')[1]
@@ -84,6 +85,15 @@ const ContactoContainer = styled.div`
 
 
 
+
+
+
+
+
+
+
+
+
 function CXNContacto() {
 
     const LocationMapContainer = () => {
@@ -116,15 +126,16 @@ function CXNContacto() {
                 </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey="1">
-                <Accordion.Header>Contacto</Accordion.Header>
+                <Accordion.Header>  Contacto</Accordion.Header>
                 <Accordion.Body>
+                    <ContactForm></ContactForm>
                    -- Formulario de contacto.
                    -- Teléfonos de contacto.
                    -- Horario oficina:
                 </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey="2">
-                <Accordion.Header>Localizacion</Accordion.Header>
+                <Accordion.Header> <GeoAlt size={"2rem"}></GeoAlt> Localización</Accordion.Header>
                 <Accordion.Body>
                     <ContactoContainer>
                         <LocationMapContainer></LocationMapContainer>

@@ -13,6 +13,7 @@ import PaymentSheetManagerPage from './pages/PaymentSheetManagerPage'
 import PaymentSheetPDFGenerator from './components/PaymentSheet/PaymentSheetPDFGenerator'
 import SchoolPage from './pages/SchoolPage'
 import TheClubPage from './pages/TheClubPage'
+import MembersManagerTable from './pages/MembersManagerPage'
 const RootComponent: React.FC = () => { 
     return (
             <Routes>
@@ -27,6 +28,7 @@ const RootComponent: React.FC = () => {
                 <Route path={ROUTES.PDF_DOCUMENT} element={<PaymentSheetPDFGenerator />}/>
                 <Route path={ROUTES.SCHOOL} element={<SchoolPage/>}/>
                 <Route path={ROUTES.THECLUB} element={<TheClubPage/>}/>
+                <Route path={ROUTES.MEMBERS_MANAGER} element={<MembersManagerTable/>}/>
             </Routes>
     )
 }

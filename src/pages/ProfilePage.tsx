@@ -7,6 +7,7 @@ import { setName, setFirstSurname, setSecondSurname, setGender, setEmail, setBir
 import Button from 'react-bootstrap/Button'
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from '../resources/routes-constants'
+import PresidenteMenu from '../components/PresidenteMenu'
 
 
 const ProfilePage = () => {
@@ -43,13 +44,23 @@ const ProfilePage = () => {
                 dispatch(setUserRoles(response.data.userRoles))
             })
     }, [userJwt, dispatch])
+    const userRoles = useAppSelector((state) => state.users.userRoles)
+    const usrRol = userRoles;
+
+    function aa() {
+        console.log(userRoles[0])
+        return "k"
+    }
 
     return userJwt ? (
-        <div>
-            <PersonalCard />
-            <Button variant="primary" onClick={handleCompaniesManagerButton}>Companies Manager</Button>
-            <Button variant="primary" onClick={handleInvoicesManagerButton}>Invoices Manager</Button>
-            <Button variant="primary" onClick={handlePaymentSheetManagerButton}>Payment Sheet Manager</Button>
+       <div> 
+            <div>
+                <PersonalCard />
+                <Button variant="primary" onClick={handleCompaniesManagerButton}>Companies Manager</Button>
+                <Button variant="primary" onClick={handleInvoicesManagerButton}>Invoices Manager</Button>
+                <Button variant="primary" onClick={handlePaymentSheetManagerButton}>Payment Sheet Manager</Button>
+            </div>
+            <div>{userRoles[0] === "ROLE_PRESIDENTE"? <PresidenteMenu></PresidenteMenu> : "NO" }</div>
         </div>
     ) : (
         <h1>Welcome to the ProfilePage !!</h1>
