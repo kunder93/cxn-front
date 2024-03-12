@@ -4,7 +4,7 @@ import { Container } from "react-bootstrap"
 
 
 
-export const CesionDatosContainer = () => {
+export const CesionDatosContainer: React.FC = () => {
     return (
         <Container>
             <p>

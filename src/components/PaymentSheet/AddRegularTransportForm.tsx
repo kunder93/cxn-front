@@ -1,24 +1,26 @@
-import 'react-app-polyfill/ie11'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+import { Field, Form, Formik, FormikHelpers, useField, useFormikContext } from 'formik'
 import * as React from 'react'
-import { Formik, Field, Form, FormikHelpers, useField, useFormikContext } from 'formik'
+import 'react-app-polyfill/ie11'
 import { INVOICES_URL, PAYMENT_SHEET_URL } from '../../resources/server_urls'
 import { useAxiosGetInvoices } from '../../utility/CustomAxios'
-
 import axios from 'axios'
+import { Button, Col, Container, FormSelect, Row } from 'react-bootstrap'
 import BootstrapForm from 'react-bootstrap/Form'
-import { Container, Row, Col, Button, FormSelect } from 'react-bootstrap'
 import { InvoicesSelectorProps, NewRegularTransportData, SelectorOption, TransportCategorySelectorProps } from './Types'
-
 
 const TransportCategorySelector: React.FC<TransportCategorySelectorProps> = ({ name, options }) => {
     const [field, helpers] = useField(name)
+    console.log(helpers)
     const { setFieldValue } = useFormikContext()
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedValue = event.target.value
         setFieldValue(name, selectedValue)
     }
-
     return (
         <FormSelect name={name} value={field.value} onChange={handleChange}>
             {options.map((option) => (
@@ -30,17 +32,16 @@ const TransportCategorySelector: React.FC<TransportCategorySelectorProps> = ({ n
     )
 }
 
-
 const CustomSelector: React.FC<InvoicesSelectorProps> = ({ name, secondName, options }) => {
     const [field1, helpers1] = useField(name)
+    console.log(helpers1)
     const { setFieldValue } = useFormikContext()
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedOption = options.find((option) => option.value === event.target.value)
-        setFieldValue(name, selectedOption?.value || '')
-        setFieldValue(secondName, selectedOption?.value2 || '')
+        setFieldValue(name, selectedOption?.value ?? '')
+        setFieldValue(secondName, selectedOption?.value2 ?? '')
     }
-
     return (
         <FormSelect name={name} value={field1.value} onChange={handleChange}>
             {options.map((option) => (
@@ -54,6 +55,8 @@ const CustomSelector: React.FC<InvoicesSelectorProps> = ({ name, secondName, opt
 
 const AddRegularTransportForm = (props: any) => {
     const { data, error, loaded } = useAxiosGetInvoices(INVOICES_URL)
+    console.log(error)
+    console.log(loaded)
     const invoicesList: SelectorOption[] = []
     data.invoicesList.forEach((invoice) => {
         invoicesList.push({ label: invoice.series + ' ' + invoice.number, value: invoice.series, value2: invoice.number } as SelectorOption)

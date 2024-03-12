@@ -1,8 +1,8 @@
-import { IInvoice } from "../Types/Types"
+import { IInvoice } from '../Types/Types'
 
-export interface ICreateInvoiceModal{
+export interface ICreateInvoiceModal {
     data: IInvoice[]
-    addDataFunction: React.Dispatch<React.SetStateAction<IInvoice[]>>
-    onHide: ()=>void
+    addInvoice: (newCompany: IInvoice) => void
+    onHide: () => void
     show: boolean
 }

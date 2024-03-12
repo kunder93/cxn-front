@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import 'react-app-polyfill/ie11'
 import * as React from 'react'
 import { Formik, Field, Form, FormikHelpers, useField, useFormikContext } from 'formik'
@@ -25,7 +27,7 @@ interface MyValues {
 type MyList = MyValues[]
 
 //define the group option type
-type GroupedOption = {
+interface GroupedOption {
     label: string // group label
     options: MyValues[]
 }
@@ -51,7 +53,7 @@ const FormikReactSelect = (props: Props) => {
     const value = flattenedOptions?.filter((o) => {
         const isArrayValue = Array.isArray(field.value)
         if (isArrayValue) {
-            const values = field.value as Array<any>
+            const values = field.value as any[]
             return values.includes(o.value)
         } else {
             return field.value === o.value
@@ -64,27 +66,28 @@ const FormikReactSelect = (props: Props) => {
             // onChange implementation
             onChange={(val) => {
                 //here I used explicit typing but there maybe a better way to type the value.
-                const _val = val as MyValues[] | MyValues
-                const isArray = Array.isArray(_val)
+                const tempVal = val as MyValues[] | MyValues
+                const isArray = Array.isArray(tempVal)
                 if (isArray) {
-                    const values = _val.map((o) => o.value)
+                    const values = tempVal.map((o) => o.value)
                     setFieldValue(name, values)
                 } else {
-                    setFieldValue(name, _val.value)
+                    setFieldValue(name, tempVal.value)
                 }
             }}
         />
     )
 }
 
-const CreateInvoiceForm = () => {
+const CreateInvoiceForm: React.FC = () => {
     const { data, error, loaded } = useAxiosGetAllUsersData(GET_ALL_USERS_URL)
+    console.log(error)
+    console.log(loaded)
     const navigate = useNavigate()
     const mylista: MyList = []
     data.usersList.forEach((user) => {
         mylista.push({ label: user.name + ' ' + user.firstSurname + ' ' + user.secondSurname, value: user.email } as MyValues)
     })
-    console.log(mylista + 'Y')
     return (
         <div>
             <Formik

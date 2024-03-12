@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Document, Image, PDFViewer, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 import React from 'react'
-import { Page, Text, View, Document, StyleSheet, PDFViewer, Image } from '@react-pdf/renderer'
-import styled from 'styled-components'
 import { Container } from 'react-bootstrap'
+import { useLocation } from 'react-router-dom'
+import styled from 'styled-components'
 import logo from '../../images/LogoCXN.jpg'
 import { IFoodHousing, IRegularTransport, IRegularTransportList, ISelfVehicle } from '../Types/Types'
-import { useLocation } from 'react-router-dom'
 // Create styles
 const styles = StyleSheet.create({
     pdfViewer: {
@@ -97,7 +98,8 @@ interface propState {
     foodHousing?: IFoodHousing
 }
 
-const PaymentSheetPDFGenerator = (props: any) => {
+const PaymentSheetPDFGenerator: React.FC<any> = (props: any) => {
+    console.log(props)
     const location = useLocation()
     const { userName } = location.state as propState
     const { userFirstSurname } = location.state as propState
@@ -204,25 +206,39 @@ const PaymentSheetPDFGenerator = (props: any) => {
                             </View>
 
                             <Text style={styles.tableTittleText}> GASTOS DE LOCOMOCION:</Text>
-                            <Text style={styles.tableTittleText}> --TRANSPORTE REGULAR: {regularTransportList.regularTransportList.length ? 'SI' : 'N/A'}</Text>
+                            <Text style={styles.tableTittleText}> --TRANSPORTE REGULAR: {regularTransportList ? 'SI' : 'N/A'}</Text>
                             <View style={styles.tableContainer}>
-                                {regularTransportList.regularTransportList.map((item: IRegularTransport) => {
-                                    let i = 0
-                                    i++
-                                    return (
-                                        <View key={i} style={styles.tableRow}>
-                                            <View style={[styles.rowCellHeader, { borderBottom: 1 }]}>
-                                                <Text style={styles.cellText}>{item.category}:</Text>
+                                {regularTransportList ? (
+                                    regularTransportList.regularTransportList.map((item: IRegularTransport) => {
+                                        let i = 0
+                                        i++
+                                        return (
+                                            <View key={i} style={styles.tableRow}>
+                                                <View style={[styles.rowCellHeader, { borderBottom: 1 }]}>
+                                                    <Text style={styles.cellText}>{item.category}:</Text>
+                                                </View>
+                                                <View style={[styles.cellContent, { borderBottom: 1 }]}>
+                                                    <Text style={styles.cellText}>{item.description}</Text>
+                                                </View>
+                                                <View style={styles.priceCell}>
+                                                    <Text style={styles.cellText}>cantidad factura</Text>
+                                                </View>
                                             </View>
-                                            <View style={[styles.cellContent, { borderBottom: 1 }]}>
-                                                <Text style={styles.cellText}>{item.description}</Text>
-                                            </View>
-                                            <View style={styles.priceCell}>
-                                                <Text style={styles.cellText}>cantidad factura</Text>
-                                            </View>
+                                        )
+                                    })
+                                ) : (
+                                    <View style={styles.tableRow}>
+                                        <View style={[styles.rowCellHeader, { borderBottom: 1 }]}>
+                                            <Text style={styles.cellText}>ssss</Text>
                                         </View>
-                                    )
-                                })}
+                                        <View style={[styles.cellContent, { borderBottom: 1 }]}>
+                                            <Text style={styles.cellText}>sssss</Text>
+                                        </View>
+                                        <View style={styles.priceCell}>
+                                            <Text style={styles.cellText}>cantidad factura</Text>
+                                        </View>
+                                    </View>
+                                )}
                             </View>
 
                             <Text style={styles.tableTittleText}> --VEHICULO PROPIO: {selfVehicle ? 'SI' : 'N/A'}</Text>

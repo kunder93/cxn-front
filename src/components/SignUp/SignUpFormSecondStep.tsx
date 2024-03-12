@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Field, FormikErrors, FormikProps } from 'formik'
 import React from 'react'
 import { Button, Col, Container, Row } from 'react-bootstrap'
@@ -34,7 +36,7 @@ export interface secondStepFormData {
     formikProps: FormikProps<SignUpFormValues>
 }
 
-const SignUpFormSecondStep = (data: secondStepFormData) => {
+const SignUpFormSecondStep: React.FC<secondStepFormData> = (data: secondStepFormData) => {
     return (
         <Container>
             <Row>

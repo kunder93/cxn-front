@@ -1,10 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Field, FormikErrors, FormikProps } from 'formik'
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Container, Row } from 'react-bootstrap'
 import BootstrapForm from 'react-bootstrap/Form'
 import styled from 'styled-components'
 import { SignUpFormValues } from './SignUpFormTypes'
-import { ICountriesList, ICountryData, ISubCountriesList, ISubCountryData } from '../Types/Types'
+import { ICountryData, ISubCountriesList, ISubCountryData } from '../Types/Types'
 import { useAxiosGetCountriesList } from '../../utility/CustomAxios'
 import axios from 'axios'
 import { GET_SUBCOUNTRIES_URL } from '../../resources/server_urls'
@@ -32,7 +37,7 @@ const isThirdStepNextButtonDisabled = (formikProps: FormikProps<SignUpFormValues
     return isBlocked
 }
 
-const SignUpFormThirdStep = (data: SignUpFormSecondStepData) => {
+const SignUpFormThirdStep: React.FC<SignUpFormSecondStepData> = (data: SignUpFormSecondStepData) => {
     const [selectedCountryNumber, setSelectedCountry] = useState<number>()
     const countriesList = useAxiosGetCountriesList()
 
@@ -45,7 +50,7 @@ const SignUpFormThirdStep = (data: SignUpFormSecondStepData) => {
     const handleCountryChange = (event: any, formikProps: any) => {
         const selectedCountry = event.target.value
         formikProps.setFieldValue('countryNumericCode', selectedCountry)
-        
+
         setSelectedCountry(selectedCountry)
     }
     const [subCountriesList, setSubCountriesList] = useState<ISubCountriesList>({ subCountryList: [] })
@@ -146,15 +151,13 @@ const SignUpFormThirdStep = (data: SignUpFormSecondStepData) => {
                             handleCountryChange(event, data.formikProps)
                         }}
                     >
-                        {countriesList.loaded ? (
-                            countriesList.data.countryList.map((country: ICountryData) => (
-                                <option key={country.numericCode} value={country.numericCode}>
-                                    {country.fullName}
-                                </option>
-                            ))
-                        ) : (
-                            ''
-                        )}
+                        {countriesList.loaded
+                            ? countriesList.data.countryList.map((country: ICountryData) => (
+                                  <option key={country.numericCode} value={country.numericCode}>
+                                      {country.fullName}
+                                  </option>
+                              ))
+                            : ''}
                     </Field>
                     <BootstrapForm.Text className="text-muted">Selecciona tu país</BootstrapForm.Text>
                 </Col>

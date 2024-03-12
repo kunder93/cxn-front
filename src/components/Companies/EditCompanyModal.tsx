@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React from 'react'
 import { Modal, Button, Col, Container, Row } from 'react-bootstrap'
 import EditCompanyForm from './EditCompanyForm'
 
-function EditCompanyModal(props: any) {
+const EditCompanyModal: React.FC<any> = (props: any) => {
     return (
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>

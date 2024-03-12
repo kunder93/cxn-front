@@ -1,4 +1,6 @@
-/* eslint-disable react/jsx-key */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import React, { useEffect, useMemo, useState } from 'react'
 
 import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'react-table'
@@ -9,7 +11,7 @@ import EditCompanyModal from './EditCompanyModal'
 import { Trash3, Pencil } from 'react-bootstrap-icons'
 import { Table } from 'react-bootstrap'
 import { CompanyTableProps, ICompany } from './Types'
-import { FloatingNotificationContainer } from './CompaniesStyles'
+import { FloatingNotificationContainer } from '../Common/FloatingNotificationContainer'
 
 const FloatingNotification: React.FC<{ message: string; variant: string; onClose: () => void }> = ({ message, variant, onClose }) => {
     const [visible, setVisible] = useState(true)
@@ -48,6 +50,10 @@ function CompanyTable(props: CompanyTableProps) {
     const [deleteErrorMessage, setDeleteErrorMessage] = useState('')
     const [deleteSuccessNotification, setDeleteSuccessNotification] = useState(false)
     const [deleteErrorNotification, setDeleteErrorNotification] = useState(false)
+    // data state is being updated when the props.data changes.
+    useEffect(() => {
+        setData(props.data)
+    }, [props.data])
     function changeSuccessNotificationState(): void {
         setDeleteSuccessNotification(false)
     }
@@ -78,6 +84,7 @@ function CompanyTable(props: CompanyTableProps) {
     const DeleteButtonClickHandler = async (props: any) => {
         // eslint-disable-next-line prefer-const
         let clone = [...data]
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
         const modifiedClone: ICompany[] = clone.splice(props.row.index, 1)
         const row = modifiedClone[0]
         try {
@@ -86,9 +93,12 @@ function CompanyTable(props: CompanyTableProps) {
             setData(clone)
         } catch (error: any) {
             setDeleteErrorNotification(true)
-            if (error.response && error.response.data) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            if (error.response?.data) {
                 // Request made and server responded
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
                 setDeleteErrorMessage(error.response.data.content)
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             } else if (error.request) {
                 // The request was made but no response was received
                 setDeleteErrorMessage('Error: no hay respuesta.')
@@ -102,6 +112,7 @@ function CompanyTable(props: CompanyTableProps) {
     function EditButtonClickHandler(props: any) {
         // eslint-disable-next-line prefer-const
         let clone = [...data]
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         const a = clone[props.row.index]
         setSelectedRow(a)
         setEditModal(true)
@@ -153,7 +164,6 @@ function CompanyTable(props: CompanyTableProps) {
                                     // Loop over the headers in each row
                                     headerGroup.headers.map((column) => (
                                         // Apply the header cell props
-                                        // eslint-disable-next-line react/jsx-key
                                         <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                                             {
                                                 // Render the header

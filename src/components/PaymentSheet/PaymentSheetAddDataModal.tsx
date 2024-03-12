@@ -1,11 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React from 'react'
-import { Modal, Button, Col, Container, Row } from 'react-bootstrap'
-import AddSelfVehicleForm from './AddSelfVehicleForm'
+import { Button, Col, Container, Modal, Row } from 'react-bootstrap'
 import { Check2 } from 'react-bootstrap-icons'
+import Accordion from 'react-bootstrap/Accordion'
 import AddFoodHousingForm from './AddFoodHousingForm'
 import AddRegularTransportForm from './AddRegularTransportForm'
-import Accordion from 'react-bootstrap/Accordion'
-function AddDataPaymentSheetModal(props: any) {
+import AddSelfVehicleForm from './AddSelfVehicleForm'
+
+const AddDataPaymentSheetModal: React.FC<any> = (props: any) => {
     console.log(props)
     return (
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
@@ -59,11 +63,13 @@ function AddDataPaymentSheetModal(props: any) {
                     <Container>
                         {props.row.selfVehicle ? (
                             <>
-                                
-                                <Check2></Check2> <span>Ruta con vehiculo propio ya añadida.</span>
+                                <Container>
+                                    {' '}
+                                    <Check2></Check2> <span>Ruta con vehiculo propio ya añadida.</span>
+                                </Container>
                             </>
                         ) : (
-                            <Accordion >
+                            <Accordion>
                                 <Accordion.Item eventKey="0">
                                     <Accordion.Header>Añadir vehículo propio:</Accordion.Header>
                                     <Accordion.Body>
@@ -75,11 +81,12 @@ function AddDataPaymentSheetModal(props: any) {
 
                         {props.row.foodHousing ? (
                             <>
-                                
-                                <Check2></Check2> <span>Ruta con comida y/o alojamiento añadido.</span>
+                                <Container>
+                                    <Check2></Check2> <span>Ruta con comida y/o alojamiento añadido.</span>
+                                </Container>
                             </>
                         ) : (
-                            <Accordion >
+                            <Accordion>
                                 <Accordion.Item eventKey="0">
                                     <Accordion.Header>Añadir manutención - alojamiento:</Accordion.Header>
                                     <Accordion.Body>
@@ -91,11 +98,12 @@ function AddDataPaymentSheetModal(props: any) {
 
                         {props.row.regularTransport ? (
                             <>
-                                
-                                <Check2></Check2> <span>Ruta con comida y/o alojamiento añadido.</span>
+                                <Container>
+                                    <Check2></Check2> <span>Ruta con comida y/o alojamiento añadido.</span>
+                                </Container>
                             </>
                         ) : (
-                            <Accordion >
+                            <Accordion>
                                 <Accordion.Item eventKey="0">
                                     <Accordion.Header>Añadir transporte regular:</Accordion.Header>
                                     <Accordion.Body>

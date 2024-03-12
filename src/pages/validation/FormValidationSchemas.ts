@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as Yup from 'yup'
 import { SignUpFormValues } from '../../components/SignUp/SignUpFormTypes'
 
@@ -9,7 +10,7 @@ const FIRSTSURNAME_MAX_LENGTH = 20
 const SECONDSURNAME_MAX_LENGTH = 20
 const POSTALCODE_MAX_LENGTH = 10
 
-export const SignUpFormValidationSchema: Yup.SchemaOf<SignUpFormValues> = Yup.object({
+export const SignUpFormValidationSchema: Yup.Schema<SignUpFormValues> = Yup.object({
     //First step fields
     email: Yup.string()
         .email('Se requiere un email válido.')
@@ -20,7 +21,7 @@ export const SignUpFormValidationSchema: Yup.SchemaOf<SignUpFormValues> = Yup.ob
         .max(PASSWORD_MAX_LENGTH, 'La contraseña no debe contener mas de ' + PASSWORD_MAX_LENGTH + ' caracteres.')
         .min(PASSWORD_MIN_LENGTH, 'La contraseña debe contener minimo ' + PASSWORD_MIN_LENGTH + ' caracteres'),
     confirmPassword: Yup.string()
-        .oneOf([Yup.ref('password'), null], 'Debe coincidir con la contraseña.')
+        .oneOf([Yup.ref('password')], 'Debe coincidir con la contraseña.')
         .required('Se requiere volver a escribir la contraseña.'),
     //Second step fields
     dni: Yup.string()
@@ -87,16 +88,15 @@ const COMPANY_ADDRESS_MAX_LENGTH = 60
 const COMPANY_ADDRESS_MIN_LENGTH = 6
 
 export const CreateCompanyValidationSchema = Yup.object().shape({
-    nifCif: Yup.string()
-    .test('valid-nif', 'NIF inválido', (value:any) => {
-      //  lógica de validación NIF personas jurídicas y entidades
-      // Validación básica NIF 
-      const nifRegex = /^[A-HJ-NP-TV-Z]\d{7}[A-J0-9]$/i;
-      return nifRegex.test(value);
-    })
-    .required('El NIF es obligatorio'),
+    nif: Yup.string()
+        .test('valid-nif', 'NIF inválido', (value: any) => {
+            //  lógica de validación NIF personas jurídicas y entidades
+            // Validación básica NIF
+            const nifRegex = /^[A-HJ-NP-TV-Z]\d{7}[A-J0-9]$/i
+            return nifRegex.test(value as string)
+        })
+        .required('El NIF es obligatorio'),
 
-  
     name: Yup.string()
         .required('Se requiere un nombre.')
         .min(COMPANY_NAME_MIN_LENGTH, 'Demasiado corto, mínimo ' + COMPANY_NAME_MIN_LENGTH + ' caracteres.')
@@ -107,11 +107,6 @@ export const CreateCompanyValidationSchema = Yup.object().shape({
         .max(COMPANY_ADDRESS_MAX_LENGTH, 'Demasiado largo, máximo ' + COMPANY_ADDRESS_MAX_LENGTH + ' caracteres.')
 })
 
-
-
-
-
-
 export const CreateInvoiceValidationSchema = Yup.object().shape({
     number: Yup.number().required('Se requiere número de factura.'),
     series: Yup.string().required('Se requiere serie de factura.'),
@@ -120,4 +115,11 @@ export const CreateInvoiceValidationSchema = Yup.object().shape({
     taxExempt: Yup.boolean(),
     sellerNif: Yup.string().required('Se requiere Vendedor.'),
     buyerNif: Yup.string().required('Se requiere Comprador.')
+})
+
+export const CreateBookValidationSchema = Yup.object().shape({
+    isbn: Yup.number().required('Se requiere numero isbn.'),
+    title: Yup.string().required('Se requiere un titulo.'),
+    gender: Yup.string().required('Se requiere un genero.'),
+    language: Yup.string().required('Se requiere un idioma.')
 })

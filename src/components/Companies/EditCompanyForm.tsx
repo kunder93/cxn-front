@@ -1,12 +1,10 @@
 import { Field, Form, Formik, FormikHelpers } from 'formik'
 import React from 'react'
-import { Container, Row, Col, Button } from 'react-bootstrap'
-
+import { Button, Col, Container, Row } from 'react-bootstrap'
 import BootstrapForm from 'react-bootstrap/Form'
 import { ICompany } from './Types'
-const EditCompanyForm = () => {
+const EditCompanyForm: React.FC = () => {
     return (
-        <>
             <div>
                 <Formik
                     initialValues={{
@@ -61,7 +59,6 @@ const EditCompanyForm = () => {
                     </BootstrapForm>
                 </Formik>
             </div>
-        </>
     )
 }
 

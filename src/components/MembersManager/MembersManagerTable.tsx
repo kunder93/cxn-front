@@ -1,4 +1,7 @@
-/* eslint-disable react/jsx-key */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, { useMemo, useState } from 'react'
 import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'react-table'
 import { Button } from 'react-bootstrap'
@@ -8,15 +11,15 @@ import { IUserData } from '../Types/Types'
 import MemberModalProfileInfo from './MemberModalProfileInfo'
 import MemberActionsModal from './MemberActionsModal'
 
-
-type Props = {
-    data:  IUserData[]
+interface Props {
+    data: IUserData[]
 }
 
-function MembersManagerTable(props: Props) {
-    const [data, setData] = useState<IUserData[]>(useMemo(() => props.data, [])) //Caching data
-    const [memberInfoModal, setMemberInfoModal] = useState(false);
-    const [memberActionsModal, setMemberActionsModal] = useState(false);
+const MembersManagerTable: React.FC<Props> = (props: Props) => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const [data /*, setData*/] = useState<IUserData[]>(useMemo(() => props.data, [])) //Caching data
+    const [memberInfoModal, setMemberInfoModal] = useState(false)
+    const [memberActionsModal, setMemberActionsModal] = useState(false)
     const [selectedRow, setSelectedRow] = useState({})
 
     const columns: Column<any>[] = useMemo(
@@ -31,18 +34,18 @@ function MembersManagerTable(props: Props) {
             },
             {
                 Header: 'Apellidos',
-                accessor: (d) => d.firstSurname + " " + d.secondSurname
+                accessor: (d) => d.firstSurname + ' ' + d.secondSurname
             },
             {
-                Header: 'Categoria socio',
+                Header: 'Rol del socio',
                 accessor: (d) => d.userRoles
             },
             {
                 Header: 'Estado',
-                accessor: 'Estado'
+                accessor: (d) => d.kindMember
             }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
         ],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [data]
     )
 
@@ -52,7 +55,6 @@ function MembersManagerTable(props: Props) {
         const selRow = clone[props.row.index]
         setSelectedRow(selRow)
         setMemberInfoModal(true)
-  
     }
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, preGlobalFilteredRows, setGlobalFilter, state } = useTable(
@@ -93,7 +95,6 @@ function MembersManagerTable(props: Props) {
                                     // Loop over the headers in each row
                                     headerGroup.headers.map((column) => (
                                         // Apply the header cell props
-                                        // eslint-disable-next-line react/jsx-key
                                         <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                                             {
                                                 // Render the header
@@ -140,16 +141,8 @@ function MembersManagerTable(props: Props) {
                 <p> Total de registros: {preGlobalFilteredRows.length}</p>
             </div>
             <input type="text" value={state.globalFilter} onChange={(event) => setGlobalFilter(event.target.value)} />
-            <MemberModalProfileInfo
-        show={memberInfoModal}
-        onHide={() => setMemberInfoModal(false)}
-        row={selectedRow}
-      />
-      <MemberActionsModal
-        show={memberActionsModal}
-        onHide={() => setMemberActionsModal(false)}
-        row={selectedRow}
-            />
+            <MemberModalProfileInfo show={memberInfoModal} onHide={() => setMemberInfoModal(false)} row={selectedRow} />
+            <MemberActionsModal show={memberActionsModal} onHide={() => setMemberActionsModal(false)} row={selectedRow} />
         </>
     )
 }

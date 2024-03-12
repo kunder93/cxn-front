@@ -42,6 +42,13 @@ const UserAceptanceModal: React.FC<FormConditionsModalProps> = ({ show, onClose,
 
 const SignUpFormFourthStep = (data: SignUpFormFourthStepData) => {
     const [selectedAceptanceOption, setSelectedAceptanceOption] = useState<UserAceptanceModalOption>(UserAceptanceModalOption.CesionDatos)
+    // NormasSocios modal open/close state constant and functions
+    const [userAceptanceModalOpen, setUserAceptanceModalOpen] = useState(false)
+
+    const handleUserAceptanceModalClose = () => {
+        setUserAceptanceModalOpen(false)
+    }
+
 
     const handleCesionDatosModalOpen = () => {
         setSelectedAceptanceOption(UserAceptanceModalOption.CesionDatos)
@@ -56,25 +63,20 @@ const SignUpFormFourthStep = (data: SignUpFormFourthStepData) => {
         setUserAceptanceModalOpen(true)
     }
 
-    // NormasSocios modal open/close state constant and functions
-    const [userAceptanceModalOpen, setUserAceptanceModalOpen] = useState(false)
 
-    const handleUserAceptanceModalClose = () => {
-        setUserAceptanceModalOpen(false)
-    }
 
- 
     return (
         <Container>
             <UserAceptanceModal show={userAceptanceModalOpen} onClose={handleUserAceptanceModalClose} userAceptanceOption={selectedAceptanceOption} />
             <Row className="mb-3">
-                <Col  >
-                    <BootstrapForm.Label style={{ fontSize: '30px' }} >Normas socio:</BootstrapForm.Label>
-                    
-                    <Field type="checkbox" name="membersTerms"  style={{ width: '25px', height: '25px' }}/>
+                <Col>
+                    <BootstrapForm.Label style={{ fontSize: '30px' }}>Normas socio:</BootstrapForm.Label>
+
+                    <Field type="checkbox" name="membersTerms" style={{ width: '25px', height: '25px' }} />
                     {/*`${values.toggle}`*/}
-                    <BootstrapForm.Text style={{ fontSize: '30px' }} className="text-muted">He leido y acepto las condiciones.</BootstrapForm.Text>
-                    
+                    <BootstrapForm.Text style={{ fontSize: '30px' }} className="text-muted">
+                        He leido y acepto las condiciones.
+                    </BootstrapForm.Text>
                 </Col>
             </Row>
 
@@ -90,7 +92,9 @@ const SignUpFormFourthStep = (data: SignUpFormFourthStepData) => {
                     <BootstrapForm.Label style={{ fontSize: '30px' }}>Proteccion datos:</BootstrapForm.Label>
                     <Field type="checkbox" name="privacyTerms" style={{ width: '25px', height: '25px' }} />
                     {/*`${values.toggle}`*/}
-                    <BootstrapForm.Text style={{ fontSize: '30px' }} className="text-muted">He leido y acepto las condiciones.</BootstrapForm.Text>
+                    <BootstrapForm.Text style={{ fontSize: '30px' }} className="text-muted">
+                        He leido y acepto las condiciones.
+                    </BootstrapForm.Text>
                 </Col>
             </Row>
             <Row>
@@ -103,9 +107,11 @@ const SignUpFormFourthStep = (data: SignUpFormFourthStepData) => {
             <Row className="mb-3">
                 <Col>
                     <BootstrapForm.Label style={{ fontSize: '30px' }}>Compromiso de confidencialidad:</BootstrapForm.Label>
-                    <Field type="checkbox" name="confidencialityTerms" style={{ width: '25px', height: '25px' }}/>
+                    <Field type="checkbox" name="confidencialityTerms" style={{ width: '25px', height: '25px' }} />
                     {/*`${values.toggle}`*/}
-                    <BootstrapForm.Text style={{ fontSize: '30px' }} className="text-muted">He leido y acepto las condiciones.</BootstrapForm.Text>
+                    <BootstrapForm.Text style={{ fontSize: '30px' }} className="text-muted">
+                        He leido y acepto las condiciones.
+                    </BootstrapForm.Text>
                 </Col>
             </Row>
             <Row>
@@ -116,6 +122,7 @@ const SignUpFormFourthStep = (data: SignUpFormFourthStepData) => {
                 </Col>
             </Row>
 
+            {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment*/}
             <Button variant="primary" onClick={data.previousStepFunction}>
                 Atras
             </Button>

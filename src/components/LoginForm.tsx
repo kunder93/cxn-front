@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import * as React from 'react'
 import axios from 'axios'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Formik, FormikHelpers, FormikProps, Form, Field, FieldProps } from 'formik'
+import { Formik, Form, Field } from 'formik'
 import { LOGIN_URL } from '../resources/server_urls'
 import { useAppDispatch } from '../store/hooks'
 import { useNavigate } from 'react-router-dom'
@@ -97,7 +100,7 @@ export const LoginForm: React.FC<any> = () => {
                         </Row>
                         <Row>
                             <Col>
-                                <Button type="submit" disabled={errors.email || errors.password ? true : false}>
+                                <Button type="submit" disabled={errors.email ?? errors.password ? true : false}>
                                     Acceder
                                 </Button>
                             </Col>
