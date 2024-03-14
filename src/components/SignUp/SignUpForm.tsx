@@ -1,32 +1,24 @@
-import * as React from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import axios from 'axios'
+import * as React from 'react'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Formik, FormikHelpers, FormikProps, Form, Field, FieldProps, FormikErrors, useFormikContext } from 'formik'
-import { SIGN_UP_URL } from '../../resources/server_urls'
-import { useNavigate } from 'react-router-dom'
+import { Form, Formik } from 'formik'
 import { useState } from 'react'
 import { Button, Container, ProgressBar } from 'react-bootstrap'
-import { SignUpFormValidationSchema } from '../../pages/validation/FormValidationSchemas'
 import BootstrapForm from 'react-bootstrap/Form'
+import { useNavigate } from 'react-router-dom'
+import { SignUpFormValidationSchema } from '../../pages/validation/FormValidationSchemas'
+import { SIGN_UP_URL } from '../../resources/server_urls'
 
-import {
-    Icon1CircleFill,
-    Icon1Circle,
-    Icon2Circle,
-    Icon2CircleFill,
-    Icon3Circle,
-    Icon3CircleFill,
-    Icon4Circle,
-    Icon4CircleFill
-} from 'react-bootstrap-icons'
-import { FormSteps, SignUpFormValues } from './SignUpFormTypes'
+import { Icon1Circle, Icon1CircleFill, Icon2Circle, Icon2CircleFill, Icon3Circle, Icon3CircleFill, Icon4Circle, Icon4CircleFill } from 'react-bootstrap-icons'
 import SignUpFormFirstStep from './SignUpFormFirstStep'
-import SignUpFormSecondStep from './SignUpFormSecondStep'
-import SignUpFormThirdStep from './SignUpFormThirdStep'
 import SignUpFormFourthStep from './SignUpFormFourthStep'
+import SignUpFormSecondStep from './SignUpFormSecondStep'
 import { ErrorAlert, ErrorTriangle, ProgressBarIconsContainer } from './SignUpFormStyles'
-
-
+import SignUpFormThirdStep from './SignUpFormThirdStep'
+import { FormSteps, SignUpFormValues } from './SignUpFormTypes'
 
 const initialValues: SignUpFormValues = {
     email: '',
@@ -51,26 +43,42 @@ const initialValues: SignUpFormValues = {
 }
 
 const StepBar: React.FC<{ step: FormSteps }> = ({ step }) => {
-    function calculateProgress(step:FormSteps):number {
-            switch (step) {
-                case FormSteps.FirstStep:
-                    return 10
-                case FormSteps.SecondStep:
-                        return 33
-                case FormSteps.ThirdStep:
-                        return 66
-                case FormSteps.FourthStep:
-                            return 90        
-            }
+    function calculateProgress(step: FormSteps): number {
+        switch (step) {
+            case FormSteps.FirstStep:
+                return 10
+            case FormSteps.SecondStep:
+                return 33
+            case FormSteps.ThirdStep:
+                return 66
+            case FormSteps.FourthStep:
+                return 90
         }
-    
+    }
+
     return (
         <Container>
             <ProgressBarIconsContainer>
-                {step === FormSteps.FirstStep ? <Icon1CircleFill style={{ width: '30px', height: '30px' }}></Icon1CircleFill> : <Icon1Circle style={{ width: '30px', height: '30px' }}></Icon1Circle>}
-                {step === FormSteps.SecondStep ? <Icon2CircleFill style={{ width: '30px', height: '30px' }}></Icon2CircleFill> : <Icon2Circle style={{ width: '30px', height: '30px' }}></Icon2Circle>}
-                {step === FormSteps.ThirdStep ? <Icon3CircleFill style={{ width: '30px', height: '30px' }}></Icon3CircleFill> : <Icon3Circle style={{ width: '30px', height: '30px' }}></Icon3Circle>}
-                {step === FormSteps.FourthStep ? <Icon4CircleFill style={{ width: '30px', height: '30px' }}></Icon4CircleFill> : <Icon4Circle style={{ width: '30px', height: '30px' }}></Icon4Circle>}
+                {step === FormSteps.FirstStep ? (
+                    <Icon1CircleFill style={{ width: '30px', height: '30px' }}></Icon1CircleFill>
+                ) : (
+                    <Icon1Circle style={{ width: '30px', height: '30px' }}></Icon1Circle>
+                )}
+                {step === FormSteps.SecondStep ? (
+                    <Icon2CircleFill style={{ width: '30px', height: '30px' }}></Icon2CircleFill>
+                ) : (
+                    <Icon2Circle style={{ width: '30px', height: '30px' }}></Icon2Circle>
+                )}
+                {step === FormSteps.ThirdStep ? (
+                    <Icon3CircleFill style={{ width: '30px', height: '30px' }}></Icon3CircleFill>
+                ) : (
+                    <Icon3Circle style={{ width: '30px', height: '30px' }}></Icon3Circle>
+                )}
+                {step === FormSteps.FourthStep ? (
+                    <Icon4CircleFill style={{ width: '30px', height: '30px' }}></Icon4CircleFill>
+                ) : (
+                    <Icon4Circle style={{ width: '30px', height: '30px' }}></Icon4Circle>
+                )}
             </ProgressBarIconsContainer>
             <ProgressBar now={calculateProgress(step)} />
         </Container>
@@ -117,8 +125,6 @@ export const SignUpForm: React.FC<any> = () => {
         }
     }
 
-
-
     return (
         <Formik
             initialValues={initialValues}
@@ -143,6 +149,7 @@ export const SignUpForm: React.FC<any> = () => {
                 axios
                     .post(SIGN_UP_URL, userData)
                     .then((response) => {
+                        console.log(response)
                         navigate('/')
                     })
                     .catch((error) => {
@@ -159,6 +166,7 @@ export const SignUpForm: React.FC<any> = () => {
                     })
                 actions.setSubmitting(false)
             }}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             validationSchema={SignUpFormValidationSchema} //     VALIDACION ESQUEMAAA
             validateOnChange={true}
             validateOnMount={true}
@@ -166,7 +174,7 @@ export const SignUpForm: React.FC<any> = () => {
         >
             {(formikProps) => (
                 <BootstrapForm as={Form}>
-                    <StepBar step={step} ></StepBar>
+                    <StepBar step={step}></StepBar>
 
                     {step === FormSteps.FirstStep && ( // FORM STEP 1
                         <SignUpFormFirstStep formikProps={formikProps} step={step} nextStepFunction={nextStep}></SignUpFormFirstStep>

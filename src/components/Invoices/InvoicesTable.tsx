@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-key */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo, useState } from 'react'
 import { IInvoice } from '../Types/Types'
 import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'react-table'
@@ -9,13 +9,12 @@ import { Pencil, Trash3 } from 'react-bootstrap-icons'
 import Table from 'react-bootstrap/Table'
 import CreateInvoiceModal from './CreateInvoiceModal'
 import EditInvoiceModal from './EditInvoiceModal'
-type Props = {
+
+interface Props {
     data: IInvoice[]
 }
 
-
-
-function InvoicesTable(props: Props) {
+const InvoicesTable: React.FC<Props> = (props: Props) => {
     console.log(props.data)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const [data, setData] = useState(useMemo(() => props.data, [])) //Caching data
@@ -57,25 +56,15 @@ function InvoicesTable(props: Props) {
         [data]
     )
 
-
-    function AddDataRowHandler(props: any) {
-        // eslint-disable-next-line prefer-const
-        let clone = [...data]
-        const modifiedClone: IInvoice[] = clone.splice(props.row.index, 1)
-        const row = modifiedClone[0]
-        axios
-            .delete(INVOICES_URL + '/' + row.series + '/' + row.number)
-            .then((/*response*/) => {
-                setData(clone)
-            })
-            .catch((error) => console.log(error))
-            .finally(() => console.log('final'))
+    // Function to add invoice tp data
+    const addInvoice = (newInvoice: IInvoice) => {
+        setData([...data, newInvoice])
     }
-
 
     function DeleteButtonClickHandler(props: any) {
         // eslint-disable-next-line prefer-const
         let clone = [...data]
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
         const modifiedClone: IInvoice[] = clone.splice(props.row.index, 1)
         const row = modifiedClone[0]
         axios
@@ -91,6 +80,7 @@ function InvoicesTable(props: Props) {
         // eslint-disable-next-line prefer-const
         let clone = [...data]
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         const a = clone[props.row.index]
         setSelectedRow(a)
         setEditModal(true)
@@ -135,7 +125,6 @@ function InvoicesTable(props: Props) {
                                     // Loop over the headers in each row
                                     headerGroup.headers.map((column) => (
                                         // Apply the header cell props
-                                        // eslint-disable-next-line react/jsx-key
                                         <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                                             {
                                                 // Render the header
@@ -182,12 +171,13 @@ function InvoicesTable(props: Props) {
             <div>
                 <p> Total de registros: {preGlobalFilteredRows.length}</p>
             </div>
+            {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment*/}
             <input type="text" value={state.globalFilter} onChange={(event) => setGlobalFilter(event.target.value)} />
             <EditInvoiceModal show={editModal} onHide={() => setEditModal(false)} row={selectedRow} />
             <Button variant="primary" onClick={() => setModalShow(true)}>
-                Create new Invoice
+                Añadir nueva factura
             </Button>
-            <CreateInvoiceModal show={modalShow} onHide={() => setModalShow(false)} data = {data} addDataFunction = {setData} />
+            <CreateInvoiceModal show={modalShow} onHide={() => setModalShow(false)} data={data} addInvoice={addInvoice} />
         </Container>
     )
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 // This lets the app load faster on subsequent visits in production, and gives
 // it offline capabilities. However, it also means that developers (and users)
 // will only see deployed updates on subsequent visits to a page, after all the
@@ -13,29 +14,9 @@ const isLocalhost = Boolean(
         window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
 )
 
-type Config = {
+interface Config {
     onSuccess?: (registration: ServiceWorkerRegistration) => void
     onUpdate?: (registration: ServiceWorkerRegistration) => void
-}
-
-export const register = (config?: Config): void => {
-    if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
-        const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href)
-        if (publicUrl.origin !== window.location.origin) {
-            return
-        }
-        window.addEventListener('load', () => {
-            const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`
-            if (isLocalhost) {
-                checkValidServiceWorker(swUrl, config)
-                navigator.serviceWorker.ready.then(() => {
-                    console.log('This web app is being served cache-first by a service ' + 'worker. To learn more, visit https://bit.ly/CRA-PWA')
-                })
-            } else {
-                registerValidSW(swUrl, config)
-            }
-        })
-    }
 }
 
 function registerValidSW(swUrl: string, config?: Config) {
@@ -51,12 +32,12 @@ function registerValidSW(swUrl: string, config?: Config) {
                     if (installingWorker.state === 'installed') {
                         if (navigator.serviceWorker.controller) {
                             console.log('New content is available and will be used when all ' + 'tabs for this page are closed. See https://bit.ly/CRA-PWA.')
-                            if (config && config.onUpdate) {
+                            if (config?.onUpdate) {
                                 config.onUpdate(registration)
                             }
                         } else {
                             console.log('Content is cached for offline use.')
-                            if (config && config.onSuccess) {
+                            if (config?.onSuccess) {
                                 config.onSuccess(registration)
                             }
                         }
@@ -90,6 +71,26 @@ function checkValidServiceWorker(swUrl: string, config?: Config) {
         })
 }
 
+export const register = (config?: Config): void => {
+    if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+        const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href)
+        if (publicUrl.origin !== window.location.origin) {
+            return
+        }
+        window.addEventListener('load', () => {
+            const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`
+            if (isLocalhost) {
+                checkValidServiceWorker(swUrl, config)
+                navigator.serviceWorker.ready.then(() => {
+                    console.log('This web app is being served cache-first by a service ' + 'worker. To learn more, visit https://bit.ly/CRA-PWA')
+                })
+            } else {
+                registerValidSW(swUrl, config)
+            }
+        })
+    }
+}
+
 export const unregister = (): void => {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.ready
@@ -97,6 +98,7 @@ export const unregister = (): void => {
                 registration.unregister()
             })
             .catch((error) => {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 console.error(error.message)
             })
     }

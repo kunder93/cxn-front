@@ -1,14 +1,17 @@
-import React from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import axios from 'axios'
+import React, { useEffect } from 'react'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Formik, FormikHelpers, FormikProps, Form, Field, FieldProps } from 'formik'
-import { COMPANIES_URL, PAYMENT_SHEET_URL } from '../../resources/server_urls'
+import { Field, Form, Formik } from 'formik'
 import { useState } from 'react'
-import { Alert, Button, Col, Container, Row } from 'react-bootstrap'
-import { CreateCompanyValidationSchema } from '../../pages/validation/FormValidationSchemas'
+import { Alert, Button, Col, Collapse, Container, Row } from 'react-bootstrap'
+import { ExclamationTriangle } from 'react-bootstrap-icons'
 import BootstrapForm from 'react-bootstrap/Form'
 import styled from 'styled-components'
-import { ExclamationTriangle } from 'react-bootstrap-icons'
+import { PAYMENT_SHEET_URL } from '../../resources/server_urls'
+import { FloatingNotificationContainer } from '../Common/FloatingNotificationContainer'
 import { IFoodHousing } from '../Types/Types'
 
 const ErrorMessage = styled.div`
@@ -30,11 +33,48 @@ const ErrorTriangle = styled(ExclamationTriangle)`
     width: 10%;
 `
 
-export const AddFoodHousingForm: React.FC<any> = (props:any) => {
+const FloatingNotification: React.FC<{ message: string; variant: string; onClose: () => void }> = ({ message, variant, onClose }) => {
+    const [visible, setVisible] = useState(true)
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setVisible(false)
+        }, 5000)
+
+        return () => {
+            clearTimeout(timer)
+        }
+    }, [])
+
+    const handleExited = () => {
+        onClose()
+    }
+
+    return (
+        <Collapse in={visible} onExited={handleExited}>
+            <FloatingNotificationContainer>
+                <Alert variant={variant} onClose={onClose} dismissible>
+                    {message}
+                </Alert>
+            </FloatingNotificationContainer>
+        </Collapse>
+    )
+}
+
+export const AddFoodHousingForm: React.FC<any> = (props: any) => {
     const initialValues: IFoodHousing = { amountDays: 0, dayPrice: 0, overnight: false }
     const [alertMessage, setAlertMessage] = useState('')
+    const [submitSuccessNotification, setSubmitSuccessNotification] = useState(false)
+    const [submitErrorNotification, setSubmitErrorNotification] = useState(false)
+    const [isWellSubmited, setIsWellSubmited] = useState(false)
     const closeAlert = () => {
         setAlertMessage('')
+    }
+    function changeSuccessNotificationState(): void {
+        setSubmitSuccessNotification(false)
+    }
+    function changeErrorNotificationState(): void {
+        setSubmitErrorNotification(false)
     }
     return (
         <Formik
@@ -42,11 +82,14 @@ export const AddFoodHousingForm: React.FC<any> = (props:any) => {
             onSubmit={(values, actions) => {
                 const foodHousingData = { amountDays: values.amountDays, dayPrice: values.dayPrice, overnight: values.overnight }
                 axios
-                    .post<any>(PAYMENT_SHEET_URL + "/" + props.data + "/addFoodHousing", foodHousingData)
+                    .post<any>(PAYMENT_SHEET_URL + '/' + props.data + '/addFoodHousing', foodHousingData)
                     .then((response) => {
                         console.log(response)
+                        setSubmitSuccessNotification(true)
+                        setIsWellSubmited(true)
                     })
                     .catch((error) => {
+                        setSubmitErrorNotification(true)
                         if (error.response.data) {
                             // Request made and server responded
                             setAlertMessage(error.response.data.content)
@@ -70,7 +113,7 @@ export const AddFoodHousingForm: React.FC<any> = (props:any) => {
                         <Row>
                             <Col>
                                 <BootstrapForm.Label htmlFor="amountDays">Cantidad de dias:</BootstrapForm.Label>
-                                <Field as={BootstrapForm.Control} id="amountDays" name="amountDays" type="number" placeholder="Cantidad de dias." />
+                                <Field as={BootstrapForm.Control} id="amountDays" name="amountDays" step="1" type="number" placeholder="Cantidad de dias." />
                             </Col>
                         </Row>
                         <Row>
@@ -79,13 +122,12 @@ export const AddFoodHousingForm: React.FC<any> = (props:any) => {
                         <Row>
                             <Col>
                                 <BootstrapForm.Label htmlFor="dayPrice">Precio por día:</BootstrapForm.Label>
-                                <Field as={BootstrapForm.Control} id="dayPrice" type="number" name="dayPrice" placeholder="Cantidad de cada día." />
+                                <Field as={BootstrapForm.Control} id="dayPrice" type="number" step="0.01" name="dayPrice" placeholder="Cantidad de cada día." />
                             </Col>
                         </Row>
                         <Row>
                             <Col>{errors.dayPrice && touched.dayPrice ? <ErrorMessage>{errors.dayPrice}</ErrorMessage> : ''}</Col>
                         </Row>
-                        
 
                         <Row>
                             <Col md="auto">
@@ -99,7 +141,9 @@ export const AddFoodHousingForm: React.FC<any> = (props:any) => {
                             <Col>{errors.overnight && touched.overnight ? <ErrorMessage>{errors.overnight}</ErrorMessage> : ''}</Col>
                         </Row>
 
-                        <Button type="submit">Añadir comida - alojamiento</Button>
+                        <Button disabled={isWellSubmited} type="submit">
+                            Añadir comida - alojamiento
+                        </Button>
                     </Container>
                     {
                         <Container>
@@ -118,6 +162,16 @@ export const AddFoodHousingForm: React.FC<any> = (props:any) => {
                             )}
                         </Container>
                     }
+                    {submitSuccessNotification && (
+                        <FloatingNotification
+                            message={'Vehiculo propio añadido.'}
+                            variant={'success'}
+                            onClose={changeSuccessNotificationState}
+                        ></FloatingNotification>
+                    )}
+                    {submitErrorNotification && (
+                        <FloatingNotification message={alertMessage} variant={'danger'} onClose={changeErrorNotificationState}></FloatingNotification>
+                    )}
                 </BootstrapForm>
             )}
         </Formik>

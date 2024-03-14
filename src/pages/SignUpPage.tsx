@@ -4,9 +4,7 @@ import SignUpForm from '../components/SignUp/SignUpForm'
 import styled from 'styled-components'
 import { Container } from 'react-bootstrap'
 
-const SignUpFormTittle = styled(Container)`
-    
-`
+const SignUpFormTittle = styled(Container)``
 
 const Page = styled.div`
     display: flex;
@@ -14,19 +12,14 @@ const Page = styled.div`
     flex-direction: column;
 `
 
-
-
-
-const SignUpPage = () => (
+const SignUpPage: React.FC = () => (
     <div>
         <Page>
-        
             <SignUpFormTittle>
-                <h2>Formulario petición de registro como socio:</h2>
+                <h2>Formulario de registro nuevo socio:</h2>
             </SignUpFormTittle>
-            
-        <Container>
-            <SignUpForm></SignUpForm>
+            <Container>
+                <SignUpForm></SignUpForm>
             </Container>
         </Page>
     </div>

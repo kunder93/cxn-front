@@ -3,7 +3,7 @@ import React from 'react'
 import BootstrapForm from 'react-bootstrap/Form'
 import { Container, Row, Col, Button } from 'react-bootstrap'
 import { IInvoice } from '../Types/Types'
-const EditInvoiceForm = () => {
+const EditInvoiceForm: React.FC = () => {
     return (
         <>
             <div>
@@ -11,8 +11,8 @@ const EditInvoiceForm = () => {
                     initialValues={{
                         number: 0,
                         series: '',
-                        expeditionDate: new Date,
-                        advancePaymentDate: new Date,
+                        expeditionDate: new Date(),
+                        advancePaymentDate: new Date(),
                         taxExempt: false,
                         sellerNif: '',
                         buyerNif: ''
@@ -67,6 +67,5 @@ const EditInvoiceForm = () => {
         </>
     )
 }
-
 
 export default EditInvoiceForm

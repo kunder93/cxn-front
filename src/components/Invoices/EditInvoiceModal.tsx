@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React from 'react'
 import { Container, Modal, Row, Col, Button } from 'react-bootstrap'
 import EditInvoiceForm from './EditInvoiceForm'
 
-function EditInvoiceModal(props: any) {
+const EditInvoiceModal: React.FC<any> = (props: any) => {
     return (
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
@@ -75,6 +77,7 @@ function EditInvoiceModal(props: any) {
                 <EditInvoiceForm></EditInvoiceForm>
             </Modal.Body>
             <Modal.Footer>
+                {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
                 <Button onClick={props.onHide}>Close</Button>
             </Modal.Footer>
         </Modal>

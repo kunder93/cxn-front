@@ -1,29 +1,25 @@
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from 'react'
-import CreatePaymentSheetForm from './CreatePaymentSheetForm';
+import Button from 'react-bootstrap/Button'
+import Modal from 'react-bootstrap/Modal'
+import CreatePaymentSheetForm from './CreatePaymentSheetForm'
 
-function CreatePaymentSheetModal(props:any) {
-  return (
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Create payment sheet
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-     < CreatePaymentSheetForm></CreatePaymentSheetForm>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={props.onHide}>Close</Button>
-      </Modal.Footer>
-    </Modal>
-  );
+const CreatePaymentSheetModal: React.FC<any> = (props: any) => {
+    return (
+        <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">Create payment sheet</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <CreatePaymentSheetForm></CreatePaymentSheetForm>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button onClick={props.onHide}>Close</Button>
+            </Modal.Footer>
+        </Modal>
+    )
 }
 
 export default CreatePaymentSheetModal

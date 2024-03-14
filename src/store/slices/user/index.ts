@@ -11,6 +11,7 @@ interface UserState {
     email: string,
     birthDate: string,
     userRoles: string
+    kindMember: string
   }
 
 const initialState = {
@@ -76,13 +77,18 @@ export const userSlice = createSlice({
       },
       removeUserRoles: (state) => {
         state.userRoles = ''
+      },
+      setKindMember: (state, action: PayloadAction<string>) => {
+        state.kindMember = action.payload
+      },
+      removeKindMember: (state) => {
+        state.kindMember = ''
       }
-  
     },
   })
 
 
-  export const { setJwt, removeJwt, setName,removeName,setFirstSurname,removeFirstSurname,setSecondSurname,removeSecondSurname,setGender,removeGender,setEmail,removeEmail,setBirthDate,removeBirthDate,setUserRoles,removeUserRoles  } = userSlice.actions
+  export const { setJwt, removeJwt, setName,removeName,setFirstSurname,removeFirstSurname,setSecondSurname,removeSecondSurname,setGender,removeGender,setEmail,removeEmail,setBirthDate,removeBirthDate,setUserRoles,removeUserRoles,setKindMember, removeKindMember  } = userSlice.actions
 
   export default userSlice.reducer
 

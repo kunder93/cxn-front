@@ -1,20 +1,22 @@
-/* eslint-disable react/jsx-key */
-import React, { useMemo, useState } from 'react'
-import {  IPaymentSheet } from '../Types/Types'
-import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'react-table'
-import { Button } from 'react-bootstrap'
-import { COMPANIES_URL } from '../../resources/server_urls'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import axios from 'axios'
-import { Trash3, Pencil, FiletypePdf } from 'react-bootstrap-icons'
-import {Table} from 'react-bootstrap'
+import React, { useMemo, useState } from 'react'
+import { Button, Table } from 'react-bootstrap'
+import { FiletypePdf, Pencil, Trash3 } from 'react-bootstrap-icons'
 import { useNavigate } from 'react-router-dom'
+import { Column, useGlobalFilter, useRowSelect, useSortBy, useTable } from 'react-table'
 import { ROUTES } from '../../resources/routes-constants'
+import { COMPANIES_URL } from '../../resources/server_urls'
+import { IPaymentSheet } from '../Types/Types'
 import AddDataPaymentSheetModal from './PaymentSheetAddDataModal'
-type Props = {
+interface Props {
     data: IPaymentSheet[]
 }
 
-function PaymentSheetTable(props: Props) {
+const PaymentSheetTable: React.FC<Props> = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const [data, setData] = useState(useMemo(() => props.data, [])) //Caching data
     const [addPaymentSheetDataModal, setAddPaymentSheetDataModal] = useState(false)
@@ -30,8 +32,8 @@ function PaymentSheetTable(props: Props) {
             },
             {
                 Header: 'Nombre',
-                accessor: (d) => (d.userName + ' ' +  d.userFirstSurname + ' ' + d.userSecondSurname)
-            }, 
+                accessor: (d) => d.userName + ' ' + d.userFirstSurname + ' ' + d.userSecondSurname
+            },
             {
                 Header: 'DNI',
                 accessor: 'userDNI'
@@ -51,9 +53,9 @@ function PaymentSheetTable(props: Props) {
             {
                 Header: 'Fecha fin',
                 accessor: 'endDate'
-            },
-            // eslint-disable-next-line react-hooks/exhaustive-deps
+            }
         ],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [data]
     )
 
@@ -62,10 +64,11 @@ function PaymentSheetTable(props: Props) {
         let clone = [...data]
         const modifiedClone: IPaymentSheet[] = clone.splice(props.row.index, 1)
         const row = modifiedClone[0]
-        
+        console.log(row)
         axios
-            .delete(COMPANIES_URL + '/' + "row.nifCif")
+            .delete(COMPANIES_URL + '/' + 'row.nifCif')
             .then((response) => {
+                console.log(response)
                 setData(clone)
             })
             .catch((error) => console.log(error))
@@ -75,7 +78,7 @@ function PaymentSheetTable(props: Props) {
     function AddDataButtonClickHandler(props: any) {
         // eslint-disable-next-line prefer-const
         let clone = [...data]
-        const a:IPaymentSheet = clone[props.row.index]
+        const a: IPaymentSheet = clone[props.row.index]
         setSelectedRow(a)
         setAddPaymentSheetDataModal(true)
         /*
@@ -88,29 +91,34 @@ function PaymentSheetTable(props: Props) {
                     */
     }
 
-
-
-
-    function ShowPDFButtonClickHandler(props: any)  {
+    function ShowPDFButtonClickHandler(props: any) {
         // eslint-disable-next-line prefer-const
         let clone = [...data]
         const modifiedClone: IPaymentSheet[] = clone.splice(props.row.index, 1)
         const row = modifiedClone[0]
-        navigate(ROUTES.PDF_DOCUMENT, { state: {userName: row.userName, 
-            userFirstSurname: row.userFirstSurname, userSecondSurname: row.userSecondSurname, 
-            postalCode: row.postalCode, userDNI: row.userDNI,
-            apartmentNumber: row.apartmentNumber,
-            building: row.building,
-            street: row.street,
-            city: row.city,
-            countryName: row.countryName,
-            countrySubdivisionName: row.countrySubdivisionName,
-            reason: row.reason, place: row.place, startDate: row.startDate, endDate: row.endDate,
-            selfVehicle: row.selfVehicle, regularTransportList: row.regularTransportList,
-            foodHousing: row.foodHousing            
-        
-        }})
-        return ('')
+        navigate(ROUTES.PDF_DOCUMENT, {
+            state: {
+                userName: row.userName,
+                userFirstSurname: row.userFirstSurname,
+                userSecondSurname: row.userSecondSurname,
+                postalCode: row.postalCode,
+                userDNI: row.userDNI,
+                apartmentNumber: row.apartmentNumber,
+                building: row.building,
+                street: row.street,
+                city: row.city,
+                countryName: row.countryName,
+                countrySubdivisionName: row.countrySubdivisionName,
+                reason: row.reason,
+                place: row.place,
+                startDate: row.startDate,
+                endDate: row.endDate,
+                selfVehicle: row.selfVehicle,
+                regularTransportList: row.regularTransportList,
+                foodHousing: row.foodHousing
+            }
+        })
+        return ''
     }
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, preGlobalFilteredRows, setGlobalFilter, state } = useTable(
@@ -127,7 +135,7 @@ function PaymentSheetTable(props: Props) {
                     Cell: (tableProps: any) => (
                         <div>
                             <Button variant="info" onClick={() => AddDataButtonClickHandler(tableProps)}>
-                                <Pencil title="Editar"/>
+                                <Pencil title="Editar" />
                             </Button>
                             <Button variant="danger" onClick={() => DeleteButtonClickHandler(tableProps)}>
                                 <Trash3 title="Borrar" />
@@ -143,7 +151,7 @@ function PaymentSheetTable(props: Props) {
     )
     return (
         <>
-             <Table  striped bordered hover responsive {...getTableProps()}>
+            <Table striped bordered hover responsive {...getTableProps()}>
                 <thead>
                     {
                         // Loop over the header rows
@@ -154,7 +162,6 @@ function PaymentSheetTable(props: Props) {
                                     // Loop over the headers in each row
                                     headerGroup.headers.map((column) => (
                                         // Apply the header cell props
-                                        // eslint-disable-next-line react/jsx-key
                                         <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                                             {
                                                 // Render the header

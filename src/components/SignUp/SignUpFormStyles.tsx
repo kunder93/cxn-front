@@ -1,8 +1,6 @@
-import React from 'react'
 import { Alert } from 'react-bootstrap'
 import { ExclamationTriangle } from 'react-bootstrap-icons'
 import styled from 'styled-components'
-
 
 export const ProgressBarIconsContainer = styled.div`
     display: flex;
@@ -24,4 +22,3 @@ export const ErrorTriangle = styled(ExclamationTriangle)`
     height: 10%;
     width: 10%;
 `
-

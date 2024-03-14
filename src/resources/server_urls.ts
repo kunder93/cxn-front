@@ -13,6 +13,8 @@ export const SIGN_UP_URL =
 
 export const INVOICES_URL = 'http://localhost:8080/api/invoice'
 
+export const LIBRARY_URL = 'http://localhost:8080/api/library'
+
 export const PAYMENT_SHEET_URL = 'http://localhost:8080/api/paymentSheet'
 
 export const GET_ALL_USERS_URL = 'http://localhost:8080/api/user/getAll'

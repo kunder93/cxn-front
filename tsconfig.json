@@ -1,27 +1,42 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "typeRoots": ["node_modules/yup"],
+    "typeRoots": [],
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext"
+      "ES2020"
     ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "strictPropertyInitialization": true, // Genera un error si las propiedades de la clase no se inicializan en el constructor
+    "noImplicitOverride": true, // Genera un error si un método decorado con `@override` no está realmente sobrescribiendo un método de la clase base
     "strict": true,
+    "incremental": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
+    "module": "es2020",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "noImplicitThis": true, //Error si se utiliza 'this' dentro de uan function sin tipo.
+    //Variables no utilizadas
+    "noUnusedLocals": true, 
+    "noUnusedParameters": true,
+    "noImplicitReturns" : true, //Error si funcion no tiene retorno.
+    "noImplicitAny" : true,
+    "strictNullChecks" : true,
+    "baseUrl": "./", // Base URL para las rutas relativas de importación
+    "paths": {
+      "*": ["src/*"] // Mapeo de rutas de importación
+    },
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
+    "src",
+    ".eslintrc.js"
   ]
 }

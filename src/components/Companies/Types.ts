@@ -7,12 +7,12 @@ export interface ICompany{
     address: string 
 }
 
-export type CompanyTableProps = {
+export interface CompanyTableProps {
     data: ICompany[]
 }
 
 export interface CreateCompanyFormValues {
-    nifCif: string
+    nif: string
     name: string
     address: string
 }
