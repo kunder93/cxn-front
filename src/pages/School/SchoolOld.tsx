@@ -103,15 +103,15 @@ const carouselBenefits = [
 const photosData: PhotoData[] = [
     {
         url: '/ChessClass/oldClass/CarouselImage1.avif',
-        alt: 'Imagen 1'
+        alt: 'Tablero de ajedrez en pared.'
     },
     {
-        url: '/ChessClass/KidsClass/CarouselImage2.avif',
-        alt: 'Imagen 2'
+        url: '/ChessClass/oldClass/CarouselImage2.avif',
+        alt: 'Tablero y reloj analógico.'
     },
     {
-        url: '/ChessClass/KidsClass/CarouselImage3.avif',
-        alt: 'Imagen 3'
+        url: '/ChessClass/oldClass/CarouselImage3.avif',
+        alt: 'Gente em clase de ajedrez.'
     }
 ]
 
