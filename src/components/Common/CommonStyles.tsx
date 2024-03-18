@@ -81,6 +81,12 @@ export const CustomAccordionStyled = styled(Accordion)`
 export const HeaderPicture = styled.picture`
     grid-area: mainCarousel;
     aspect-ratio: 9/2;
+     /* Media query para dispositivos con un ancho máximo de 768px (dispositivos móviles) */
+     @media (max-width: 420px) {
+        aspect-ratio: 1.5;
+    }
+
+
 `
 /**
  * Image used into header picture
