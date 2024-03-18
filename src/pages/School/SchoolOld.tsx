@@ -33,8 +33,16 @@ const faqOldSchoolPairsQuestionAnswer = [
         answer: 'Todo el material necesario lo proporciona el club.'
     },
     {
-        question: '¿Dónde puedo apuntarme, cuánto cuesta?',
-        answer: 'En el padroado de deportes o en nuestras oficinas. Mas info: (link de contacto) '
+        question: '¿Dónde puedo apuntarme?',
+        answer: 'En nuestras oficinas, en esta web con el formulario de contacto o enviando un correo a xadreznaron@hotmail.com'
+    },
+    {
+        question: '¿Cuánto cuesta?',
+        answer: '20 Euros al mes'
+    },
+    {
+        question: '¿Qué días se imparten las clases?',
+        answer: 'Dos días a la semana, depende del número de alumnos y los grupos hay varios a escoger. Solicitar más información a través del formulario o correo.'
     }
 ]
 
