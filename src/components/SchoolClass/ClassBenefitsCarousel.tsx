@@ -40,12 +40,9 @@ const IconButtonStyle = styled.button`
     background: none;
     cursor: pointer;
     margin-bottom: 2px;
-    &:focus {
-        outline: 4px solid blue !important; 
-    }
-    /* focus style when navigate with keyboard */
-    &:focus:not(:focus-visible) {
-        outline: none; 
+    /* Estilo de enfoque solo cuando se navega con el teclado */
+    &:focus-visible {
+        outline: 4px solid blue !important; /* Establecemos un contorno azul de 4px */
     }
 `
 
