@@ -125,7 +125,7 @@ const photosData: PhotoData[] = [
 
 const accordionData: BenefitsAccordionProps = {
     carouselBenefits: carouselBenefits,
-    initialQuestionsFormTopic: 'CLASES INFANTILES',
+    initialQuestionsFormTopic: 'CLASES ADULTOS',
     faqList: faqOldSchoolPairsQuestionAnswer,
     photosData: photosData
 }
