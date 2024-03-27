@@ -67,7 +67,7 @@ const CollapsibleNavigationBar: React.FC = () => {
 
     return (
         <StyledNavbar className="sticky-top" collapseOnSelect expand="sm" data-bs-theme="dark" id="main-navigation-bar">
-            <NavbarBrandStyled as={Link} to={''} tabIndex={0} aria-description="Link a la página principal.">
+            <NavbarBrandStyled as={Link} to={''} tabIndex={0} aria-label="Link a la página principal.">
                 <NavLogo alt="CXN Logo" src={CxnLogo} />
             </NavbarBrandStyled>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />

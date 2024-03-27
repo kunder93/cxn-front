@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
 import styled from 'styled-components'
-import { MainContainerStyled } from '../components/Common/CommonStyles'
+import { MainContainerStyled, mainContentContainerBackgroundColor } from '../components/Common/CommonStyles'
 import HomePageCard, { ButtonOptions, HomePageCardProps } from '../components/HomePage/HomePageCard'
 import HomePageMainCarousel from '../components/HomePage/HomePageMainCarousel'
 import { useAppSelector } from '../store/hooks'
@@ -9,7 +9,7 @@ import { SetPageTitle } from '../utility/functions'
 import MoreInfoForm from '../components/Common/MoreInfoForm'
 import MembersBenefits from '../components/HomePage/MembersBenefits'
 
-const mainContentBackgroundColor = 'rgba(0, 0, 0, 0.65)'
+
 const pageMainTitle = 'Circulo Xadrez Narón te da la bienvenida !'
 const freeActivitiesTitle = 'Prueba nuestras actividades de forma gratuita sin ser soci@:'
 const memberActivitiesTitle = 'Beneficios de hacerte socio:'
@@ -62,23 +62,23 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
 const memberActivitiesCardsData: HomePageCardProps[] = [
     {
         imageSrc: '/Principal/PremiosGallegoVeteranos_optimizada.avif',
-        imageAlt: 'Imagen torneos y competicion federada',
+        imageAlt: 'Recibiendo premios campoeonato gallego.',
         cardTitle: 'Torneos y competicion federada',
         cardText: ['Participa en torneos y competición oficial.', 'Enfréntate a los mejores, supera tus límites.'],
         buttonProps: [{ buttonText: 'Más info', buttonAction: ButtonOptions.MODAL, component: <MembersBenefits></MembersBenefits> }]
     },
     {
         imageSrc: '/Principal/LibrosAjedrez_optimizada.avif',
-        imageAlt: 'Imagen libros ajedrez',
+        imageAlt: 'Estantería con libros de ajedrez.',
         cardTitle: 'Material de ajedrez',
         cardText: ['Acceso a multitud de libros, revistas, programas, piezas, relojes, etc', 'Pide lo que creas que falte, nosotros lo conseguimos.'],
         buttonProps: [{ buttonText: 'Más info', buttonAction: ButtonOptions.MODAL, component: <MembersBenefits></MembersBenefits> }]
     },
     {
-        imageSrc: '/Principal/LibrosAjedrez_optimizada.avif',
-        imageAlt: 'Imagen libros ajedrez',
-        cardTitle: 'Otros beneficios(poner)',
-        cardText: ['Acceso a multitud de libros, revistas, programas, piezas, relojes, etc', 'Pide lo que creas que falte, nosotros lo compramos.'],
+        imageSrc: '/Principal/ClaseAdultos.avif',
+        imageAlt: '4 Personas analizando posición ajedrez.',
+        cardTitle: 'Tutorización y seguimiento',
+        cardText: ['Profesionales capacitados para ayudarte en tu progreso y mostrarte los puntos mejorables y las tecnicas necesarias para alcanzar tus metas.'],
         buttonProps: [{ buttonText: 'Más info', buttonAction: ButtonOptions.MODAL, component: <MembersBenefits></MembersBenefits> }]
     }
 ]
@@ -98,9 +98,10 @@ const MainContentStyledSection = styled.section`
         'section-header'
         'free-activities'
         'member-ativities';
-    background-color: ${mainContentBackgroundColor};
+    background-color: ${mainContentContainerBackgroundColor};
     align-items: center; /* Centrar verticalmente */
     justify-content: center; /* Centrar horizontalmente */
+    color: black;
 `
 
 const MainContentHeader = styled.header`
@@ -111,6 +112,8 @@ const PageContentTitle = styled.h1`
     padding-bottom: 0.5em;
     padding-left: 1em;
     padding-right: 1em;
+    font-weight: bold;
+    font-size: 250%;
 `
 
 const ClubFreeActivitiesSection = styled.section`
