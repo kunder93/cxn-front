@@ -34,9 +34,9 @@ const StyledCardBody = styled(Card.Body)`
 
 const StyledCard = styled(Card)`
     border-radius: 0 !important;
-    border: 0 !important;
+    border: 4px solid green !important;
     width: 300px;
-    height: 350px !important;
+    height: 380px !important;
 `
 
 const StyledCardText = styled(Card.Text)`
