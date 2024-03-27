@@ -101,7 +101,7 @@ const HomePageCard: React.FC<HomePageCardProps> = (props) => {
         <>
             <article>
                 <StyledCard>
-                    <ScaledImage src={props.imageSrc} alt={props.imageAlt} />
+                    <ScaledImage src={props.imageSrc} alt={props.imageAlt} loading='lazy' />
                     <StyledCardBody>
                         <StyledCardTitle>{props.cardTitle}</StyledCardTitle>
                         {props.cardText.map((text, index) => (
