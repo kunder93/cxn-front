@@ -1,11 +1,13 @@
 import React from 'react'
 import { Card, Container } from 'react-bootstrap'
 import styled from 'styled-components'
-import { PersonSquare } from 'react-bootstrap-icons'
+//import { PersonSquare } from 'react-bootstrap-icons'
 
 const CardStyled = styled(Card)`
     width: 200px;
     justify-self: center;
+    border-radius: 0% !important;
+    border: 1px solid #695839 !important;
 `
 
 const ContainerStyled = styled(Container)`
@@ -22,47 +24,48 @@ const ContainerStyled = styled(Container)`
 }
 `
 
-const PersonSquareStyled = styled(PersonSquare)`
-    width: auto;
-    height: auto;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-    padding-top: 0.5em;
+const PersonImage = styled(Card.Img)`
+    height: 200px;
+    object-fit: cover; /* Evita que la imagen se estire */
+    border-radius: 0% !important;
 `
 
 const CardTitle = styled.h3`
-    font-size: 150%;
+    font-size: 130%;
+    font-weight: bold;
 `
 interface DirectivaCardProps {
     title: string
     person: string
+    imageSrc: string
 }
-const DirectivaCard: React.FC<DirectivaCardProps> = ({ title, person }) => (
+const DirectivaCard: React.FC<DirectivaCardProps> = ({ title, person, imageSrc }) => (
     <CardStyled>
-        <Card.Header>
+        <Card.Header style={{backgroundColor:'grey', borderRadius:'0%'}}>
             <CardTitle>{title}</CardTitle>
         </Card.Header>
-        <Card.Img as={PersonSquareStyled} />
-        <Card.Body>
-            <Card.Title>{person}</Card.Title>
+        <PersonImage src={imageSrc} />
+        <Card.Body style={{backgroundColor:'grey'}}>
+            <Card.Title style={{fontWeight:'bold'}}>{person}</Card.Title>
         </Card.Body>
     </CardStyled>
 )
 
 const DirectivaComponent: React.FC = () => {
-    const directivaData: { title: string; person: string }[] = [
-        { title: 'Presidente', person: 'Juan Manuel Caneiro Couto' },
-        { title: 'Secretario', person: 'Pablo Fernandez Lopez' },
-        { title: 'Tesorero', person: 'Santiago Paz Pérez' },
-        { title: 'Vicepresidente', person: 'Luisa' },
-        { title: 'Vocal', person: 'Almudena' },
-        { title: 'Vocal', person: 'Raul' }
+    const directivaData: { title: string; person: string, imageSrc: string }[] = [
+        { title: 'Presidente', person: 'Juan Manuel Caneiro Couto', imageSrc:'/TheClub/JuanCaneiro.avif' },
+        { title: 'Secretario', person: 'Pablo Fernandez Lopez',imageSrc:'/TheClub/PabloFernandez.avif' },
+        { title: 'Tesorero', person: 'David Roca', imageSrc:'/TheClub/DavidRoca.avif' },
+        { title: 'Vicepresidenta', person: 'Luisa', imageSrc:'/TheClub/Luisa.avif' },
+        { title: 'Vocal', person: 'Almudena',imageSrc:'/TheClub/femaleGenericProfile.avif' },
+        { title: 'Vocal', person: 'Raul',imageSrc:'/TheClub/maleGenericProfile.avif' },
+        { title: 'Vocal', person: 'Santiago Paz Pérez',imageSrc:'/TheClub/maleGenericProfile.avif' },
     ]
 
     return (
         <ContainerStyled>
             {directivaData.map((item, index) => (
-                <DirectivaCard key={index} title={item.title} person={item.person} />
+                <DirectivaCard key={index} title={item.title} person={item.person} imageSrc={item.imageSrc} />
             ))}
         </ContainerStyled>
     )
