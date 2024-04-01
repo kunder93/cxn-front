@@ -38,13 +38,14 @@ interface DirectivaCardProps {
     title: string
     person: string
     imageSrc: string
+    imageAlt: string
 }
-const DirectivaCard: React.FC<DirectivaCardProps> = ({ title, person, imageSrc }) => (
+const DirectivaCard: React.FC<DirectivaCardProps> = ({ title, person, imageSrc, imageAlt }) => (
     <CardStyled>
         <Card.Header style={{backgroundColor:'grey', borderRadius:'0%'}}>
             <CardTitle>{title}</CardTitle>
         </Card.Header>
-        <PersonImage src={imageSrc} />
+        <PersonImage src={imageSrc} alt={imageAlt} />
         <Card.Body style={{backgroundColor:'grey'}}>
             <Card.Title style={{fontWeight:'bold'}}>{person}</Card.Title>
         </Card.Body>
@@ -52,20 +53,20 @@ const DirectivaCard: React.FC<DirectivaCardProps> = ({ title, person, imageSrc }
 )
 
 const DirectivaComponent: React.FC = () => {
-    const directivaData: { title: string; person: string, imageSrc: string }[] = [
-        { title: 'Presidente', person: 'Juan Manuel Caneiro Couto', imageSrc:'/TheClub/JuanCaneiro.avif' },
-        { title: 'Secretario', person: 'Pablo Fernandez Lopez',imageSrc:'/TheClub/PabloFernandez.avif' },
-        { title: 'Tesorero', person: 'David Roca', imageSrc:'/TheClub/DavidRoca.avif' },
-        { title: 'Vicepresidenta', person: 'Luisa', imageSrc:'/TheClub/Luisa.avif' },
-        { title: 'Vocal', person: 'Almudena',imageSrc:'/TheClub/femaleGenericProfile.avif' },
-        { title: 'Vocal', person: 'Raul',imageSrc:'/TheClub/maleGenericProfile.avif' },
-        { title: 'Vocal', person: 'Santiago Paz Pérez',imageSrc:'/TheClub/maleGenericProfile.avif' },
+    const directivaData: { title: string; person: string, imageSrc: string, imageAlt: string }[] = [
+        { title: 'Presidente', person: 'Juan Manuel Caneiro Couto', imageSrc:'/TheClub/JuanCaneiro.avif', imageAlt:'Presidente Juan Manuel Caneiro Couto' },
+        { title: 'Secretario', person: 'Pablo Fernández López',imageSrc:'/TheClub/PabloFernandez.avif', imageAlt:'Secretario Pablo Fernández López' },
+        { title: 'Tesorero', person: 'David Roca', imageSrc:'/TheClub/DavidRoca.avif', imageAlt:'Tesorero David Roca' },
+        { title: 'Vicepresidenta', person: 'Luisa', imageSrc:'/TheClub/Luisa.avif', imageAlt:'Vicepresidenta Luisa' },
+        { title: 'Vocal', person: 'Almudena',imageSrc:'/TheClub/femaleGenericProfile.avif', imageAlt:'Vocal Almudena' },
+        { title: 'Vocal', person: 'Raul',imageSrc:'/TheClub/maleGenericProfile.avif', imageAlt:'Vocal Raul' },
+        { title: 'Vocal', person: 'Santiago Paz Pérez',imageSrc:'/TheClub/maleGenericProfile.avif', imageAlt:'Vocal Santiago Paz Pérez' },
     ]
 
     return (
         <ContainerStyled>
             {directivaData.map((item, index) => (
-                <DirectivaCard key={index} title={item.title} person={item.person} imageSrc={item.imageSrc} />
+                <DirectivaCard key={index} title={item.title} person={item.person} imageSrc={item.imageSrc} imageAlt = {item.imageAlt} />
             ))}
         </ContainerStyled>
     )
