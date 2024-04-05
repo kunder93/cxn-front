@@ -9,7 +9,7 @@ const MembersManagerPage: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get<IUsersListData>('http://localhost:8080/api/user/getAll')
+                const response = await axios.get<IUsersListData>('https://xadreznaron.es:4443/api/user/getAll')
                 setData(response.data)
                 console.log('AXIOS DATA:')
                 console.log(response.data)

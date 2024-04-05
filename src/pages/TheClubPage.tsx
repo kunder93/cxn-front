@@ -6,7 +6,7 @@ import { SetPageTitle } from '../utility/functions'
 import HeaderInfoClubBar from '../components/TheClub/HeaderInfoClubBar'
 import { useLocation } from 'react-router'
 
-const FotoTemporalPortadaClub = '/TheClubHeaderImage.avif'
+const FotoTemporalPortadaClub = '/TheClub//TheClubHeader.avif'
 
 interface LocationState {
     accordionItemToOpen: string
