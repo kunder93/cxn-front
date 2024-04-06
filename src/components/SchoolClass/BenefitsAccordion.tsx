@@ -44,7 +44,7 @@ const BenefitsAccordion: React.FC<BenefitsAccordionProps> = ({ carouselBenefits,
                     <h2>{contactHeaderMsg}:</h2>
                 </Accordion.Header>
                 <Accordion.Body>
-                    <MoreInfoClassForm formTitle="Pide más info:" initialTopic={initialQuestionsFormTopic} />
+                    <MoreInfoClassForm formTitle="Solicita información:" initialTopic={initialQuestionsFormTopic} />
                 </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey="2">

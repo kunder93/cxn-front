@@ -27,8 +27,14 @@ export const useAxiosGetCompanies = (url: string) => {
     const [error, setError]: [string, (error: string) => void] = useState('')
 
     useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*', // Asegúrate de que coincida con la configuración de CORS en el backend
+            }
+        };
         axios
-            .get(url)
+            .get(url,axiosConfig)
             .then((response) => setData(response.data as companiesAxiosResponse))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
@@ -44,8 +50,14 @@ export const useAxiosGetInvoices = (url: string) => {
     const [error, setError]: [string, (error: string) => void] = useState('')
 
     useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*', // Asegúrate de que coincida con la configuración de CORS en el backend
+            }
+        };
         axios
-            .get(url)
+            .get(url, axiosConfig)
             .then((response) => setData(response.data as invoicesAxiosResponse))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
@@ -61,8 +73,14 @@ export const useAxiosGetBooks = (url: string) => {
     const [error, setError]: [string, (error: string) => void] = useState('')
 
     useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*', // Asegúrate de que coincida con la configuración de CORS en el backend
+            }
+        };
         axios
-            .get(url)
+            .get(url, axiosConfig)
             .then((response) => setData(response.data as booksAxiosResponse))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
@@ -80,8 +98,14 @@ export const useAxiosGetPaymentSheets = (url: string) => {
     const [error, setError]: [string, (error: string) => void] = useState('')
 
     useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*', // Asegúrate de que coincida con la configuración de CORS en el backend
+            }
+        };
         axios
-            .get(url)
+            .get(url,axiosConfig)
             .then((response) => {
                 setData(response.data as paymentSheetsAxiosResponse)
             })
@@ -99,8 +123,14 @@ export const useAxiosGetAllUsersData = (url: string) => {
     const [error, setError]: [string, (error: string) => void] = useState('')
 
     useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*', // Asegúrate de que coincida con la configuración de CORS en el backend
+            }
+        };
         axios
-            .get(url)
+            .get(url,axiosConfig)
             .then((response) => {
                 setData(response.data as IUsersListData)
             })
@@ -118,8 +148,14 @@ export const useAxiosPostLogin = (url: string, payload: LoginFormValues) => {
     const [error, setError]: [string, (error: string) => void] = useState('')
 
     useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*', // Asegúrate de que coincida con la configuración de CORS en el backend
+            }
+        };
         axios
-            .post(url, payload)
+            .post(url, payload,axiosConfig)
             .then((response) => setData(response.data as string))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
@@ -141,8 +177,14 @@ export const useAxiosGetCountriesList = () => {
     const [error, setError]: [string, (error: string) => void] = useState('')
 
     useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*', // Asegúrate de que coincida con la configuración de CORS en el backend
+            }
+        };
         axios
-            .get<countriesListAxiosResponse>(GET_ALL_COUNTRIES_URL)
+            .get<countriesListAxiosResponse>(GET_ALL_COUNTRIES_URL,axiosConfig)
             .then((response) => setData(response.data))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
@@ -164,8 +206,14 @@ export const useAxiosGetSubCountriesList = (countryNumericCode: number) => {
     const [error, setError]: [string, (error: string) => void] = useState('')
 
     useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*', // Asegúrate de que coincida con la configuración de CORS en el backend
+            }
+        };
         axios
-            .get<subCountriesListAxiosResponse>(GET_SUBCOUNTRIES_URL + '/' + countryNumericCode)
+            .get<subCountriesListAxiosResponse>(GET_SUBCOUNTRIES_URL + '/' + countryNumericCode,axiosConfig)
             .then((response) => setData(response.data))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))

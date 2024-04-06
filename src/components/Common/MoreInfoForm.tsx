@@ -7,10 +7,11 @@ import { Button, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
 
 const FormTitleStyled = styled.span`
-    font-size: 150%;
+    font-size: 190%;
     text-align: left;
     display: block;
     padding-bottom: 1em;
+    font-weight: bold;
 `
 
 /**

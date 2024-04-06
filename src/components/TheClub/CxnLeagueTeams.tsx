@@ -128,8 +128,8 @@ const teamsInfo: TeamCardProps[] = [
 ]
 
 const StyledLink = styled.a`
-    height: 100%;
-    width: 100%;
+    height: auto;
+    width: auto;
     &:focus {
         outline: 4px solid blue !important; // Estilo del borde de foco
     }
@@ -137,8 +137,18 @@ const StyledLink = styled.a`
     &:focus:not(:focus-visible) {
         outline: none; // Eliminar el borde predeterminado
     }
+
+
 `
 const TeamInfoCardStyled = styled(TeamInfoCard)`
+
+`
+const AAA = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centra verticalmente los elementos */
+    align-items: center; /* Centra horizontalmente los elementos */
+    height: 100%;
 
 `
 
@@ -148,12 +158,14 @@ const CxnLeagueTeams: React.FC = () => {
     return (
         <TeamsMainContainer>
             <TeamsSectionHeaderContainer>
-                <h2>
+                <AAA>
                     <StyledLink href={'https://www.fegaxa.org'} target="_blank" rel="noopener noreferrer" aria-description="Federacion Galega Xadrez link">
                         <LogoFegaxa src="/logo_fegaxa.avif" alt="Federacion Galega Xadrez Logo"></LogoFegaxa>
                     </StyledLink>{' '}
-                    Equipos en liga gallega:
-                </h2>
+                    <h2 style={{paddingTop:'0.5em'}}>
+                        Equipos en liga gallega:
+                    </h2>
+                </AAA>
             </TeamsSectionHeaderContainer>
             <BodyContainer>
                 {teamsInfo.map((team, index) => (

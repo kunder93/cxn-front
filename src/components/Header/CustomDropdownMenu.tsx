@@ -57,7 +57,7 @@ const CustomDropdownMenu: React.FC<DropdownMenuProps> = ({ title, route, menuIte
         <div ref={dropdownRef} >
             <NavDropdown
                 title={
-                    <StyledDropdownTitle aria-description="Desplegable con enlace" role="heading" aria-level={1} onClick={() => navigate(route)} tabIndex={0} onFocus={handleFocus}>
+                    <StyledDropdownTitle aria-label="Desplegable con enlace" role="heading" aria-level={1} onClick={() => navigate(route)} tabIndex={0} onFocus={handleFocus}>
                         {title}
                     </StyledDropdownTitle>
                 }

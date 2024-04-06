@@ -33,8 +33,16 @@ const faqOldSchoolPairsQuestionAnswer = [
         answer: 'Todo el material necesario lo proporciona el club.'
     },
     {
-        question: '¿Dónde puedo apuntarme, cuánto cuesta?',
-        answer: 'En el padroado de deportes o en nuestras oficinas. Mas info: (link de contacto) '
+        question: '¿Dónde puedo apuntarme?',
+        answer: 'En nuestras oficinas, en esta web con el formulario de contacto o enviando un correo a xadreznaron@hotmail.com'
+    },
+    {
+        question: '¿Cuánto cuesta?',
+        answer: '20 Euros al mes'
+    },
+    {
+        question: '¿Qué días se imparten las clases?',
+        answer: 'Dos días a la semana, depende del número de alumnos y los grupos hay varios a escoger. Solicitar más información a través del formulario o correo.'
     }
 ]
 
@@ -103,21 +111,21 @@ const carouselBenefits = [
 const photosData: PhotoData[] = [
     {
         url: '/ChessClass/oldClass/CarouselImage1.avif',
-        alt: 'Imagen 1'
+        alt: 'Tablero de ajedrez en pared.'
     },
     {
-        url: '/ChessClass/KidsClass/CarouselImage2.avif',
-        alt: 'Imagen 2'
+        url: '/ChessClass/oldClass/CarouselImage2.avif',
+        alt: 'Tablero y reloj analógico.'
     },
     {
-        url: '/ChessClass/KidsClass/CarouselImage3.avif',
-        alt: 'Imagen 3'
+        url: '/ChessClass/oldClass/CarouselImage3.avif',
+        alt: 'Gente em clase de ajedrez.'
     }
 ]
 
 const accordionData: BenefitsAccordionProps = {
     carouselBenefits: carouselBenefits,
-    initialQuestionsFormTopic: 'CLASES INFANTILES',
+    initialQuestionsFormTopic: 'CLASES ADULTOS',
     faqList: faqOldSchoolPairsQuestionAnswer,
     photosData: photosData
 }

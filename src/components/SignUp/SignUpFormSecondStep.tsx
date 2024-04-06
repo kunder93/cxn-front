@@ -42,7 +42,7 @@ const SignUpFormSecondStep: React.FC<secondStepFormData> = (data: secondStepForm
             <Row>
                 <Col>
                     <BootstrapForm.Label htmlFor="dni">DNI:</BootstrapForm.Label>
-                    <Field as={BootstrapForm.Control} id="dni" name="dni" type="text" placeholder="Tu DNI" />
+                    <Field as={BootstrapForm.Control} id="dni" name="dni" type="text" placeholder="Tu DNI" autoComplete="off" />
                 </Col>
             </Row>
             <Row>
@@ -51,7 +51,7 @@ const SignUpFormSecondStep: React.FC<secondStepFormData> = (data: secondStepForm
             <Row>
                 <Col>
                     <BootstrapForm.Label htmlFor="name">Nombre:</BootstrapForm.Label>
-                    <Field as={BootstrapForm.Control} id="name" name="name" type="text" placeholder="Tu nombre" />
+                    <Field as={BootstrapForm.Control} id="name" name="name" type="text" placeholder="Tu nombre" autoComplete="off" />
                 </Col>
             </Row>
             <Row>
@@ -60,7 +60,7 @@ const SignUpFormSecondStep: React.FC<secondStepFormData> = (data: secondStepForm
             <Row>
                 <Col>
                     <BootstrapForm.Label htmlFor="firstSurname">Primer apellido:</BootstrapForm.Label>
-                    <Field as={BootstrapForm.Control} id="firstSurname" name="firstSurname" type="text" placeholder="Tu primer apellido" />
+                    <Field as={BootstrapForm.Control} id="firstSurname" name="firstSurname" type="text" placeholder="Tu primer apellido"  autoComplete="off"/>
                 </Col>
             </Row>
             <Row>
@@ -76,7 +76,7 @@ const SignUpFormSecondStep: React.FC<secondStepFormData> = (data: secondStepForm
             <Row>
                 <Col>
                     <BootstrapForm.Label htmlFor="secondSurname">Segundo apellido:</BootstrapForm.Label>
-                    <Field as={BootstrapForm.Control} id="secondSurname" name="secondSurname" type="text" placeholder="Tu segundo apellido" />
+                    <Field as={BootstrapForm.Control} id="secondSurname" name="secondSurname" type="text" placeholder="Tu segundo apellido" autoComplete="off"/>
                 </Col>
             </Row>
             <Row>
