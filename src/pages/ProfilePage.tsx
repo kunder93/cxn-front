@@ -6,31 +6,10 @@ import { useAppDispatch } from '../store/hooks'
 //import PresidenteMenu from '../components/PresidenteMenu'
 //import UserServicesDropdown from '../components/UsersServices/UserServicesDropdown'
 import styled from 'styled-components'
-import { Button, Container } from 'react-bootstrap'
-import { UserProfile, UserRole, setUserProfile } from '../store/slices/user'
+import { UserProfile, setUserProfile } from '../store/slices/user'
 import AdminRolePage from '../components/UserProfiles/AdminRolePage'
 import SocioRolePage from '../components/UserProfiles/SocioRolePage'
-import PresidenteRolePage from '../components/UserProfiles/PresidenteRolePage'
-import SecretarioRolePage from '../components/UserProfiles/SecretarioRolePage'
-import TesoreroRolePage from '../components/UserProfiles/TesoreroRolePage'
-import PresidenteMenu from '../components/PresidenteMenu'
 //import { Wrench } from 'react-bootstrap-icons'
-
-const CustomRow = styled.div`
-    border-top: 2px solid grey;
-    display: flex;
-    justify-content: space-between;
-    width: 50%;
-    padding-top: 1em;
-    padding-bottom: 1em;
-`
-
-const CustomCol = styled.div`
-    flex: 0 0 calc(50% - 1em);
-    margin-left: 1em;
-    padding-right: 1em;
-    padding-left: 1em;
-`
 
 const SideBar = styled.aside`
     background-color: pink;
@@ -41,21 +20,20 @@ const MainPageContainer = styled.div`
     grid-template-columns: 25fr 75fr;
 `
 
-const renderValue = (value: string | Date | UserRole[]): React.ReactNode => {
-    if (typeof value === 'string' || value instanceof Date) {
-        return value.toString()
-    } else if (Array.isArray(value)) {
-        return value.join(', ')
-    } else {
-        return 'Valor no reconocido'
-    }
+enum ProfileSection {
+    UserPage = 0,
+    ChessData = 1,
+    AdminPage = 2
 }
 
 const ProfilePage: React.FC = () => {
     const userJwt = useAppSelector((state) => state.users.jwt)
-    const userProfile = useAppSelector((state) => state.users.userProfile)
+
     const dispatch = useAppDispatch()
     console.log(userJwt)
+
+    const [profilePage, SetProfilePage]= React.useState<ProfileSection>(ProfileSection.UserPage);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -63,7 +41,7 @@ const ProfilePage: React.FC = () => {
                 const response = await axios.get<UserProfile>('https://xadreznaron.es:4443/api/user', {
                     headers: {
                         Authorization: 'Bearer ' + userJwt,
-                        'Access-Control-Allow-Origin': '*' // Agregar el encabezado CORS aquí
+                        'Access-Control-Allow-Origin': '*' //  CORS
                     }
                 })
 
@@ -81,13 +59,13 @@ const ProfilePage: React.FC = () => {
             <SideBar>
                 <ul>
                     <li>
-                        <a href="#">Información personal</a>
+                        <a href="#" onClick={() => SetProfilePage(ProfileSection.UserPage)}>Información personal</a>
                     </li>
                     <li>
-                        <a href="#">Datos de ajedrez</a>
+                        <a href="#" onClick={() => SetProfilePage(ProfileSection.ChessData)}>Datos de ajedrez</a>
                     </li>
                     <li>
-                        <a href="#">Link 3</a>
+                        <a href="#" onClick={() => SetProfilePage(ProfileSection.AdminPage)}>Pagina Admin</a>
                     </li>
                     <li>
                         <a href="#">Link 4</a>
@@ -98,35 +76,12 @@ const ProfilePage: React.FC = () => {
                 </ul>
             </SideBar>
             <div>
-                <Container>
-                    <h1>Información personal:</h1>
-                    {Object.keys(userProfile).map((key) => (
-                        <CustomRow key={key}>
-                            <CustomCol>{key}:</CustomCol>
-                            <CustomCol>{renderValue(userProfile[key as keyof UserProfile])}</CustomCol>
-                        </CustomRow>
-                    ))}
-                    <Button variant="success">Cambiar correo</Button>
-                    <Button variant="success">Cambiar contraseña</Button>
-                    <Button variant="danger">Darse de baja</Button>
-                </Container>
-                <Container>
-                    <h1>Datos de ajedrez:</h1>
-                    <CustomRow>
-                        <CustomCol>Federado:</CustomCol>
-                        <CustomCol>SI</CustomCol>
-                    </CustomRow>
-                    <CustomRow>
-                        <CustomCol>ID FIDE:</CustomCol>
-                        <CustomCol>66786785</CustomCol>
-                    </CustomRow>
-                    <CustomRow>
-                        <CustomCol>Equipo liga gallega:</CustomCol>
-                        <CustomCol>CXN NARONTEC A</CustomCol>
-                    </CustomRow>
-                    <Button variant="success">Solicitar alta federativa</Button>
-                </Container>
+
                 {/* Verificación de user ROles */}
+
+                {profilePage == ProfileSection.AdminPage && <AdminRolePage></AdminRolePage> }
+                {profilePage == ProfileSection.UserPage && <SocioRolePage></SocioRolePage> }
+                {/*}
                 {userProfile?.userRoles?.includes(UserRole.ADMIN) && <AdminRolePage></AdminRolePage>}
                 {userProfile?.userRoles?.includes(UserRole.SOCIO) && <SocioRolePage></SocioRolePage>}
                 {userProfile?.userRoles?.includes(UserRole.PRESIDENTE) && <PresidenteRolePage></PresidenteRolePage>}
