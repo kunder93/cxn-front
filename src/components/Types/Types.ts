@@ -1,4 +1,7 @@
+import { KindMember } from "store/types/userTypes"
+
 export interface IUserData {
+    dni:string
     name: string
     firstSurname: string
     secondSurname: string
@@ -6,7 +9,7 @@ export interface IUserData {
     birthDate: Date
     email: string
     userRoles: string
-    kindMember: string
+    kindMember: KindMember
 }
 
 export interface IUsersListData {

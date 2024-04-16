@@ -9,18 +9,24 @@ import { InfoCircle, PersonGear } from 'react-bootstrap-icons'
 import { Table } from 'react-bootstrap'
 import { IUserData } from '../Types/Types'
 import MemberModalProfileInfo from './MemberModalProfileInfo'
-import MemberActionsModal from './MemberActionsModal'
+import { renderKindMember, renderUserRoles } from '../../utility/userUtilities'
+import { UserProfile } from '../../store/types/userTypes'
+import ChangeKindMemberModal from './ChangeKindMemberModal'
 
 interface Props {
-    data: IUserData[]
+    usersData: IUserData[]
 }
 
-const MembersManagerTable: React.FC<Props> = (props: Props) => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const [data /*, setData*/] = useState<IUserData[]>(useMemo(() => props.data, [])) //Caching data
+/**
+ * Component that displays a table with members data and actions to modify them.
+ * @param props The users data.
+ * @returns Component with Table that contains members data and actions for modify members.
+ */
+const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
+    const [data] = useState<IUserData[]>(useMemo(() => usersData, [])) //Caching data
     const [memberInfoModal, setMemberInfoModal] = useState(false)
-    const [memberActionsModal, setMemberActionsModal] = useState(false)
-    const [selectedRow, setSelectedRow] = useState({})
+    const [changeKindMemberModal, setChangeKindMemberModal] = useState(false)
+    const [selectedRow, setSelectedRow] = useState<IUserData | undefined>() // Updated typing here
 
     const columns: Column<any>[] = useMemo(
         () => [
@@ -38,24 +44,34 @@ const MembersManagerTable: React.FC<Props> = (props: Props) => {
             },
             {
                 Header: 'Rol del socio',
-                accessor: (d) => d.userRoles
+                accessor: (d: UserProfile) => renderUserRoles(d.userRoles)
             },
             {
                 Header: 'Estado',
-                accessor: (d) => d.kindMember
+                accessor: (d: UserProfile) => renderKindMember(d.kindMember)
             }
         ],
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [data]
     )
 
-    function InfoButtonClickHandler(props: any) {
-        // eslint-disable-next-line prefer-const
-        let clone = [...data]
-        const selRow = clone[props.row.index]
-        setSelectedRow(selRow)
-        setMemberInfoModal(true)
+    const InfoButtonClickHandler = (props: any) => {
+        if (props.row) {
+            const clone = [...data];
+            const selRow = clone[props.row.index];
+            setSelectedRow(selRow);
+            setMemberInfoModal(true);
+        }
     }
+
+    const EditKindMemberButtonClickHandler = (props:any) => {
+        if (props.row) {
+            const clone = [...data];
+            const selRow = clone[props.row.index];
+            setSelectedRow(selRow);
+            setChangeKindMemberModal(true)
+        }
+    }
+
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, preGlobalFilteredRows, setGlobalFilter, state } = useTable(
         { columns, data },
@@ -71,10 +87,10 @@ const MembersManagerTable: React.FC<Props> = (props: Props) => {
                     Cell: (tableProps: any) => (
                         <div>
                             <Button variant="info" onClick={() => InfoButtonClickHandler(tableProps)}>
-                                <InfoCircle title="Más info" />
+                                <InfoCircle aria-description="Datos completos" />
                             </Button>
-                            <Button variant="info" onClick={() => setMemberActionsModal(true)}>
-                                <PersonGear title="Acciones" />
+                            <Button variant="info" onClick={() => EditKindMemberButtonClickHandler(tableProps)}>
+                                <PersonGear aria-description="Modificar rol del socio" />
                             </Button>
                         </div>
                     )
@@ -82,68 +98,43 @@ const MembersManagerTable: React.FC<Props> = (props: Props) => {
             ])
         }
     )
+
     return (
         <>
             <Table striped bordered hover responsive {...getTableProps()}>
                 <thead>
-                    {
-                        // Loop over the header rows
-                        headerGroups.map((headerGroup) => (
-                            // Apply the header row props
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {
-                                    // Loop over the headers in each row
-                                    headerGroup.headers.map((column) => (
-                                        // Apply the header cell props
-                                        <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                            {
-                                                // Render the header
-                                                column.render('Header')
-                                            }
-                                            <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
-                                        </th>
-                                    ))
-                                }
-                            </tr>
-                        ))
-                    }
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column) => (
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render('Header')}
+                                    <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                 </thead>
                 <tbody {...getTableBodyProps()}>
-                    {
-                        // Loop over the table rows
-                        rows.map((row) => {
-                            // Prepare the row for display
-                            prepareRow(row)
-                            return (
-                                // Apply the row props
-                                <tr {...row.getRowProps()}>
-                                    {
-                                        // Loop over the rows cells
-                                        row.cells.map((cell) => {
-                                            // Apply the cell props
-                                            return (
-                                                <td {...cell.getCellProps()}>
-                                                    {
-                                                        // Render the cell contents
-                                                        cell.render('Cell')
-                                                    }
-                                                </td>
-                                            )
-                                        })
-                                    }
-                                </tr>
-                            )
-                        })
-                    }
-                </tbody>
+                    {rows.map((row) => {
+                        prepareRow(row);
+                        return (
+                            <tr {...row.getRowProps()}>
+                                {row.cells.map((cell) => (
+                                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                ))}
+                            </tr>
+                        );
+                    })}
+                </tbody> 
             </Table>
             <div>
                 <p> Total de registros: {preGlobalFilteredRows.length}</p>
             </div>
             <input type="text" value={state.globalFilter} onChange={(event) => setGlobalFilter(event.target.value)} />
-            <MemberModalProfileInfo show={memberInfoModal} onHide={() => setMemberInfoModal(false)} row={selectedRow} />
-            <MemberActionsModal show={memberActionsModal} onHide={() => setMemberActionsModal(false)} row={selectedRow} />
+            <MemberModalProfileInfo show={memberInfoModal} onHide={() => setMemberInfoModal(false)} row={selectedRow ?? {}} />
+            <ChangeKindMemberModal show={changeKindMemberModal} onHide={() => setChangeKindMemberModal(false)} memberFirstSurname={selectedRow?.firstSurname} memberSecondSurname={selectedRow?.secondSurname} memberName={selectedRow?.name} kindMember={selectedRow?.kindMember} memberDni={selectedRow?.dni}/>
         </>
     )
 }
+
 export default MembersManagerTable

@@ -23,7 +23,7 @@ const MembersManagerPage: React.FC = () => {
         void fetchData()
     }, [])
 
-    return loaded ? <MembersManagerTable data={data.usersList}></MembersManagerTable> : <div></div>
+    return loaded ? <MembersManagerTable usersData={data.usersList}></MembersManagerTable> : <div></div>
 }
 
 export default MembersManagerPage
