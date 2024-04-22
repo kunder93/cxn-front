@@ -1,9 +1,10 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { IBook, ICountryData, IInvoice, IPaymentSheet, ISubCountryData, IUsersListData } from '../components/Types/Types'
-import { GET_ALL_COUNTRIES_URL, GET_SUBCOUNTRIES_URL } from '../resources/server_urls'
+import { IBook, ICountryData, IInvoice, IPaymentSheet, ISubCountryData, IUserData, IUsersListData } from '../components/Types/Types'
+import { CHANGE_KIND_MEMBER_URL, GET_ALL_COUNTRIES_URL, GET_SUBCOUNTRIES_URL } from '../resources/server_urls'
 import { ICompany } from '../components/Companies/Types'
 import { LoginFormValues } from '../components/LoginForm'
+import { ChangeKindMemberFormData } from 'components/MembersManager/ChangeKindMemberForm'
 
 interface companiesAxiosResponse {
     companiesList: ICompany[]
@@ -30,11 +31,11 @@ export const useAxiosGetCompanies = (url: string) => {
         const axiosConfig = {
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*', // Asegúrate de que coincida con la configuración de CORS en el backend
+                'Access-Control-Allow-Origin': '*' // Asegúrate de que coincida con la configuración de CORS en el backend
             }
-        };
+        }
         axios
-            .get(url,axiosConfig)
+            .get(url, axiosConfig)
             .then((response) => setData(response.data as companiesAxiosResponse))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
@@ -53,9 +54,9 @@ export const useAxiosGetInvoices = (url: string) => {
         const axiosConfig = {
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*', // Asegúrate de que coincida con la configuración de CORS en el backend
+                'Access-Control-Allow-Origin': '*' // Asegúrate de que coincida con la configuración de CORS en el backend
             }
-        };
+        }
         axios
             .get(url, axiosConfig)
             .then((response) => setData(response.data as invoicesAxiosResponse))
@@ -76,9 +77,9 @@ export const useAxiosGetBooks = (url: string) => {
         const axiosConfig = {
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*', // Asegúrate de que coincida con la configuración de CORS en el backend
+                'Access-Control-Allow-Origin': '*' // Asegúrate de que coincida con la configuración de CORS en el backend
             }
-        };
+        }
         axios
             .get(url, axiosConfig)
             .then((response) => setData(response.data as booksAxiosResponse))
@@ -101,11 +102,11 @@ export const useAxiosGetPaymentSheets = (url: string) => {
         const axiosConfig = {
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*', // Asegúrate de que coincida con la configuración de CORS en el backend
+                'Access-Control-Allow-Origin': '*' // Asegúrate de que coincida con la configuración de CORS en el backend
             }
-        };
+        }
         axios
-            .get(url,axiosConfig)
+            .get(url, axiosConfig)
             .then((response) => {
                 setData(response.data as paymentSheetsAxiosResponse)
             })
@@ -126,11 +127,11 @@ export const useAxiosGetAllUsersData = (url: string) => {
         const axiosConfig = {
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*', // Asegúrate de que coincida con la configuración de CORS en el backend
+                'Access-Control-Allow-Origin': '*' // Asegúrate de que coincida con la configuración de CORS en el backend
             }
-        };
+        }
         axios
-            .get(url,axiosConfig)
+            .get(url, axiosConfig)
             .then((response) => {
                 setData(response.data as IUsersListData)
             })
@@ -151,11 +152,11 @@ export const useAxiosPostLogin = (url: string, payload: LoginFormValues) => {
         const axiosConfig = {
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*', // Asegúrate de que coincida con la configuración de CORS en el backend
+                'Access-Control-Allow-Origin': '*' // Asegúrate de que coincida con la configuración de CORS en el backend
             }
-        };
+        }
         axios
-            .post(url, payload,axiosConfig)
+            .post(url, payload, axiosConfig)
             .then((response) => setData(response.data as string))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
@@ -180,11 +181,11 @@ export const useAxiosGetCountriesList = () => {
         const axiosConfig = {
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*', // Asegúrate de que coincida con la configuración de CORS en el backend
+                'Access-Control-Allow-Origin': '*' // Asegúrate de que coincida con la configuración de CORS en el backend
             }
-        };
+        }
         axios
-            .get<countriesListAxiosResponse>(GET_ALL_COUNTRIES_URL,axiosConfig)
+            .get<countriesListAxiosResponse>(GET_ALL_COUNTRIES_URL, axiosConfig)
             .then((response) => setData(response.data))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
@@ -209,11 +210,33 @@ export const useAxiosGetSubCountriesList = (countryNumericCode: number) => {
         const axiosConfig = {
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*', // Asegúrate de que coincida con la configuración de CORS en el backend
+                'Access-Control-Allow-Origin': '*' // Asegúrate de que coincida con la configuración de CORS en el backend
             }
-        };
+        }
         axios
-            .get<subCountriesListAxiosResponse>(GET_SUBCOUNTRIES_URL + '/' + countryNumericCode,axiosConfig)
+            .get<subCountriesListAxiosResponse>(GET_SUBCOUNTRIES_URL + '/' + countryNumericCode, axiosConfig)
+            .then((response) => setData(response.data))
+            .catch((error: string) => setError(error))
+            .finally(() => setLoaded(true))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    return { data, error, loaded }
+}
+
+export const useAxiosChangeKindMember = (payload: ChangeKindMemberFormData) => {
+    const [data, setData] = useState<IUserData>()
+    const [loaded, setLoaded]: [boolean, (loading: boolean) => void] = useState<boolean>(false)
+    const [error, setError]: [string, (error: string) => void] = useState('')
+    useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' //coincide con configuración de CORS en el backend
+            }
+        }
+        axios
+            .patch<IUserData>(CHANGE_KIND_MEMBER_URL, payload, axiosConfig)
             .then((response) => setData(response.data))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))

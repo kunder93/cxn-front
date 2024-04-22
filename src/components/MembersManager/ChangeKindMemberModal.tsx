@@ -6,14 +6,15 @@ import { KindMember } from '../../store/types/userTypes'
 import ChangeKindMemberForm from './ChangeKindMemberForm'
 
 interface ChangeKindMemberProps extends ModalProps {
-    memberDni: string | undefined
+    memberEmail: string | undefined
     memberName: string | undefined
     memberFirstSurname: string | undefined
     memberSecondSurname: string | undefined
     kindMember: KindMember | undefined
+    updateKindMember: ( newKindMember: KindMember) => void;
 }
 
-const ChangeKindMemberModal: React.FC<ChangeKindMemberProps> = ({ memberName, memberFirstSurname, memberSecondSurname, memberDni,kindMember, ...props }) => {
+const ChangeKindMemberModal: React.FC<ChangeKindMemberProps> = ({ updateKindMember, memberName, memberEmail, memberFirstSurname, memberSecondSurname, kindMember, ...props }) => {
     return (
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
@@ -21,12 +22,12 @@ const ChangeKindMemberModal: React.FC<ChangeKindMemberProps> = ({ memberName, me
                     Cambiar el tipo de socio de: <strong>{memberName + ' ' + memberFirstSurname + ' ' + memberSecondSurname}</strong>
                 </Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                {kindMember && memberDni && <ChangeKindMemberForm dni={memberDni} kindMember={kindMember}></ChangeKindMemberForm>}
-            </Modal.Body>
+            <Modal.Body>{kindMember && memberEmail && <ChangeKindMemberForm  formData={{ email: memberEmail, kindMember: kindMember }} updateKindMember={updateKindMember}  ></ChangeKindMemberForm>}</Modal.Body>
             <Modal.Footer>
                 {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access*/}
-                <Button onClick={props.onHide}>Close</Button>
+                <Button variant="danger" onClick={props.onHide}>
+                    Cerrar
+                </Button>
             </Modal.Footer>
         </Modal>
     )
