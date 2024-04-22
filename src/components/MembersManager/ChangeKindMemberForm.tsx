@@ -1,7 +1,7 @@
 import React from 'react'
-import { Formik, Field, Form } from 'formik'
+import { Formik, Field, Form, FormikValues, FormikProps } from 'formik'
 import { KindMember } from '../../store/types/userTypes'
-import { Button, FormControl, FormGroup, FormLabel } from 'react-bootstrap'
+import { FormControl, FormGroup, FormLabel } from 'react-bootstrap'
 import { renderKindMember } from '../../utility/userUtilities'
 import { Form as BootstrapForm } from 'react-bootstrap'
 import ChangeKindMemberSubmitResultAlert from './ChangeKindMemberSubmitResultAlert'
@@ -11,18 +11,22 @@ export interface ChangeKindMemberFormData {
     kindMember: KindMember
 }
 
-export interface ChangeKindMemberFormProps {
+export interface ChangeKindMemberFormProps  {
     formData: ChangeKindMemberFormData
+    formikRef: React.RefObject<FormikProps<FormikValues>>
     updateKindMember: ( newKindMember: KindMember) => void;
+}   
+
+export interface ChangeKindMemberFormRef {
+    submitForm: () => void;
 }
 
-
-
-const ChangeKindMemberForm: React.FC<ChangeKindMemberFormProps> = ({ formData, updateKindMember }) => {
+const ChangeKindMemberForm: React.FC<ChangeKindMemberFormProps> = ({formikRef, formData, updateKindMember }) => {
     const { kindMember, email } = formData;
     const [visibleAlert, setVisibleAlert] = React.useState(false)
+
     return (
-        <Formik
+        <Formik innerRef={formikRef}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             initialValues={{ kindMember, email }}
             onSubmit={() => setVisibleAlert(true)}
@@ -63,9 +67,12 @@ const ChangeKindMemberForm: React.FC<ChangeKindMemberFormProps> = ({ formData, u
                             </BootstrapForm.Select>
                         </FormGroup>
                         <div style={{ paddingTop: '1em' }}>
+                            
+                            {/*}
                             <Button variant="success" type="submit">
                                 Cambiar
                             </Button>
+                            */}
                         </div>
                     </BootstrapForm>
                 </>
