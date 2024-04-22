@@ -6,16 +6,20 @@ import { renderKindMember } from '../../utility/userUtilities'
 import { Form as BootstrapForm } from 'react-bootstrap'
 import ChangeKindMemberSubmitResultAlert from './ChangeKindMemberSubmitResultAlert'
 
-export interface ChangeKindMemberFormData {
+export interface ChangeKindMemberValues extends FormikValues {
     email: string
-    kindMember: KindMember
+    kindMember:KindMember
 }
 
+
 export interface ChangeKindMemberFormProps  {
-    formData: ChangeKindMemberFormData
-    formikRef: React.RefObject<FormikProps<FormikValues>>
+    formData: ChangeKindMemberValues
+    formikRef: React.RefObject<FormikProps<ChangeKindMemberValues>>
     updateKindMember: ( newKindMember: KindMember) => void;
+    
 }   
+
+
 
 export interface ChangeKindMemberFormRef {
     submitForm: () => void;
@@ -24,18 +28,22 @@ export interface ChangeKindMemberFormRef {
 const ChangeKindMemberForm: React.FC<ChangeKindMemberFormProps> = ({formikRef, formData, updateKindMember }) => {
     const { kindMember, email } = formData;
     const [visibleAlert, setVisibleAlert] = React.useState(false)
+    const [alertValues, setAlertValues] = React.useState<ChangeKindMemberValues>({email:'', kindMember:KindMember.SOCIO_NUMERO})
+
 
     return (
         <Formik innerRef={formikRef}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             initialValues={{ kindMember, email }}
-            onSubmit={() => setVisibleAlert(true)}
+            onSubmit={(values) => {
+                setVisibleAlert(true)
+                setAlertValues({kindMember: values.kindMember, email:values.email})
+            }}
         >
             {({ values, setFieldValue }) => (
                 <>
                 {visibleAlert && <ChangeKindMemberSubmitResultAlert 
                         visibleParam={visibleAlert} closeFunction={setVisibleAlert}
-                         formData={{email: values.email, kindMember: values.kindMember}} 
+                         formData={{email: alertValues.email, kindMember: alertValues.kindMember}} 
                          updateKindMember={updateKindMember} />}
             
                     <BootstrapForm as={Form}>
@@ -66,14 +74,6 @@ const ChangeKindMemberForm: React.FC<ChangeKindMemberFormProps> = ({formikRef, f
                                 ))}
                             </BootstrapForm.Select>
                         </FormGroup>
-                        <div style={{ paddingTop: '1em' }}>
-                            
-                            {/*}
-                            <Button variant="success" type="submit">
-                                Cambiar
-                            </Button>
-                            */}
-                        </div>
                     </BootstrapForm>
                 </>
             )}

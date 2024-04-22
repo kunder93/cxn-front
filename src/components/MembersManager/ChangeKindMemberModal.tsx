@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useRef } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal, { ModalProps } from 'react-bootstrap/Modal'
 import { KindMember } from '../../store/types/userTypes'
-import ChangeKindMemberForm from './ChangeKindMemberForm'
+import ChangeKindMemberForm, { ChangeKindMemberValues } from './ChangeKindMemberForm'
 import styled from 'styled-components'
-import { FormikProps, FormikValues } from 'formik'
+import { FormikProps } from 'formik'
 
 interface ChangeKindMemberProps extends ModalProps {
     memberEmail: string | undefined
@@ -29,15 +28,14 @@ const ChangeKindMemberModal: React.FC<ChangeKindMemberProps> = ({
     kindMember,
     ...props
 }) => {
+    // Attach this to your <Formik>
+    const formRef = useRef<FormikProps<ChangeKindMemberValues>>(null)
 
-// Attach this to your <Formik>
-const formRef = useRef<FormikProps<FormikValues>>(null)
-
-const handleSubmit = () => {
-  if (formRef.current) {
-    formRef.current.handleSubmit()
-  }
-}
+    const handleSubmit = () => {
+        if (formRef.current) {
+            formRef.current.handleSubmit()
+        }
+    }
 
     return (
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
@@ -48,11 +46,14 @@ const handleSubmit = () => {
             </Modal.Header>
             <Modal.Body>
                 {kindMember && memberEmail && (
-                    <ChangeKindMemberForm  formikRef={formRef} formData={{ email: memberEmail, kindMember: kindMember }} updateKindMember={updateKindMember}></ChangeKindMemberForm>
+                    <ChangeKindMemberForm
+                        formikRef={formRef}
+                        formData={{ email: memberEmail, kindMember: kindMember }}
+                        updateKindMember={updateKindMember}
+                    ></ChangeKindMemberForm>
                 )}
             </Modal.Body>
             <StyledModalFooter>
-                {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access*/}
                 <Button variant="success" onClick={handleSubmit}>
                     Cambiar
                 </Button>

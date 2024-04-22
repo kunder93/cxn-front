@@ -4,10 +4,10 @@ import { Alert, Collapse, Spinner } from 'react-bootstrap'
 import { FloatingNotificationContainer } from '../../components/Common/FloatingNotificationContainer'
 import { renderKindMember } from '../../utility/userUtilities'
 import { KindMember } from 'store/types/userTypes'
-import { ChangeKindMemberFormData } from './ChangeKindMemberForm'
+import { ChangeKindMemberValues } from './ChangeKindMemberForm'
 
 interface IChangeKindMemberSubmitResultAlert {
-    formData: ChangeKindMemberFormData
+    formData: ChangeKindMemberValues
     visibleParam: boolean
     closeFunction: React.Dispatch<React.SetStateAction<boolean>>
     updateKindMember:  ( newKindMember: KindMember) => void;

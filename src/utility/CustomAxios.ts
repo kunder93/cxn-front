@@ -4,7 +4,7 @@ import { IBook, ICountryData, IInvoice, IPaymentSheet, ISubCountryData, IUserDat
 import { CHANGE_KIND_MEMBER_URL, GET_ALL_COUNTRIES_URL, GET_SUBCOUNTRIES_URL } from '../resources/server_urls'
 import { ICompany } from '../components/Companies/Types'
 import { LoginFormValues } from '../components/LoginForm'
-import { ChangeKindMemberFormData } from 'components/MembersManager/ChangeKindMemberForm'
+import { ChangeKindMemberValues } from 'components/MembersManager/ChangeKindMemberForm'
 
 interface companiesAxiosResponse {
     companiesList: ICompany[]
@@ -224,7 +224,7 @@ export const useAxiosGetSubCountriesList = (countryNumericCode: number) => {
     return { data, error, loaded }
 }
 
-export const useAxiosChangeKindMember = (payload: ChangeKindMemberFormData) => {
+export const useAxiosChangeKindMember = (payload: ChangeKindMemberValues) => {
     const [data, setData] = useState<IUserData>()
     const [loaded, setLoaded]: [boolean, (loading: boolean) => void] = useState<boolean>(false)
     const [error, setError]: [string, (error: string) => void] = useState('')
