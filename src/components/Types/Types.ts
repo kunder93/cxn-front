@@ -1,19 +1,8 @@
-import { KindMember } from "store/types/userTypes"
+import { UserProfile } from "store/types/userTypes"
 
-export interface IUserData {
-    dni:string
-    name: string
-    firstSurname: string
-    secondSurname: string
-    gende: string
-    birthDate: Date
-    email: string
-    userRoles: string
-    kindMember: KindMember
-}
 
 export interface IUsersListData {
-    usersList: IUserData[]
+    usersList: UserProfile[]
 }
 
 export interface ISelfVehicle {

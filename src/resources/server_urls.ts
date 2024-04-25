@@ -31,3 +31,5 @@ export const GET_ALL_COUNTRIES_URL = BASE_URL + "api/address/getCountries"
 export const GET_SUBCOUNTRIES_URL = BASE_URL + "api/address/country"
 
 export const CHANGE_KIND_MEMBER_URL = BASE_URL + 'api/user/changeKindOfMember'
+
+export const CHANGE_MEMBER_ROLES_URL = BASE_URL + 'api/user/role'

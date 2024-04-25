@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal, { ModalProps } from 'react-bootstrap/Modal'
-import { KindMember } from '../../store/types/userTypes'
+import { KindMember } from '../../../store/types/userTypes'
 import ChangeKindMemberForm, { ChangeKindMemberValues } from './ChangeKindMemberForm'
 import styled from 'styled-components'
 import { FormikProps } from 'formik'

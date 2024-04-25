@@ -1,51 +1,50 @@
 import React from 'react'
 import { Formik, Field, Form, FormikValues, FormikProps } from 'formik'
-import { KindMember } from '../../store/types/userTypes'
+import { KindMember } from '../../../store/types/userTypes'
 import { FormControl, FormGroup, FormLabel } from 'react-bootstrap'
-import { renderKindMember } from '../../utility/userUtilities'
+import { renderKindMember } from '../../../utility/userUtilities'
 import { Form as BootstrapForm } from 'react-bootstrap'
 import ChangeKindMemberSubmitResultAlert from './ChangeKindMemberSubmitResultAlert'
 
 export interface ChangeKindMemberValues extends FormikValues {
     email: string
-    kindMember:KindMember
+    kindMember: KindMember
 }
 
-
-export interface ChangeKindMemberFormProps  {
+export interface ChangeKindMemberFormProps {
     formData: ChangeKindMemberValues
     formikRef: React.RefObject<FormikProps<ChangeKindMemberValues>>
-    updateKindMember: ( newKindMember: KindMember) => void;
-    
-}   
-
-
-
-export interface ChangeKindMemberFormRef {
-    submitForm: () => void;
+    updateKindMember: (newKindMember: KindMember) => void
 }
 
-const ChangeKindMemberForm: React.FC<ChangeKindMemberFormProps> = ({formikRef, formData, updateKindMember }) => {
-    const { kindMember, email } = formData;
+export interface ChangeKindMemberFormRef {
+    submitForm: () => void
+}
+
+const ChangeKindMemberForm: React.FC<ChangeKindMemberFormProps> = ({ formikRef, formData, updateKindMember }) => {
+    const { kindMember, email } = formData
     const [visibleAlert, setVisibleAlert] = React.useState(false)
-    const [alertValues, setAlertValues] = React.useState<ChangeKindMemberValues>({email:'', kindMember:KindMember.SOCIO_NUMERO})
-
-
+    const [alertValues, setAlertValues] = React.useState<ChangeKindMemberValues>({ email: '', kindMember: KindMember.SOCIO_NUMERO })
     return (
-        <Formik innerRef={formikRef}
+        <Formik
+            innerRef={formikRef}
             initialValues={{ kindMember, email }}
             onSubmit={(values) => {
                 setVisibleAlert(true)
-                setAlertValues({kindMember: values.kindMember, email:values.email})
+                setAlertValues({ kindMember: values.kindMember, email: values.email })
             }}
         >
             {({ values, setFieldValue }) => (
                 <>
-                {visibleAlert && <ChangeKindMemberSubmitResultAlert 
-                        visibleParam={visibleAlert} closeFunction={setVisibleAlert}
-                         formData={{email: alertValues.email, kindMember: alertValues.kindMember}} 
-                         updateKindMember={updateKindMember} />}
-            
+                    {visibleAlert && (
+                        <ChangeKindMemberSubmitResultAlert
+                            visibleParam={visibleAlert}
+                            closeFunction={setVisibleAlert}
+                            formData={{ email: alertValues.email, kindMember: alertValues.kindMember }}
+                            updateKindMember={updateKindMember}
+                        />
+                    )}
+
                     <BootstrapForm as={Form}>
                         <FormGroup>
                             <FormLabel htmlFor="email">

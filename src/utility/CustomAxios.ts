@@ -1,10 +1,12 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { IBook, ICountryData, IInvoice, IPaymentSheet, ISubCountryData, IUserData, IUsersListData } from '../components/Types/Types'
-import { CHANGE_KIND_MEMBER_URL, GET_ALL_COUNTRIES_URL, GET_SUBCOUNTRIES_URL } from '../resources/server_urls'
+import { IBook, ICountryData, IInvoice, IPaymentSheet, ISubCountryData, IUsersListData } from '../components/Types/Types'
+import { CHANGE_KIND_MEMBER_URL, CHANGE_MEMBER_ROLES_URL, GET_ALL_COUNTRIES_URL, GET_ALL_USERS_URL, GET_SUBCOUNTRIES_URL } from '../resources/server_urls'
 import { ICompany } from '../components/Companies/Types'
 import { LoginFormValues } from '../components/LoginForm'
-import { ChangeKindMemberValues } from 'components/MembersManager/ChangeKindMemberForm'
+import { ChangeKindMemberValues } from 'components/MembersManager/ChangeKindMember/ChangeKindMemberForm'
+import { UserProfile } from 'store/types/userTypes'
+import { ChangeMemberRolesValues } from 'components/MembersManager/ChangeMemberRole/ChangeMemberRolesForm'
 
 interface companiesAxiosResponse {
     companiesList: ICompany[]
@@ -118,7 +120,7 @@ export const useAxiosGetPaymentSheets = (url: string) => {
     return { data, error, loaded }
 }
 
-export const useAxiosGetAllUsersData = (url: string) => {
+export const useAxiosGetAllUsersData = () => {
     const [data, setData]: [IUsersListData, (data: IUsersListData) => void] = useState<IUsersListData>({ usersList: [] })
     const [loaded, setLoaded]: [boolean, (loading: boolean) => void] = useState<boolean>(false)
     const [error, setError]: [string, (error: string) => void] = useState('')
@@ -131,7 +133,7 @@ export const useAxiosGetAllUsersData = (url: string) => {
             }
         }
         axios
-            .get(url, axiosConfig)
+            .get(GET_ALL_USERS_URL, axiosConfig)
             .then((response) => {
                 setData(response.data as IUsersListData)
             })
@@ -225,7 +227,7 @@ export const useAxiosGetSubCountriesList = (countryNumericCode: number) => {
 }
 
 export const useAxiosChangeKindMember = (payload: ChangeKindMemberValues) => {
-    const [data, setData] = useState<IUserData>()
+    const [data, setData] = useState<UserProfile>()
     const [loaded, setLoaded]: [boolean, (loading: boolean) => void] = useState<boolean>(false)
     const [error, setError]: [string, (error: string) => void] = useState('')
     useEffect(() => {
@@ -236,7 +238,29 @@ export const useAxiosChangeKindMember = (payload: ChangeKindMemberValues) => {
             }
         }
         axios
-            .patch<IUserData>(CHANGE_KIND_MEMBER_URL, payload, axiosConfig)
+            .patch<UserProfile>(CHANGE_KIND_MEMBER_URL, payload, axiosConfig)
+            .then((response) => setData(response.data))
+            .catch((error: string) => setError(error))
+            .finally(() => setLoaded(true))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    return { data, error, loaded }
+}
+
+export const useAxiosChangeMemberRoles = (payload: ChangeMemberRolesValues) => {
+    const [data, setData] = useState<UserProfile>()
+    const [loaded, setLoaded]: [boolean, (loading: boolean) => void] = useState<boolean>(false)
+    const [error, setError]: [string, (error: string) => void] = useState('')
+    useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' //coincide con configuración de CORS en el backend
+            }
+        }
+        axios
+            .patch<UserProfile>(CHANGE_MEMBER_ROLES_URL, payload, axiosConfig)
             .then((response) => setData(response.data))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))

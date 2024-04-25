@@ -1,8 +1,8 @@
 import React from 'react'
-import { useAxiosChangeKindMember } from '../../utility/CustomAxios'
+import { useAxiosChangeKindMember } from '../../../utility/CustomAxios'
 import { Alert, Collapse, Spinner } from 'react-bootstrap'
-import { FloatingNotificationContainer } from '../../components/Common/FloatingNotificationContainer'
-import { renderKindMember } from '../../utility/userUtilities'
+import { FloatingNotificationContainer } from '../../Common/FloatingNotificationContainer'
+import { renderKindMember } from '../../../utility/userUtilities'
 import { KindMember } from 'store/types/userTypes'
 import { ChangeKindMemberValues } from './ChangeKindMemberForm'
 
@@ -10,7 +10,7 @@ interface IChangeKindMemberSubmitResultAlert {
     formData: ChangeKindMemberValues
     visibleParam: boolean
     closeFunction: React.Dispatch<React.SetStateAction<boolean>>
-    updateKindMember:  ( newKindMember: KindMember) => void;
+    updateKindMember: (newKindMember: KindMember) => void
 }
 
 const ChangeKindMemberSubmitResultAlert: React.FC<IChangeKindMemberSubmitResultAlert> = ({ updateKindMember, formData, visibleParam, closeFunction }) => {
@@ -33,10 +33,9 @@ const ChangeKindMemberSubmitResultAlert: React.FC<IChangeKindMemberSubmitResultA
     React.useEffect(() => {
         if (loaded && !error) {
             // La solicitud se completó con éxito, llama a updateKindMember para actualizar la tabla
-            updateKindMember(kindMember);
+            updateKindMember(kindMember)
         }
-    }, [loaded, error, updateKindMember,kindMember]);
-
+    }, [loaded, error, updateKindMember, kindMember])
 
     // Función para determinar la variante de la alerta
     React.useEffect(() => {

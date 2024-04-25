@@ -1,29 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import MembersManagerTable from '../components/MembersManager/MembersManagerTable'
-import axios from 'axios'
-import { IUsersListData } from '../components/Types/Types'
+
+import { useAxiosGetAllUsersData } from '../utility/CustomAxios'
+import { Spinner } from 'react-bootstrap'
+
 
 const MembersManagerPage: React.FC = () => {
-    const [data, setData] = useState<IUsersListData>({ usersList: [] })
-    const [loaded, setLoaded] = useState(false)
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get<IUsersListData>('https://xadreznaron.es:4443/api/user/getAll')
-                setData(response.data)
-                console.log('AXIOS DATA:')
-                console.log(response.data)
-                setLoaded(true)
-            } catch (error) {
-                console.error('Error fetching data:', error)
-                setLoaded(true)
-            }
-        }
-
-        void fetchData()
-    }, [])
-
-    return loaded ? <MembersManagerTable usersData={data.usersList}></MembersManagerTable> : <div></div>
+    const { data, error, loaded } = useAxiosGetAllUsersData()
+    console.log(error)
+    return <> {(loaded  || !data) ? <MembersManagerTable usersData={data.usersList}></MembersManagerTable> 
+     : <Spinner animation="border" variant="primary" />}
+     </>
 }
 
 export default MembersManagerPage

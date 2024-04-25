@@ -2,16 +2,16 @@
 import React, { useMemo, useState } from 'react'
 import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'react-table'
 import { Button } from 'react-bootstrap'
-import { InfoCircle, PersonGear } from 'react-bootstrap-icons'
+import { Gear, InfoCircle, PersonGear } from 'react-bootstrap-icons'
 import { Table } from 'react-bootstrap'
-import { IUserData } from '../Types/Types'
 import MemberModalProfileInfo from './MemberModalProfileInfo'
-import { renderKindMember } from '../../utility/userUtilities'
-import ChangeKindMemberModal from './ChangeKindMemberModal'
-import { KindMember } from 'store/types/userTypes'
+import { renderKindMember, renderUserRoles } from '../../utility/userUtilities'
+import ChangeKindMemberModal from './ChangeKindMember/ChangeKindMemberModal'
+import { KindMember, UserProfile, UserRole } from 'store/types/userTypes'
+import ChangeMemberRolesModal from './ChangeMemberRole/ChangeMemberRolesModal'
 
 interface Props {
-    usersData: IUserData[]
+    usersData: UserProfile[]
 }
 
 /**
@@ -21,45 +21,55 @@ interface Props {
  */
 const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const [data, setData] = useState<IUserData[]>(useMemo(() => usersData, [])) //Caching data
+    const [data, setData] = useState<UserProfile[]>(useMemo(() => usersData, [])) //Caching data
     const [memberInfoModal, setMemberInfoModal] = useState(false)
     const [changeKindMemberModal, setChangeKindMemberModal] = useState(false)
-    const [selectedRow, setSelectedRow] = useState<IUserData | undefined>() // Updated typing here
-    const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null);
-
-
+    const [changeMemberRoleModal, setChangeMemberRoleModal] = useState(false)
+    const [selectedRow, setSelectedRow] = useState<UserProfile | undefined>() // Updated typing here
+    const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null)
 
     const updateKindMember = (newKindMember: KindMember) => {
         if (selectedRowIndex !== null) {
-            setData(prevData => {
-                const newData = [...prevData];
-                newData[selectedRowIndex].kindMember = newKindMember;
-                return newData;
-            });
+            setData((prevData) => {
+                const newData = [...prevData]
+                newData[selectedRowIndex].kindMember = newKindMember
+                return newData
+            })
         }
-    };
+    }
 
-    const columns: Column<IUserData>[] = useMemo(
+    const updateMemberRoles = (newUserRoles: UserRole[]) => {
+        if (selectedRowIndex !== null) {
+            setData((prevData) => {
+                const newData = [...prevData]
+                newData[selectedRowIndex].userRoles = newUserRoles
+                return newData
+            })
+        }
+    }
+    
+
+    const columns: Column<UserProfile>[] = useMemo(
         () => [
             {
                 Header: 'D.N.I.',
-                accessor: (d: IUserData) => d.dni
+                accessor: (d: UserProfile) => d.dni
             },
             {
                 Header: 'Nombre',
-                accessor: (d: IUserData) => d.name
+                accessor: (d: UserProfile) => d.name
             },
             {
                 Header: 'Apellidos',
-                accessor: (d: IUserData) => d.firstSurname + ' ' + d.secondSurname
+                accessor: (d: UserProfile) => d.firstSurname + ' ' + d.secondSurname
             },
             {
                 Header: 'Rol del socio',
-                accessor: (d: IUserData) => /**renderUserRoles**/ d.userRoles
+                accessor: (d: UserProfile) => renderUserRoles(d.userRoles)
             },
             {
                 Header: 'Estado',
-                accessor: (d: IUserData) => renderKindMember(d.kindMember)
+                accessor: (d: UserProfile) => renderKindMember(d.kindMember)
             }
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -88,14 +98,26 @@ const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
             const clone = [...data]
             const selRow = clone[props.row.index]
             setSelectedRow(selRow)
-            setSelectedRowIndex(props.row.index); // Set the selected row index
+            setSelectedRowIndex(props.row.index) // Set the selected row index
             setChangeKindMemberModal(true)
         }
     }
 
+    const EditMemberRoleButtonClickHandler = (props: {
+        row: {
+            index: number
+        }
+    }) => {
+        if (props.row) {
+            const clone = [...data]
+            const selRow = clone[props.row.index]
+            setSelectedRow(selRow)
+            setSelectedRowIndex(props.row.index) // Set the selected row index
+            setChangeMemberRoleModal(true)
+        }
+    }
 
-
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, preGlobalFilteredRows, setGlobalFilter, state } = useTable<IUserData>(
+    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, preGlobalFilteredRows, setGlobalFilter, state } = useTable<UserProfile>(
         { columns, data },
         useGlobalFilter,
         useSortBy,
@@ -113,7 +135,10 @@ const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
                                 <InfoCircle aria-description="Datos completos" />
                             </Button>
                             <Button variant="info" onClick={() => EditKindMemberButtonClickHandler(tableProps)}>
-                                <PersonGear aria-description="Modificar rol del socio" />
+                                <PersonGear aria-description="Modificar el estado del socio" />
+                            </Button>
+                            <Button variant="info" onClick={() => EditMemberRoleButtonClickHandler(tableProps)}>
+                                <Gear aria-description="Modificar rol del socio" />
                             </Button>
                         </div>
                     )
@@ -121,7 +146,7 @@ const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
             ])
         }
     )
-
+    console.log('RENDERING MEMBERS TABLE')
     return (
         <>
             <Table striped bordered hover responsive {...getTableProps()}>
@@ -166,7 +191,18 @@ const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
                 memberName={selectedRow?.name}
                 kindMember={selectedRow?.kindMember}
             />
-        </>
+            <ChangeMemberRolesModal
+                show={changeMemberRoleModal}
+                //CAMBIAR LINEA DE ABAJO FUNCION NO CORRECTA
+                updateMemberRoles={updateMemberRoles}
+                onHide={() => setChangeMemberRoleModal(false)}
+                memberFirstSurname={selectedRow?.firstSurname}
+                memberSecondSurname={selectedRow?.secondSurname}
+                memberEmail={selectedRow?.email?  selectedRow.email : ''}
+                memberName={selectedRow?.name}
+                memberRoles={selectedRow?.userRoles? selectedRow.userRoles : [] }
+            />
+        </> 
     )
 }
 
