@@ -71,7 +71,6 @@ export const LoginForm: React.FC<any> = () => {
                             setAlertMessage('Error: algo inesperado. Recarga o intentalo mas tarde.')
                         }
                     })
-                //console.log('submited Login')
                 actions.setSubmitting(false)
             }}
             validationSchema={LogInValidationSchema}

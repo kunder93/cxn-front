@@ -13,11 +13,9 @@ interface IChangeMemberRolesSubmitResultAlert {
 }
 
 const ChangeMemberRolesSubmitResultAlert: React.FC<IChangeMemberRolesSubmitResultAlert> = ({ updateMemberRoles, formData, visibleParam, closeFunction }) => {
-    const { userRoles, email } = formData
+    const { userRoles } = formData
     const { data, error, loaded } = useAxiosChangeMemberRoles(formData)
     const [variant, setVariant] = React.useState('info')
-    console.log(data)
-    console.log(email)
     // Función para determinar el contenido y el estilo de la alerta
     const determineAlertContent = () => {
         if (!loaded) {

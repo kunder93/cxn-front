@@ -4,6 +4,19 @@ import { UserRole } from '../../../store/types/userTypes'
 import { FormControl, FormGroup, FormLabel } from 'react-bootstrap'
 import { Form as BootstrapForm } from 'react-bootstrap'
 import ChangeMemberRolesSubmitResultAlert from './ChangeMemberRoleSubmitResultAlert'
+import styled from 'styled-components'
+
+const CheckBoxesGroup = styled(FormGroup)`
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+`
+
+const CheckBoxLabel = styled(FormLabel)`
+    & > input {
+        margin-left: 0.5rem; /* Ajusta el valor según necesites */
+    }
+`
 
 export interface ChangeMemberRolesValues extends FormikValues {
     email: string
@@ -24,7 +37,6 @@ const ChangeMemberRolesForm: React.FC<ChangeMemberRolesFormProps> = ({ formikRef
     const { userRoles, email } = formData
     const [visibleAlert, setVisibleAlert] = React.useState(false)
     const [alertValues, setAlertValues] = React.useState<ChangeMemberRolesValues>({ email: '', userRoles: [] })
-    console.log('MEMBER ROLES FORM RENDERING')
     return (
         <Formik
             innerRef={formikRef}
@@ -51,33 +63,35 @@ const ChangeMemberRolesForm: React.FC<ChangeMemberRolesFormProps> = ({ formikRef
                             </FormLabel>
                             <FormControl as={Field} id="email" name="email" type="text" value={values.email} readOnly />
                         </FormGroup>
-                        <FormGroup>
-                            <h2>Roles asignados:</h2>
-                            <FormLabel >
-                                <strong>ADMIN</strong>
-                                <Field type="checkbox" name="userRoles" value={UserRole.ADMIN} />
-                            </FormLabel>
-                            <br/>
-                            <FormLabel >
-                                <strong>PRESIDENTE</strong>
-                                <Field type="checkbox" name="userRoles" value={UserRole.PRESIDENTE} />
-                            </FormLabel>
-                            <br/>
-                            <FormLabel htmlFor="kindMember">
-                                <strong>SECRETARIO</strong>
-                                <Field type="checkbox" name="userRoles" value={UserRole.SECRETARIO} />
-                            </FormLabel>
-                            <br/>
-                            <FormLabel htmlFor="kindMember">
-                                <strong>TESORERO</strong>
-                                <Field type="checkbox" name="userRoles" value={UserRole.TESORERO} />
-                            </FormLabel>
-                            <br/>
-                            <FormLabel htmlFor="kindMember">
-                                <strong>SOCIO</strong>
-                                <Field type="checkbox" name="userRoles" value={UserRole.SOCIO} />
-                            </FormLabel>
-                        </FormGroup>
+                        <div>
+                            <strong>Roles asignados:</strong>
+                            <CheckBoxesGroup>
+                                <CheckBoxLabel>
+                                    <strong>ADMIN</strong>
+                                    <Field type="checkbox" name="userRoles" value={UserRole.ADMIN} />
+                                </CheckBoxLabel>
+                                <CheckBoxLabel>
+                                    <strong>PRESIDENTE</strong>
+                                    <Field type="checkbox" name="userRoles" value={UserRole.PRESIDENTE} />
+                                </CheckBoxLabel>
+                                <CheckBoxLabel htmlFor="kindMember">
+                                    <strong>SECRETARIO</strong>
+                                    <Field type="checkbox" name="userRoles" value={UserRole.SECRETARIO} />
+                                </CheckBoxLabel>
+                                <CheckBoxLabel htmlFor="kindMember">
+                                    <strong>TESORERO</strong>
+                                    <Field type="checkbox" name="userRoles" value={UserRole.TESORERO} />
+                                </CheckBoxLabel>
+                                <CheckBoxLabel htmlFor="kindMember">
+                                    <strong>SOCIO</strong>
+                                    <Field type="checkbox" name="userRoles" value={UserRole.SOCIO} />
+                                </CheckBoxLabel>
+                                <CheckBoxLabel htmlFor="kindMember">
+                                    <strong>SOCIO CANDIDATO</strong>
+                                    <Field type="checkbox" name="userRoles" value={UserRole.SOCIO_CANDIDATO} />
+                                </CheckBoxLabel>
+                            </CheckBoxesGroup>
+                        </div>
                     </BootstrapForm>
                 </>
             )}

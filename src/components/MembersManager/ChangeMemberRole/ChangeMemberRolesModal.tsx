@@ -19,7 +19,6 @@ interface ChangeMemberRolesModalProps extends ModalProps {
 }
 
 const ChangeMemberRolesModal: React.FC<ChangeMemberRolesModalProps> = ({ memberName,memberEmail, memberFirstSurname, memberSecondSurname, memberRoles,updateMemberRoles, ...props }) => {
-    console.log('MEMBER ROLES MODAL RENDERING')
     // Formik form ref for use submit when click Button.
     const formRef = React.useRef<FormikProps<ChangeMemberRolesValues>>(null)
 

@@ -29,6 +29,8 @@ export function renderUserRoles(value: UserRole[]): string {
                     return 'TESORERO'
                 case UserRole.SOCIO:
                     return 'SOCIO'
+                case UserRole.SOCIO_CANDIDATO:
+                        return 'CANDIDATO A SOCIO'
                 default:
                     return 'NO CONOCIDO'
             }

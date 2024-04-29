@@ -14,11 +14,9 @@ interface IChangeKindMemberSubmitResultAlert {
 }
 
 const ChangeKindMemberSubmitResultAlert: React.FC<IChangeKindMemberSubmitResultAlert> = ({ updateKindMember, formData, visibleParam, closeFunction }) => {
-    const { kindMember, email } = formData
-    const { data, error, loaded } = useAxiosChangeKindMember(formData)
+    const { kindMember /*, email */ } = formData
+    const { /*data,*/ error, loaded } = useAxiosChangeKindMember(formData)
     const [variant, setVariant] = React.useState('info')
-    console.log(data)
-    console.log(email)
     // Función para determinar el contenido y el estilo de la alerta
     const determineAlertContent = () => {
         if (!loaded) {
@@ -35,7 +33,8 @@ const ChangeKindMemberSubmitResultAlert: React.FC<IChangeKindMemberSubmitResultA
             // La solicitud se completó con éxito, llama a updateKindMember para actualizar la tabla
             updateKindMember(kindMember)
         }
-    }, [loaded, error, updateKindMember, kindMember])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loaded, error, kindMember])
 
     // Función para determinar la variante de la alerta
     React.useEffect(() => {

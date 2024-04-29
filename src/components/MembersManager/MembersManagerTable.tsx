@@ -146,7 +146,6 @@ const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
             ])
         }
     )
-    console.log('RENDERING MEMBERS TABLE')
     return (
         <>
             <Table striped bordered hover responsive {...getTableProps()}>
