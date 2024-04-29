@@ -25,6 +25,17 @@ export interface UserProfile {
     email: string
     kindMember: KindMember
     userRoles: UserRole[]
+    userAddress: UserAddress
+}
+
+export interface UserAddress{
+    postalCode: number
+    apartmentNumber: number
+    building: string
+    street: string
+    city: string
+    countryName: string
+    subCountryName: string
 }
 
 export interface UserState {

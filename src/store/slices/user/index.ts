@@ -13,7 +13,16 @@ const initialState: UserState = {
         email: '',
         birthDate: new Date(),
         userRoles: [] as UserRole[], // Inicializamos como un array vacío de roles
-        kindMember: KindMember.SOCIO_NUMERO // Valor predeterminado para kindMember
+        kindMember: KindMember.SOCIO_NUMERO, // Valor predeterminado para kindMember
+        userAddress: { // Dirección del usuario
+            postalCode: 0,
+            apartmentNumber: 0,
+            building: '',
+            street: '',
+            city: '',
+            countryName: '',
+            subCountryName: ''
+        }
     }
 }
 

@@ -48,7 +48,6 @@ const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
         }
     }
     
-
     const columns: Column<UserProfile>[] = useMemo(
         () => [
             {
@@ -179,7 +178,7 @@ const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
             </div>
             {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment*/}
             <input type="text" value={state.globalFilter} onChange={(event) => setGlobalFilter(event.target.value)} />
-            <MemberModalProfileInfo show={memberInfoModal} onHide={() => setMemberInfoModal(false)} row={selectedRow ?? {}} />
+            <MemberModalProfileInfo show={memberInfoModal} onHide={() => setMemberInfoModal(false)} row={selectedRow} />
             <ChangeKindMemberModal
                 show={changeKindMemberModal}
                 updateKindMember={updateKindMember}
@@ -192,7 +191,6 @@ const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
             />
             <ChangeMemberRolesModal
                 show={changeMemberRoleModal}
-                //CAMBIAR LINEA DE ABAJO FUNCION NO CORRECTA
                 updateMemberRoles={updateMemberRoles}
                 onHide={() => setChangeMemberRoleModal(false)}
                 memberFirstSurname={selectedRow?.firstSurname}
