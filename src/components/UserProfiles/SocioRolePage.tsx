@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, Container } from 'react-bootstrap'
 import { useAppSelector } from '../../store/hooks'
 import styled from 'styled-components'
 import { UserProfile } from '../../store/types/userTypes'
 import { renderGenderValues, renderKindMember, renderUserRoles } from '../../utility/userUtilities'
+import ChangeEmailModal from '../MyProfile/ChangeEmail/ChangeEmailModal'
 
 const CustomRow = styled.div`
     border-top: 2px solid grey;
@@ -28,6 +29,13 @@ const StyledContainer = styled(Container)`
 
 const SocioRolePage: React.FC = () => {
     const userProfile: UserProfile = useAppSelector((state) => state.users.userProfile)
+
+    const [emailModal, setEmailModal] = useState(false)
+
+    function handleChangeEmail() {
+        setEmailModal(true)
+    }
+
     return (
         <StyledContainer>
             <h1>Información personal:</h1>
@@ -64,7 +72,17 @@ const SocioRolePage: React.FC = () => {
                 <CustomCol>{renderUserRoles(userProfile.userRoles)}</CustomCol>
             </CustomRow>
 
-            <Button variant="success">Cambiar correo</Button>
+            <Button onClick={handleChangeEmail} variant="success">
+                Cambiar correo
+            </Button>
+            <ChangeEmailModal
+                show={emailModal}
+                onHide={() => setEmailModal(false)}
+                userEmail={userProfile.email}
+                name={userProfile.name}
+                firstSurname={userProfile.firstSurname}
+                secondSurname={userProfile.secondSurname}
+            ></ChangeEmailModal>
             <Button variant="success">Cambiar contraseña</Button>
             <Button variant="danger">Darse de baja</Button>
         </StyledContainer>

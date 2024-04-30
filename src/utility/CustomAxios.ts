@@ -1,12 +1,13 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { IBook, ICountryData, IInvoice, IPaymentSheet, ISubCountryData, IUsersListData } from '../components/Types/Types'
-import { CHANGE_KIND_MEMBER_URL, CHANGE_MEMBER_ROLES_URL, GET_ALL_COUNTRIES_URL, GET_ALL_USERS_URL, GET_SUBCOUNTRIES_URL } from '../resources/server_urls'
+import { CHANGE_KIND_MEMBER_URL, CHANGE_MEMBER_EMAIL_URL, CHANGE_MEMBER_ROLES_URL, GET_ALL_COUNTRIES_URL, GET_ALL_USERS_URL, GET_SUBCOUNTRIES_URL } from '../resources/server_urls'
 import { ICompany } from '../components/Companies/Types'
 import { LoginFormValues } from '../components/LoginForm'
 import { ChangeKindMemberValues } from 'components/MembersManager/ChangeKindMember/ChangeKindMemberForm'
 import { UserProfile } from 'store/types/userTypes'
 import { ChangeMemberRolesValues } from 'components/MembersManager/ChangeMemberRole/ChangeMemberRolesForm'
+import { ChangeEmailAxiosValues } from 'components/MyProfile/ChangeEmail/ChangeUserEmailResultAlert'
 
 interface companiesAxiosResponse {
     companiesList: ICompany[]
@@ -269,3 +270,26 @@ export const useAxiosChangeMemberRoles = (payload: ChangeMemberRolesValues) => {
 
     return { data, error, loaded }
 }
+
+export const useAxiosChangeUserEmail = (payload: ChangeEmailAxiosValues) => {
+    const [data, setData] = useState<UserProfile>()
+    const [loaded, setLoaded]: [boolean, (loading: boolean) => void] = useState<boolean>(false)
+    const [error, setError]: [string, (error: string) => void] = useState('')
+    useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' //coincide con configuración de CORS en el backend
+            }
+        }
+        axios
+            .patch<UserProfile>(CHANGE_MEMBER_EMAIL_URL, payload, axiosConfig)
+            .then((response) => setData(response.data))
+            .catch((error: string) => setError(error))
+            .finally(() => setLoaded(true))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    return { data, error, loaded }
+}
+
