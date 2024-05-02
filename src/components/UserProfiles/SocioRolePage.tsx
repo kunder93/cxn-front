@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { UserProfile } from '../../store/types/userTypes'
 import { renderGenderValues, renderKindMember, renderUserRoles } from '../../utility/userUtilities'
 import ChangeEmailModal from '../MyProfile/ChangeEmail/ChangeEmailModal'
+import ChangePasswordModal from '../../components/MyProfile/ChangePassword/ChangePasswordModal'
 
 const CustomRow = styled.div`
     border-top: 2px solid grey;
@@ -31,9 +32,12 @@ const SocioRolePage: React.FC = () => {
     const userProfile: UserProfile = useAppSelector((state) => state.users.userProfile)
 
     const [emailModal, setEmailModal] = useState(false)
-
+    const [passwordModal, setPasswordModal] = useState(false)
     function handleChangeEmail() {
         setEmailModal(true)
+    }
+    function handleChangePassword(){
+        setPasswordModal(true)
     }
 
     return (
@@ -83,7 +87,16 @@ const SocioRolePage: React.FC = () => {
                 firstSurname={userProfile.firstSurname}
                 secondSurname={userProfile.secondSurname}
             ></ChangeEmailModal>
-            <Button variant="success">Cambiar contraseña</Button>
+            <Button variant="success" onClick={handleChangePassword} >Cambiar contraseña</Button>
+            <ChangePasswordModal
+                show={passwordModal}
+                onHide={() => setPasswordModal(false)}
+                userEmail={userProfile.email}
+                name={userProfile.name}
+                firstSurname={userProfile.firstSurname}
+                secondSurname={userProfile.secondSurname}
+            ></ChangePasswordModal>
+
             <Button variant="danger">Darse de baja</Button>
         </StyledContainer>
     )
