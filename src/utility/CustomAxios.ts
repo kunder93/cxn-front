@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { IBook, ICountryData, IInvoice, IPaymentSheet, ISubCountryData, IUsersListData } from '../components/Types/Types'
-import { CHANGE_KIND_MEMBER_URL, CHANGE_MEMBER_EMAIL_URL, CHANGE_MEMBER_PASSWORD_URL, CHANGE_MEMBER_ROLES_URL, GET_ALL_COUNTRIES_URL, GET_ALL_USERS_URL, GET_SUBCOUNTRIES_URL } from '../resources/server_urls'
+import { CHANGE_KIND_MEMBER_URL, CHANGE_MEMBER_EMAIL_URL, CHANGE_MEMBER_PASSWORD_URL, CHANGE_MEMBER_ROLES_URL, GET_ALL_COUNTRIES_URL, GET_ALL_USERS_URL, GET_SUBCOUNTRIES_URL, UNSUBSCRIBE_MEMBER_URL } from '../resources/server_urls'
 import { ICompany } from '../components/Companies/Types'
 import { LoginFormValues } from '../components/LoginForm'
 import { ChangeKindMemberValues } from 'components/MembersManager/ChangeKindMember/ChangeKindMemberForm'
@@ -9,6 +9,7 @@ import { UserProfile } from 'store/types/userTypes'
 import { ChangeMemberRolesValues } from 'components/MembersManager/ChangeMemberRole/ChangeMemberRolesForm'
 import { ChangeEmailAxiosValues } from 'components/MyProfile/ChangeEmail/ChangeUserEmailResultAlert'
 import { ChangePasswordAxiosValues } from 'components/MyProfile/ChangePassword/ChangeUserPasswordResultAlert'
+import { UnsubscribeMemberAxiosValues } from 'components/MyProfile/UnsubscribeMember/UnsubscribeMemberResultAlert'
 
 interface companiesAxiosResponse {
     companiesList: ICompany[]
@@ -316,4 +317,27 @@ export const useAxiosChangeUserPassword = (payload: ChangePasswordAxiosValues) =
     return { data, error, loaded }
 }
 
+
+export const useAxiosUnsubscribeMember = (payload: UnsubscribeMemberAxiosValues) => {
+    const [data, setData] = useState<UserProfile>();
+    const [loaded, setLoaded] = useState<boolean>(false);
+    const [error, setError] = useState<string>('');
+
+    useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' //coincide con configuración de CORS en el backend
+            }
+        };
+
+        axios
+            .delete<UserProfile>(UNSUBSCRIBE_MEMBER_URL, { ...axiosConfig, data: payload }) // Include payload in the data field
+            .then((response) => setData(response.data))
+            .catch((error:string) => setError(error)) // Catching the error object
+            .finally(() => setLoaded(true));
+    }, [payload]);
+
+    return { data, error, loaded };
+};
 

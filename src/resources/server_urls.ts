@@ -37,3 +37,5 @@ export const CHANGE_MEMBER_ROLES_URL = BASE_URL + 'api/user/role'
 export const CHANGE_MEMBER_EMAIL_URL = BASE_URL + 'api/user/changeEmail'
 
 export const CHANGE_MEMBER_PASSWORD_URL = BASE_URL + 'api/user/changePassword'
+
+export const UNSUBSCRIBE_MEMBER_URL = BASE_URL + 'api/user/unsubscribe'

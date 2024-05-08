@@ -6,6 +6,7 @@ import { UserProfile } from '../../store/types/userTypes'
 import { renderGenderValues, renderKindMember, renderUserRoles } from '../../utility/userUtilities'
 import ChangeEmailModal from '../MyProfile/ChangeEmail/ChangeEmailModal'
 import ChangePasswordModal from '../../components/MyProfile/ChangePassword/ChangePasswordModal'
+import UnsubscribeMemberModal from '../../components/MyProfile/UnsubscribeMember/UnsubscribeMemberModal'
 
 const CustomRow = styled.div`
     border-top: 2px solid grey;
@@ -33,11 +34,15 @@ const SocioRolePage: React.FC = () => {
 
     const [emailModal, setEmailModal] = useState(false)
     const [passwordModal, setPasswordModal] = useState(false)
+    const [unsubscribeMemberModal, setUnsubscribeMemberModal] = useState(false)
     function handleChangeEmail() {
         setEmailModal(true)
     }
     function handleChangePassword(){
         setPasswordModal(true)
+    }
+    function handleUnsubscribeMember(){
+        setUnsubscribeMemberModal(true)
     }
 
     return (
@@ -96,8 +101,17 @@ const SocioRolePage: React.FC = () => {
                 firstSurname={userProfile.firstSurname}
                 secondSurname={userProfile.secondSurname}
             ></ChangePasswordModal>
+            <Button variant="danger" onClick={handleUnsubscribeMember}>Darse de baja</Button>
+            <UnsubscribeMemberModal
+                show={unsubscribeMemberModal}
+                onHide={() => setUnsubscribeMemberModal(false)}
+                userEmail={userProfile.email}
+                name={userProfile.name}
+                firstSurname={userProfile.firstSurname}
+                secondSurname={userProfile.secondSurname}
+            ></UnsubscribeMemberModal>
 
-            <Button variant="danger">Darse de baja</Button>
+
         </StyledContainer>
     )
 }
