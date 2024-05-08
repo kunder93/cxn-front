@@ -2,7 +2,10 @@ import { FloatingNotificationContainer } from '../../Common/FloatingNotification
 import React from 'react'
 import { Alert, Collapse, Spinner } from 'react-bootstrap'
 import { useAxiosUnsubscribeMember } from '../../../utility/CustomAxios'
-import { setUserProfile } from '../../../store/slices/user'
+import { removeJwt, removeUserProfile, setUserProfile } from '../../../store/slices/user'
+import { useNavigate } from 'react-router'
+import { ROUTES } from '../../../resources/routes-constants'
+import { useAppDispatch } from '../../../store/hooks'
 
 export interface UnsubscribeMemberAxiosValues {
     email: string
@@ -17,7 +20,8 @@ interface IUnsubscribeMemberSubmitResultAlert {
 
 const ChangeUserEmailResultAlert: React.FC<IUnsubscribeMemberSubmitResultAlert> = ({ visibleParam, closeFunction, formData }) => {
     const [variant, setVariant] = React.useState('info')
-
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
     const { data, error, loaded } = useAxiosUnsubscribeMember(formData)
 
     const determineAlertContent = () => {
@@ -28,7 +32,7 @@ const ChangeUserEmailResultAlert: React.FC<IUnsubscribeMemberSubmitResultAlert> 
         } else {
             data && setUserProfile(data)
 
-            return 'Se ha cambiado el email a: ' + data?.email
+            return 'Se ha cambiado el email a: ' + data?.email + ', vuelve a entrar en tu cuenta.'
         }
     }
 
@@ -41,21 +45,27 @@ const ChangeUserEmailResultAlert: React.FC<IUnsubscribeMemberSubmitResultAlert> 
         }
     }, [error])
 
-    // Efecto secundario para ocultar la alerta después de 5 segundos
+    // Hide alert after 5 seconds and delete user data, jwt token and go to HOMEPAGE.
     React.useEffect(() => {
+        const logoutHandler = () => {
+            dispatch(removeJwt())
+            dispatch(removeUserProfile())
+            navigate(ROUTES.HOMEPAGE_ROUTE)
+        }
         const timer = setTimeout(() => {
             closeFunction(false)
+            if (!error && data) {
+                logoutHandler()
+                navigate('/')
+            }
         }, 5000)
 
         // Limpia el temporizador al desmontar el componente
         return () => clearTimeout(timer)
-    }, [closeFunction])
-    const handleExit = () => {
-        console.log('exit')
-    }
+    }, [closeFunction, data, dispatch, error, navigate])
 
     return (
-        <Collapse in={visibleParam} onExited={handleExit}>
+        <Collapse in={visibleParam}>
             <FloatingNotificationContainer>
                 <Alert variant={variant}>{determineAlertContent()}</Alert>
             </FloatingNotificationContainer>

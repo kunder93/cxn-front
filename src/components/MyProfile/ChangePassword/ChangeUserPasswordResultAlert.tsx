@@ -1,8 +1,11 @@
 import { FloatingNotificationContainer } from '../../Common/FloatingNotificationContainer'
 import React from 'react'
 import { Alert, Collapse, Spinner } from 'react-bootstrap'
-import { setUserProfile } from '../../../store/slices/user'
+import { removeJwt, removeUserProfile, setUserProfile } from '../../../store/slices/user'
 import { useAxiosChangeUserPassword } from '../../../utility/CustomAxios'
+import { ROUTES } from '../../../resources/routes-constants'
+import { useAppDispatch } from '../../../store/hooks'
+import { useNavigate } from 'react-router'
 
 export interface ChangePasswordAxiosValues {
     email: string
@@ -18,7 +21,8 @@ interface IChangePasswordSubmitResultAlert {
 
 const ChangeUserPasswordResultAlert: React.FC<IChangePasswordSubmitResultAlert> = ({ visibleParam, closeFunction, formData }) => {
     const [variant, setVariant] = React.useState('info')
-
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
     const { data, error, loaded } = useAxiosChangeUserPassword(formData)
 
     const determineAlertContent = () => {
@@ -29,11 +33,11 @@ const ChangeUserPasswordResultAlert: React.FC<IChangePasswordSubmitResultAlert> 
         } else {
             data && setUserProfile(data)
 
-            return 'Se ha cambiado el email a: ' + data?.email
+            return 'Se ha cambiado el email a: ' + data?.email + ', vuelve a entrar en tu cuenta.'
         }
     }
 
-    // Función para determinar la variante de la alerta
+    // Stablish alert variant.
     React.useEffect(() => {
         if (error) {
             setVariant('danger')
@@ -42,21 +46,27 @@ const ChangeUserPasswordResultAlert: React.FC<IChangePasswordSubmitResultAlert> 
         }
     }, [error])
 
-    // Efecto secundario para ocultar la alerta después de 5 segundos
+    // Hide alert after 5 seconds and delete user data, jwt token and go to HOMEPAGE.
     React.useEffect(() => {
+        const logoutHandler = () => {
+            dispatch(removeJwt())
+            dispatch(removeUserProfile())
+            navigate(ROUTES.HOMEPAGE_ROUTE)
+        }
         const timer = setTimeout(() => {
             closeFunction(false)
+            if (!error && data) {
+                logoutHandler()
+                navigate('/')
+            }
         }, 5000)
 
         // Limpia el temporizador al desmontar el componente
         return () => clearTimeout(timer)
-    }, [closeFunction])
-    const handleExit = () => {
-        console.log('exit')
-    }
+    }, [closeFunction, data, dispatch, error, navigate])
 
     return (
-        <Collapse in={visibleParam} onExited={handleExit}>
+        <Collapse in={visibleParam}>
             <FloatingNotificationContainer>
                 <Alert variant={variant}>{determineAlertContent()}</Alert>
             </FloatingNotificationContainer>
