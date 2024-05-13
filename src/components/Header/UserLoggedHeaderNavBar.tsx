@@ -65,7 +65,7 @@ const UserLoggedHeaderNavBar: React.FC = () => {
     return (
         <Nav className="ms-auto">
             <Nav.Link as={Link} to={ROUTES.MYPROFILE_ROUTE}>
-                My perfil
+                Zona Socio
             </Nav.Link>
             <Nav.Link as={Link} to={ROUTES.HOMEPAGE_ROUTE} onClick={logoutHandler}>
                 Salir
