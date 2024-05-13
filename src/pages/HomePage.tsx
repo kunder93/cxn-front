@@ -24,7 +24,7 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
             {
                 buttonText: 'Pide hasta 1 mes de prueba',
                 buttonAction: ButtonOptions.MODAL,
-                component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'FORMULARIO DE INFORMACION: CLASES PARA NIÑOS'} />
+                component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'FORMULARIO DE INFORMACION: CLASES PARA NIÑOS'} category={'CLASES NIÑOS'} />
             }
         ]
     },
@@ -39,7 +39,7 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
                 buttonText: 'Solicitar info',
                 buttonAction: ButtonOptions.MODAL,
                 component: (
-                    <MoreInfoForm initialTopic={'¿CUÁLES SON LOS PRÓXIMOS TORNEOS?'} formTitle={'FORMULARIO DE INFORMACIÓN: PRÓXIMOS TORNEOS'}></MoreInfoForm>
+                    <MoreInfoForm initialTopic={'¿CUÁLES SON LOS PRÓXIMOS TORNEOS?'} formTitle={'FORMULARIO DE INFORMACIÓN: PRÓXIMOS TORNEOS'} category={'PRÓXIMOS TORNEOS'}></MoreInfoForm>
                 )
             }
         ]
@@ -53,7 +53,7 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
             {
                 buttonText: 'Pide hasta 1 mes de prueba',
                 buttonAction: ButtonOptions.MODAL,
-                component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'FORMULARIO DE INFORMACION: CLASES PARA ADULTOS'}></MoreInfoForm>
+                component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'FORMULARIO DE INFORMACION: CLASES PARA ADULTOS'} category={'CLASES ADULTOS'}></MoreInfoForm>
             }
         ]
     }

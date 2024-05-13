@@ -119,7 +119,8 @@ const accordionData: BenefitsAccordionProps = {
     carouselBenefits: carouselBenefits,
     initialQuestionsFormTopic: 'CLASES INFANTILES',
     faqList: faqOldSchoolPairsQuestionAnswer,
-    photosData: photosData
+    photosData: photosData,
+    chessQuestionsFormCategory: 'CLASES ONLINE'
 }
 
 const SchoolOnline: React.FC = () => {
