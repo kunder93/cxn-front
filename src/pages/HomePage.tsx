@@ -243,13 +243,10 @@ const HomePage: React.FC = () => {
         return JSON.parse(jsonPayload)
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, no-unused-vars, @typescript-eslint/no-unused-vars
     const userJwt = useAppSelector((state: any) => state.users.jwt)
 
-    return userJwt ? (
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-        <h1>Welcome {parseJwt(userJwt).sub} !!</h1>
-    ) : (
+    return (
         <MainContainerStyled>
             <StyledMainCarouselSection>
                 <HomePageMainCarousel />
