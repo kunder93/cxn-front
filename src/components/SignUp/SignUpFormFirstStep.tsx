@@ -44,7 +44,7 @@ const SignUpFormFirstStep: React.FC<formFirstStepData> = (firstStepData: formFir
                 <Row>
                     <Col>
                         <BootstrapForm.Label htmlFor="password">Contraseña:</BootstrapForm.Label>
-                        <Field as={BootstrapForm.Control} id="password" type="password" name="password" placeholder="password" />
+                        <Field as={BootstrapForm.Control} id="password" type="password" name="password" placeholder="new password"  autoComplete="new-password"/>
                     </Col>
                 </Row>
                 <Row>
@@ -61,7 +61,7 @@ const SignUpFormFirstStep: React.FC<formFirstStepData> = (firstStepData: formFir
                 <Row>
                     <Col>
                         <BootstrapForm.Label htmlFor="confirmPassword">Confirma la contraseña:</BootstrapForm.Label>
-                        <Field as={BootstrapForm.Control} id="confirmPassword" type="password" name="confirmPassword" placeholder="Repeat password" />
+                        <Field as={BootstrapForm.Control} id="confirmPassword" type="password" name="confirmPassword" placeholder="Repeat password"  autoComplete="new-password"/>
                     </Col>
                 </Row>
                 <Row>

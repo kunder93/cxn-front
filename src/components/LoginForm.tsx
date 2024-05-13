@@ -71,7 +71,6 @@ export const LoginForm: React.FC<any> = () => {
                             setAlertMessage('Error: algo inesperado. Recarga o intentalo mas tarde.')
                         }
                     })
-                //console.log('submited Login')
                 actions.setSubmitting(false)
             }}
             validationSchema={LogInValidationSchema}
@@ -83,7 +82,7 @@ export const LoginForm: React.FC<any> = () => {
                         <Row>
                             <Col>
                                 <BootstrapForm.Label htmlFor="email">Email:</BootstrapForm.Label>
-                                <Field as={BootstrapForm.Control}  id="email" name="email" type="text" placeholder="email" />
+                                <Field as={BootstrapForm.Control}  id="email" name="email" type="text" placeholder="email" autoComplete="email" />
                             </Col>
                         </Row>
                         <Row>
@@ -92,7 +91,7 @@ export const LoginForm: React.FC<any> = () => {
                         <Row>
                             <Col>
                                 <BootstrapForm.Label htmlFor="password">Password:</BootstrapForm.Label>
-                                <Field as={BootstrapForm.Control}  id="password" type="password" name="password" placeholder="password" />
+                                <Field as={BootstrapForm.Control}  id="password" type="password" name="password" placeholder="contraseña" autoComplete="current-password"/>
                             </Col>
                         </Row>
                         <Row>

@@ -1,95 +1,53 @@
-import {createSlice} from "@reduxjs/toolkit"
+import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
+import { KindMember, UserProfile, UserRole, UserState } from '../../../store/types/userTypes'
 
-
-interface UserState {
-    jwt: string,
-    name: string,
-    firstSurname: string,
-    secondSurname: string,
-    gender: string,
-    email: string,
-    birthDate: string,
-    userRoles: string
-    kindMember: string
-  }
-
-const initialState = {
+const initialState: UserState = {
     jwt: '',
-    name: '',
-    firstSurname: '',
-    secondSurname: '',
-    gender: '',
-    email: '',
-    birthDate: '' ,
-    userRoles: ''
-
-  } as UserState
+    userProfile: {
+        dni: '',
+        name: '',
+        firstSurname: '',
+        secondSurname: '',
+        gender: '',
+        email: '',
+        birthDate: new Date(),
+        userRoles: [] as UserRole[], // Inicializamos como un array vacío de roles
+        kindMember: KindMember.SOCIO_NUMERO, // Valor predeterminado para kindMember
+        userAddress: { // Dirección del usuario
+            postalCode: 0,
+            apartmentNumber: 0,
+            building: '',
+            street: '',
+            city: '',
+            countryName: '',
+            subCountryName: ''
+        }
+    }
+}
 
 export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-      setJwt: (state, action: PayloadAction<string>) => {
-        state.jwt = action.payload
-      },
-      removeJwt: (state) => {
-        state.jwt = ''
-      },
-      setName:(state, action:PayloadAction<string>) => {
-        state.name = action.payload
-      },
-      removeName: (state) => {
-        state.name = ''
-      },
-      setFirstSurname:(state, action:PayloadAction<string>) => {
-        state.firstSurname = action.payload
-      },
-      removeFirstSurname: (state) => {
-        state.firstSurname = ''
-      },
-      setSecondSurname:(state, action:PayloadAction<string>) => {
-        state.secondSurname = action.payload
-      },
-      removeSecondSurname: (state) => {
-        state.secondSurname = ''
-      },
-      setGender:(state, action:PayloadAction<string>) => {
-        state.gender = action.payload
-      },
-      removeGender: (state) => {
-        state.gender = ''
-      },
-      setEmail:(state, action:PayloadAction<string>) => {
-        state.email = action.payload
-      },
-      removeEmail: (state) => {
-        state.email = ''
-      },
-      setBirthDate:(state, action:PayloadAction<string>) => {
-        state.birthDate = action.payload
-      },
-      removeBirthDate: (state) => {
-        state.birthDate = ''
-      },
-      setUserRoles:(state, action:PayloadAction<string>) => {
-        state.userRoles = action.payload
-      },
-      removeUserRoles: (state) => {
-        state.userRoles = ''
-      },
-      setKindMember: (state, action: PayloadAction<string>) => {
-        state.kindMember = action.payload
-      },
-      removeKindMember: (state) => {
-        state.kindMember = ''
-      }
-    },
-  })
+        // TOKEN JWT ACTIONS
+        setJwt: (state, action: PayloadAction<string>) => {
+            state.jwt = action.payload
+        },
+        removeJwt: (state) => {
+            state.jwt = ''
+        },
 
+        // USER PROFILE ACTIONS
+        setUserProfile: (state, action: PayloadAction<UserProfile>) => {
+            state.userProfile = action.payload
+        },
+        removeUserProfile: (state) => {
+            state.userProfile = initialState.userProfile
+        }
+    }
+})
 
-  export const { setJwt, removeJwt, setName,removeName,setFirstSurname,removeFirstSurname,setSecondSurname,removeSecondSurname,setGender,removeGender,setEmail,removeEmail,setBirthDate,removeBirthDate,setUserRoles,removeUserRoles,setKindMember, removeKindMember  } = userSlice.actions
+export const { setJwt, removeJwt, setUserProfile, removeUserProfile } = userSlice.actions
 
-  export default userSlice.reducer
-
-
+export default userSlice.reducer

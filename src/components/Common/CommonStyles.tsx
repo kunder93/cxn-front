@@ -8,7 +8,7 @@ const mainPageFontColor = 'white'
 //Accordion colors
 const accordionSectionHeaderBackgroundColor = ' #75674efc'
 const accordionSectionHeaderBackgroundColorExpanded = '#695839'
-const accordionSectionHeaderFontAndIconColorExpanded = '#15ff00'
+const accordionSectionHeaderFontAndIconColorExpanded = '#ffffff'
 const accordionSectionBodyBackgroundColor = '#d8cdba'
 export const carouselBackgroundSlideColor = accordionSectionBodyBackgroundColor
 export const principalFontColor = 'black'

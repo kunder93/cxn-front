@@ -127,7 +127,7 @@ const Footer: React.FC = () => {
                     <XuntaLogoStyled aria-label="Logo Xunta de Galicia"></XuntaLogoStyled>
                 </LinkStyle>
                 <LinkStyle href="https://narontec.es/" target="_blank" rel="noopener noreferrer" aria-label="Mas sobre patrocinador narontec." tabIndex={0}>
-                    <LogoNarontecStyled src="/Footer/logotipo-narontec-web.avif" alt="Logo patrocinador Narontec." />
+                    <LogoNarontecStyled src="/Footer/logotipo-narontec-web.avif" alt="Logo patrocinador Narontec." loading='lazy' />
                 </LinkStyle>
             </SpoonsorFooterContainer>
             <SocialNetworkFooterContainer>
