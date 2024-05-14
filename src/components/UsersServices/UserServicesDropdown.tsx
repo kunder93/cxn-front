@@ -1,12 +1,12 @@
 import React from 'react'
 
-import { IUserData } from '../Types/Types'
 import { Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '../../resources/routes-constants'
+import { UserProfile } from 'store/types/userTypes'
 
 interface Props {
-    data: IUserData[]
+    data: UserProfile[]
 }
 
 const UserServicesDropdown: React.FC<Props> = (props) => {

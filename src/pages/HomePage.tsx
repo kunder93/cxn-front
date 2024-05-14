@@ -24,7 +24,7 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
             {
                 buttonText: 'Pide hasta 1 mes de prueba',
                 buttonAction: ButtonOptions.MODAL,
-                component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'FORMULARIO DE INFORMACION: CLASES PARA NIÑOS'} />
+                component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'FORMULARIO DE INFORMACION: CLASES PARA NIÑOS'} category={'CLASES NIÑOS'} />
             }
         ]
     },
@@ -39,7 +39,7 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
                 buttonText: 'Solicitar info',
                 buttonAction: ButtonOptions.MODAL,
                 component: (
-                    <MoreInfoForm initialTopic={'¿CUÁLES SON LOS PRÓXIMOS TORNEOS?'} formTitle={'FORMULARIO DE INFORMACIÓN: PRÓXIMOS TORNEOS'}></MoreInfoForm>
+                    <MoreInfoForm initialTopic={'¿CUÁLES SON LOS PRÓXIMOS TORNEOS?'} formTitle={'FORMULARIO DE INFORMACIÓN: PRÓXIMOS TORNEOS'} category={'PRÓXIMOS TORNEOS'}></MoreInfoForm>
                 )
             }
         ]
@@ -53,7 +53,7 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
             {
                 buttonText: 'Pide hasta 1 mes de prueba',
                 buttonAction: ButtonOptions.MODAL,
-                component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'FORMULARIO DE INFORMACION: CLASES PARA ADULTOS'}></MoreInfoForm>
+                component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'FORMULARIO DE INFORMACION: CLASES PARA ADULTOS'} category={'CLASES ADULTOS'}></MoreInfoForm>
             }
         ]
     }
@@ -226,6 +226,7 @@ const MemberActivitiesArticle3 = styled(MemberActivitiesArticle)`
 
 const HomePage: React.FC = () => {
     SetPageTitle('CXN Principal')
+
     const parseJwt = (token: string) => {
         const base64Url = token.split('.')[1]
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
@@ -242,13 +243,10 @@ const HomePage: React.FC = () => {
         return JSON.parse(jsonPayload)
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, no-unused-vars, @typescript-eslint/no-unused-vars
     const userJwt = useAppSelector((state: any) => state.users.jwt)
 
-    return userJwt ? (
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-        <h1>Welcome {parseJwt(userJwt).sub} !!</h1>
-    ) : (
+    return (
         <MainContainerStyled>
             <StyledMainCarouselSection>
                 <HomePageMainCarousel />

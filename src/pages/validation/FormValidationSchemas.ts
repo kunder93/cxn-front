@@ -74,7 +74,7 @@ export const LogInValidationSchema = Yup.object().shape({
         .required('Se necesita un email!')
         .email('Email no válido')
         .min(6, 'Demasiado corto, minimo 6 caracteres!')
-        .max(20, 'Demasiado largo, maximo 20 caracteres!'),
+        .max(40, 'Demasiado largo, maximo 20 caracteres!'),
 
     password: Yup.string()
         .required('Se necesita una contraseña!')
