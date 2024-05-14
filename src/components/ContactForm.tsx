@@ -14,7 +14,6 @@ const validationSchema = Yup.object({
     messageContent: Yup.string().required('Es necesario por lo menos 20 caracteres.').min(20, 'Se necesitan 20 caracteres minimos.')
 })
 
-
 interface SubmitAxiosValues {
     email: string
     category: string
@@ -55,7 +54,6 @@ const FloatingNotification: React.FC<{ message: string; variant: string; onClose
         </Collapse>
     )
 }
-
 
 // Form component
 const ContactForm: React.FC = () => {
@@ -103,43 +101,42 @@ const ContactForm: React.FC = () => {
         <div>
             <h2>Formulario de contacto:</h2>
             <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
-            {({ isSubmitting, isValid }) => (
-                
-                <BootstrapForm as={Form}>
-                    <BootstrapForm.Group className="mb-3">
-                        <BootstrapForm.Label htmlFor="email">Correo electrónico:</BootstrapForm.Label>
-                        <BootstrapForm.Control as={Field} type="email" name="email" title="email" id="email" placeholder="Tu correo electrónico!" />
-                        <ErrorMessage name="email" component="div" className="alert alert-danger" />
-                        <BootstrapForm.Label htmlFor="reason">Tema: / Razón:</BootstrapForm.Label>
-                        <BootstrapForm.Control as={Field} type="text" name="reason" title="reason" id="reason" placeholder="Motivo del mensaje." />
-                        <ErrorMessage name="reason" component="div" className="alert alert-danger" />
-                        <BootstrapForm.Label htmlFor="messageContent">Detalles:</BootstrapForm.Label>
-                        <BootstrapForm.Control
-                            as={Field}
-                            component={'textarea'}
-                            id="messageContent"
-                            name="messageContent"
-                            rows={4}
-                            title="messageContent"
-                            placeholder="Escribe aquí el mensaje."
-                        />
-                        <ErrorMessage name="messageContent" component="div" className="alert alert-danger" />
-                    </BootstrapForm.Group>
-                    <Button variant="success" type="submit" disabled={isSubmitting || !isValid}>
-                        {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Enviar'}
-                    </Button>
-                    {submitSuccessNotification && (
-                        <FloatingNotification
-                            message={'SOLICITUD ENVIADA CORRECTAMENTE'}
-                            variant={'success'}
-                            onClose={changeSuccessNotificationState}
-                        ></FloatingNotification>
-                    )}
-                    {submitErrorNotification && (
-                        <FloatingNotification message={alertMessage} variant={'danger'} onClose={changeErrorNotificationState}></FloatingNotification>
-                    )}
-                </BootstrapForm>
-                  )}
+                {({ isSubmitting, isValid }) => (
+                    <BootstrapForm as={Form}>
+                        <BootstrapForm.Group className="mb-3">
+                            <BootstrapForm.Label htmlFor="email">Correo electrónico:</BootstrapForm.Label>
+                            <BootstrapForm.Control as={Field} type="email" name="email" title="email" id="email" placeholder="Tu correo electrónico!" />
+                            <ErrorMessage name="email" component="div" className="alert alert-danger" />
+                            <BootstrapForm.Label htmlFor="reason">Tema: / Razón:</BootstrapForm.Label>
+                            <BootstrapForm.Control as={Field} type="text" name="reason" title="reason" id="reason" placeholder="Motivo del mensaje." />
+                            <ErrorMessage name="reason" component="div" className="alert alert-danger" />
+                            <BootstrapForm.Label htmlFor="messageContent">Detalles:</BootstrapForm.Label>
+                            <BootstrapForm.Control
+                                as={Field}
+                                component={'textarea'}
+                                id="messageContent"
+                                name="messageContent"
+                                rows={4}
+                                title="messageContent"
+                                placeholder="Escribe aquí el mensaje."
+                            />
+                            <ErrorMessage name="messageContent" component="div" className="alert alert-danger" />
+                        </BootstrapForm.Group>
+                        <Button variant="success" type="submit" disabled={isSubmitting || !isValid}>
+                            {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Enviar'}
+                        </Button>
+                        {submitSuccessNotification && (
+                            <FloatingNotification
+                                message={'SOLICITUD ENVIADA CORRECTAMENTE'}
+                                variant={'success'}
+                                onClose={changeSuccessNotificationState}
+                            ></FloatingNotification>
+                        )}
+                        {submitErrorNotification && (
+                            <FloatingNotification message={alertMessage} variant={'danger'} onClose={changeErrorNotificationState}></FloatingNotification>
+                        )}
+                    </BootstrapForm>
+                )}
             </Formik>
         </div>
     )

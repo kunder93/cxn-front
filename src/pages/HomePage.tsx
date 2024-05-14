@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { MainContainerStyled, mainContentContainerBackgroundColor } from '../components/Common/CommonStyles'
 import HomePageCard, { ButtonOptions, HomePageCardProps } from '../components/HomePage/HomePageCard'
 import HomePageMainCarousel from '../components/HomePage/HomePageMainCarousel'
-import { useAppSelector } from '../store/hooks'
+//import { useAppSelector } from '../store/hooks'
 import { SetPageTitle } from '../utility/functions'
 import MoreInfoForm from '../components/Common/MoreInfoForm'
 import MembersBenefits from '../components/HomePage/MembersBenefits'
@@ -227,7 +227,8 @@ const MemberActivitiesArticle3 = styled(MemberActivitiesArticle)`
 const HomePage: React.FC = () => {
     SetPageTitle('CXN Principal')
 
-    const parseJwt = (token: string) => {
+    /**
+     const parseJwt = (token: string) => {
         const base64Url = token.split('.')[1]
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
         const jsonPayload = decodeURIComponent(
@@ -242,9 +243,9 @@ const HomePage: React.FC = () => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return JSON.parse(jsonPayload)
     }
-
+    **/
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, no-unused-vars, @typescript-eslint/no-unused-vars
-    const userJwt = useAppSelector((state: any) => state.users.jwt)
+    // const userJwt = useAppSelector((state: any) => state.users.jwt)
 
     return (
         <MainContainerStyled>
