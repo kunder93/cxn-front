@@ -22,10 +22,14 @@ const CompanyTable:React.FC<ChessQuestionsTableProps>= (props)=>  {
     useEffect(() => {
         setData(props.data.chessQuestionList)
     }, [props.data])
-
+    console.log(data)
 
     const columns: Column<IChessQuestion>[] = useMemo(
         () => [
+            {
+                Header: 'Identificador',
+                accessor: 'id'
+            },
             {
                 Header: 'Correo',
                 accessor: 'email'
@@ -45,7 +49,13 @@ const CompanyTable:React.FC<ChessQuestionsTableProps>= (props)=>  {
             {
                 Header: 'Mensaje',
                 accessor: 'message'
+            },
+            {
+                Header: 'Se ha visto',
+                accessor: 'seen',
+                Cell: ({ value }) => value ? 'Sí' : 'No'
             }
+            
             // eslint-disable-next-line react-hooks/exhaustive-deps
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -343,11 +343,13 @@ export const useAxiosUnsubscribeMember = (payload: UnsubscribeMemberAxiosValues)
 
 
 export interface IChessQuestion {
+    id:number
     email: string
     category: string
     topic: string
     message: string
     date: Date
+    seen: boolean
 }
 
 export interface IChessQuestionsList {

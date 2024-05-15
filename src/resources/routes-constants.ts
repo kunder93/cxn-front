@@ -19,5 +19,4 @@ export const ROUTES = {
     PRIVACY_POLICY:"/privacypolicy",
     LEGAL_NOTICE:"/legalnotice",
     CHESS_QUESTIONS_MANAGER: "/chessQuestionsManager"
-
 }
