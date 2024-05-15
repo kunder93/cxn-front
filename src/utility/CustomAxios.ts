@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { IBook, ICountryData, IInvoice, IPaymentSheet, ISubCountryData, IUsersListData } from '../components/Types/Types'
-import { CHANGE_KIND_MEMBER_URL, CHANGE_MEMBER_EMAIL_URL, CHANGE_MEMBER_PASSWORD_URL, CHANGE_MEMBER_ROLES_URL, GET_ALL_COUNTRIES_URL, GET_ALL_USERS_URL, GET_SUBCOUNTRIES_URL, UNSUBSCRIBE_MEMBER_URL } from '../resources/server_urls'
+import { CHANGE_KIND_MEMBER_URL, CHANGE_MEMBER_EMAIL_URL, CHANGE_MEMBER_PASSWORD_URL, CHANGE_MEMBER_ROLES_URL, CHESS_QUESTION_URL, GET_ALL_COUNTRIES_URL, GET_ALL_USERS_URL, GET_SUBCOUNTRIES_URL, UNSUBSCRIBE_MEMBER_URL } from '../resources/server_urls'
 import { ICompany } from '../components/Companies/Types'
 import { LoginFormValues } from '../components/LoginForm'
 import { ChangeKindMemberValues } from 'components/MembersManager/ChangeKindMember/ChangeKindMemberForm'
@@ -341,3 +341,37 @@ export const useAxiosUnsubscribeMember = (payload: UnsubscribeMemberAxiosValues)
     return { data, error, loaded };
 };
 
+
+export interface IChessQuestion {
+    email: string
+    category: string
+    topic: string
+    message: string
+    date: Date
+}
+
+export interface IChessQuestionsList {
+    chessQuestionList: IChessQuestion[]
+}
+export const useAxiosGetChessQuestions = () => {
+    const [data, setData] = useState<IChessQuestionsList>();
+    const [loaded, setLoaded] = useState<boolean>(false);
+    const [error, setError] = useState<string>('');
+
+    useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' //coincide con configuración de CORS en el backend
+            }
+        };
+
+        axios
+            .get<IChessQuestionsList>(CHESS_QUESTION_URL, { ...axiosConfig })
+            .then((response) => setData(response.data))
+            .catch((error:string) => setError(error)) // Catching the error object
+            .finally(() => setLoaded(true));
+    }, []);
+
+    return { data, error, loaded };
+};

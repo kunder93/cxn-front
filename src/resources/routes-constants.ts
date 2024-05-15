@@ -17,6 +17,7 @@ export const ROUTES = {
     MEMBERS_MANAGER:"/membersManager",
     ACTIVITIES:"/activities",
     PRIVACY_POLICY:"/privacypolicy",
-    LEGAL_NOTICE:"/legalnotice"
+    LEGAL_NOTICE:"/legalnotice",
+    CHESS_QUESTIONS_MANAGER: "/chessQuestionsManager"
 
 }
