@@ -2,41 +2,67 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import React, { useEffect, useMemo, useState } from 'react'
-
 import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'react-table'
-import {  Button} from 'react-bootstrap'
-import { Trash3, Pencil } from 'react-bootstrap-icons'
+import { Button } from 'react-bootstrap'
+import { Trash3, Eye, EyeSlash } from 'react-bootstrap-icons'
 import { Table } from 'react-bootstrap'
 import { IChessQuestion, IChessQuestionsList } from '../../utility/CustomAxios'
+import axios from 'axios'
+import { CHESS_QUESTION_CHANGE_SEEN_STATE } from '../../resources/server_urls'
+import { format, parseISO } from 'date-fns'
 
-interface ChessQuestionsTableProps{
-    data:IChessQuestionsList
+interface ChessQuestionsTableProps {
+    data: IChessQuestionsList
 }
 
-const CompanyTable:React.FC<ChessQuestionsTableProps>= (props)=>  {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const [data, setData] = useState(useMemo(() => props.data.chessQuestionList, [])) //Caching data
+const ChessQuestionsTable: React.FC<ChessQuestionsTableProps> = (props) => {
+    const [data, setData] = useState(useMemo(() => props.data.chessQuestionList, [])) // Caching data
 
-
-    // data state is being updated when the props.data changes.
+    // Data state is being updated when the props.data changes.
     useEffect(() => {
         setData(props.data.chessQuestionList)
     }, [props.data])
-    console.log(data)
+
+    const ChangeSeenState = (rowIndex: number) => {
+        const clone = [...data]
+        const row = clone[rowIndex]
+        axios
+            .post<IChessQuestion>(
+                CHESS_QUESTION_CHANGE_SEEN_STATE,
+                { id: row.id },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            )
+            .then((response) => {
+                // Update the specific row data with the response
+                clone[rowIndex] = response.data
+                // Update the state with the new data
+                setData(clone)
+            })
+            .catch((error) => console.log(error))
+            .finally(() => console.log('final'))
+    }
 
     const columns: Column<IChessQuestion>[] = useMemo(
         () => [
-            {
+/*            {
                 Header: 'Identificador',
                 accessor: 'id'
             },
-            {
+ */           {
                 Header: 'Correo',
                 accessor: 'email'
             },
             {
                 Header: 'Fecha',
-                accessor: 'date'
+                accessor: 'date',
+                Cell: ({ value }) => {
+                    const formattedDate = format(parseISO(value.toString()), 'dd-MM-yyyy - HH:mm')
+                    return <span>{formattedDate}</span>
+                }
             },
             {
                 Header: 'Categoria',
@@ -51,11 +77,16 @@ const CompanyTable:React.FC<ChessQuestionsTableProps>= (props)=>  {
                 accessor: 'message'
             },
             {
-                Header: 'Se ha visto',
+                Header: 'Visto',
                 accessor: 'seen',
-                Cell: ({ value }) => value ? 'Sí' : 'No'
+                Cell: ({ row }) => (
+                    <div className="d-flex w-100">
+                    <Button className="w-100" variant="info" onClick={() => ChangeSeenState(row.index)}>
+                      {row.original.seen ? <Eye color='green' size={30} title="Visto" /> : <EyeSlash size={30} color='red' title="No visto" />}
+                    </Button>
+                  </div>
+                )
             }
-            
             // eslint-disable-next-line react-hooks/exhaustive-deps
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -72,14 +103,11 @@ const CompanyTable:React.FC<ChessQuestionsTableProps>= (props)=>  {
                 ...columns,
                 {
                     id: 'selection',
-                    Header: () => <div> OPTIONS</div>,
+                    Header: () => <div>BORRAR</div>,
                     Cell: (/*tableProps: any*/) => (
                         <div>
-                            <Button variant="info" onClick={()=> console.log('H')/*() => EditButtonClickHandler(tableProps)*/}>
-                                <Pencil title="Editar" />
-                            </Button>
-                            <Button variant="danger" onClick={()=> console.log('Y')/*() => DeleteButtonClickHandler(tableProps)*/}>
-                                <Trash3 title="Borrar" />
+                            <Button variant="danger" onClick={() => console.log('Y')}>
+                                <Trash3 size={30} title="Borrar" />
                             </Button>
                         </div>
                     )
@@ -87,6 +115,7 @@ const CompanyTable:React.FC<ChessQuestionsTableProps>= (props)=>  {
             ])
         }
     )
+
     return (
         <>
             <Table striped bordered hover responsive {...getTableProps()}>
@@ -130,7 +159,6 @@ const CompanyTable:React.FC<ChessQuestionsTableProps>= (props)=>  {
                                                 <td {...cell.getCellProps()}>
                                                     {
                                                         // Render the cell contents
-
                                                         cell.render('Cell')
                                                     }
                                                 </td>
@@ -150,4 +178,5 @@ const CompanyTable:React.FC<ChessQuestionsTableProps>= (props)=>  {
         </>
     )
 }
-export default CompanyTable
+
+export default ChessQuestionsTable

@@ -1,7 +1,17 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { IBook, ICountryData, IInvoice, IPaymentSheet, ISubCountryData, IUsersListData } from '../components/Types/Types'
-import { CHANGE_KIND_MEMBER_URL, CHANGE_MEMBER_EMAIL_URL, CHANGE_MEMBER_PASSWORD_URL, CHANGE_MEMBER_ROLES_URL, CHESS_QUESTION_URL, GET_ALL_COUNTRIES_URL, GET_ALL_USERS_URL, GET_SUBCOUNTRIES_URL, UNSUBSCRIBE_MEMBER_URL } from '../resources/server_urls'
+import {
+    CHANGE_KIND_MEMBER_URL,
+    CHANGE_MEMBER_EMAIL_URL,
+    CHANGE_MEMBER_PASSWORD_URL,
+    CHANGE_MEMBER_ROLES_URL,
+    CHESS_QUESTION_URL,
+    GET_ALL_COUNTRIES_URL,
+    GET_ALL_USERS_URL,
+    GET_SUBCOUNTRIES_URL,
+    UNSUBSCRIBE_MEMBER_URL
+} from '../resources/server_urls'
 import { ICompany } from '../components/Companies/Types'
 import { LoginFormValues } from '../components/LoginForm'
 import { ChangeKindMemberValues } from 'components/MembersManager/ChangeKindMember/ChangeKindMemberForm'
@@ -317,11 +327,10 @@ export const useAxiosChangeUserPassword = (payload: ChangePasswordAxiosValues) =
     return { data, error, loaded }
 }
 
-
 export const useAxiosUnsubscribeMember = (payload: UnsubscribeMemberAxiosValues) => {
-    const [data, setData] = useState<UserProfile>();
-    const [loaded, setLoaded] = useState<boolean>(false);
-    const [error, setError] = useState<string>('');
+    const [data, setData] = useState<UserProfile>()
+    const [loaded, setLoaded] = useState<boolean>(false)
+    const [error, setError] = useState<string>('')
 
     useEffect(() => {
         const axiosConfig = {
@@ -329,21 +338,20 @@ export const useAxiosUnsubscribeMember = (payload: UnsubscribeMemberAxiosValues)
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*' //coincide con configuración de CORS en el backend
             }
-        };
+        }
 
         axios
             .delete<UserProfile>(UNSUBSCRIBE_MEMBER_URL, { ...axiosConfig, data: payload }) // Include payload in the data field
             .then((response) => setData(response.data))
-            .catch((error:string) => setError(error)) // Catching the error object
-            .finally(() => setLoaded(true));
-    }, [payload]);
+            .catch((error: string) => setError(error)) // Catching the error object
+            .finally(() => setLoaded(true))
+    }, [payload])
 
-    return { data, error, loaded };
-};
-
+    return { data, error, loaded }
+}
 
 export interface IChessQuestion {
-    id:number
+    id: number
     email: string
     category: string
     topic: string
@@ -356,9 +364,9 @@ export interface IChessQuestionsList {
     chessQuestionList: IChessQuestion[]
 }
 export const useAxiosGetChessQuestions = () => {
-    const [data, setData] = useState<IChessQuestionsList>();
-    const [loaded, setLoaded] = useState<boolean>(false);
-    const [error, setError] = useState<string>('');
+    const [data, setData] = useState<IChessQuestionsList>()
+    const [loaded, setLoaded] = useState<boolean>(false)
+    const [error, setError] = useState<string>('')
 
     useEffect(() => {
         const axiosConfig = {
@@ -366,14 +374,14 @@ export const useAxiosGetChessQuestions = () => {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*' //coincide con configuración de CORS en el backend
             }
-        };
+        }
 
         axios
             .get<IChessQuestionsList>(CHESS_QUESTION_URL, { ...axiosConfig })
             .then((response) => setData(response.data))
-            .catch((error:string) => setError(error)) // Catching the error object
-            .finally(() => setLoaded(true));
-    }, []);
+            .catch((error: string) => setError(error)) // Catching the error object
+            .finally(() => setLoaded(true))
+    }, [])
 
-    return { data, error, loaded };
-};
+    return { data, error, loaded }
+}
