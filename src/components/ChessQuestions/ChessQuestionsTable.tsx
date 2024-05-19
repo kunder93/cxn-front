@@ -8,12 +8,32 @@ import { Trash3, Eye, EyeSlash } from 'react-bootstrap-icons'
 import { Table } from 'react-bootstrap'
 import { IChessQuestion, IChessQuestionsList } from '../../utility/CustomAxios'
 import axios from 'axios'
-import { CHESS_QUESTION_CHANGE_SEEN_STATE } from '../../resources/server_urls'
+import { CHESS_QUESTION_CHANGE_SEEN_STATE, CHESS_QUESTION_DELETE } from '../../resources/server_urls'
 import { format, parseISO } from 'date-fns'
 
 interface ChessQuestionsTableProps {
     data: IChessQuestionsList
 }
+
+function handleDeleteButton(id: number, onDeleteSuccess: (id: number) => void) {
+    console.log('Deleting question with id:', id)
+    axios
+        .delete(`${CHESS_QUESTION_DELETE}/${id}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response) => {
+            console.log('Delete response:', response)
+            onDeleteSuccess(id) // Llama a la función callback para actualizar el estado
+        })
+        .catch((error) => {
+            console.error('There was an error deleting the question:', error)
+        })
+}
+
+
+
 
 const ChessQuestionsTable: React.FC<ChessQuestionsTableProps> = (props) => {
     const [data, setData] = useState(useMemo(() => props.data.chessQuestionList, [])) // Caching data
@@ -22,6 +42,13 @@ const ChessQuestionsTable: React.FC<ChessQuestionsTableProps> = (props) => {
     useEffect(() => {
         setData(props.data.chessQuestionList)
     }, [props.data])
+
+    const handleDeleteButtonWrapper = (id: number) => {
+        handleDeleteButton(id, (deletedId) => {
+            // Actualiza el estado para eliminar la pregunta de la tabla
+            setData((prevData) => prevData.filter((question) => question.id !== deletedId))
+        })
+    }
 
     const ChangeSeenState = (rowIndex: number) => {
         const clone = [...data]
@@ -48,11 +75,7 @@ const ChessQuestionsTable: React.FC<ChessQuestionsTableProps> = (props) => {
 
     const columns: Column<IChessQuestion>[] = useMemo(
         () => [
-/*            {
-                Header: 'Identificador',
-                accessor: 'id'
-            },
- */           {
+            {
                 Header: 'Correo',
                 accessor: 'email'
             },
@@ -81,10 +104,10 @@ const ChessQuestionsTable: React.FC<ChessQuestionsTableProps> = (props) => {
                 accessor: 'seen',
                 Cell: ({ row }) => (
                     <div className="d-flex w-100">
-                    <Button className="w-100" variant="info" onClick={() => ChangeSeenState(row.index)}>
-                      {row.original.seen ? <Eye color='green' size={30} title="Visto" /> : <EyeSlash size={30} color='red' title="No visto" />}
-                    </Button>
-                  </div>
+                        <Button className="w-100" variant="info" onClick={() => ChangeSeenState(row.index)}>
+                            {row.original.seen ? <Eye color="green" size={30} title="Visto" /> : <EyeSlash size={30} color="red" title="No visto" />}
+                        </Button>
+                    </div>
                 )
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -104,9 +127,9 @@ const ChessQuestionsTable: React.FC<ChessQuestionsTableProps> = (props) => {
                 {
                     id: 'selection',
                     Header: () => <div>BORRAR</div>,
-                    Cell: (/*tableProps: any*/) => (
+                    Cell: (tableProps: any) => (
                         <div>
-                            <Button variant="danger" onClick={() => console.log('Y')}>
+                                 <Button variant="danger" onClick={() => handleDeleteButtonWrapper(tableProps.row.original.id)}>
                                 <Trash3 size={30} title="Borrar" />
                             </Button>
                         </div>
