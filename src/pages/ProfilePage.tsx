@@ -1,58 +1,102 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { useAppSelector } from '../store/hooks'
 import React, { useEffect } from 'react'
 import axios from 'axios'
-import PersonalCard from './../components/PersonalCard'
+//import PersonalCard from './../components/PersonalCard'
 import { useAppDispatch } from '../store/hooks'
-import { setName, setFirstSurname, setSecondSurname, setGender, setEmail, setBirthDate, setUserRoles, setKindMember } from '../store/slices/user/index'
-import PresidenteMenu from '../components/PresidenteMenu'
-import UserServicesDropdown from '../components/UsersServices/UserServicesDropdown'
+//import PresidenteMenu from '../components/PresidenteMenu'
+//import UserServicesDropdown from '../components/UsersServices/UserServicesDropdown'
+import styled from 'styled-components'
+import {setUserProfile } from '../store/slices/user'
+import AdminRolePage from '../components/UserProfiles/AdminRolePage'
+import SocioRolePage from '../components/UserProfiles/SocioRolePage'
+import { UserProfile } from '../store/types/userTypes'
+//import { Wrench } from 'react-bootstrap-icons'
+
+const SideBar = styled.aside`
+    background-color: pink;
+`
+
+const MainPageContainer = styled.div`
+    display: grid;
+    grid-template-columns: 25fr 75fr;
+`
+
+enum ProfileSection {
+    UserPage = 0,
+    ChessData = 1,
+    AdminPage = 2
+}
 
 const ProfilePage: React.FC = () => {
     const userJwt = useAppSelector((state) => state.users.jwt)
+
     const dispatch = useAppDispatch()
     console.log(userJwt)
+
+    const [profilePage, SetProfilePage]= React.useState<ProfileSection>(ProfileSection.UserPage);
+
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/user', {
+                const response = await axios.get<UserProfile>('https://xadreznaron.es:4443/api/user', {
                     headers: {
-                        Authorization: 'Bearer ' + userJwt
+                        Authorization: 'Bearer ' + userJwt,
+                        'Access-Control-Allow-Origin': '*' //  CORS
                     }
                 })
 
-                console.log(response.data.kindMember)
-                dispatch(setName(response.data.name))
-                dispatch(setFirstSurname(response.data.firstSurname))
-                dispatch(setSecondSurname(response.data.secondSurname))
-                dispatch(setGender(response.data.gender))
-                dispatch(setEmail(response.data.email))
-                dispatch(setBirthDate(response.data.birthDate))
-                dispatch(setUserRoles(response.data.userRoles))
-                dispatch(setKindMember(response.data.kindMember))
+                const userProfile: UserProfile = response.data
+                dispatch(setUserProfile(userProfile))
             } catch (error) {
                 // Manejar errores aquí si es necesario
                 console.error('Error al obtener datos del usuario', error)
             }
         }
-
         void fetchData() // Llama a la función asincrónica
     }, [userJwt, dispatch])
-    const userRoles = useAppSelector((state) => state.users.userRoles)
-
     return userJwt ? (
-        <div>
+        <MainPageContainer>
+            <SideBar>
+                <ul>
+                    <li>
+                        <a href="#" onClick={() => SetProfilePage(ProfileSection.UserPage)}>Información personal</a>
+                    </li>
+                    <li>
+                        <a href="#" onClick={() => SetProfilePage(ProfileSection.ChessData)}>Datos de ajedrez</a>
+                    </li>
+                    <li>
+                        <a href="#" onClick={() => SetProfilePage(ProfileSection.AdminPage)}>Pagina Admin</a>
+                    </li>
+                    <li>
+                        <a href="#">Link 4</a>
+                    </li>
+                    <li>
+                        <a href="#">Link 5</a>
+                    </li>
+                </ul>
+            </SideBar>
             <div>
-                <PersonalCard />
-                {/* <Button variant="primary" onClick={handleCompaniesManagerButton}>Companies Manager</Button>
+
+                {/* Verificación de user ROles */}
+
+                {profilePage == ProfileSection.AdminPage && <AdminRolePage></AdminRolePage> }
+                {profilePage == ProfileSection.UserPage && <SocioRolePage></SocioRolePage> }
+                {/*}
+                {userProfile?.userRoles?.includes(UserRole.ADMIN) && <AdminRolePage></AdminRolePage>}
+                {userProfile?.userRoles?.includes(UserRole.SOCIO) && <SocioRolePage></SocioRolePage>}
+                {userProfile?.userRoles?.includes(UserRole.PRESIDENTE) && <PresidenteRolePage></PresidenteRolePage>}
+                {userProfile?.userRoles?.includes(UserRole.SECRETARIO) && <SecretarioRolePage></SecretarioRolePage>}
+                {userProfile?.userRoles?.includes(UserRole.TESORERO) &&<> <TesoreroRolePage></TesoreroRolePage> && <PresidenteMenu></PresidenteMenu> </> }
+                {/* <PersonalCard />
+                 <Button variant="primary" onClick={handleCompaniesManagerButton}>Companies Manager</Button>
                 <Button variant="primary" onClick={handleInvoicesManagerButton}>Invoices Manager</Button>
-                <Button variant="primary" onClick={handlePaymentSheetManagerButton}>Payment Sheet Manager</Button> */}
+                <Button variant="primary" onClick={handlePaymentSheetManagerButton}>Payment Sheet Manager</Button> 
+                */}
+                {/*} <div>{/*userRoles[0].startsWith('ROLE_PRESIDENTE') ? <PresidenteMenu></PresidenteMenu> : 'NO ERES PRESIDENTE'</div>
+                  <UserServicesDropdown data={[]}></UserServicesDropdown>*/}
             </div>
-            <div>{userRoles[0].startsWith('ROLE_PRESIDENTE') ? <PresidenteMenu></PresidenteMenu> : 'NO ERES PRESIDENTE'}</div>
-            <UserServicesDropdown data={[]}></UserServicesDropdown>
-        </div>
+        </MainPageContainer>
     ) : (
         <h1>Welcome to the ProfilePage !!</h1>
     )

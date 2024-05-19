@@ -1,26 +1,38 @@
 
-export const BASE_URL = 'http://localhost:8080/'
+export const BASE_URL = 'https://xadreznaron.es:4443/'
 
-export const COMPANIES_URL = 'http://localhost:8080/api/company'
+export const COMPANIES_URL = BASE_URL  +  'api/company'
 
 export const LOGIN_URL = 
-   'http://localhost:8080/api/auth/signinn'
-
+BASE_URL + 'api/auth/signinn'
 
 export const SIGN_UP_URL = 
-'http://localhost:8080/api/auth/signup'
+BASE_URL + 'api/auth/signup'
 
+export const INVOICES_URL = BASE_URL + 'api/invoice'
 
-export const INVOICES_URL = 'http://localhost:8080/api/invoice'
+export const LIBRARY_URL = BASE_URL + 'api/library'
 
-export const LIBRARY_URL = 'http://localhost:8080/api/library'
+export const PAYMENT_SHEET_URL = BASE_URL + 'api/paymentSheet'
 
-export const PAYMENT_SHEET_URL = 'http://localhost:8080/api/paymentSheet'
+export const GET_ALL_USERS_URL = BASE_URL + 'api/user/getAll'
 
-export const GET_ALL_USERS_URL = 'http://localhost:8080/api/user/getAll'
+export const GET_ALL_COUNTRIES_URL = BASE_URL + "api/address/getCountries"
 
+export const GET_SUBCOUNTRIES_URL = BASE_URL + "api/address/country"
 
-export const GET_ALL_COUNTRIES_URL = "http://localhost:8080/api/address/getCountries"
+export const CHANGE_KIND_MEMBER_URL = BASE_URL + 'api/user/changeKindOfMember'
 
+export const CHANGE_MEMBER_ROLES_URL = BASE_URL + 'api/user/role'
 
-export const GET_SUBCOUNTRIES_URL = "http://localhost:8080/api/address/country"
+export const CHANGE_MEMBER_EMAIL_URL = BASE_URL + 'api/user/changeEmail'
+
+export const CHANGE_MEMBER_PASSWORD_URL = BASE_URL + 'api/user/changePassword'
+
+export const UNSUBSCRIBE_MEMBER_URL = BASE_URL + 'api/user/unsubscribe'
+
+export const CHESS_QUESTION_URL = BASE_URL + 'api/chessQuestion'
+
+export const CHESS_QUESTION_CHANGE_SEEN_STATE = CHESS_QUESTION_URL + '/changeChessQuestionHasSeen'
+
+export const CHESS_QUESTION_DELETE = CHESS_QUESTION_URL;

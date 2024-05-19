@@ -153,7 +153,8 @@ const accordionData: BenefitsAccordionProps = {
     carouselBenefits: carouselBenefits,
     initialQuestionsFormTopic: 'CLASES INFANTILES',
     faqList: faqKidsSchoolPairsQuestionAnswer,
-    photosData: photosData
+    photosData: photosData,
+    chessQuestionsFormCategory: 'CLASES NIÑOS'
 }
 
 
