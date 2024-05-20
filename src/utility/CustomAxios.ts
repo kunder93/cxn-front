@@ -14,12 +14,12 @@ import {
 } from '../resources/server_urls'
 import { ICompany } from '../components/Companies/Types'
 import { LoginFormValues } from '../components/LoginForm'
-import { ChangeKindMemberValues } from 'components/MembersManager/ChangeKindMember/ChangeKindMemberForm'
-import { UserProfile } from 'store/types/userTypes'
-import { ChangeMemberRolesValues } from 'components/MembersManager/ChangeMemberRole/ChangeMemberRolesForm'
-import { ChangeEmailAxiosValues } from 'components/MyProfile/ChangeEmail/ChangeUserEmailResultAlert'
-import { ChangePasswordAxiosValues } from 'components/MyProfile/ChangePassword/ChangeUserPasswordResultAlert'
-import { UnsubscribeMemberAxiosValues } from 'components/MyProfile/UnsubscribeMember/UnsubscribeMemberResultAlert'
+import { ChangeKindMemberValues } from '../components/MembersManager/ChangeKindMember/ChangeKindMemberForm'
+import { UserProfile } from '../store/types/userTypes'
+import { ChangeMemberRolesValues } from '../components/MembersManager/ChangeMemberRole/ChangeMemberRolesForm'
+import { ChangeEmailAxiosValues } from '../components/MyProfile/ChangeEmail/ChangeUserEmailResultAlert'
+import { ChangePasswordAxiosValues } from '../components/MyProfile/ChangePassword/ChangeUserPasswordResultAlert'
+import { UnsubscribeMemberAxiosValues } from '../components/MyProfile/UnsubscribeMember/UnsubscribeMemberResultAlert'
 
 interface companiesAxiosResponse {
     companiesList: ICompany[]
