@@ -6,10 +6,11 @@ import { useAppDispatch } from '../store/hooks'
 //import PresidenteMenu from '../components/PresidenteMenu'
 //import UserServicesDropdown from '../components/UsersServices/UserServicesDropdown'
 import styled from 'styled-components'
-import {setUserProfile } from '../store/slices/user'
+
 import AdminRolePage from '../components/UserProfiles/AdminRolePage'
 import SocioRolePage from '../components/UserProfiles/SocioRolePage'
 import { UserProfile } from '../store/types/userTypes'
+import { setUserProfile } from '../store/slices/user'
 //import { Wrench } from 'react-bootstrap-icons'
 
 const SideBar = styled.aside`
