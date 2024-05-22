@@ -1,88 +1,65 @@
-import { Field, FormikErrors, FormikProps } from 'formik'
 import React from 'react'
+import { FormikProps, FormikErrors } from 'formik'
 import { Button, Col, Container, Row } from 'react-bootstrap'
 import BootstrapForm from 'react-bootstrap/Form'
+import { SignUpFormValues, SignUpFormStepProps } from './SignUpFormTypes'
+import FormField from './FormField'
 import styled from 'styled-components'
-import { SignUpFormValues, formFirstStepData } from './SignUpFormTypes'
 
-const ErrorMessage = styled.div`
-    color: red;
+const MainContainer = styled(Container)`
+    padding-top: 1em;
+    padding-bottom: 10em;
+`
+const FormStyledContainer = styled.div`
+    background-color: rgba(250, 238, 168, 0.219);
+    box-shadow:
+        0 0.5em 0.5em -0.3em rgba(0, 0, 0, 0.3),
+        0.5em 0 0.5em -0.3em rgba(0, 0, 0, 0.3);
+    padding: 1em;
+    padding-left: 14em;
+    padding-right: 14em;
+    border-radius: 5px;
 `
 
-const FormRow = styled(Row)`
-    margin-bottom: 2em;
+const ButtonRow = styled(Row)`
+    display: flex;
+    padding-top: 0.5em;
+    padding-bottom: 1em;
+`
+const ButtonCol = styled(Col)`
+    justify-content: center;
 `
 
 const isFirstStepNextButtonDisabled = (formikProps: FormikProps<SignUpFormValues>): boolean => {
     const formErrors: FormikErrors<SignUpFormValues> = formikProps.errors
-    let isBlocked = true
-    formErrors.email ? (isBlocked = true) : formErrors.password ? (isBlocked = true) : formErrors.confirmPassword ? (isBlocked = true) : (isBlocked = false)
-    return isBlocked
+    return !!(formErrors.email ?? formErrors.password ?? formErrors.confirmPassword)
 }
 
-const SignUpFormFirstStep: React.FC<formFirstStepData> = (firstStepData: formFirstStepData) => {
+const SignUpFormFirstStep: React.FC<SignUpFormStepProps> = ({ formikProps, nextStepFunction }) => {
     return (
-        <Container as={BootstrapForm.Group}>
-            <FormRow>
-                <Row>
-                    <Col>
-                        <BootstrapForm.Label htmlFor="email">Correo electrónico:</BootstrapForm.Label>
-                        <Field as={BootstrapForm.Control} id="email" name="email" type="text" placeholder="email" />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        {firstStepData.formikProps.errors.email && firstStepData.formikProps.touched.email ? (
-                            <ErrorMessage>{firstStepData.formikProps.errors.email}</ErrorMessage>
-                        ) : (
-                            ''
-                        )}
-                    </Col>
-                </Row>
-            </FormRow>
-            <FormRow>
-                <Row>
-                    <Col>
-                        <BootstrapForm.Label htmlFor="password">Contraseña:</BootstrapForm.Label>
-                        <Field as={BootstrapForm.Control} id="password" type="password" name="password" placeholder="new password"  autoComplete="new-password"/>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        {firstStepData.formikProps.errors.password && firstStepData.formikProps.touched.password ? (
-                            <ErrorMessage>{firstStepData.formikProps.errors.password}</ErrorMessage>
-                        ) : (
-                            ''
-                        )}
-                    </Col>
-                </Row>
-            </FormRow>
-            <FormRow>
-                <Row>
-                    <Col>
-                        <BootstrapForm.Label htmlFor="confirmPassword">Confirma la contraseña:</BootstrapForm.Label>
-                        <Field as={BootstrapForm.Control} id="confirmPassword" type="password" name="confirmPassword" placeholder="Repeat password"  autoComplete="new-password"/>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        {firstStepData.formikProps.errors.confirmPassword && firstStepData.formikProps.touched.confirmPassword ? (
-                            <ErrorMessage>{firstStepData.formikProps.errors.confirmPassword}</ErrorMessage>
-                        ) : (
-                            ''
-                        )}
-                    </Col>
-                </Row>
-            </FormRow>
-            <Row>
-                <Col>
-                    {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment*/}
-                    <Button variant="primary" onClick={firstStepData.nextStepFunction} disabled={isFirstStepNextButtonDisabled(firstStepData.formikProps)}>
-                        Siguiente
-                    </Button>
-                </Col>
-            </Row>
-        </Container>
+        <MainContainer as={BootstrapForm.Group}>
+            <FormStyledContainer>
+                <FormField id="email" name="email" type="text" label="Correo electrónico:" placeholder="Email" formikProps={formikProps} />
+                <FormField id="password" name="password" type="password" label="Contraseña:" placeholder="Contraseña" formikProps={formikProps} />
+                <FormField
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    label="Confirma la contraseña:"
+                    placeholder="Repite la contraseña"
+                    formikProps={formikProps}
+                />
+                <ButtonRow>
+                    <Col></Col>
+                    <ButtonCol>
+                        <Button variant="primary" onClick={nextStepFunction} disabled={isFirstStepNextButtonDisabled(formikProps)}>
+                            Siguiente
+                        </Button>
+                        <Col></Col>
+                    </ButtonCol>
+                </ButtonRow>
+            </FormStyledContainer>
+        </MainContainer>
     )
 }
 
