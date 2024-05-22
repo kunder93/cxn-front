@@ -1,34 +1,10 @@
 import React from 'react'
 import { FormikProps, FormikErrors } from 'formik'
-import { Button, Col, Container, Row } from 'react-bootstrap'
+import { Button, Col } from 'react-bootstrap'
 import BootstrapForm from 'react-bootstrap/Form'
 import { SignUpFormValues, SignUpFormStepProps } from './SignUpFormTypes'
 import FormField from './FormField'
-import styled from 'styled-components'
-
-const MainContainer = styled(Container)`
-    padding-top: 1em;
-    padding-bottom: 10em;
-`
-const FormStyledContainer = styled.div`
-    background-color: rgba(250, 238, 168, 0.219);
-    box-shadow:
-        0 0.5em 0.5em -0.3em rgba(0, 0, 0, 0.3),
-        0.5em 0 0.5em -0.3em rgba(0, 0, 0, 0.3);
-    padding: 1em;
-    padding-left: 14em;
-    padding-right: 14em;
-    border-radius: 5px;
-`
-
-const ButtonRow = styled(Row)`
-    display: flex;
-    padding-top: 0.5em;
-    padding-bottom: 1em;
-`
-const ButtonCol = styled(Col)`
-    justify-content: center;
-`
+import { ButtonCol, ButtonRow, FormStyledContainer, MainContainer } from './CommonStyles'
 
 const isFirstStepNextButtonDisabled = (formikProps: FormikProps<SignUpFormValues>): boolean => {
     const formErrors: FormikErrors<SignUpFormValues> = formikProps.errors

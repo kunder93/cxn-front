@@ -1,10 +1,11 @@
 import { Field, FormikProps } from 'formik'
 import React from 'react'
-import { Button, Col, Container, Row } from 'react-bootstrap'
+import { Button, Col, Row } from 'react-bootstrap'
 import BootstrapForm from 'react-bootstrap/Form'
 import styled from 'styled-components'
 import { SignUpFormValues } from './SignUpFormTypes'
 import FormField from './FormField'
+import { ButtonCol, ButtonRow, FormStyledContainer, MainContainer } from './CommonStyles'
 
 const ErrorMessage = styled.div`
     color: red;
@@ -12,30 +13,6 @@ const ErrorMessage = styled.div`
 
 const FormRow = styled(Row)`
     margin-bottom: 2em;
-`
-const ButtonRow = styled(Row)`
-    display: flex;
-    padding-top: 0.5em;
-    padding-bottom: 1em;
-`
-const ButtonCol = styled(Col)`
-    display: flex;
-    flex-direction: row-reverse;
-`
-const MainContainer = styled(Container)`
-    padding-top: 1em;
-    padding-bottom: 10em;
-`
-
-const FormStyledContainer = styled.div`
-    background-color: rgba(250, 238, 168, 0.219);
-    box-shadow:
-        0 0.5em 0.5em -0.3em rgba(0, 0, 0, 0.3),
-        0.5em 0 0.5em -0.3em rgba(0, 0, 0, 0.3);
-    padding: 1em;
-    padding-left: 14em;
-    padding-right: 14em;
-    border-radius: 5px;
 `
 
 const isSecondStepNextButtonDisabled = (formikProps: FormikProps<SignUpFormValues>): boolean => {

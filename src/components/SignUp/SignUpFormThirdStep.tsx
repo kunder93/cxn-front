@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { Button, Col, Container, Row } from 'react-bootstrap'
+import { Button, Col, Row } from 'react-bootstrap'
 import BootstrapForm from 'react-bootstrap/Form'
 import { SignUpFormStepProps, SignUpFormValues } from './SignUpFormTypes'
 import { ICountryData, ISubCountryData } from '../Types/Types'
@@ -7,32 +7,7 @@ import { useAxiosGetCountriesList } from '../../utility/CustomAxios'
 import FormField from './FormField'
 import { Field, FormikProps } from 'formik'
 import useSubCountries from './CustomHooks/useSubCountries'
-import styled from 'styled-components'
-
-const ButtonRow = styled(Row)`
-    display: flex;
-    padding-top: 0.5em;
-    padding-bottom: 1em;
-`
-const ButtonCol = styled(Col)`
-    display: flex;
-    flex-direction: row-reverse;
-`
-const MainContainer = styled(Container)`
-    padding-top: 1em;
-    padding-bottom: 10em;
-`
-
-const FormStyledContainer = styled.div`
-    background-color: rgba(250, 238, 168, 0.219);
-    box-shadow:
-        0 0.5em 0.5em -0.3em rgba(0, 0, 0, 0.3),
-        0.5em 0 0.5em -0.3em rgba(0, 0, 0, 0.3);
-    padding: 1em;
-    padding-left: 14em;
-    padding-right: 14em;
-    border-radius: 5px;
-`
+import { ButtonCol, ButtonRow, FormStyledContainer, MainContainer } from './CommonStyles'
 
 const isThirdStepNextButtonDisabled = ({ errors, values }: FormikProps<SignUpFormValues>): boolean => {
     return !!(

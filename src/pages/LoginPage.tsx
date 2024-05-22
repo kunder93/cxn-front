@@ -1,19 +1,18 @@
+import { MainContainer } from '../components/SignUp/CommonStyles'
+import LoginForm from '../components/LoginForm'
 import React from 'react'
-import { Col, Container, Row } from 'react-bootstrap'
-import { LoginForm } from '../components/LoginForm'
+import { Col, Row } from 'react-bootstrap'
 
 const LoginPage: React.FC = () => {
     return (
-        <Container fluid="md">
-            <Row>
-                <Col></Col>
-                <Col>
+    <Row>
+        <Col></Col>
+        <Col>
+        <MainContainer fluid="md">
                     <h2>Acceso socios CXN:</h2>
                     <LoginForm></LoginForm>
-                </Col>
-                <Col></Col>
-            </Row>
-        </Container>
-    )
+        </MainContainer>
+        </Col><Col></Col>
+        </Row> )
 }
 export default LoginPage

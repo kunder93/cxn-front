@@ -1,8 +1,9 @@
 import { Field } from 'formik'
 import React, { useCallback, useMemo, useState } from 'react'
-import { Button, Col, Container, Modal, Row } from 'react-bootstrap'
+import { Button, Col, Modal, Row } from 'react-bootstrap'
 import BootstrapForm from 'react-bootstrap/Form'
 import Spinner from 'react-bootstrap/Spinner'
+import { ButtonCol, ButtonRow, FormStyledContainer, MainContainer } from './CommonStyles'
 import { FormConditionsModalProps, SignUpFormStepProps, UserAceptanceModalOption } from './SignUpFormTypes'
 import {
     CesionDatosContainer,
@@ -13,31 +14,6 @@ import {
     RelativoSociosTextContainer
 } from './UserAceptanceTextStyle'
 import styled from 'styled-components'
-
-const ButtonRow = styled(Row)`
-    display: flex;
-    padding-top: 0.5em;
-    padding-bottom: 1em;
-`
-const ButtonCol = styled(Col)`
-    display: flex;
-    flex-direction: row-reverse;
-`
-const MainContainer = styled(Container)`
-    padding-top: 1em;
-    padding-bottom: 10em;
-`
-
-const FormStyledContainer = styled.div`
-    background-color: rgba(250, 238, 168, 0.219);
-    box-shadow:
-        0 0.5em 0.5em -0.3em rgba(0, 0, 0, 0.3),
-        0.5em 0 0.5em -0.3em rgba(0, 0, 0, 0.3);
-    padding: 1em;
-    padding-left: 14em;
-    padding-right: 14em;
-    border-radius: 5px;
-`
 
 const UserAceptanceModal: React.FC<FormConditionsModalProps> = ({ show, onClose, userAceptanceOption }) => {
     const renderModalContent = useMemo(() => {
@@ -87,7 +63,7 @@ const StyledLabel = styled(BootstrapForm.Label)`
 const StyledRow = styled(Row)``
 
 const CheckBoxWithLabel: React.FC<{ name: string; label: string }> = ({ name, label }) => (
-    <StyledRow class="container-sm">
+    <StyledRow className="container-sm">
         <Col>
             <StyledLabel>{label}</StyledLabel>
         </Col>
@@ -115,7 +91,7 @@ const SignUpFormFourthStep: React.FC<SignUpFormStepProps> = ({ formikProps, prev
             <FormStyledContainer>
                 <UserAceptanceModal show={userAceptanceModalOpen} onClose={handleUserAceptanceModalClose} userAceptanceOption={selectedAceptanceOption} />
                 <CheckBoxWithLabel name="membersTerms" label="Normas del socio:" />
-                <StyledRow class="container-sm">
+                <StyledRow className="container-sm">
                     <Col>
                         <Button variant="link" onClick={() => handleModalOpen(UserAceptanceModalOption.NormasSocios)}>
                             Ver las condiciones sobre normas de los socios.
@@ -123,7 +99,7 @@ const SignUpFormFourthStep: React.FC<SignUpFormStepProps> = ({ formikProps, prev
                     </Col>
                 </StyledRow>
                 <CheckBoxWithLabel name="privacyTerms" label="Protección datos:" />
-                <StyledRow class="container-sm">
+                <StyledRow className="container-sm">
                     <Col>
                         <Button variant="link" onClick={() => handleModalOpen(UserAceptanceModalOption.CesionDatos)}>
                             Ver las condiciones sobre protección de datos.
@@ -131,7 +107,7 @@ const SignUpFormFourthStep: React.FC<SignUpFormStepProps> = ({ formikProps, prev
                     </Col>
                 </StyledRow>
                 <CheckBoxWithLabel name="confidencialityTerms" label="Compromiso de confidencialidad:" />
-                <StyledRow class="container-sm">
+                <StyledRow className="container-sm">
                     <Col>
                         <Button variant="link" onClick={() => handleModalOpen(UserAceptanceModalOption.CompromisoConfidencialidad)}>
                             Ver las condiciones sobre el compromiso de confidencialidad.
