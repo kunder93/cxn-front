@@ -8,11 +8,18 @@ interface CardsButtonsModalProps extends ModalProps {
 
 const HomePageCardsModal: React.FC<CardsButtonsModalProps> = (props) => {
     return (
-        <Modal {...props} onHide={props.closemodal} size="lg" aria-labelledby="contained-modal-title-vcenter" centered aria-label="Modal de información de las tarjetas de inicio.">
+        <Modal
+            {...props}
+            onHide={props.closemodal}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            aria-label="Modal de información de las tarjetas de inicio."
+        >
             <Modal.Body>{props.modalcontentcomponent}</Modal.Body>
             <Modal.Footer>
                 <Button variant="danger" onClick={props.closemodal}>
-                    Cerrar ventana
+                    Cerrar
                 </Button>
             </Modal.Footer>
         </Modal>
