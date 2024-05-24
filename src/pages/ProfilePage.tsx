@@ -19,7 +19,7 @@ const SideBar = styled.aside`
 
 const MainPageContainer = styled.div`
     display: grid;
-    grid-template-columns: 25fr 75fr;
+    grid-template-columns: 25fr 50fr 25fr;
 `
 
 enum ProfileSection {
@@ -97,6 +97,7 @@ const ProfilePage: React.FC = () => {
                 {/*} <div>{/*userRoles[0].startsWith('ROLE_PRESIDENTE') ? <PresidenteMenu></PresidenteMenu> : 'NO ERES PRESIDENTE'</div>
                   <UserServicesDropdown data={[]}></UserServicesDropdown>*/}
             </div>
+            <div></div>
         </MainPageContainer>
     ) : (
         <h1>Welcome to the ProfilePage !!</h1>
