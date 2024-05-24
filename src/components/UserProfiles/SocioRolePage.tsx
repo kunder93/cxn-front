@@ -8,13 +8,29 @@ import ChangeEmailModal from '../MyProfile/ChangeEmail/ChangeEmailModal'
 import ChangePasswordModal from '../../components/MyProfile/ChangePassword/ChangePasswordModal'
 import UnsubscribeMemberModal from '../../components/MyProfile/UnsubscribeMember/UnsubscribeMemberModal'
 
+const FirstCustomRow = styled.div`
+    display: flex;
+    justify-content: space-between;
+    width: 100%; /* Ajusta el ancho según sea necesario */
+    padding-top: 1em;
+    padding-bottom: 1em;
+`
+
 const CustomRow = styled.div`
     border-top: 2px solid grey;
     display: flex;
     justify-content: space-between;
-    width: 50%;
+    width: 100%; /* Ajusta el ancho según sea necesario */
     padding-top: 1em;
     padding-bottom: 1em;
+`
+
+const ButtonsRow = styled.div`
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    width: 100%; /* Ajusta el ancho según sea necesario */
+    margin-top: 1em; /* Añade un margen superior si es necesario */
 `
 
 const CustomCol = styled.div`
@@ -25,8 +41,14 @@ const CustomCol = styled.div`
 `
 
 const StyledContainer = styled(Container)`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
     padding-top: 1em;
     padding-bottom: 2em;
+    text-align: center; /* Alineación centrada del texto si es necesario */
 `
 
 const SocioRolePage: React.FC = () => {
@@ -38,20 +60,20 @@ const SocioRolePage: React.FC = () => {
     function handleChangeEmail() {
         setEmailModal(true)
     }
-    function handleChangePassword(){
+    function handleChangePassword() {
         setPasswordModal(true)
     }
-    function handleUnsubscribeMember(){
+    function handleUnsubscribeMember() {
         setUnsubscribeMemberModal(true)
     }
 
     return (
         <StyledContainer>
             <h1>Información personal:</h1>
-            <CustomRow>
+            <FirstCustomRow>
                 <CustomCol>DNI:</CustomCol>
                 <CustomCol>{userProfile.dni}</CustomCol>
-            </CustomRow>
+            </FirstCustomRow>
             <CustomRow>
                 <CustomCol>Nombre:</CustomCol>
                 <CustomCol>{userProfile.name}</CustomCol>
@@ -81,9 +103,18 @@ const SocioRolePage: React.FC = () => {
                 <CustomCol>{renderUserRoles(userProfile.userRoles)}</CustomCol>
             </CustomRow>
 
-            <Button onClick={handleChangeEmail} variant="success">
-                Cambiar correo
-            </Button>
+            <ButtonsRow>
+                <Button onClick={handleChangeEmail} variant="secondary">
+                    Cambiar correo
+                </Button>
+                <Button variant="secondary" onClick={handleChangePassword}>
+                    Cambiar contraseña
+                </Button>
+                <Button variant="danger" onClick={handleUnsubscribeMember}>
+                    Darse de baja
+                </Button>
+            </ButtonsRow>
+
             <ChangeEmailModal
                 show={emailModal}
                 onHide={() => setEmailModal(false)}
@@ -91,8 +122,7 @@ const SocioRolePage: React.FC = () => {
                 name={userProfile.name}
                 firstSurname={userProfile.firstSurname}
                 secondSurname={userProfile.secondSurname}
-            ></ChangeEmailModal>
-            <Button variant="success" onClick={handleChangePassword} >Cambiar contraseña</Button>
+            />
             <ChangePasswordModal
                 show={passwordModal}
                 onHide={() => setPasswordModal(false)}
@@ -100,8 +130,7 @@ const SocioRolePage: React.FC = () => {
                 name={userProfile.name}
                 firstSurname={userProfile.firstSurname}
                 secondSurname={userProfile.secondSurname}
-            ></ChangePasswordModal>
-            <Button variant="danger" onClick={handleUnsubscribeMember}>Darse de baja</Button>
+            />
             <UnsubscribeMemberModal
                 show={unsubscribeMemberModal}
                 onHide={() => setUnsubscribeMemberModal(false)}
@@ -109,10 +138,9 @@ const SocioRolePage: React.FC = () => {
                 name={userProfile.name}
                 firstSurname={userProfile.firstSurname}
                 secondSurname={userProfile.secondSurname}
-            ></UnsubscribeMemberModal>
-
-
+            />
         </StyledContainer>
     )
 }
+
 export default SocioRolePage
