@@ -7,7 +7,7 @@ import HomePageMainCarousel from '../components/HomePage/HomePageMainCarousel'
 //import { useAppSelector } from '../store/hooks'
 import { SetPageTitle } from '../utility/functions'
 import MoreInfoForm from '../components/Common/MoreInfoForm'
-import MembersBenefits from '../components/HomePage/MembersBenefits'
+import MembersBenefits, { MembersBenefitOption } from '../components/HomePage/MembersBenefits'
 
 
 const pageMainTitle = 'Circulo Xadrez Narón te da la bienvenida !'
@@ -65,21 +65,21 @@ const memberActivitiesCardsData: HomePageCardProps[] = [
         imageAlt: 'Recibiendo premios campoeonato gallego.',
         cardTitle: 'Torneos y competicion federada',
         cardText: ['Participa en torneos y competición oficial.', 'Enfréntate a los mejores, supera tus límites.'],
-        buttonProps: [{ buttonText: 'Más info', buttonAction: ButtonOptions.MODAL, component: <MembersBenefits></MembersBenefits> }]
+        buttonProps: [{ buttonText: 'Más info', buttonAction: ButtonOptions.MODAL, component: <MembersBenefits benefitOption={MembersBenefitOption.COMPETICION_FEDERADA}></MembersBenefits> }]
     },
     {
         imageSrc: '/Principal/LibrosAjedrez_optimizada.avif',
         imageAlt: 'Estantería con libros de ajedrez.',
         cardTitle: 'Material de ajedrez',
         cardText: ['Acceso a multitud de libros, revistas, programas, piezas, relojes, etc', 'Pide lo que creas que falte, nosotros lo conseguimos.'],
-        buttonProps: [{ buttonText: 'Más info', buttonAction: ButtonOptions.MODAL, component: <MembersBenefits></MembersBenefits> }]
+        buttonProps: [{ buttonText: 'Más info', buttonAction: ButtonOptions.MODAL, component: <MembersBenefits benefitOption={MembersBenefitOption.MATERIAL_AJEDREZ}></MembersBenefits> }]
     },
     {
         imageSrc: '/Principal/ClaseAdultos.avif',
         imageAlt: '4 Personas analizando posición ajedrez.',
         cardTitle: 'Tutorización y seguimiento',
         cardText: ['Profesionales capacitados para ayudarte en tu progreso y mostrarte los puntos mejorables y las tecnicas necesarias para alcanzar tus metas.'],
-        buttonProps: [{ buttonText: 'Más info', buttonAction: ButtonOptions.MODAL, component: <MembersBenefits></MembersBenefits> }]
+        buttonProps: [{ buttonText: 'Más info', buttonAction: ButtonOptions.MODAL, component: <MembersBenefits benefitOption={MembersBenefitOption.TUTORIZACION}></MembersBenefits> }]
     }
 ]
 const [activity1, activity2, activity3] = freeAticivitiesCardsData
