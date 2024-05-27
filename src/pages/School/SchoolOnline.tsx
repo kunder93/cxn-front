@@ -15,7 +15,7 @@ import {
 import { SetPageTitle } from '../../utility/functions'
 import { PhotoData } from 'components/SchoolClass/ClassPhotoGalleryCarousel'
 
-const pageTitle = 'Escola adultos Círculo Xadrez Narón'
+const pageTitle = 'Escola online Círculo Xadrez Narón'
 
 const pageSubTitle = 'Compartir nuestra pasión por el ajedrez al mismo tiempo que aprendemos y crecemos como personas.'
 
