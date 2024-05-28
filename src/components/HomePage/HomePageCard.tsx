@@ -1,15 +1,10 @@
-import React, { ReactElement } from 'react'
-import { Button, Card, CardImg } from 'react-bootstrap'
-import { useNavigate } from 'react-router'
-import styled from 'styled-components'
-import HomePageCardModal from './HomePageCardModal'
+import React, { ReactElement } from 'react';
+import { Button, Card } from 'react-bootstrap';
+import { useNavigate } from 'react-router';
+import styled from 'styled-components';
+import HomePageCardModal from './HomePageCardModal';
+import HomePageCardImage from './HomePageCardImage';
 
-const ScaledImage = styled(CardImg)`
-    width: 100%;
-    aspect-ratio: 16/9;
-    object-fit: fill;
-    border-radius: 0% !important;
-`
 const CardFooter = styled(Card.Footer)`
     &&& {
         display: flex;
@@ -18,7 +13,7 @@ const CardFooter = styled(Card.Footer)`
         align-items: stretch;
         padding: 0; /* Elimina el padding */
     }
-`
+`;
 
 const StyledCardBody = styled(Card.Body)`
     text-align: center; /* Alinea el contenido al centro */
@@ -30,24 +25,24 @@ const StyledCardBody = styled(Card.Body)`
         padding-left: 0.5em;
         padding-right: 0.5em;
     }
-`
+`;
 
 const StyledCard = styled(Card)`
     border-radius: 0 !important;
     border: 4px solid green !important;
     width: 300px;
     height: 380px !important;
-`
+`;
 
 const StyledCardText = styled(Card.Text)`
     margin-bottom: 0%;
     padding-bottom: 0.5em;
     font-family: 'Roboto', sans-serif;
-`
+`;
 
 const StyledCardTitle = styled(Card.Title)`
     font-family: 'Protest Strike', sans-serif;
-`
+`;
 
 export enum ButtonOptions {
     NAVIGATION = 'NAVIGATION', // Para acciones de navegación
@@ -55,45 +50,50 @@ export enum ButtonOptions {
 }
 
 export interface FormParams {
-    formInitialTopic: string
-    formTitle: string
+    formInitialTopic: string;
+    formTitle: string;
 }
 
 export interface ButtonProps {
-    buttonText: string
-    buttonAction: ButtonOptions
-    component?: ReactElement
-    navigationUrl?: string
+    buttonText: string;
+    buttonAction: ButtonOptions;
+    component?: ReactElement;
+    navigationUrl?: string;
 }
 
 export interface HomePageCardProps {
-    imageSrc: string
-    imageAlt: string
-    cardTitle: string
-    cardText: string[]
-    buttonProps: ButtonProps[]
+    imageSrc: string;
+    imageAlt: string;
+    sources: {
+        srcSet: string;
+        media?: string;
+        type?: string;
+    }[];
+    cardTitle: string;
+    cardText: string[];
+    buttonProps: ButtonProps[];
 }
 
 const HomePageCard: React.FC<HomePageCardProps> = (props) => {
-    const navigate = useNavigate()
-    const [showModal, setShowModal] = React.useState(false)
-    const [modalContent, setModalContent] = React.useState<ReactElement | null>(null)
+    const navigate = useNavigate();
+    const [showModal, setShowModal] = React.useState(false);
+    const [modalContent, setModalContent] = React.useState<ReactElement | null>(null);
 
     function closeModal() {
-        setShowModal(false)
+        setShowModal(false);
     }
 
     function buttonClickHandler(buttonProps: ButtonProps): void {
         switch (buttonProps.buttonAction) {
             case ButtonOptions.MODAL:
-                setShowModal(true)
-                setModalContent(buttonProps.component ?? null)
-                break
+                setShowModal(true);
+                setModalContent(buttonProps.component ?? null);
+                break;
             case ButtonOptions.NAVIGATION:
-                navigate(buttonProps.navigationUrl ?? '')
-                break
+                navigate(buttonProps.navigationUrl ?? '');
+                break;
             default:
-                break
+                break;
         }
     }
 
@@ -101,7 +101,7 @@ const HomePageCard: React.FC<HomePageCardProps> = (props) => {
         <>
             <article>
                 <StyledCard>
-                    <ScaledImage src={props.imageSrc} alt={props.imageAlt} loading='lazy' />
+                    <HomePageCardImage alt={props.imageAlt} src={props.imageSrc} sources={props.sources} />
                     <StyledCardBody>
                         <StyledCardTitle>{props.cardTitle}</StyledCardTitle>
                         {props.cardText.map((text, index) => (
@@ -124,11 +124,11 @@ const HomePageCard: React.FC<HomePageCardProps> = (props) => {
             </article>
             <HomePageCardModal
                 show={showModal}
-                closemodal={closeModal}
-                modalcontentcomponent={modalContent ?? null} // Renderizar contenido modal personalizado
-            ></HomePageCardModal>
+                closeModal={closeModal}
+                modalContentComponent={modalContent ?? null} // Renderizar contenido modal personalizado
+            />
         </>
-    )
-}
+    );
+};
 
-export default HomePageCard
+export default HomePageCard;
