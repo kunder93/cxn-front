@@ -59,8 +59,6 @@ const CustomNav = styled(Nav)`
     padding-right: 2em;
 `
 
-
-
 const CXN_BLOG_URL = 'https://xadreznaron.wordpress.com/'
 
 const CollapsibleNavigationBar: React.FC = () => {
@@ -71,7 +69,6 @@ const CollapsibleNavigationBar: React.FC = () => {
     const handleToggle = () => setExpanded(!expanded)
     const handleNavItemClick = () => setExpanded(false)
     const handleNavbarBrandClick = () => setExpanded(false)
-
 
     return (
         <StyledNavbar expanded={expanded} className="sticky-top" collapseOnSelect expand="sm" data-bs-theme="dark" id="main-navigation-bar">
@@ -93,7 +90,6 @@ const CollapsibleNavigationBar: React.FC = () => {
                             { text: 'Recursos', href: ROUTES.SCHOOL_RESOURCES }
                         ]}
                         onNavItemClick={handleNavItemClick}
-                        
                     />
                     <CustomDropdownMenu
                         title="El Club"
