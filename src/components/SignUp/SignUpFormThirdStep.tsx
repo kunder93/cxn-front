@@ -7,7 +7,39 @@ import { useAxiosGetCountriesList } from '../../utility/CustomAxios'
 import FormField from './FormField'
 import { Field, FormikProps } from 'formik'
 import useSubCountries from './CustomHooks/useSubCountries'
-import { ButtonCol, ButtonRow, FormStyledContainer, MainContainer } from './CommonStyles'
+import { ButtonRow, FormStyledContainer, MainContainer } from './CommonStyles'
+import styled from 'styled-components'
+
+const ButtonCol = styled(Col)`
+    width: 50%;
+    display: flex;
+    justify-content: center;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        margin-bottom: 1em;
+    }
+`
+
+const ResponsiveMainContainer = styled(MainContainer)`
+    @media (max-width: 768px) {
+        width: 100%;
+        padding: 0;
+    }
+`
+
+const ResponsiveFormStyledContainer = styled(FormStyledContainer)`
+    @media (max-width: 768px) {
+        width: 100%;
+        padding-top: 0.1em;
+        padding-left: 2em;
+        padding-right: 1em;
+        font-size: 120%;
+        .form-label {
+            font-weight: 600;
+        }
+    }
+`
 
 const isThirdStepNextButtonDisabled = ({ errors, values }: FormikProps<SignUpFormValues>): boolean => {
     return !!(
@@ -70,8 +102,8 @@ const SignUpFormThirdStep: React.FC<SignUpFormStepProps> = ({ formikProps, previ
     }, [subCountriesList, subCountriesLoading, subCountriesError])
 
     return (
-        <MainContainer>
-            <FormStyledContainer>
+        <ResponsiveMainContainer>
+            <ResponsiveFormStyledContainer>
                 <FormField label="Código postal:" id="postalCode" name="postalCode" type="text" placeholder="Código postal" formikProps={formikProps} />
                 <FormField
                     label="Número:"
@@ -104,19 +136,29 @@ const SignUpFormThirdStep: React.FC<SignUpFormStepProps> = ({ formikProps, previ
                 </Row>
                 <ButtonRow>
                     <ButtonCol>
-                        <Button variant="primary" onClick={previousStepFunction}>
+                        <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={previousStepFunction}
+                            style={{ width: '100%', maxWidth: '150px', padding: '5px 10px', fontSize: '14px' }}
+                        >
                             Atrás
                         </Button>
                     </ButtonCol>
-                    <Col></Col>
-                    <Col>
-                        <Button variant="primary" onClick={nextStepFunction} disabled={isNextButtonDisabled}>
+                    <ButtonCol>
+                        <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={nextStepFunction}
+                            disabled={isNextButtonDisabled}
+                            style={{ width: '100%', maxWidth: '150px', padding: '5px 10px', fontSize: '14px' }}
+                        >
                             Siguiente
                         </Button>
-                    </Col>
+                    </ButtonCol>
                 </ButtonRow>
-            </FormStyledContainer>
-        </MainContainer>
+            </ResponsiveFormStyledContainer>
+        </ResponsiveMainContainer>
     )
 }
 
