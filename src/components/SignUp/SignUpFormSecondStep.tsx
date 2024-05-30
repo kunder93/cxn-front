@@ -5,14 +5,47 @@ import BootstrapForm from 'react-bootstrap/Form'
 import styled from 'styled-components'
 import { SignUpFormValues } from './SignUpFormTypes'
 import FormField from './FormField'
-import { ButtonCol, ButtonRow, FormStyledContainer, MainContainer } from './CommonStyles'
+import { ButtonRow, FormStyledContainer, MainContainer } from './CommonStyles'
 
 const ErrorMessage = styled.div`
     color: red;
 `
 
+const ResponsiveMainContainer = styled(MainContainer)`
+    @media (max-width: 768px) {
+        width: 100%;
+        padding: 0;
+    }
+`
+
+const ResponsiveFormStyledContainer = styled(FormStyledContainer)`
+    @media (max-width: 768px) {
+        width: 100%;
+        padding-top: 0.1em;
+        padding-left: 2em;
+        padding-right: 1em;
+        font-size: 120%;
+        .form-label {
+            font-weight: 600;
+        }
+    }
+`
+
 const FormRow = styled(Row)`
     margin-bottom: 2em;
+`
+
+const ButtonCol = styled(Col)`
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    padding: 0 5px;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        margin-bottom: 1em;
+        padding: 0;
+    }
 `
 
 const isSecondStepNextButtonDisabled = (formikProps: FormikProps<SignUpFormValues>): boolean => {
@@ -20,15 +53,15 @@ const isSecondStepNextButtonDisabled = (formikProps: FormikProps<SignUpFormValue
     return !!(errors.dni ?? errors.name ?? errors.firstSurname ?? errors.secondSurname ?? errors.gender ?? errors.birthDate)
 }
 
-export interface secondStepFormData {
+export interface SecondStepFormData {
     nextStepFunction: () => void
     previousStepFunction: () => void
     formikProps: FormikProps<SignUpFormValues>
 }
 
-const SignUpFormSecondStep: React.FC<secondStepFormData> = ({ formikProps, nextStepFunction, previousStepFunction }) => (
-    <MainContainer>
-        <FormStyledContainer>
+const SignUpFormSecondStep: React.FC<SecondStepFormData> = ({ formikProps, nextStepFunction, previousStepFunction }) => (
+    <ResponsiveMainContainer>
+        <ResponsiveFormStyledContainer>
             <FormField id="dni" name="dni" type="text" label="DNI:" placeholder="Tu DNI" formikProps={formikProps} />
             <FormField id="name" name="name" type="text" label="Nombre:" placeholder="Tu nombre" formikProps={formikProps} />
             <FormField id="firstSurname" name="firstSurname" type="text" label="Primer apellido:" placeholder="Tu primer apellido" formikProps={formikProps} />
@@ -61,19 +94,29 @@ const SignUpFormSecondStep: React.FC<secondStepFormData> = ({ formikProps, nextS
             </FormRow>
             <ButtonRow>
                 <ButtonCol>
-                    <Button variant="primary" onClick={previousStepFunction}>
+                    <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={previousStepFunction}
+                        style={{ width: '100%', maxWidth: '150px', padding: '5px 10px', fontSize: '14px' }}
+                    >
                         Atrás
                     </Button>
                 </ButtonCol>
-                <Col></Col>
-                <Col>
-                    <Button variant="primary" onClick={nextStepFunction} disabled={isSecondStepNextButtonDisabled(formikProps)}>
+                <ButtonCol>
+                    <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={nextStepFunction}
+                        disabled={isSecondStepNextButtonDisabled(formikProps)}
+                        style={{ width: '100%', maxWidth: '150px', padding: '5px 10px', fontSize: '14px' }}
+                    >
                         Siguiente
                     </Button>
-                </Col>
+                </ButtonCol>
             </ButtonRow>
-        </FormStyledContainer>
-    </MainContainer>
+        </ResponsiveFormStyledContainer>
+    </ResponsiveMainContainer>
 )
 
 export default SignUpFormSecondStep

@@ -1,4 +1,4 @@
-import { Col, Container, Row } from 'react-bootstrap'
+import { Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 
 export const MainContainer = styled(Container)`
@@ -18,9 +18,8 @@ export const FormStyledContainer = styled.div`
 
 export const ButtonRow = styled(Row)`
     display: flex;
-    padding-top: 0.5em;
     padding-bottom: 1em;
+    padding-right: 1em;
+    flex-wrap: nowrap !important;
 `
-export const ButtonCol = styled(Col)`
-    justify-content: center;
-`
+

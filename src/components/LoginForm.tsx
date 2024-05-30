@@ -16,15 +16,31 @@ const ErrorMessage = styled.div`
     color: red;
 `
 
-export const LoginFormStyledContainer = styled.div`
+const StyledRow = styled(Row)`
+    padding-bottom: 1em;
+`
+
+const LoginFormStyledContainer = styled.div`
     background-color: rgba(250, 238, 168, 0.219);
     box-shadow:
         0 0.5em 0.5em -0.3em rgba(0, 0, 0, 0.3),
         0.5em 0 0.5em -0.3em rgba(0, 0, 0, 0.3);
     padding: 1em;
-    padding-left: 8em;
-    padding-right: 8em;
+    font-size: 140%;
+    padding-left: 18em;
+    padding-right: 18em;
     border-radius: 5px;
+    @media (max-width: 768px) {
+        padding-left: 3em;
+        padding-right: 3em;
+
+        input {
+            font-size:100%;
+        }
+        label {
+            font-size: 120%
+        }
+    }
 `
 
 const ErrorAlert = styled(Alert)`
@@ -46,7 +62,7 @@ const CenteredButtonRow = styled(Row)`
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100px; /* Ajusta según sea necesario */
+    min-height: 100px;
 `
 
 // Form values interface
@@ -56,7 +72,7 @@ export interface LoginFormValues {
 }
 
 // Login response interface
-interface LoginAxiosResponse {
+export interface LoginAxiosResponse {
     jwt: string
 }
 
@@ -76,13 +92,7 @@ const LoginForm: React.FC = () => {
             navigate('/')
         } catch (error) {
             const axiosError = error as AxiosError<{ content: string }>
-            if (axiosError.response) {
-                setAlertMessage(axiosError.response.data.content)
-            } else if (axiosError.request) {
-                setAlertMessage('Error: no hay respuesta.')
-            } else {
-                setAlertMessage('Error: algo inesperado. Recarga o inténtalo más tarde.')
-            }
+            setAlertMessage(axiosError.response?.data.content ?? 'Error: algo inesperado. Recarga o inténtalo más tarde.')
         } finally {
             actions.setSubmitting(false)
         }
@@ -91,9 +101,9 @@ const LoginForm: React.FC = () => {
     return (
         <LoginFormStyledContainer>
             <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={LogInValidationSchema} validateOnChange>
-                {({ errors, touched, isSubmitting }) => (
-                    <BootstrapForm as={Form}>
-                        <Row>
+                {({ errors, touched, isSubmitting, isValid, dirty }) => (
+                    <Form>
+                        <StyledRow>
                             <Col>
                                 <BootstrapForm.Label htmlFor="email">Email:</BootstrapForm.Label>
                                 <Field
@@ -107,10 +117,10 @@ const LoginForm: React.FC = () => {
                                 />
                                 {errors.email && touched.email && <ErrorMessage>{errors.email}</ErrorMessage>}
                             </Col>
-                        </Row>
+                        </StyledRow>
                         <Row>
                             <Col>
-                                <BootstrapForm.Label htmlFor="password">Password:</BootstrapForm.Label>
+                                <BootstrapForm.Label htmlFor="password">Contraseña:</BootstrapForm.Label>
                                 <Field
                                     as={BootstrapForm.Control}
                                     id="password"
@@ -125,7 +135,7 @@ const LoginForm: React.FC = () => {
                         </Row>
                         <CenteredButtonRow>
                             <Col xs="auto">
-                                <Button type="submit" variant="success" disabled={isSubmitting}>
+                                <Button type="submit" variant="success" size="lg" disabled={!dirty || !isValid || isSubmitting}>
                                     {isSubmitting ? (
                                         <>
                                             <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> Accediendo...
@@ -145,7 +155,7 @@ const LoginForm: React.FC = () => {
                                 </Col>
                             </Row>
                         )}
-                    </BootstrapForm>
+                    </Form>
                 )}
             </Formik>
         </LoginFormStyledContainer>

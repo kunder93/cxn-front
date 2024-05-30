@@ -46,6 +46,21 @@ const FloatingWindow = styled.div`
     }
 `
 
+const StyledNav = styled(Nav)`
+          
+    a {
+        font-size: 160%;
+    }
+    @media (max-width: 768px) {
+        gap: 0px;
+        border-top: 2px solid grey;
+        margin-top: 0.5em;
+        padding-top: 0.5em;
+        margin-right: 4em;
+
+    }
+`
+
 const UserLoggedHeaderNavBar: React.FC = () => {
     const [imagePopOver, setImagePopOver] = useState(false)
     const dispatch = useAppDispatch()
@@ -63,21 +78,19 @@ const UserLoggedHeaderNavBar: React.FC = () => {
     }
 
     return (
-        <Nav className="ms-auto">
+        <StyledNav className="ms-auto">
             <Nav.Link as={Link} to={ROUTES.MYPROFILE_ROUTE}>
                 Zona Socio
             </Nav.Link>
             <Nav.Link as={Link} to={ROUTES.HOMEPAGE_ROUTE} onClick={logoutHandler}>
                 Salir
             </Nav.Link>
-            <div>
-                <UserProfileIconStyled onMouseEnter={handleImageMouseEnter} onMouseLeave={handleImageMouseLeave}></UserProfileIconStyled>
-            </div>
+            <UserProfileIconStyled onMouseEnter={handleImageMouseEnter} onMouseLeave={handleImageMouseLeave}></UserProfileIconStyled>
             <FloatingWindow hidden={!imagePopOver}>
                 {/* Content for the floating window */}
-                This is the floating window content.
+                En construcción, paciencia!!.
             </FloatingWindow>
-        </Nav>
+        </StyledNav>
     )
 }
 
