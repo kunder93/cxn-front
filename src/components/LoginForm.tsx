@@ -31,8 +31,15 @@ const LoginFormStyledContainer = styled.div`
     padding-right: 18em;
     border-radius: 5px;
     @media (max-width: 768px) {
-        padding-left: 4em;
-        padding-right: 4em;
+        padding-left: 3em;
+        padding-right: 3em;
+
+        input {
+            font-size:100%;
+        }
+        label {
+            font-size: 120%
+        }
     }
 `
 
@@ -85,7 +92,7 @@ const LoginForm: React.FC = () => {
             navigate('/')
         } catch (error) {
             const axiosError = error as AxiosError<{ content: string }>
-            setAlertMessage(axiosError.response?.data.content || 'Error: algo inesperado. Recarga o inténtalo más tarde.')
+            setAlertMessage(axiosError.response?.data.content ?? 'Error: algo inesperado. Recarga o inténtalo más tarde.')
         } finally {
             actions.setSubmitting(false)
         }
@@ -113,7 +120,7 @@ const LoginForm: React.FC = () => {
                         </StyledRow>
                         <Row>
                             <Col>
-                                <BootstrapForm.Label htmlFor="password">Password:</BootstrapForm.Label>
+                                <BootstrapForm.Label htmlFor="password">Contraseña:</BootstrapForm.Label>
                                 <Field
                                     as={BootstrapForm.Control}
                                     id="password"
