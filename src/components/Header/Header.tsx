@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import { useAppSelector } from '../../store/hooks'
@@ -57,6 +57,13 @@ const CustomNav = styled(Nav)`
     font-size: 150%;
     gap: 30px;
     padding-right: 2em;
+    @media (max-width: 768px) {
+        gap: 0px;
+        border-top: 2px solid grey;
+        margin-top: 0.5em;
+        padding-top: 0.5em;
+        margin-right: 3em;
+    }
 `
 
 const CXN_BLOG_URL = 'https://xadreznaron.wordpress.com/'
@@ -66,19 +73,32 @@ const CollapsibleNavigationBar: React.FC = () => {
     const userJwt = useAppSelector<string>((state) => state.users.jwt)
     const isUserLoggedIn = userJwt.length !== 0
 
+    const navbarRef = useRef<HTMLDivElement>(null)
+
     const handleToggle = () => setExpanded(!expanded)
     const handleNavItemClick = () => setExpanded(false)
     const handleNavbarBrandClick = () => setExpanded(false)
 
+    const handleClickOutside = (event: MouseEvent) => {
+        if (navbarRef.current && !navbarRef.current.contains(event.target as Node)) {
+            setExpanded(false)
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener('click', handleClickOutside)
+        return () => {
+            document.removeEventListener('click', handleClickOutside)
+        }
+    }, [])
+
     return (
-        <StyledNavbar expanded={expanded} className="sticky-top" collapseOnSelect expand="sm" data-bs-theme="dark" id="main-navigation-bar">
+        <StyledNavbar ref={navbarRef} expanded={expanded} className="sticky-top" collapseOnSelect expand="sm" data-bs-theme="dark" id="main-navigation-bar">
             <NavbarBrandStyled as={Link} to={''} tabIndex={0} aria-label="Link a la página principal." onClick={handleNavbarBrandClick}>
                 <NavLogo alt="CXN Logo" src={CxnLogo} />
             </NavbarBrandStyled>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" onClick={handleToggle} /> {/* Botón de alternancia */}
             <Navbar.Collapse id="responsive-navbar-nav">
-                {' '}
-                {/* Contenedor colapsable */}
                 <InsideOptionsNav className="me-auto">
                     <CustomDropdownMenu
                         title={'Escuela'}
