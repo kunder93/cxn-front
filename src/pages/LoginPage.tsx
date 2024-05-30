@@ -1,18 +1,25 @@
 import { MainContainer } from '../components/SignUp/CommonStyles'
 import LoginForm from '../components/LoginForm'
 import React from 'react'
-import { Col, Row } from 'react-bootstrap'
+import styled from 'styled-components'
+
+
+const LoginPageTitle = styled.h2`
+    font-weight: 600;
+    font-size:200%;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    padding-left: 0.1em;
+`
+
+
 
 const LoginPage: React.FC = () => {
     return (
-    <Row>
-        <Col></Col>
-        <Col>
         <MainContainer fluid="md">
-                    <h2>Acceso socios CXN:</h2>
-                    <LoginForm></LoginForm>
+            <LoginPageTitle>Acceso socios CXN:</LoginPageTitle>
+            <LoginForm></LoginForm>
         </MainContainer>
-        </Col><Col></Col>
-        </Row> )
+    )
 }
 export default LoginPage

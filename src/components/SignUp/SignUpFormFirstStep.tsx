@@ -1,10 +1,38 @@
 import React from 'react'
 import { FormikProps, FormikErrors } from 'formik'
-import { Button, Col } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import BootstrapForm from 'react-bootstrap/Form'
 import { SignUpFormValues, SignUpFormStepProps } from './SignUpFormTypes'
 import FormField from './FormField'
-import { ButtonCol, ButtonRow, FormStyledContainer, MainContainer } from './CommonStyles'
+import { ButtonRow, FormStyledContainer, MainContainer } from './CommonStyles'
+import styled from 'styled-components'
+
+const ResponsiveFormStyledContainer = styled(FormStyledContainer)`
+    @media (max-width: 768px) {
+        width: 100%;
+        padding-top: 0.1em;
+        padding-left: 2em;
+        padding-right: 1em;
+        font-size: 120%;
+        .form-label {
+            font-weight: 600;
+        }
+    }
+`
+
+const ResponsiveMainContainer = styled(MainContainer)`
+    @media (max-width: 768px) {
+        width: 100%;
+        padding: 0;
+    }
+`
+
+const ResponsiveFormField = styled(FormField)`
+    width: 100%;
+    @media (max-width: 768px) {
+        width: 100%;
+    }
+`
 
 const isFirstStepNextButtonDisabled = (formikProps: FormikProps<SignUpFormValues>): boolean => {
     const formErrors: FormikErrors<SignUpFormValues> = formikProps.errors
@@ -13,11 +41,11 @@ const isFirstStepNextButtonDisabled = (formikProps: FormikProps<SignUpFormValues
 
 const SignUpFormFirstStep: React.FC<SignUpFormStepProps> = ({ formikProps, nextStepFunction }) => {
     return (
-        <MainContainer as={BootstrapForm.Group}>
-            <FormStyledContainer>
-                <FormField id="email" name="email" type="text" label="Correo electrónico:" placeholder="Email" formikProps={formikProps} />
-                <FormField id="password" name="password" type="password" label="Contraseña:" placeholder="Contraseña" formikProps={formikProps} />
-                <FormField
+        <ResponsiveMainContainer as={BootstrapForm.Group}>
+            <ResponsiveFormStyledContainer>
+                <ResponsiveFormField id="email" name="email" type="text" label="Correo electrónico:" placeholder="Email" formikProps={formikProps} />
+                <ResponsiveFormField id="password" name="password" type="password" label="Contraseña:" placeholder="Contraseña" formikProps={formikProps} />
+                <ResponsiveFormField
                     id="confirmPassword"
                     name="confirmPassword"
                     type="password"
@@ -26,16 +54,12 @@ const SignUpFormFirstStep: React.FC<SignUpFormStepProps> = ({ formikProps, nextS
                     formikProps={formikProps}
                 />
                 <ButtonRow>
-                    <Col></Col>
-                    <ButtonCol>
-                        <Button variant="primary" onClick={nextStepFunction} disabled={isFirstStepNextButtonDisabled(formikProps)}>
-                            Siguiente
-                        </Button>
-                        <Col></Col>
-                    </ButtonCol>
+                    <Button variant="primary" onClick={nextStepFunction} disabled={isFirstStepNextButtonDisabled(formikProps)}>
+                        Siguiente
+                    </Button>
                 </ButtonRow>
-            </FormStyledContainer>
-        </MainContainer>
+            </ResponsiveFormStyledContainer>
+        </ResponsiveMainContainer>
     )
 }
 
