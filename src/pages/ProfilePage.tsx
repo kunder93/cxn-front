@@ -6,10 +6,11 @@ import { useAppDispatch } from '../store/hooks'
 //import PresidenteMenu from '../components/PresidenteMenu'
 //import UserServicesDropdown from '../components/UsersServices/UserServicesDropdown'
 import styled from 'styled-components'
-import {setUserProfile } from '../store/slices/user'
+
 import AdminRolePage from '../components/UserProfiles/AdminRolePage'
 import SocioRolePage from '../components/UserProfiles/SocioRolePage'
 import { UserProfile } from '../store/types/userTypes'
+import { setUserProfile } from '../store/slices/user'
 //import { Wrench } from 'react-bootstrap-icons'
 
 const SideBar = styled.aside`
@@ -18,7 +19,7 @@ const SideBar = styled.aside`
 
 const MainPageContainer = styled.div`
     display: grid;
-    grid-template-columns: 25fr 75fr;
+    grid-template-columns: 25fr 50fr 25fr;
 `
 
 enum ProfileSection {
@@ -96,6 +97,7 @@ const ProfilePage: React.FC = () => {
                 {/*} <div>{/*userRoles[0].startsWith('ROLE_PRESIDENTE') ? <PresidenteMenu></PresidenteMenu> : 'NO ERES PRESIDENTE'</div>
                   <UserServicesDropdown data={[]}></UserServicesDropdown>*/}
             </div>
+            <div></div>
         </MainPageContainer>
     ) : (
         <h1>Welcome to the ProfilePage !!</h1>
