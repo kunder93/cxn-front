@@ -116,6 +116,7 @@ const [memberActivity1, memberActivity2, memberActivity3] = memberActivitiesCard
 
 const StyledMainCarouselSection = styled.section`
     grid-area: mainCarousel;
+
 `
 
 const MainContentStyledSection = styled.section`

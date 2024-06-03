@@ -7,10 +7,12 @@ const carouselImageSrc1 = '/Principal/HomePageHeader.avif'
 const PictureContainer = styled.div`
     width: 100%;
     overflow: hidden; /* Evita que el contenido adicional desborde */
+
 `
 
 const MainPicture = styled.picture`
     width: 100%;
+    
 `
 
 const StyledImage = styled(Image)`
@@ -18,6 +20,9 @@ const StyledImage = styled(Image)`
     height: auto; /* Mantiene la proporción de la imagen */
     aspect-ratio: 4/1;
     filter: blur(2px);
+    @media (max-width: 768px) {
+        height: 200px;
+    }
 `
 
 const HomePageMainCarousel: React.FC = () => {

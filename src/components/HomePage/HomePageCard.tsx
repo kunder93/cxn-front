@@ -111,20 +111,19 @@ const HomePageCard: React.FC<HomePageCardProps> = (props) => {
                     <CardFooter>
                         {props.buttonProps.map((button, index) => (
                             <Button
-                                variant="success"
                                 key={index}
                                 onClick={() => buttonClickHandler(button)}
                                 style={{
                                     flexGrow: 1,
                                     borderRadius: 0,
                                     textShadow: '4px 4px 5px rgba(0, 0, 0, 0.5)',
-                                    backgroundColor: 'gold',
-                                    borderColor: 'gold',
+                                    backgroundColor: '#857415',
+                                    borderColor: '#857415',
                                     borderRight: index !== props.buttonProps.length - 1 ? '2px solid #926f32' : 'none',
                                     transition: 'background-color 0.3s ease-in-out'
                                 }}
-                                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f7dd4f')}
-                                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'gold')}
+                                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#af9919')}
+                                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#857415')}
                             >
                                 {button.buttonText}
                             </Button>
