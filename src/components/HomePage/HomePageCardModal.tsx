@@ -11,7 +11,7 @@ const HomePageCardModal: React.FC<HomePageCardModalProps> = ({ show, closeModal,
     return (
         <Modal show={show} onHide={closeModal}>
             <Modal.Header closeButton>
-                <Modal.Title>FORMULARIO DE INFORMACIÓN:</Modal.Title>
+                <Modal.Title>INFORMACIÓN:</Modal.Title>
             </Modal.Header>
             <Modal.Body>{modalContentComponent}</Modal.Body>
             <Modal.Footer>

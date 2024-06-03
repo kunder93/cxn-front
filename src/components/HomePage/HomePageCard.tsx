@@ -29,7 +29,7 @@ const StyledCardBody = styled(Card.Body)`
 
 const StyledCard = styled(Card)`
     border-radius: 0 !important;
-    border: 4px solid green !important;
+    border: 4px solid #926f32 !important;
     width: 300px;
     height: 380px !important;
 `
@@ -114,7 +114,17 @@ const HomePageCard: React.FC<HomePageCardProps> = (props) => {
                                 variant="success"
                                 key={index}
                                 onClick={() => buttonClickHandler(button)}
-                                style={{ flexGrow: 1, borderRadius: 0, textShadow: '4px 4px 5px rgba(0, 0, 0, 0.5)' }}
+                                style={{
+                                    flexGrow: 1,
+                                    borderRadius: 0,
+                                    textShadow: '4px 4px 5px rgba(0, 0, 0, 0.5)',
+                                    backgroundColor: 'gold',
+                                    borderColor: 'gold',
+                                    borderRight: index !== props.buttonProps.length - 1 ? '2px solid #926f32' : 'none',
+                                    transition: 'background-color 0.3s ease-in-out'
+                                }}
+                                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f7dd4f')}
+                                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'gold')}
                             >
                                 {button.buttonText}
                             </Button>

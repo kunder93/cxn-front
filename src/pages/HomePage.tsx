@@ -24,13 +24,7 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
             {
                 buttonText: 'Pide hasta 1 mes de prueba',
                 buttonAction: ButtonOptions.MODAL,
-                component: (
-                    <MoreInfoForm
-                        initialTopic={'PRUEBA CLASES PARA NIÑOS'}
-                        formTitle={'CLASES PARA NIÑOS'}
-                        category={'CLASES NIÑOS'}
-                    />
-                )
+                component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'CLASES PARA NIÑOS'} category={'CLASES NIÑOS'} />
             }
         ]
     },
@@ -65,13 +59,7 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
             {
                 buttonText: 'Pide hasta 1 mes de prueba',
                 buttonAction: ButtonOptions.MODAL,
-                component: (
-                    <MoreInfoForm
-                        initialTopic={'PRUEBA CLASES PARA NIÑOS'}
-                        formTitle={'CLASES PARA ADULTOS'}
-                        category={'CLASES ADULTOS'}
-                    ></MoreInfoForm>
-                )
+                component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'CLASES PARA ADULTOS'} category={'CLASES ADULTOS'}></MoreInfoForm>
             }
         ]
     }
