@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
 
 interface HomePageCardModalProps {
     show: boolean;
@@ -11,11 +11,11 @@ const HomePageCardModal: React.FC<HomePageCardModalProps> = ({ show, closeModal,
     return (
         <Modal show={show} onHide={closeModal}>
             <Modal.Header closeButton>
-                <Modal.Title>Modal Heading</Modal.Title>
+                <Modal.Title>INFORMACIÓN:</Modal.Title>
             </Modal.Header>
             <Modal.Body>{modalContentComponent}</Modal.Body>
             <Modal.Footer>
-                <button onClick={closeModal}>Close</button>
+                <Button variant={'danger'} onClick={closeModal}>Cerrar</Button>
             </Modal.Footer>
         </Modal>
     );
