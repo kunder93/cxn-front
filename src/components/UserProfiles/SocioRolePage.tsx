@@ -1,44 +1,39 @@
-import React, { useState } from 'react'
-import { Button, Container } from 'react-bootstrap'
-import { useAppSelector } from '../../store/hooks'
-import styled from 'styled-components'
-import { UserProfile } from '../../store/types/userTypes'
-import { renderGenderValues, renderKindMember, renderUserRoles } from '../../utility/userUtilities'
-import ChangeEmailModal from '../MyProfile/ChangeEmail/ChangeEmailModal'
-import ChangePasswordModal from '../../components/MyProfile/ChangePassword/ChangePasswordModal'
-import UnsubscribeMemberModal from '../../components/MyProfile/UnsubscribeMember/UnsubscribeMemberModal'
+import React, { useState } from 'react';
+import { Button, Container } from 'react-bootstrap';
+import { useAppSelector } from '../../store/hooks';
+import styled from 'styled-components';
+import { UserProfile } from '../../store/types/userTypes';
+import { renderGenderValues, renderKindMember, renderUserRoles } from '../../utility/userUtilities';
+import ChangeEmailModal from '../MyProfile/ChangeEmail/ChangeEmailModal';
+import ChangePasswordModal from '../../components/MyProfile/ChangePassword/ChangePasswordModal';
+import UnsubscribeMemberModal from '../../components/MyProfile/UnsubscribeMember/UnsubscribeMemberModal';
 
-const FirstCustomRow = styled.div`
+const Row = styled.div`
     display: flex;
     justify-content: space-between;
-    width: 100%; /* Ajusta el ancho según sea necesario */
-    padding-top: 1em;
-    padding-bottom: 1em;
-`
+    width: 100%;
+    padding: 1em 0;
+    font-family: 'Montserrat', sans-serif;
 
-const CustomRow = styled.div`
-    border-top: 2px solid grey;
-    display: flex;
-    justify-content: space-between;
-    width: 100%; /* Ajusta el ancho según sea necesario */
-    padding-top: 1em;
-    padding-bottom: 1em;
-`
+    &:not(:first-child) {
+        border-top: 2px solid #dee2e6;
+    }
+`;
 
-const ButtonsRow = styled.div`
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-evenly;
-    width: 100%; /* Ajusta el ancho según sea necesario */
-    margin-top: 1em; /* Añade un margen superior si es necesario */
-`
-
-const CustomCol = styled.div`
+const Col = styled.div`
     flex: 0 0 calc(50% - 1em);
     margin-left: 1em;
-    padding-right: 1em;
-    padding-left: 1em;
-`
+    padding: 0 1em;
+    font-size: 1.2em; /* Aumenta el tamaño de la fuente */
+`;
+
+const ButtonRow = styled.div`
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    margin-top: 2em;
+    font-family: 'Montserrat', sans-serif;
+`;
 
 const StyledContainer = styled(Container)`
     display: flex;
@@ -46,75 +41,72 @@ const StyledContainer = styled(Container)`
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    padding-top: 1em;
-    padding-bottom: 2em;
-    text-align: center; /* Alineación centrada del texto si es necesario */
-`
+    padding: 2em 1em;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+`;
+
+const Title = styled.h1`
+    margin-bottom: 1.5em;
+    color: #343a40;
+    font-size: 2em; /* Aumenta el tamaño de la fuente */
+`;
 
 const SocioRolePage: React.FC = () => {
-    const userProfile: UserProfile = useAppSelector((state) => state.users.userProfile)
-
-    const [emailModal, setEmailModal] = useState(false)
-    const [passwordModal, setPasswordModal] = useState(false)
-    const [unsubscribeMemberModal, setUnsubscribeMemberModal] = useState(false)
-    function handleChangeEmail() {
-        setEmailModal(true)
-    }
-    function handleChangePassword() {
-        setPasswordModal(true)
-    }
-    function handleUnsubscribeMember() {
-        setUnsubscribeMemberModal(true)
-    }
+    const userProfile: UserProfile = useAppSelector((state) => state.users.userProfile);
+    const [emailModal, setEmailModal] = useState(false);
+    const [passwordModal, setPasswordModal] = useState(false);
+    const [unsubscribeMemberModal, setUnsubscribeMemberModal] = useState(false);
 
     return (
         <StyledContainer>
-            <h1>Información personal:</h1>
-            <FirstCustomRow>
-                <CustomCol>DNI:</CustomCol>
-                <CustomCol>{userProfile.dni}</CustomCol>
-            </FirstCustomRow>
-            <CustomRow>
-                <CustomCol>Nombre:</CustomCol>
-                <CustomCol>{userProfile.name}</CustomCol>
-            </CustomRow>
-            <CustomRow>
-                <CustomCol>Apellidos:</CustomCol>
-                <CustomCol>{userProfile.firstSurname + ' ' + userProfile.secondSurname}</CustomCol>
-            </CustomRow>
-            <CustomRow>
-                <CustomCol>Fecha de nacimiento:</CustomCol>
-                <CustomCol>{userProfile.birthDate.toString()}</CustomCol>
-            </CustomRow>
-            <CustomRow>
-                <CustomCol>Género:</CustomCol>
-                <CustomCol>{renderGenderValues(userProfile.gender)}</CustomCol>
-            </CustomRow>
-            <CustomRow>
-                <CustomCol>Correo electrónico:</CustomCol>
-                <CustomCol>{userProfile.email}</CustomCol>
-            </CustomRow>
-            <CustomRow>
-                <CustomCol>Tipo de socio:</CustomCol>
-                <CustomCol>{renderKindMember(userProfile.kindMember)}</CustomCol>
-            </CustomRow>
-            <CustomRow>
-                <CustomCol>Rol del socio:</CustomCol>
-                <CustomCol>{renderUserRoles(userProfile.userRoles)}</CustomCol>
-            </CustomRow>
-
-            <ButtonsRow>
-                <Button onClick={handleChangeEmail} variant="secondary">
+            <Title>Información personal:</Title>
+            <Row>
+                <Col>DNI:</Col>
+                <Col>{userProfile.dni}</Col>
+            </Row>
+            <Row>
+                <Col>Nombre:</Col>
+                <Col>{userProfile.name}</Col>
+            </Row>
+            <Row>
+                <Col>Apellidos:</Col>
+                <Col>{`${userProfile.firstSurname} ${userProfile.secondSurname}`}</Col>
+            </Row>
+            <Row>
+                <Col>Fecha de nacimiento:</Col>
+                <Col>{new Date(userProfile.birthDate).toLocaleDateString()}</Col>
+            </Row>
+            <Row>
+                <Col>Género:</Col>
+                <Col>{renderGenderValues(userProfile.gender)}</Col>
+            </Row>
+            <Row>
+                <Col>Correo electrónico:</Col>
+                <Col>{userProfile.email}</Col>
+            </Row>
+            <Row>
+                <Col>Tipo de socio:</Col>
+                <Col>{renderKindMember(userProfile.kindMember)}</Col>
+            </Row>
+            <Row>
+                <Col>Rol del socio:</Col>
+                <Col>{renderUserRoles(userProfile.userRoles)}</Col>
+            </Row>
+            <ButtonRow>
+                <Button onClick={() => setEmailModal(true)} variant="secondary">
                     Cambiar correo
                 </Button>
-                <Button variant="secondary" onClick={handleChangePassword}>
+                <Button onClick={() => setPasswordModal(true)} variant="secondary">
                     Cambiar contraseña
                 </Button>
-                <Button variant="danger" onClick={handleUnsubscribeMember}>
+                <Button onClick={() => setUnsubscribeMemberModal(true)} variant="danger">
                     Darse de baja
                 </Button>
-            </ButtonsRow>
-
+            </ButtonRow>
             <ChangeEmailModal
                 show={emailModal}
                 onHide={() => setEmailModal(false)}
@@ -140,7 +132,7 @@ const SocioRolePage: React.FC = () => {
                 secondSurname={userProfile.secondSurname}
             />
         </StyledContainer>
-    )
-}
+    );
+};
 
-export default SocioRolePage
+export default SocioRolePage;
