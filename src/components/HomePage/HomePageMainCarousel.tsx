@@ -1,31 +1,40 @@
 import React from 'react'
-import { Carousel } from 'react-bootstrap'
 import styled from 'styled-components'
+import Image from 'react-bootstrap/Image'
 
 const carouselImageSrc1 = '/Principal/HomePageHeader.avif'
 
-const StyledCarousel = styled(Carousel)`
-    .carousel-item {
-        img {
-            aspect-ratio: 9/2;
-            width: 100%;
-            max-height: 50vh;
-            filter: blur(2px); /* Ajusta el valor según sea necesario */
-        }
+const PictureContainer = styled.div`
+    width: 100%;
+    overflow: hidden; /* Evita que el contenido adicional desborde */
+
+`
+
+const MainPicture = styled.picture`
+    width: 100%;
+    
+`
+
+const StyledImage = styled(Image)`
+    width: 100%;
+    height: auto; /* Mantiene la proporción de la imagen */
+    aspect-ratio: 4/1;
+    filter: blur(2px);
+    @media (max-width: 768px) {
+        height: 200px;
     }
 `
 
-/**
- * Create carousel for main page.
- * @returns Carousel used in main page to show main page header images.
- */
-export const HomePageMainCarousel: React.FC = () => {
+const HomePageMainCarousel: React.FC = () => {
     return (
-        <StyledCarousel controls={false} indicators={false} fade={true} interval={5000}>
-            <Carousel.Item>
-                <img src={carouselImageSrc1} alt="Imagen cabecera pagina principal." /> {/* No lazy cause it loads in the first page view*/}
-            </Carousel.Item>
-        </StyledCarousel>
+        <PictureContainer>
+            <MainPicture>
+                <source media="(min-width:1050px)" srcSet="/Principal/HomePageHeader1050.avif" />
+                <source media="(min-width:650px)" srcSet="/Principal/HomePageHeader650.avif" />
+                <source media="(min-width:450px)" srcSet="/Principal/HomePageHeader450.avif" />
+                <StyledImage src={carouselImageSrc1} alt="Imagen cabecera pagina principal." fluid /> {/* No lazy cause it loads in the first page view */}
+            </MainPicture>
+        </PictureContainer>
     )
 }
 

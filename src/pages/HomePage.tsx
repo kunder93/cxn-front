@@ -24,13 +24,7 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
             {
                 buttonText: 'Pide hasta 1 mes de prueba',
                 buttonAction: ButtonOptions.MODAL,
-                component: (
-                    <MoreInfoForm
-                        initialTopic={'PRUEBA CLASES PARA NIÑOS'}
-                        formTitle={'FORMULARIO DE INFORMACION: CLASES PARA NIÑOS'}
-                        category={'CLASES NIÑOS'}
-                    />
-                )
+                component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'CLASES PARA NIÑOS'} category={'CLASES NIÑOS'} />
             }
         ]
     },
@@ -48,7 +42,7 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
                 component: (
                     <MoreInfoForm
                         initialTopic={'¿CUÁLES SON LOS PRÓXIMOS TORNEOS?'}
-                        formTitle={'FORMULARIO DE INFORMACIÓN: PRÓXIMOS TORNEOS'}
+                        formTitle={'PRÓXIMOS TORNEOS'}
                         category={'PRÓXIMOS TORNEOS'}
                     ></MoreInfoForm>
                 )
@@ -65,13 +59,7 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
             {
                 buttonText: 'Pide hasta 1 mes de prueba',
                 buttonAction: ButtonOptions.MODAL,
-                component: (
-                    <MoreInfoForm
-                        initialTopic={'PRUEBA CLASES PARA NIÑOS'}
-                        formTitle={'FORMULARIO DE INFORMACION: CLASES PARA ADULTOS'}
-                        category={'CLASES ADULTOS'}
-                    ></MoreInfoForm>
-                )
+                component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'CLASES PARA ADULTOS'} category={'CLASES ADULTOS'}></MoreInfoForm>
             }
         ]
     }
@@ -128,6 +116,7 @@ const [memberActivity1, memberActivity2, memberActivity3] = memberActivitiesCard
 
 const StyledMainCarouselSection = styled.section`
     grid-area: mainCarousel;
+
 `
 
 const MainContentStyledSection = styled.section`
@@ -155,6 +144,13 @@ const PageContentTitle = styled.h1`
     padding-right: 1em;
     font-weight: bold;
     font-size: 250%;
+    @media (max-width: 768px) {
+        font-size: 200%; // Ajusta este valor según tus necesidades
+    }
+
+    @media (max-width: 480px) {
+        font-size: 180%; // Ajusta este valor según tus necesidades
+    }
 `
 
 const ClubFreeActivitiesSection = styled.section`
@@ -196,6 +192,13 @@ const FreeActivitiesTittle = styled.h2`
     padding-bottom: 1vw;
     padding-left: 1em;
     padding-right: 1em;
+    @media (max-width: 768px) {
+        font-size: 180%; // Ajusta este valor según tus necesidades
+    }
+
+    @media (max-width: 480px) {
+        font-size: 140%; // Ajusta este valor según tus necesidades
+    }
 `
 
 const FreeActivitiesArticle = styled.article`
