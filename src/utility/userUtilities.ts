@@ -20,7 +20,7 @@ export function renderUserRoles(value: UserRole[]): string {
         .map((role) => {
             switch (role) {
                 case UserRole.ADMIN:
-                    return 'ADMINISTRADOR'
+                    return 'ADMIN'
                 case UserRole.PRESIDENTE:
                     return 'PRESIDENTE'
                 case UserRole.SECRETARIO:
@@ -30,7 +30,7 @@ export function renderUserRoles(value: UserRole[]): string {
                 case UserRole.SOCIO:
                     return 'SOCIO'
                 case UserRole.SOCIO_CANDIDATO:
-                        return 'CANDIDATO A SOCIO'
+                        return 'CANDIDATO'
                 default:
                     return 'NO CONOCIDO'
             }

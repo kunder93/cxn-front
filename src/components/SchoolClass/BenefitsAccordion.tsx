@@ -23,7 +23,13 @@ export interface BenefitsAccordionProps {
     chessQuestionsFormCategory: string
 }
 
-const BenefitsAccordion: React.FC<BenefitsAccordionProps> = ({ carouselBenefits, initialQuestionsFormTopic, faqList, photosData, chessQuestionsFormCategory}) => {
+const BenefitsAccordion: React.FC<BenefitsAccordionProps> = ({
+    carouselBenefits,
+    initialQuestionsFormTopic,
+    faqList,
+    photosData,
+    chessQuestionsFormCategory
+}) => {
     const chessBenefitsHeaderMsg = 'Beneficios del ajedrez:'
     const contactHeaderMsg = 'Contacto'
     const faqHeaderMsg = 'Preguntas frecuentes:'

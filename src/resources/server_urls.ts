@@ -32,3 +32,7 @@ export const CHANGE_MEMBER_PASSWORD_URL = BASE_URL + 'api/user/changePassword'
 export const UNSUBSCRIBE_MEMBER_URL = BASE_URL + 'api/user/unsubscribe'
 
 export const CHESS_QUESTION_URL = BASE_URL + 'api/chessQuestion'
+
+export const CHESS_QUESTION_CHANGE_SEEN_STATE = CHESS_QUESTION_URL + '/changeChessQuestionHasSeen'
+
+export const CHESS_QUESTION_DELETE = CHESS_QUESTION_URL;
