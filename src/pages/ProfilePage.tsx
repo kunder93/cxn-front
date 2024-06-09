@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import AdminRolePage from '../components/UserProfiles/AdminRolePage'
 import SocioRolePage from '../components/UserProfiles/SocioRolePage'
@@ -7,41 +7,95 @@ import MemberCandidate from '../components/UserProfiles/MemberCandidate'
 import PresidenteRolePage from '../components/UserProfiles/PresidenteRolePage'
 import TesoreroRolePage from '../components/UserProfiles/TesoreroRolePage'
 import SecretarioRolePage from '../components/UserProfiles/SecretarioRolePage'
+import MembersManagerPage from './MembersManagerPage'
+import InvoicesManagerPage from './InvoicesManagerPage'
+import CompaniesManagerPage from './CompaniesManagerPage'
+import ChessQuestionsManager from './ChessQuestionsManager'
 import Sidebar, { ProfileSection } from '../components/UserProfiles/SideBar'
 import ChessProfile from '../components/UserProfiles/ChessProfile'
-
+import UserProfileNavbar from '../components/UserProfiles/UserProfileNavBar'
+import PaymentSheetManagerPage from './PaymentSheetManagerPage'
 
 const MainPageContainer = styled.div`
     display: grid;
     grid-template-columns: 1fr 3fr;
     gap: 1rem;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
 `
+
+const ProfileContent = styled.div`
+    margin-top: 2rem;
+    margin-right: 5rem;
+
+    @media (max-width: 768px) {
+        margin-top: 0;
+        padding-bottom: 4rem;
+    }
+`
+
+const sectionComponents = {
+    [ProfileSection.AdminPage]: AdminRolePage,
+    [ProfileSection.UserPage]: SocioRolePage,
+    [ProfileSection.ChessData]: ChessProfile,
+    [ProfileSection.MemberCandidate]: MemberCandidate,
+    [ProfileSection.President]: PresidenteRolePage,
+    [ProfileSection.Tesorero]: TesoreroRolePage,
+    [ProfileSection.Secretario]: SecretarioRolePage,
+    [ProfileSection.MembersManager]: MembersManagerPage,
+    [ProfileSection.InvoicesManger]: InvoicesManagerPage,
+    [ProfileSection.PaymentSheetsManager]: PaymentSheetManagerPage,
+    [ProfileSection.CompaniesManager]: CompaniesManagerPage,
+    [ProfileSection.MessagesManager]: ChessQuestionsManager
+}
 
 const ProfilePage: React.FC = () => {
     const { userProfile, error } = useUserProfile()
     const [profilePage, setProfilePage] = useState<ProfileSection>(ProfileSection.UserPage)
+    const [sidebarSection, setSidebarSection] = useState<ProfileSection>(ProfileSection.UserPage)
+    const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 768)
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768)
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
+    const CurrentPageComponent = sectionComponents[profilePage]
+
+    const changePage = (newSection: ProfileSection) => {
+        setProfilePage(newSection)
+        // setSidebarSection(newSection); // Este es el cambio, solo actualizará profilePage
+    }
+
+    const changeSidebarSection = (newSection: ProfileSection) => {
+        setSidebarSection(newSection)
+    }
 
     return (
         <MainPageContainer>
             {userProfile && (
-                <Sidebar roles={userProfile.userRoles} setProfilePage={setProfilePage} />
+                <>
+                    {!isMobile ? (
+                        <Sidebar
+                            roles={userProfile.userRoles}
+                            setProfilePage={changePage}
+                            setSidebarSection={changeSidebarSection}
+                            currentSection={sidebarSection}
+                        />
+                    ) : (
+                        <UserProfileNavbar
+                            roles={userProfile.userRoles}
+                            currentSection={sidebarSection}
+                            setProfilePage={changePage}
+                            setSidebarSection={changeSidebarSection}
+                        />
+                    )}
+                </>
             )}
-            <div>
-                {error ? (
-                    <p>{error}</p>
-                ) : (
-                    <>
-                        {profilePage === ProfileSection.AdminPage && <AdminRolePage />}
-                        {profilePage === ProfileSection.UserPage && <SocioRolePage />}
-                        {profilePage === ProfileSection.ChessData && <ChessProfile/>}
-                        {profilePage === ProfileSection.MemberCandidate && <MemberCandidate />}
-                        {profilePage === ProfileSection.President && <PresidenteRolePage />}
-                        {profilePage === ProfileSection.Tesorero && <TesoreroRolePage />}
-                        {profilePage === ProfileSection.Secretario && <SecretarioRolePage />}
-                        {/* Aquí puedes añadir más páginas según sea necesario */}
-                    </>
-                )}
-            </div>
+            <ProfileContent>{error ? <p>{error}</p> : CurrentPageComponent && <CurrentPageComponent changePage={changePage} />}</ProfileContent>
         </MainPageContainer>
     )
 }

@@ -9,6 +9,13 @@ import { renderKindMember, renderUserRoles } from '../../utility/userUtilities'
 import ChangeKindMemberModal from './ChangeKindMember/ChangeKindMemberModal'
 import { KindMember, UserProfile, UserRole } from 'store/types/userTypes'
 import ChangeMemberRolesModal from './ChangeMemberRole/ChangeMemberRolesModal'
+import styled from 'styled-components'
+
+
+const RoleCell = styled.div`
+    max-width: 100px;
+    text-overflow: ellipsis;
+`;
 
 interface Props {
     usersData: UserProfile[]
@@ -64,7 +71,7 @@ const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
             },
             {
                 Header: 'Rol del socio',
-                accessor: (d: UserProfile) => renderUserRoles(d.userRoles)
+                accessor: (d: UserProfile)  => <RoleCell>{renderUserRoles(d.userRoles)}</RoleCell>
             },
             {
                 Header: 'Estado',

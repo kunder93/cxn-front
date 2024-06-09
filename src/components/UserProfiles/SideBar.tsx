@@ -1,11 +1,21 @@
-import React from 'react';
-import { UserRole } from '../../store/types/userTypes';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
+import { BsPerson, BsGear, BsPeople, BsCalendar, BsClipboardData } from 'react-icons/bs'
+import { FaChessKnight } from 'react-icons/fa'
+import { UserRole } from '../../store/types/userTypes'
 
 const SideBarContainer = styled.aside`
     background-color: #f8f9fa;
-    padding: 1rem;
+    padding: 2rem;
     font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    max-width: 350px;
+    font-size: 16px;
+
+    @media (max-width: 768px) {
+        display: none;
+    }
 
     ul {
         list-style-type: none;
@@ -18,105 +28,92 @@ const SideBarContainer = styled.aside`
                 color: #343a40;
                 text-decoration: none;
                 font-weight: bold;
+                display: flex;
+                align-items: center;
+                padding: 1rem;
+                border-radius: 8px;
+                transition: background-color 0.3s ease;
+
+                svg {
+                    margin-right: 1rem;
+                    font-size: 1.5rem;
+                }
 
                 &:hover {
-                    text-decoration: underline;
+                    background-color: #e9ecef;
+                }
+
+                &.active {
+                    background-color: #343a40;
+                    color: #fff;
+
+                    svg {
+                        color: #fff;
+                    }
                 }
             }
         }
     }
-`;
-
-interface SidebarProps {
-    roles: UserRole[];
-    setProfilePage: (section: ProfileSection) => void;
-}
+`
 
 export enum ProfileSection {
-    UserPage,
-    ChessData,
-    AdminPage,
-    MemberCandidate,
-    President,
-    Tesorero,
-    Secretario,
+    AdminPage = 'AdminPage',
+    UserPage = 'UserPage',
+    ChessData = 'ChessData',
+    MemberCandidate = 'MemberCandidate',
+    President = 'President',
+    Tesorero = 'Tesorero',
+    Secretario = 'Secretario',
+    MembersManager = 'MembersManager',
+    InvoicesManger = 'InvoicesManager',
+    PaymentSheetsManager = 'PaymentSheetsManager',
+    CompaniesManager = 'CompaniesManager',
+    MessagesManager = 'MessagesManager'
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ roles, setProfilePage }) => {
+interface SidebarProps {
+    roles: UserRole[]
+    setProfilePage: (section: ProfileSection) => void
+    setSidebarSection: (section: ProfileSection) => void
+    currentSection: ProfileSection
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ roles, setProfilePage, setSidebarSection, currentSection }) => {
+    const handleClick = (section: ProfileSection) => {
+        setProfilePage(section)
+        setSidebarSection(section)
+    }
+
+    const renderLink = (section: ProfileSection, icon: JSX.Element, label: string) => (
+        <li key={section}>
+            <a href="#" className={currentSection === section ? 'active' : ''} onClick={() => handleClick(section)}>
+                {icon} {label}
+            </a>
+        </li>
+    )
+
+    const sections = [
+        { section: ProfileSection.UserPage, icon: <BsPerson />, label: 'Mi Perfil', roles: [UserRole.SOCIO] },
+        { section: ProfileSection.AdminPage, icon: <BsGear />, label: 'Administración', roles: [UserRole.ADMIN] },
+        { section: ProfileSection.President, icon: <BsPeople />, label: 'Presidente', roles: [UserRole.PRESIDENTE] },
+        { section: ProfileSection.Tesorero, icon: <BsClipboardData />, label: 'Tesorero', roles: [UserRole.TESORERO] },
+        { section: ProfileSection.Secretario, icon: <BsCalendar />, label: 'Secretario', roles: [UserRole.SECRETARIO] },
+        { section: ProfileSection.ChessData, icon: <FaChessKnight />, label: 'Datos de Ajedrez', roles: [UserRole.SOCIO, UserRole.ADMIN] },
+        { section: ProfileSection.MemberCandidate, icon: <BsPeople />, label: 'Candidatos a Socios', roles: [UserRole.SOCIO_CANDIDATO, UserRole.ADMIN] }
+    ]
+
     return (
         <SideBarContainer>
             <ul>
-                <li>
-                    <a href="#" onClick={() => setProfilePage(ProfileSection.UserPage)}>
-                        Información personal
-                    </a>
-                </li>
-
-                {roles.includes(UserRole.SOCIO) && (
-                    <li>
-                        <a href="#" onClick={() => setProfilePage(ProfileSection.ChessData)}>
-                            Datos de ajedrez
-                        </a>
-                    </li>
-                )}
-                {roles.includes(UserRole.ADMIN) && (
-                    <>
-                        <li>
-                            <a href="#" onClick={() => setProfilePage(ProfileSection.ChessData)}>
-                                Datos de ajedrez
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" onClick={() => setProfilePage(ProfileSection.President)}>
-                                Sección de presidente
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" onClick={() => setProfilePage(ProfileSection.Tesorero)}>
-                                Sección de tesorero
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" onClick={() => setProfilePage(ProfileSection.Secretario)}>
-                                Sección de secretario
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" onClick={() => setProfilePage(ProfileSection.AdminPage)}>
-                                Página Admin
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" onClick={() => setProfilePage(ProfileSection.MemberCandidate)}>
-                                Información candidato a socio
-                            </a>
-                        </li>
-                    </>
-                )}
-                {roles.includes(UserRole.SOCIO_CANDIDATO) && (
-                    <li>
-                        <a href="#" onClick={() => setProfilePage(ProfileSection.MemberCandidate)}>
-                            Información candidato a socio
-                        </a>
-                    </li>
-                )}
-                {roles.includes(UserRole.PRESIDENTE) && (
-                    <>
-                        <li>
-                            <a href="#" onClick={() => setProfilePage(ProfileSection.ChessData)}>
-                                Datos de ajedrez
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" onClick={() => setProfilePage(ProfileSection.President)}>
-                                Sección de presidente
-                            </a>
-                        </li>
-                    </>
-                )}
+                {sections.map(({ section, icon, label, roles: sectionRoles }) => {
+                    if (roles.includes(UserRole.ADMIN) || sectionRoles.some((role) => roles.includes(role))) {
+                        return renderLink(section, icon, label)
+                    }
+                    return null
+                })}
             </ul>
         </SideBarContainer>
-    );
-};
+    )
+}
 
-export default Sidebar;
+export default Sidebar
