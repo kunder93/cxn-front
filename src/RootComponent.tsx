@@ -23,6 +23,7 @@ import ActivitiesPage from './pages/ActivitiesPage'
 import ScrollTopWrapper from './components/Common/ScrollTopWrapper'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import LegalNotice from './pages/LegalNotice'
+import ChessQuestionsManager from './pages/ChessQuestionsManager'
 const RootComponent: React.FC = () => {
     return (
         <ScrollTopWrapper>
@@ -47,6 +48,7 @@ const RootComponent: React.FC = () => {
                 <Route path={ROUTES.ACTIVITIES} element={<ActivitiesPage />} />
                 <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
                 <Route path={ROUTES.LEGAL_NOTICE} element={<LegalNotice />} />
+                <Route path ={ROUTES.CHESS_QUESTIONS_MANAGER} element={<ChessQuestionsManager />}/>
             </Routes>
         </ScrollTopWrapper>
     )

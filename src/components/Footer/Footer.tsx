@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Facebook } from 'react-bootstrap-icons'
+import { Facebook, Instagram, Twitter } from 'react-bootstrap-icons'
 import { Container } from 'react-bootstrap'
 import styled from 'styled-components'
 import { ReactComponent as DeputacionLogo } from '../../images/DepCor_horiz.svg'
@@ -44,6 +44,19 @@ const LastRowFooterContainer = styled(Container)`
     color: #adff2f;
 `
 const FacebookIcon = styled(Facebook)`
+    width: 100px;
+    height: 100px;
+    margin: 30px;
+    fill: #ffffff;
+`
+
+const InstagramIcon = styled(Instagram)`
+    width: 100px;
+    height: 100px;
+    margin: 30px;
+    fill: #ffffff;
+`
+const TwitterIcon = styled(Twitter)`
     width: 100px;
     height: 100px;
     margin: 30px;
@@ -127,7 +140,7 @@ const Footer: React.FC = () => {
                     <XuntaLogoStyled aria-label="Logo Xunta de Galicia"></XuntaLogoStyled>
                 </LinkStyle>
                 <LinkStyle href="https://narontec.es/" target="_blank" rel="noopener noreferrer" aria-label="Mas sobre patrocinador narontec." tabIndex={0}>
-                    <LogoNarontecStyled src="/Footer/logotipo-narontec-web.avif" alt="Logo patrocinador Narontec." />
+                    <LogoNarontecStyled src="/Footer/logotipo-narontec-web.avif" alt="Logo patrocinador Narontec." loading="lazy" />
                 </LinkStyle>
             </SpoonsorFooterContainer>
             <SocialNetworkFooterContainer>
@@ -139,6 +152,24 @@ const Footer: React.FC = () => {
                     tabIndex={0}
                 >
                     <FacebookIcon aria-label="Icono Facebook"></FacebookIcon>
+                </LinkStyle>
+                <LinkStyle
+                    href="https://twitter.com/XadrezNaron"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Ver instagram circulo xadrez naron."
+                    tabIndex={0}
+                >
+                    <InstagramIcon aria-label="Icono Instagram"></InstagramIcon>
+                </LinkStyle>
+                <LinkStyle
+                    href="https://twitter.com/XadrezNaron"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Ver twitter circulo xadrez naron."
+                    tabIndex={0}
+                >
+                    <TwitterIcon aria-label="Icono Twitter"></TwitterIcon>
                 </LinkStyle>
             </SocialNetworkFooterContainer>
             <SecondFooterContainer>

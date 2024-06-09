@@ -1,9 +1,25 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { IBook, ICountryData, IInvoice, IPaymentSheet, ISubCountryData, IUsersListData } from '../components/Types/Types'
-import { GET_ALL_COUNTRIES_URL, GET_SUBCOUNTRIES_URL } from '../resources/server_urls'
+import {
+    CHANGE_KIND_MEMBER_URL,
+    CHANGE_MEMBER_EMAIL_URL,
+    CHANGE_MEMBER_PASSWORD_URL,
+    CHANGE_MEMBER_ROLES_URL,
+    CHESS_QUESTION_URL,
+    GET_ALL_COUNTRIES_URL,
+    GET_ALL_USERS_URL,
+    GET_SUBCOUNTRIES_URL,
+    UNSUBSCRIBE_MEMBER_URL
+} from '../resources/server_urls'
 import { ICompany } from '../components/Companies/Types'
 import { LoginFormValues } from '../components/LoginForm'
+import { ChangeKindMemberValues } from '../components/MembersManager/ChangeKindMember/ChangeKindMemberForm'
+import { UserProfile } from '../store/types/userTypes'
+import { ChangeMemberRolesValues } from '../components/MembersManager/ChangeMemberRole/ChangeMemberRolesForm'
+import { ChangeEmailAxiosValues } from '../components/MyProfile/ChangeEmail/ChangeUserEmailResultAlert'
+import { ChangePasswordAxiosValues } from '../components/MyProfile/ChangePassword/ChangeUserPasswordResultAlert'
+import { UnsubscribeMemberAxiosValues } from '../components/MyProfile/UnsubscribeMember/UnsubscribeMemberResultAlert'
 
 interface companiesAxiosResponse {
     companiesList: ICompany[]
@@ -27,8 +43,14 @@ export const useAxiosGetCompanies = (url: string) => {
     const [error, setError]: [string, (error: string) => void] = useState('')
 
     useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' // Asegúrate de que coincida con la configuración de CORS en el backend
+            }
+        }
         axios
-            .get(url)
+            .get(url, axiosConfig)
             .then((response) => setData(response.data as companiesAxiosResponse))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
@@ -44,8 +66,14 @@ export const useAxiosGetInvoices = (url: string) => {
     const [error, setError]: [string, (error: string) => void] = useState('')
 
     useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' // Asegúrate de que coincida con la configuración de CORS en el backend
+            }
+        }
         axios
-            .get(url)
+            .get(url, axiosConfig)
             .then((response) => setData(response.data as invoicesAxiosResponse))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
@@ -61,8 +89,14 @@ export const useAxiosGetBooks = (url: string) => {
     const [error, setError]: [string, (error: string) => void] = useState('')
 
     useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' // Asegúrate de que coincida con la configuración de CORS en el backend
+            }
+        }
         axios
-            .get(url)
+            .get(url, axiosConfig)
             .then((response) => setData(response.data as booksAxiosResponse))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
@@ -80,8 +114,14 @@ export const useAxiosGetPaymentSheets = (url: string) => {
     const [error, setError]: [string, (error: string) => void] = useState('')
 
     useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' // Asegúrate de que coincida con la configuración de CORS en el backend
+            }
+        }
         axios
-            .get(url)
+            .get(url, axiosConfig)
             .then((response) => {
                 setData(response.data as paymentSheetsAxiosResponse)
             })
@@ -93,14 +133,20 @@ export const useAxiosGetPaymentSheets = (url: string) => {
     return { data, error, loaded }
 }
 
-export const useAxiosGetAllUsersData = (url: string) => {
+export const useAxiosGetAllUsersData = () => {
     const [data, setData]: [IUsersListData, (data: IUsersListData) => void] = useState<IUsersListData>({ usersList: [] })
     const [loaded, setLoaded]: [boolean, (loading: boolean) => void] = useState<boolean>(false)
     const [error, setError]: [string, (error: string) => void] = useState('')
 
     useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' // Asegúrate de que coincida con la configuración de CORS en el backend
+            }
+        }
         axios
-            .get(url)
+            .get(GET_ALL_USERS_URL, axiosConfig)
             .then((response) => {
                 setData(response.data as IUsersListData)
             })
@@ -118,8 +164,14 @@ export const useAxiosPostLogin = (url: string, payload: LoginFormValues) => {
     const [error, setError]: [string, (error: string) => void] = useState('')
 
     useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' // Asegúrate de que coincida con la configuración de CORS en el backend
+            }
+        }
         axios
-            .post(url, payload)
+            .post(url, payload, axiosConfig)
             .then((response) => setData(response.data as string))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
@@ -141,8 +193,14 @@ export const useAxiosGetCountriesList = () => {
     const [error, setError]: [string, (error: string) => void] = useState('')
 
     useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' // Asegúrate de que coincida con la configuración de CORS en el backend
+            }
+        }
         axios
-            .get<countriesListAxiosResponse>(GET_ALL_COUNTRIES_URL)
+            .get<countriesListAxiosResponse>(GET_ALL_COUNTRIES_URL, axiosConfig)
             .then((response) => setData(response.data))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
@@ -164,12 +222,165 @@ export const useAxiosGetSubCountriesList = (countryNumericCode: number) => {
     const [error, setError]: [string, (error: string) => void] = useState('')
 
     useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' // Asegúrate de que coincida con la configuración de CORS en el backend
+            }
+        }
         axios
-            .get<subCountriesListAxiosResponse>(GET_SUBCOUNTRIES_URL + '/' + countryNumericCode)
+            .get<subCountriesListAxiosResponse>(GET_SUBCOUNTRIES_URL + '/' + countryNumericCode, axiosConfig)
             .then((response) => setData(response.data))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
         // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    return { data, error, loaded }
+}
+
+export const useAxiosChangeKindMember = (payload: ChangeKindMemberValues) => {
+    const [data, setData] = useState<UserProfile>()
+    const [loaded, setLoaded]: [boolean, (loading: boolean) => void] = useState<boolean>(false)
+    const [error, setError]: [string, (error: string) => void] = useState('')
+    useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' //coincide con configuración de CORS en el backend
+            }
+        }
+        axios
+            .patch<UserProfile>(CHANGE_KIND_MEMBER_URL, payload, axiosConfig)
+            .then((response) => setData(response.data))
+            .catch((error: string) => setError(error))
+            .finally(() => setLoaded(true))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    return { data, error, loaded }
+}
+
+export const useAxiosChangeMemberRoles = (payload: ChangeMemberRolesValues) => {
+    const [data, setData] = useState<UserProfile>()
+    const [loaded, setLoaded]: [boolean, (loading: boolean) => void] = useState<boolean>(false)
+    const [error, setError]: [string, (error: string) => void] = useState('')
+    useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' //coincide con configuración de CORS en el backend
+            }
+        }
+        axios
+            .patch<UserProfile>(CHANGE_MEMBER_ROLES_URL, payload, axiosConfig)
+            .then((response) => setData(response.data))
+            .catch((error: string) => setError(error))
+            .finally(() => setLoaded(true))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    return { data, error, loaded }
+}
+
+export const useAxiosChangeUserEmail = (payload: ChangeEmailAxiosValues) => {
+    const [data, setData] = useState<UserProfile>()
+    const [loaded, setLoaded]: [boolean, (loading: boolean) => void] = useState<boolean>(false)
+    const [error, setError]: [string, (error: string) => void] = useState('')
+    useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' //coincide con configuración de CORS en el backend
+            }
+        }
+        axios
+            .patch<UserProfile>(CHANGE_MEMBER_EMAIL_URL, payload, axiosConfig)
+            .then((response) => setData(response.data))
+            .catch((error: string) => setError(error))
+            .finally(() => setLoaded(true))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    return { data, error, loaded }
+}
+
+export const useAxiosChangeUserPassword = (payload: ChangePasswordAxiosValues) => {
+    const [data, setData] = useState<UserProfile>()
+    const [loaded, setLoaded]: [boolean, (loading: boolean) => void] = useState<boolean>(false)
+    const [error, setError]: [string, (error: string) => void] = useState('')
+    useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' //coincide con configuración de CORS en el backend
+            }
+        }
+        axios
+            .patch<UserProfile>(CHANGE_MEMBER_PASSWORD_URL, payload, axiosConfig)
+            .then((response) => setData(response.data))
+            .catch((error: string) => setError(error))
+            .finally(() => setLoaded(true))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    return { data, error, loaded }
+}
+
+export const useAxiosUnsubscribeMember = (payload: UnsubscribeMemberAxiosValues) => {
+    const [data, setData] = useState<UserProfile>()
+    const [loaded, setLoaded] = useState<boolean>(false)
+    const [error, setError] = useState<string>('')
+
+    useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' //coincide con configuración de CORS en el backend
+            }
+        }
+
+        axios
+            .delete<UserProfile>(UNSUBSCRIBE_MEMBER_URL, { ...axiosConfig, data: payload }) // Include payload in the data field
+            .then((response) => setData(response.data))
+            .catch((error: string) => setError(error)) // Catching the error object
+            .finally(() => setLoaded(true))
+    }, [payload])
+
+    return { data, error, loaded }
+}
+
+export interface IChessQuestion {
+    id: number
+    email: string
+    category: string
+    topic: string
+    message: string
+    date: Date
+    seen: boolean
+}
+
+export interface IChessQuestionsList {
+    chessQuestionList: IChessQuestion[]
+}
+export const useAxiosGetChessQuestions = () => {
+    const [data, setData] = useState<IChessQuestionsList>()
+    const [loaded, setLoaded] = useState<boolean>(false)
+    const [error, setError] = useState<string>('')
+
+    useEffect(() => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' //coincide con configuración de CORS en el backend
+            }
+        }
+
+        axios
+            .get<IChessQuestionsList>(CHESS_QUESTION_URL, { ...axiosConfig })
+            .then((response) => setData(response.data))
+            .catch((error: string) => setError(error)) // Catching the error object
+            .finally(() => setLoaded(true))
     }, [])
 
     return { data, error, loaded }

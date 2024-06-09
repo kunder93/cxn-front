@@ -1,10 +1,12 @@
-import React from 'react'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+import React, { useEffect, useState } from 'react'
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
 import axios from 'axios'
 import BootstrapForm from 'react-bootstrap/Form'
-import { Button, Spinner } from 'react-bootstrap'
+import { Alert, Button, Collapse, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
+import { CHESS_QUESTION_URL } from '../../resources/server_urls'
+import { FloatingNotificationContainer } from './FloatingNotificationContainer'
 
 const FormTitleStyled = styled.span`
     font-size: 190%;
@@ -26,6 +28,7 @@ const validationSchema = Yup.object().shape({
 interface Props {
     initialTopic: string // Definir initialTopic como opcional
     formTitle: string
+    category: string
     // onSubmit: (values: FormData) => Promise<void>; // prop for handling form submission
 }
 
@@ -35,25 +38,94 @@ interface FormData {
     email: string
 }
 
-const MoreInfoForm: React.FC<Props> = ({ initialTopic, formTitle /*, onSubmit*/ }) => {
+interface SubmitAxiosValues {
+    email: string
+    category: string
+    topic: string
+    message: string
+}
+
+const FloatingNotification: React.FC<{ message: string; variant: string; onClose: () => void }> = ({ message, variant, onClose }) => {
+    const [visible, setVisible] = useState(true)
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setVisible(false)
+        }, 5000)
+
+        return () => {
+            clearTimeout(timer)
+        }
+    }, [])
+
+    const handleExited = () => {
+        onClose()
+    }
+
+    return (
+        <Collapse in={visible} onExited={handleExited}>
+            <FloatingNotificationContainer>
+                <Alert variant={variant} onClose={onClose} dismissible>
+                    {message}
+                </Alert>
+            </FloatingNotificationContainer>
+        </Collapse>
+    )
+}
+
+const MoreInfoForm: React.FC<Props> = ({ initialTopic, formTitle, category /*, onSubmit*/ }) => {
+    const [alertMessage, setAlertMessage] = useState('')
+    const [submitSuccessNotification, setSubmitSuccessNotification] = useState(false)
+    const [submitErrorNotification, setSubmitErrorNotification] = useState(false)
+
     const initialValues: FormData = {
         texto: '',
         asunto: initialTopic,
         email: ''
     }
 
-    const handleSubmit = async (values: FormData) => {
-        await new Promise((resolve) => setTimeout(resolve, 5000)) // Simular una espera de 5 seg.
+    function changeSuccessNotificationState(): void {
+        setSubmitSuccessNotification(false)
+    }
+    function changeErrorNotificationState(): void {
+        setSubmitErrorNotification(false)
+    }
+    const handleSubmit = async (values: FormData, actions: FormikHelpers<FormData>) => {
         try {
-            await axios.post('https://FORMULARIO.CLASES', values)
-            console.log('Datos enviados:', values)
-        } catch (error) {
-            console.error('Error al enviar los datos:', error)
+            await axios.post<SubmitAxiosValues>(CHESS_QUESTION_URL, {
+                email: values.email,
+                category: category,
+                topic: values.asunto,
+                message: values.texto
+            })
+            setSubmitSuccessNotification(true)
+            actions.resetForm()
+            actions.setSubmitting(false)
+        } catch (error: any) {
+            setSubmitErrorNotification(true)
+
+            if (error.response?.data) {
+                // Request made and server responded
+                setAlertMessage(error.response.data.content)
+            } else if (error.request) {
+                // The request was made but no response was received
+                setAlertMessage('Error: no hay respuesta.')
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                setAlertMessage('Error: algo inesperado. Recarga o intentalo mas tarde.')
+            }
         }
     }
 
     return (
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit} validateOnMount={true}>
+        <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={(values: FormData, actions) => {
+                void handleSubmit(values, actions)
+            }}
+            validateOnMount={true}
+        >
             {({ setFieldTouched, touched, errors, isSubmitting, isValid }) => (
                 <Form className="mt-4">
                     <FormTitleStyled>{formTitle}</FormTitleStyled>
@@ -101,6 +173,16 @@ const MoreInfoForm: React.FC<Props> = ({ initialTopic, formTitle /*, onSubmit*/ 
                     <Button variant="success" type="submit" disabled={isSubmitting || !isValid}>
                         {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Enviar'}
                     </Button>
+                    {submitSuccessNotification && (
+                        <FloatingNotification
+                            message={'SOLICITUD ENVIADA CORRECTAMENTE'}
+                            variant={'success'}
+                            onClose={changeSuccessNotificationState}
+                        ></FloatingNotification>
+                    )}
+                    {submitErrorNotification && (
+                        <FloatingNotification message={alertMessage} variant={'danger'} onClose={changeErrorNotificationState}></FloatingNotification>
+                    )}
                 </Form>
             )}
         </Formik>

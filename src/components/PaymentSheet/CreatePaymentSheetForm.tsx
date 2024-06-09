@@ -4,7 +4,7 @@ import 'react-app-polyfill/ie11'
 import * as React from 'react'
 import { Formik, Field, Form, FormikHelpers, useField, useFormikContext } from 'formik'
 import Select from 'react-select'
-import { GET_ALL_USERS_URL, PAYMENT_SHEET_URL } from '../../resources/server_urls'
+import { PAYMENT_SHEET_URL } from '../../resources/server_urls'
 import { useAxiosGetAllUsersData } from '../../utility/CustomAxios'
 import { StateManagerProps } from 'react-select/dist/declarations/src/useStateManager'
 import axios from 'axios'
@@ -80,7 +80,7 @@ const FormikReactSelect = (props: Props) => {
 }
 
 const CreateInvoiceForm: React.FC = () => {
-    const { data, error, loaded } = useAxiosGetAllUsersData(GET_ALL_USERS_URL)
+    const { data, error, loaded } = useAxiosGetAllUsersData()
     console.log(error)
     console.log(loaded)
     const navigate = useNavigate()

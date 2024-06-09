@@ -1,15 +1,10 @@
 import React, { ReactElement } from 'react'
-import { Button, Card, CardImg } from 'react-bootstrap'
+import { Button, Card } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 import HomePageCardModal from './HomePageCardModal'
+import HomePageCardImage from './HomePageCardImage'
 
-const ScaledImage = styled(CardImg)`
-    width: 100%;
-    aspect-ratio: 16/9;
-    object-fit: fill;
-    border-radius: 0% !important;
-`
 const CardFooter = styled(Card.Footer)`
     &&& {
         display: flex;
@@ -34,9 +29,9 @@ const StyledCardBody = styled(Card.Body)`
 
 const StyledCard = styled(Card)`
     border-radius: 0 !important;
-    border: 0 !important;
+    border: 4px solid #926f32 !important;
     width: 300px;
-    height: 350px !important;
+    height: 380px !important;
 `
 
 const StyledCardText = styled(Card.Text)`
@@ -69,6 +64,11 @@ export interface ButtonProps {
 export interface HomePageCardProps {
     imageSrc: string
     imageAlt: string
+    sources: {
+        srcSet: string
+        media?: string
+        type?: string
+    }[]
     cardTitle: string
     cardText: string[]
     buttonProps: ButtonProps[]
@@ -101,7 +101,7 @@ const HomePageCard: React.FC<HomePageCardProps> = (props) => {
         <>
             <article>
                 <StyledCard>
-                    <ScaledImage src={props.imageSrc} alt={props.imageAlt} />
+                    <HomePageCardImage alt={props.imageAlt} src={props.imageSrc} sources={props.sources} />
                     <StyledCardBody>
                         <StyledCardTitle>{props.cardTitle}</StyledCardTitle>
                         {props.cardText.map((text, index) => (
@@ -111,10 +111,19 @@ const HomePageCard: React.FC<HomePageCardProps> = (props) => {
                     <CardFooter>
                         {props.buttonProps.map((button, index) => (
                             <Button
-                                variant="success"
                                 key={index}
                                 onClick={() => buttonClickHandler(button)}
-                                style={{ flexGrow: 1, borderRadius: 0, textShadow: '4px 4px 5px rgba(0, 0, 0, 0.5)' }}
+                                style={{
+                                    flexGrow: 1,
+                                    borderRadius: 0,
+                                    textShadow: '4px 4px 5px rgba(0, 0, 0, 0.5)',
+                                    backgroundColor: '#857415',
+                                    borderColor: '#857415',
+                                    borderRight: index !== props.buttonProps.length - 1 ? '2px solid #926f32' : 'none',
+                                    transition: 'background-color 0.3s ease-in-out'
+                                }}
+                                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#af9919')}
+                                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#857415')}
                             >
                                 {button.buttonText}
                             </Button>
@@ -124,9 +133,9 @@ const HomePageCard: React.FC<HomePageCardProps> = (props) => {
             </article>
             <HomePageCardModal
                 show={showModal}
-                closemodal={closeModal}
-                modalcontentcomponent={modalContent ?? null} // Renderizar contenido modal personalizado
-            ></HomePageCardModal>
+                closeModal={closeModal}
+                modalContentComponent={modalContent ?? null} // Renderizar contenido modal personalizado
+            />
         </>
     )
 }
