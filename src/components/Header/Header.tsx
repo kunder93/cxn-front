@@ -13,8 +13,8 @@ import CustomDropdownMenu from './CustomDropdownMenu'
 
 const NavLogo = styled.img`
     filter: invert(100%) saturate(80%) brightness(70%);
-    width: 100%;
-    height: 100%;
+    width: 75%;
+    height: 75%;
     max-width: 100px;
 `
 
