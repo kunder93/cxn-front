@@ -27,22 +27,22 @@ const headerImageSrc = '/ChessClass/SchoolHeaderImage.avif'
 const summaryImageSrc = '/ChessClass/oldClass/GreenArrowGoingUp.avif'
 
 const faqOldSchoolPairsQuestionAnswer = [
-    { question: '¿Cuándo empiezan las clases?', answer: 'Las clases empiezan en Octubre y duran hasta Junio.' },
+    { question: '¿Cuándo empiezan las clases?', answer: 'Las clases comienzan en octubre y se extienden hasta junio. ¡Asegúrate de reservar tu lugar con anticipación!' },
     {
         question: '¿Necesito comprar algo para las clases o llevar algún material?',
-        answer: 'Todo el material necesario lo proporciona el club.'
+        answer: 'No necesitas traer nada. Todo el material necesario, incluidos tableros, piezas y material de estudio, lo proporciona el club.'
     },
     {
         question: '¿Dónde puedo apuntarme?',
-        answer: 'En nuestras oficinas, en esta web con el formulario de contacto o enviando un correo a xadreznaron@hotmail.com'
+        answer: 'Puedes inscribirte en nuestras oficinas, a través de esta web usando el formulario de contacto o enviando un correo a xadreznaron@hotmail.com. ¡Es fácil y rápido!'
     },
     {
         question: '¿Cuánto cuesta?',
-        answer: '20 Euros al mes'
+        answer: 'La cuota es de 20 euros al mes. Un precio accesible para una actividad tan enriquecedora.'
     },
     {
         question: '¿Qué días se imparten las clases?',
-        answer: 'Dos días a la semana, depende del número de alumnos y los grupos hay varios a escoger. Solicitar más información a través del formulario o correo.'
+        answer: 'Las clases se imparten dos días a la semana. Los días específicos dependen del número de alumnos y los grupos disponibles. Para más detalles, por favor solicita información a través del formulario o correo electrónico.'
     }
 ]
 
