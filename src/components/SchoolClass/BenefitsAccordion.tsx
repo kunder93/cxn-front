@@ -5,7 +5,7 @@ import ClassBenefitsCarousel, { CarouselItemMessage } from './ClassBenefitsCarou
 import ClassPhotoGalleryCarousel, { PhotoData } from './ClassPhotoGalleryCarousel'
 import { CameraStyled, EnvelopeOpenHeartStyled, GraphUpArrowStyled, PatchQuestionStyled } from './CommonStyles'
 import FaqList, { PairQuestionAnswer } from './FaqList'
-import MoreInfoClassForm from '../Common/MoreInfoForm'
+import MoreInfoClassForm from '../Common/MoreInfoForm/MoreInfoForm'
 
 /**
  * Properties for the component BenefitsAccordion.
