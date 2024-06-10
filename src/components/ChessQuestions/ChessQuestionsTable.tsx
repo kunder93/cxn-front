@@ -32,9 +32,6 @@ function handleDeleteButton(id: number, onDeleteSuccess: (id: number) => void) {
         })
 }
 
-
-
-
 const ChessQuestionsTable: React.FC<ChessQuestionsTableProps> = (props) => {
     const [data, setData] = useState(useMemo(() => props.data.chessQuestionList, [])) // Caching data
 
@@ -129,7 +126,7 @@ const ChessQuestionsTable: React.FC<ChessQuestionsTableProps> = (props) => {
                     Header: () => <div>BORRAR</div>,
                     Cell: (tableProps: any) => (
                         <div>
-                                 <Button variant="danger" onClick={() => handleDeleteButtonWrapper(tableProps.row.original.id)}>
+                            <Button variant="danger" onClick={() => handleDeleteButtonWrapper(tableProps.row.original.id)}>
                                 <Trash3 size={30} title="Borrar" />
                             </Button>
                         </div>

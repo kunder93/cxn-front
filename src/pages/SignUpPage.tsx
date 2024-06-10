@@ -10,12 +10,12 @@ const Page = styled.div`
     flex-direction: column;
 `
 
-const SignUpPage: React.FC = () => ( 
-        <Page>
-            <Container>
-                <SignUpForm></SignUpForm>
-            </Container>
-        </Page>
-    )
+const SignUpPage: React.FC = () => (
+    <Page>
+        <Container>
+            <SignUpForm></SignUpForm>
+        </Container>
+    </Page>
+)
 
 export default SignUpPage
