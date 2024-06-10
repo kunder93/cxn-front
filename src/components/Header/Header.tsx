@@ -111,23 +111,24 @@ const CollapsibleNavigationBar: React.FC = () => {
                         ]}
                         onNavItemClick={handleNavItemClick}
                     />
+                     <Nav.Link as={Link} title="Actividades" to={ROUTES.ACTIVITIES} onClick={handleNavItemClick}>
+                        Actividades
+                    </Nav.Link>
                     <CustomDropdownMenu
                         title="El Club"
                         route={ROUTES.THECLUB}
                         menuItems={[
                             { text: 'Directiva', href: ROUTES.THECLUB, accordionItemToOpen: '1' },
                             { text: 'Estatutos', href: ROUTES.THECLUB, accordionItemToOpen: '2' },
-                            { text: 'Equipos', href: ROUTES.THECLUB, accordionItemToOpen: '3' },
                             { text: 'Historia', href: ROUTES.THECLUB, accordionItemToOpen: '4' },
                             { text: 'Contacto', href: ROUTES.THECLUB, accordionItemToOpen: '5' },
-                            { text: 'Localización', href: ROUTES.THECLUB, accordionItemToOpen: '6' }
+                            { text: 'Localización', href: ROUTES.THECLUB, accordionItemToOpen: '6' },
+                            { text: 'Equipos', href: ROUTES.THECLUB, accordionItemToOpen: '3' }
                         ]}
                         onNavItemClick={handleNavItemClick}
                     />
-                    <Nav.Link as={Link} title="Actividades" to={ROUTES.ACTIVITIES} onClick={handleNavItemClick}>
-                        Actividades
-                    </Nav.Link>
-                    <Nav.Link title="Blog CXN" href={CXN_BLOG_URL} target="_blank" rel="noopener noreferrer" onClick={handleNavItemClick}>
+                   
+                    <Nav.Link title=" Blog noticias CXN" href={CXN_BLOG_URL} target="_blank" rel="noopener noreferrer" onClick={handleNavItemClick}>
                         Blog
                     </Nav.Link>
                 </InsideOptionsNav>
