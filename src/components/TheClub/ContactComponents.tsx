@@ -9,6 +9,9 @@ const phoneNumber = '(+34) 654 94 62 12'
 const CellContainer = styled.ul`
     font-size: 140%;
     list-style-type: none; /* Eliminar los puntos de lista */
+    @media screen and (max-width: 400px) {
+        font-size: 120%;
+    }
 `
 const ContactTitle = styled.h2`
     padding-top: 2rem;
@@ -36,6 +39,7 @@ const ContactListContainer = styled(ListGroup)`
         grid-template-columns: 1fr; /* Cambia a una columna cuando la resolución es igual o menor a 768px */
     }
 `
+
 
 const ContactContainer: React.FC = () => {
     return (
