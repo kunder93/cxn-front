@@ -9,6 +9,21 @@ import { renderKindMember, renderUserRoles } from '../../utility/userUtilities'
 import ChangeKindMemberModal from './ChangeKindMember/ChangeKindMemberModal'
 import { KindMember, UserProfile, UserRole } from 'store/types/userTypes'
 import ChangeMemberRolesModal from './ChangeMemberRole/ChangeMemberRolesModal'
+import styled from 'styled-components'
+
+const RoleCell = styled.div`
+    max-width: 100px;
+    text-overflow: ellipsis;
+`
+
+const AmountMembersBox = styled.div``
+const FilterBox = styled.div`
+    padding-bottom: 2em;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: baseline;
+    gap: 1em;
+`
 
 interface Props {
     usersData: UserProfile[]
@@ -47,7 +62,7 @@ const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
             })
         }
     }
-    
+
     const columns: Column<UserProfile>[] = useMemo(
         () => [
             {
@@ -64,7 +79,7 @@ const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
             },
             {
                 Header: 'Rol del socio',
-                accessor: (d: UserProfile) => renderUserRoles(d.userRoles)
+                accessor: (d: UserProfile) => <RoleCell>{renderUserRoles(d.userRoles)}</RoleCell>
             },
             {
                 Header: 'Estado',
@@ -147,6 +162,16 @@ const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
     )
     return (
         <>
+            <FilterBox>
+                {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment*/}
+                <p>Busqueda en la tabla:</p> <input type="text" value={state.globalFilter} onChange={(event) => setGlobalFilter(event.target.value)} />{' '}
+                <AmountMembersBox>
+                    <p>
+                        {' '}
+                        Total de socios: <strong> {preGlobalFilteredRows.length} </strong>
+                    </p>
+                </AmountMembersBox>
+            </FilterBox>
             <Table striped bordered hover responsive {...getTableProps()}>
                 <thead>
                     {headerGroups.map((headerGroup) => (
@@ -173,11 +198,7 @@ const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
                     })}
                 </tbody>
             </Table>
-            <div>
-                <p> Total de registros: {preGlobalFilteredRows.length}</p>
-            </div>
-            {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment*/}
-            <input type="text" value={state.globalFilter} onChange={(event) => setGlobalFilter(event.target.value)} />
+
             <MemberModalProfileInfo show={memberInfoModal} onHide={() => setMemberInfoModal(false)} row={selectedRow} />
             <ChangeKindMemberModal
                 show={changeKindMemberModal}
@@ -195,11 +216,11 @@ const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
                 onHide={() => setChangeMemberRoleModal(false)}
                 memberFirstSurname={selectedRow?.firstSurname}
                 memberSecondSurname={selectedRow?.secondSurname}
-                memberEmail={selectedRow?.email?  selectedRow.email : ''}
+                memberEmail={selectedRow?.email ? selectedRow.email : ''}
                 memberName={selectedRow?.name}
-                memberRoles={selectedRow?.userRoles? selectedRow.userRoles : [] }
+                memberRoles={selectedRow?.userRoles ? selectedRow.userRoles : []}
             />
-        </> 
+        </>
     )
 }
 

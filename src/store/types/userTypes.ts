@@ -15,16 +15,19 @@ export enum KindMember {
 }
 
 
-export interface UserProfile {
+export interface UserData {
     dni: string
+    email: string
     name: string
     firstSurname: string
     secondSurname: string
     gender: string
     birthDate: Date
-    email: string
     kindMember: KindMember
     userRoles: UserRole[]
+}
+
+export interface UserProfile extends UserData {
     userAddress: UserAddress
 }
 

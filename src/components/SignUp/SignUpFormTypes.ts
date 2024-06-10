@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FormikProps } from "formik"
+import { FormikProps } from 'formik'
 
 export enum FormSteps {
     FirstStep = 1,
@@ -8,6 +8,29 @@ export enum FormSteps {
     FourthStep = 4
 }
 
+export interface SignUpFormStepProps {
+    formikProps: FormikProps<SignUpFormValues>
+    previousStepFunction: () => void
+    nextStepFunction: () => void
+}
+
+export interface UserFormData {
+    email: string
+    password: string
+    dni: string
+    name: string
+    firstSurname: string
+    secondSurname: string
+    gender: string
+    birthDate: Date
+    postalCode: string
+    apartmentNumber: string
+    building: string
+    street: string
+    city: string
+    countryNumericCode: number
+    countrySubdivisionName: string
+}
 
 export interface SignUpFormValues {
     //First step
@@ -35,27 +58,19 @@ export interface SignUpFormValues {
     confidencialityTerms: boolean
 }
 
-export interface SignUpFormFourthStepData {
-    formikProps: FormikProps<SignUpFormValues>
-    nextStepFunction: any
-    previousStepFunction: any
-}
-
 export enum UserAceptanceModalOption {
     CesionDatos = 1,
     NormasSocios = 2,
     CompromisoConfidencialidad = 3
 }
-export interface FormConditionsModalProps{
+export interface FormConditionsModalProps {
     userAceptanceOption: UserAceptanceModalOption
-    show: boolean;
-    onClose: () => void;
-    props?: any    
+    show: boolean
+    onClose: () => void
+    props?: any
 }
 
-export interface formFirstStepData {
-    formikProps: FormikProps<SignUpFormValues>
-    step: FormSteps
-    nextStepFunction: any
+// Interfaz para el contenido del error de la respuesta
+export interface AxiosErrorResponseData {
+    content: string
 }
-  

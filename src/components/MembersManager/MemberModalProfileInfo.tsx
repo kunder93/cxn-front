@@ -2,7 +2,7 @@ import React from 'react'
 import { Accordion, Col, Row } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
 import Modal, { ModalProps } from 'react-bootstrap/Modal'
-import { UserProfile } from 'store/types/userTypes'
+import { UserProfile } from '../../store/types/userTypes'
 import { renderKindMember, renderUserRoles } from '../../utility/userUtilities'
 
 interface props extends ModalProps {

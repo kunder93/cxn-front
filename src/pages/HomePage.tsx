@@ -6,9 +6,8 @@ import HomePageCard, { ButtonOptions, HomePageCardProps } from '../components/Ho
 import HomePageMainCarousel from '../components/HomePage/HomePageMainCarousel'
 //import { useAppSelector } from '../store/hooks'
 import { SetPageTitle } from '../utility/functions'
-import MoreInfoForm from '../components/Common/MoreInfoForm'
-import MembersBenefits from '../components/HomePage/MembersBenefits'
-
+import MoreInfoForm from '../components/Common/MoreInfoForm/MoreInfoForm'
+import MembersBenefits, { MembersBenefitOption } from '../components/HomePage/MembersBenefits'
 
 const pageMainTitle = 'Circulo Xadrez Narón te da la bienvenida !'
 const freeActivitiesTitle = 'Prueba nuestras actividades de forma gratuita sin ser soci@:'
@@ -18,19 +17,21 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
     {
         imageSrc: '/Principal/NinosTorneo_optimizada.avif',
         imageAlt: 'Imagen clases niños',
+        sources: [],
         cardTitle: 'Clases para niños',
         cardText: ['Disponibles en varios horarios y lugares.', ' Desde 5 hasta 18 años.'],
         buttonProps: [
             {
                 buttonText: 'Pide hasta 1 mes de prueba',
                 buttonAction: ButtonOptions.MODAL,
-                component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'FORMULARIO DE INFORMACION: CLASES PARA NIÑOS'} category={'CLASES NIÑOS'} />
+                component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'CLASES PARA NIÑOS'} category={'CLASES NIÑOS'} />
             }
         ]
     },
     {
         imageSrc: '/Principal/TorneoTablerosPiezasColocadas_optimizada.avif',
         imageAlt: 'Imagen torneo niños',
+        sources: [],
         cardTitle: 'Torneos informales',
         cardText: ['Torneos para cualquiera !', 'Sólo apuntarse y jugar.'],
         buttonProps: [
@@ -39,7 +40,11 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
                 buttonText: 'Solicitar info',
                 buttonAction: ButtonOptions.MODAL,
                 component: (
-                    <MoreInfoForm initialTopic={'¿CUÁLES SON LOS PRÓXIMOS TORNEOS?'} formTitle={'FORMULARIO DE INFORMACIÓN: PRÓXIMOS TORNEOS'} category={'PRÓXIMOS TORNEOS'}></MoreInfoForm>
+                    <MoreInfoForm
+                        initialTopic={'¿CUÁLES SON LOS PRÓXIMOS TORNEOS?'}
+                        formTitle={'PRÓXIMOS TORNEOS'}
+                        category={'PRÓXIMOS TORNEOS'}
+                    ></MoreInfoForm>
                 )
             }
         ]
@@ -47,13 +52,14 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
     {
         imageSrc: '/Principal/MayoresClaseOptimizada.avif',
         imageAlt: 'Imagen clase adultos',
+        sources: [],
         cardTitle: 'Clases para adultos',
         cardText: ['Desde los 18 años.', ' Disponibles en varios horarios y lugares.'],
         buttonProps: [
             {
                 buttonText: 'Pide hasta 1 mes de prueba',
                 buttonAction: ButtonOptions.MODAL,
-                component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'FORMULARIO DE INFORMACION: CLASES PARA ADULTOS'} category={'CLASES ADULTOS'}></MoreInfoForm>
+                component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'CLASES PARA ADULTOS'} category={'CLASES ADULTOS'}></MoreInfoForm>
             }
         ]
     }
@@ -63,23 +69,46 @@ const memberActivitiesCardsData: HomePageCardProps[] = [
     {
         imageSrc: '/Principal/PremiosGallegoVeteranos_optimizada.avif',
         imageAlt: 'Recibiendo premios campoeonato gallego.',
+        sources: [],
         cardTitle: 'Torneos y competicion federada',
         cardText: ['Participa en torneos y competición oficial.', 'Enfréntate a los mejores, supera tus límites.'],
-        buttonProps: [{ buttonText: 'Más info', buttonAction: ButtonOptions.MODAL, component: <MembersBenefits></MembersBenefits> }]
+        buttonProps: [
+            {
+                buttonText: 'Más info',
+                buttonAction: ButtonOptions.MODAL,
+                component: <MembersBenefits benefitOption={MembersBenefitOption.COMPETICION_FEDERADA}></MembersBenefits>
+            }
+        ]
     },
     {
         imageSrc: '/Principal/LibrosAjedrez_optimizada.avif',
         imageAlt: 'Estantería con libros de ajedrez.',
+        sources: [],
         cardTitle: 'Material de ajedrez',
         cardText: ['Acceso a multitud de libros, revistas, programas, piezas, relojes, etc', 'Pide lo que creas que falte, nosotros lo conseguimos.'],
-        buttonProps: [{ buttonText: 'Más info', buttonAction: ButtonOptions.MODAL, component: <MembersBenefits></MembersBenefits> }]
+        buttonProps: [
+            {
+                buttonText: 'Más info',
+                buttonAction: ButtonOptions.MODAL,
+                component: <MembersBenefits benefitOption={MembersBenefitOption.MATERIAL_AJEDREZ}></MembersBenefits>
+            }
+        ]
     },
     {
         imageSrc: '/Principal/ClaseAdultos.avif',
         imageAlt: '4 Personas analizando posición ajedrez.',
+        sources: [],
         cardTitle: 'Tutorización y seguimiento',
-        cardText: ['Profesionales capacitados para ayudarte en tu progreso y mostrarte los puntos mejorables y las tecnicas necesarias para alcanzar tus metas.'],
-        buttonProps: [{ buttonText: 'Más info', buttonAction: ButtonOptions.MODAL, component: <MembersBenefits></MembersBenefits> }]
+        cardText: [
+            'Profesionales capacitados para ayudarte en tu progreso y mostrarte los puntos mejorables y las tecnicas necesarias para alcanzar tus metas.'
+        ],
+        buttonProps: [
+            {
+                buttonText: 'Más info',
+                buttonAction: ButtonOptions.MODAL,
+                component: <MembersBenefits benefitOption={MembersBenefitOption.TUTORIZACION}></MembersBenefits>
+            }
+        ]
     }
 ]
 const [activity1, activity2, activity3] = freeAticivitiesCardsData
@@ -87,6 +116,7 @@ const [memberActivity1, memberActivity2, memberActivity3] = memberActivitiesCard
 
 const StyledMainCarouselSection = styled.section`
     grid-area: mainCarousel;
+
 `
 
 const MainContentStyledSection = styled.section`
@@ -114,6 +144,13 @@ const PageContentTitle = styled.h1`
     padding-right: 1em;
     font-weight: bold;
     font-size: 250%;
+    @media (max-width: 768px) {
+        font-size: 200%; // Ajusta este valor según tus necesidades
+    }
+
+    @media (max-width: 480px) {
+        font-size: 180%; // Ajusta este valor según tus necesidades
+    }
 `
 
 const ClubFreeActivitiesSection = styled.section`
@@ -155,6 +192,13 @@ const FreeActivitiesTittle = styled.h2`
     padding-bottom: 1vw;
     padding-left: 1em;
     padding-right: 1em;
+    @media (max-width: 768px) {
+        font-size: 180%; // Ajusta este valor según tus necesidades
+    }
+
+    @media (max-width: 480px) {
+        font-size: 140%; // Ajusta este valor según tus necesidades
+    }
 `
 
 const FreeActivitiesArticle = styled.article`
@@ -226,27 +270,6 @@ const MemberActivitiesArticle3 = styled(MemberActivitiesArticle)`
 
 const HomePage: React.FC = () => {
     SetPageTitle('CXN Principal')
-
-    /**
-     const parseJwt = (token: string) => {
-        const base64Url = token.split('.')[1]
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
-        const jsonPayload = decodeURIComponent(
-            window
-                .atob(base64)
-                .split('')
-                .map(function (c) {
-                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-                })
-                .join('')
-        )
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return JSON.parse(jsonPayload)
-    }
-    **/
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, no-unused-vars, @typescript-eslint/no-unused-vars
-    // const userJwt = useAppSelector((state: any) => state.users.jwt)
-
     return (
         <MainContainerStyled>
             <StyledMainCarouselSection>

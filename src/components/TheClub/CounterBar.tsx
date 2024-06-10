@@ -36,7 +36,7 @@ const CountingNumber: React.FC<counterProps> = ({ duration, startValue, endValue
 };
 
 export const ContadorSocios = () => {
-    const valoresContador: counterProps = { duration:  2000, startValue: 0, endValue: 55 }
+    const valoresContador: counterProps = { duration:  2000, startValue: 0, endValue: 72 }
     return (
                 <CountingNumber {...valoresContador}></CountingNumber>
     )
@@ -45,7 +45,7 @@ export const ContadorSocios = () => {
 
 export const ContadorFechaFundacionClub = () => {
     const valoresContador: counterProps = {
-        duration:2000, startValue: 0, endValue: 1978}
+        duration:2000, startValue: 0, endValue: 1986}
     return(
         <CountingNumber {...valoresContador}></CountingNumber>
     )
