@@ -6,7 +6,7 @@ import HomePageCard, { ButtonOptions, HomePageCardProps } from '../components/Ho
 import HomePageMainCarousel from '../components/HomePage/HomePageMainCarousel'
 //import { useAppSelector } from '../store/hooks'
 import { SetPageTitle } from '../utility/functions'
-import MoreInfoForm from '../components/Common/MoreInfoForm'
+import MoreInfoForm from '../components/Common/MoreInfoForm/MoreInfoForm'
 import MembersBenefits, { MembersBenefitOption } from '../components/HomePage/MembersBenefits'
 
 const pageMainTitle = 'Circulo Xadrez Narón te da la bienvenida !'
