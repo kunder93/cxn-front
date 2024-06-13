@@ -1,6 +1,6 @@
 import { Container, ProgressBar } from 'react-bootstrap'
-import { FormSteps } from './SignUpFormTypes'
-import { ProgressBarIconsContainer } from './SignUpFormStyles'
+import { FormSteps } from '../SignUpFormTypes'
+import { ProgressBarIconsContainer } from '../SignUpFormStyles'
 import { Icon1Circle, Icon1CircleFill, Icon2Circle, Icon2CircleFill, Icon3Circle, Icon3CircleFill, Icon4Circle, Icon4CircleFill } from 'react-bootstrap-icons'
 import React from 'react'
 

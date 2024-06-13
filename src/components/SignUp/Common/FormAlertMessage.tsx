@@ -1,5 +1,5 @@
 import React from 'react'
-import { ErrorAlert, ErrorTriangle } from './SignUpFormStyles'
+import { ErrorAlert, ErrorTriangle } from '../SignUpFormStyles'
 import { Button, Container } from 'react-bootstrap'
 
 // Componente para mostrar mensajes de alerta

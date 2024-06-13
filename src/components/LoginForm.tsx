@@ -5,65 +5,10 @@ import { LOGIN_URL } from '../resources/server_urls'
 import { useAppDispatch } from '../store/hooks'
 import { useNavigate } from 'react-router-dom'
 import { setJwt } from '../store/slices/user'
-import { Alert, Button, Col, Row, Spinner } from 'react-bootstrap'
+import { Button, Col, Spinner } from 'react-bootstrap'
 import { LogInValidationSchema } from '../pages/validation/FormValidationSchemas'
 import BootstrapForm from 'react-bootstrap/Form'
-import styled from 'styled-components'
-import { ExclamationTriangle } from 'react-bootstrap-icons'
-
-// Styled components
-const ErrorMessage = styled.div`
-    color: red;
-`
-
-const StyledRow = styled(Row)`
-    padding-bottom: 1em;
-`
-
-const LoginFormStyledContainer = styled.div`
-    background-color: rgba(250, 238, 168, 0.219);
-    box-shadow:
-        0 0.5em 0.5em -0.3em rgba(0, 0, 0, 0.3),
-        0.5em 0 0.5em -0.3em rgba(0, 0, 0, 0.3);
-    padding: 1em;
-    font-size: 140%;
-    padding-left: 18em;
-    padding-right: 18em;
-    border-radius: 5px;
-    @media (max-width: 768px) {
-        padding-left: 3em;
-        padding-right: 3em;
-
-        input {
-            font-size:100%;
-        }
-        label {
-            font-size: 120%
-        }
-    }
-`
-
-const ErrorAlert = styled(Alert)`
-    color: red;
-    font-size: 1em;
-    background-color: white;
-    margin: 3px;
-    padding: 0.5em 1.5em;
-    border: 1px solid palevioletred;
-    border-radius: 10px;
-`
-
-const ErrorTriangle = styled(ExclamationTriangle)`
-    height: 10%;
-    width: 10%;
-`
-
-const CenteredButtonRow = styled(Row)`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100px;
-`
+import { ButtonRow, ErrorAlert, ErrorMessage, ErrorTriangle, FormStyledContainer, StyledRow } from './SignUpSingInCommonStyles'
 
 // Form values interface
 export interface LoginFormValues {
@@ -99,7 +44,8 @@ const LoginForm: React.FC = () => {
     }
 
     return (
-        <LoginFormStyledContainer>
+        <FormStyledContainer>
+            <h1>Entra en zona socios:</h1>
             <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={LogInValidationSchema} validateOnChange>
                 {({ errors, touched, isSubmitting, isValid, dirty }) => (
                     <Form>
@@ -118,7 +64,7 @@ const LoginForm: React.FC = () => {
                                 {errors.email && touched.email && <ErrorMessage>{errors.email}</ErrorMessage>}
                             </Col>
                         </StyledRow>
-                        <Row>
+                        <StyledRow>
                             <Col>
                                 <BootstrapForm.Label htmlFor="password">Contraseña:</BootstrapForm.Label>
                                 <Field
@@ -132,8 +78,8 @@ const LoginForm: React.FC = () => {
                                 />
                                 {errors.password && touched.password && <ErrorMessage>{errors.password}</ErrorMessage>}
                             </Col>
-                        </Row>
-                        <CenteredButtonRow>
+                        </StyledRow>
+                        <ButtonRow>
                             <Col xs="auto">
                                 <Button type="submit" variant="success" size="lg" disabled={!dirty || !isValid || isSubmitting}>
                                     {isSubmitting ? (
@@ -145,20 +91,20 @@ const LoginForm: React.FC = () => {
                                     )}
                                 </Button>
                             </Col>
-                        </CenteredButtonRow>
+                        </ButtonRow>
                         {alertMessage && (
-                            <Row>
+                            <StyledRow>
                                 <Col>
                                     <ErrorAlert variant="danger" onClose={closeAlert} dismissible>
                                         <ErrorTriangle /> {alertMessage}
                                     </ErrorAlert>
                                 </Col>
-                            </Row>
+                            </StyledRow>
                         )}
                     </Form>
                 )}
             </Formik>
-        </LoginFormStyledContainer>
+        </FormStyledContainer>
     )
 }
 
