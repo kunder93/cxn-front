@@ -1,12 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react'
 import { Formik, Field, Form, ErrorMessage, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
 import BootstrapForm from 'react-bootstrap/Form'
 import { Alert, Button, Collapse, Spinner } from 'react-bootstrap'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { CHESS_QUESTION_URL } from '../resources/server_urls'
 import { FloatingNotificationContainer } from './Common/FloatingNotificationContainer'
+import { AxiosErrorResponseData } from './SignUp/SignUpFormTypes'
 // Define validation schema using Yup
 const validationSchema = Yup.object({
     email: Yup.string().required('Es necesario un email !').email('Es necesario un email !'),
@@ -82,18 +82,15 @@ const ContactForm: React.FC = () => {
             setSubmitSuccessNotification(true)
             actions.resetForm()
             actions.setSubmitting(false)
-        } catch (error: any) {
-            setSubmitErrorNotification(true)
-
-            if (error.response?.data) {
-                // Request made and server responded
-                setAlertMessage(error.response.data.content)
-            } else if (error.request) {
-                // The request was made but no response was received
-                setAlertMessage('Error: no hay respuesta.')
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError<AxiosErrorResponseData>
+                const errorMessage =
+                    axiosError.response?.data?.content ??
+                    (axiosError.request ? 'Error: no hay respuesta.' : 'Error: algo inesperado. Recarga o intentalo más tarde.')
+                setAlertMessage(errorMessage)
             } else {
-                // Something happened in setting up the request that triggered an Error
-                setAlertMessage('Error: algo inesperado. Recarga o intentalo mas tarde.')
+                setAlertMessage('Error: algo inesperado. Recarga o intentalo más tarde.')
             }
         }
     }

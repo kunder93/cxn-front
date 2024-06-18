@@ -7,6 +7,7 @@ import ChangeUserEmailResultAlert from './ChangeUserEmailResultAlert'
 export interface EmailChangeFormProps {
     initialEmail: string
     formikRef: React.RefObject<FormikProps<ChangeEmailFormValues>>
+    buttonDisabledHandler: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export interface ChangeEmailFormValues {
@@ -16,7 +17,8 @@ export interface ChangeEmailFormValues {
 }
 
 const StyledErrorMessage = styled(ErrorMessage)`
-    color: red;
+    color: #e20101;
+    font-weight: bold;
 `
 
 const StyledFormContainer = styled(Container)`
@@ -25,6 +27,7 @@ const StyledFormContainer = styled(Container)`
 
 const EmailChangeForm: React.FC<EmailChangeFormProps> = ({ initialEmail, formikRef }) => {
     const [visibleAlert, setVisibleAlert] = React.useState(false)
+
     const handleSubmit = () => {
         setVisibleAlert(true)
     }
@@ -48,48 +51,46 @@ const EmailChangeForm: React.FC<EmailChangeFormProps> = ({ initialEmail, formikR
                 onSubmit={handleSubmit}
             >
                 {({ values }) => (
-                    <BootstrapForm>
-                        <Form>
-                            <Row>
-                                <Col>
-                                    <FormGroup>
-                                        <FormLabel>
-                                            <strong>Email Actual:</strong>
-                                        </FormLabel>
-                                        <FormControl type="text" name="currentEmail" value={initialEmail} disabled />
-                                    </FormGroup>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <FormGroup>
-                                        <FormLabel>
-                                            <strong>Nuevo Email:</strong>
-                                        </FormLabel>
-                                        <Field as={FormControl} type="email" name="newEmail" />
-                                        <StyledErrorMessage name="newEmail" component="div" />
-                                    </FormGroup>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <FormGroup>
-                                        <FormLabel>
-                                            <strong>Confirmar Nuevo Email:</strong>
-                                        </FormLabel>
-                                        <Field as={FormControl} type="email" name="confirmNewEmail" />
-                                        <StyledErrorMessage name="confirmNewEmail" component="div" />
-                                    </FormGroup>
-                                </Col>
-                            </Row>
-                            {visibleAlert && (
-                                <ChangeUserEmailResultAlert
-                                    visibleParam={visibleAlert}
-                                    closeFunction={setVisibleAlert}
-                                    formData={{ email: values.currentEmail, newEmail: values.newEmail }}
-                                />
-                            )}
-                        </Form>
+                    <BootstrapForm as={Form}>
+                        <Row>
+                            <Col>
+                                <FormGroup>
+                                    <FormLabel htmlFor="currentEmail">
+                                        <strong>Email actual:</strong>
+                                    </FormLabel>
+                                    <FormControl type="text" id="currentEmail" name="currentEmail" value={initialEmail} disabled />
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <FormGroup>
+                                    <FormLabel htmlFor="newEmail">
+                                        <strong>Nuevo Email:</strong>
+                                    </FormLabel>
+                                    <Field as={FormControl} type="email" id="newEmail" name="newEmail" />
+                                    <StyledErrorMessage name="newEmail" component="div" />
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <FormGroup>
+                                    <FormLabel htmlFor="confirmNewEmail">
+                                        <strong>Confirmar Nuevo Email:</strong>
+                                    </FormLabel>
+                                    <Field as={FormControl} type="email" id="confirmNewEmail" name="confirmNewEmail" />
+                                    <StyledErrorMessage name="confirmNewEmail" component="div" />
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        {visibleAlert && (
+                            <ChangeUserEmailResultAlert
+                                visibleParam={visibleAlert}
+                                closeFunction={setVisibleAlert}
+                                formData={{ email: values.currentEmail, newEmail: values.newEmail }}
+                            />
+                        )}
                     </BootstrapForm>
                 )}
             </Formik>

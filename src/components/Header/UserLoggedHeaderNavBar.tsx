@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { Nav } from 'react-bootstrap'
-import { useAppDispatch } from '../../store/hooks'
 import { PersonCircle } from 'react-bootstrap-icons'
+import { useAppDispatch } from '../../store/hooks'
 import { removeJwt } from '../../store/slices/user'
 import { ROUTES } from '../../resources/routes-constants'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
-const UserProfileIconStyled = styled(PersonCircle)`
+const UserProfileIcon = styled(PersonCircle)`
     width: 50px;
     height: 50px;
     min-height: 50px;
@@ -47,7 +47,8 @@ const FloatingWindow = styled.div`
 `
 
 const StyledNav = styled(Nav)`
-          
+    padding-right: 2em;
+
     a {
         font-size: 160%;
     }
@@ -57,11 +58,14 @@ const StyledNav = styled(Nav)`
         margin-top: 0.5em;
         padding-top: 0.5em;
         margin-right: 4em;
-
     }
 `
 
-const UserLoggedHeaderNavBar: React.FC = () => {
+interface IUserLoggedHeaderNavBar {
+    handleNavItemClick: () => void
+}
+
+const UserLoggedHeaderNavBar: React.FC<IUserLoggedHeaderNavBar> = ({ handleNavItemClick }) => {
     const [imagePopOver, setImagePopOver] = useState(false)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
@@ -69,9 +73,11 @@ const UserLoggedHeaderNavBar: React.FC = () => {
     const handleImageMouseEnter = () => {
         setImagePopOver(true)
     }
+
     const handleImageMouseLeave = () => {
         setImagePopOver(false)
     }
+
     const logoutHandler = () => {
         dispatch(removeJwt())
         navigate(ROUTES.HOMEPAGE_ROUTE)
@@ -79,13 +85,14 @@ const UserLoggedHeaderNavBar: React.FC = () => {
 
     return (
         <StyledNav className="ms-auto">
-            <Nav.Link as={Link} to={ROUTES.MYPROFILE_ROUTE}>
+            <UserProfileIcon onMouseEnter={handleImageMouseEnter} onMouseLeave={handleImageMouseLeave} />
+            <Nav.Link as={Link} to={ROUTES.MYPROFILE_ROUTE} onClick={handleNavItemClick}>
                 Zona Socio
             </Nav.Link>
             <Nav.Link as={Link} to={ROUTES.HOMEPAGE_ROUTE} onClick={logoutHandler}>
                 Salir
             </Nav.Link>
-            <UserProfileIconStyled onMouseEnter={handleImageMouseEnter} onMouseLeave={handleImageMouseLeave}></UserProfileIconStyled>
+
             <FloatingWindow hidden={!imagePopOver}>
                 {/* Content for the floating window */}
                 En construcción, paciencia!!.

@@ -13,13 +13,13 @@ import {
     UNSUBSCRIBE_MEMBER_URL
 } from '../resources/server_urls'
 import { ICompany } from '../components/Companies/Types'
-import { LoginFormValues } from '../components/LoginForm'
 import { ChangeKindMemberValues } from '../components/MembersManager/ChangeKindMember/ChangeKindMemberForm'
 import { UserProfile } from '../store/types/userTypes'
 import { ChangeMemberRolesValues } from '../components/MembersManager/ChangeMemberRole/ChangeMemberRolesForm'
 import { ChangeEmailAxiosValues } from '../components/MyProfile/ChangeEmail/ChangeUserEmailResultAlert'
 import { ChangePasswordAxiosValues } from '../components/MyProfile/ChangePassword/ChangeUserPasswordResultAlert'
 import { UnsubscribeMemberAxiosValues } from '../components/MyProfile/UnsubscribeMember/UnsubscribeMemberResultAlert'
+import { LoginFormValues } from 'components/LoginForm'
 
 interface companiesAxiosResponse {
     companiesList: ICompany[]
@@ -54,7 +54,7 @@ export const useAxiosGetCompanies = (url: string) => {
             .then((response) => setData(response.data as companiesAxiosResponse))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, [])
 
     return { data, error, loaded }
@@ -77,7 +77,6 @@ export const useAxiosGetInvoices = (url: string) => {
             .then((response) => setData(response.data as invoicesAxiosResponse))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return { data, error, loaded }
@@ -100,7 +99,7 @@ export const useAxiosGetBooks = (url: string) => {
             .then((response) => setData(response.data as booksAxiosResponse))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, [])
 
     return { data, error, loaded }
@@ -127,7 +126,7 @@ export const useAxiosGetPaymentSheets = (url: string) => {
             })
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, [])
 
     return { data, error, loaded }
@@ -152,7 +151,7 @@ export const useAxiosGetAllUsersData = () => {
             })
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, [])
 
     return { data, error, loaded }
@@ -175,7 +174,7 @@ export const useAxiosPostLogin = (url: string, payload: LoginFormValues) => {
             .then((response) => setData(response.data as string))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, [])
 
     return { data, error, loaded }
@@ -204,7 +203,7 @@ export const useAxiosGetCountriesList = () => {
             .then((response) => setData(response.data))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, [])
 
     return { data, error, loaded }
@@ -233,7 +232,7 @@ export const useAxiosGetSubCountriesList = (countryNumericCode: number) => {
             .then((response) => setData(response.data))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, [])
 
     return { data, error, loaded }
@@ -255,7 +254,7 @@ export const useAxiosChangeKindMember = (payload: ChangeKindMemberValues) => {
             .then((response) => setData(response.data))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, [])
 
     return { data, error, loaded }
@@ -277,7 +276,7 @@ export const useAxiosChangeMemberRoles = (payload: ChangeMemberRolesValues) => {
             .then((response) => setData(response.data))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, [])
 
     return { data, error, loaded }
@@ -299,7 +298,7 @@ export const useAxiosChangeUserEmail = (payload: ChangeEmailAxiosValues) => {
             .then((response) => setData(response.data))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, [])
 
     return { data, error, loaded }
@@ -321,7 +320,7 @@ export const useAxiosChangeUserPassword = (payload: ChangePasswordAxiosValues) =
             .then((response) => setData(response.data))
             .catch((error: string) => setError(error))
             .finally(() => setLoaded(true))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, [])
 
     return { data, error, loaded }

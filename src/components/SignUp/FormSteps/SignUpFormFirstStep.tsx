@@ -1,7 +1,6 @@
 import React from 'react'
 import { FormikProps, FormikErrors } from 'formik'
 import { Button, Col } from 'react-bootstrap'
-import BootstrapForm from 'react-bootstrap/Form'
 import { SignUpFormValues, SignUpFormStepProps } from '../SignUpFormTypes'
 import FormField from '../Common/FormField'
 import { ButtonRow } from '../../SignUpSingInCommonStyles'
@@ -14,7 +13,7 @@ const isFirstStepNextButtonDisabled = (formikProps: FormikProps<SignUpFormValues
 
 const SignUpFormFirstStep: React.FC<SignUpFormStepProps> = ({ formikProps, nextStepFunction }) => {
     return (
-        <ResponsiveMainContainer as={BootstrapForm.Group}>
+        <ResponsiveMainContainer>
             <FormField id="email" name="email" type="text" label="Correo electrónico:" placeholder="Email" formikProps={formikProps} />
             <FormField id="password" name="password" type="password" label="Contraseña:" placeholder="Contraseña" formikProps={formikProps} />
             <FormField

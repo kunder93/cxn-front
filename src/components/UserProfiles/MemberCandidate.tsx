@@ -13,7 +13,9 @@ const MessageContainer = styled.div`
     margin-right: 2rem;
     font-family: 'Montserrat', sans-serif;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición suave */
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease; /* Transición suave */
 
     &:hover {
         transform: translateY(-5px); /* Levantar un poco el contenedor al pasar el ratón */
@@ -23,7 +25,7 @@ const MessageContainer = styled.div`
 
 // Título del mensaje
 const MessageTitle = styled.h2`
-    color: #ff69b4; /* Color rosa intenso */
+    color: #f5459d; /* Color rosa intenso */
     font-size: 1.8rem; /* Tamaño de fuente más grande */
     margin-bottom: 1rem;
 `
@@ -40,10 +42,10 @@ const MemberCandidate: React.FC = () => {
     const user = useAppSelector((state) => state.users)
     return (
         <MessageContainer>
-            <MessageTitle>Bienvenido, {user.userProfile.name} {user.userProfile.firstSurname}</MessageTitle>
-            <MessageText>
-                Su solicitud está siendo procesada y será cursada en los próximos días. Gracias por su paciencia.
-            </MessageText>
+            <MessageTitle>
+                Bienvenido, {user.userProfile.name} {user.userProfile.firstSurname}
+            </MessageTitle>
+            <MessageText>Su solicitud está siendo procesada y será cursada en los próximos días. Gracias por su paciencia.</MessageText>
         </MessageContainer>
     )
 }

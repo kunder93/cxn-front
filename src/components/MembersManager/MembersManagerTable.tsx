@@ -1,15 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-import React, { useMemo, useState } from 'react'
-import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'react-table'
-import { Button } from 'react-bootstrap'
+import React, { useMemo, useState, useCallback } from 'react'
+import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect, Row } from 'react-table'
+import { Button, Table } from 'react-bootstrap'
 import { Gear, InfoCircle, PersonGear } from 'react-bootstrap-icons'
-import { Table } from 'react-bootstrap'
 import MemberModalProfileInfo from './MemberModalProfileInfo'
-import { renderKindMember, renderUserRoles } from '../../utility/userUtilities'
 import ChangeKindMemberModal from './ChangeKindMember/ChangeKindMemberModal'
-import { KindMember, UserProfile, UserRole } from 'store/types/userTypes'
 import ChangeMemberRolesModal from './ChangeMemberRole/ChangeMemberRolesModal'
+import { KindMember, UserProfile, UserRole } from 'store/types/userTypes'
 import styled from 'styled-components'
+import { renderKindMember, renderUserRoles } from '../../utility/userUtilities'
 
 const RoleCell = styled.div`
     max-width: 100px;
@@ -25,111 +23,105 @@ const FilterBox = styled.div`
     gap: 1em;
 `
 
+const ActionButtonsContainer = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+`
+
+const ActionButtons: React.FC<{
+    row: Row<UserProfile>
+    onInfoClick: (row: Row<UserProfile>) => void
+    onEditKindClick: (row: Row<UserProfile>) => void
+    onEditRoleClick: (row: Row<UserProfile>) => void
+}> = ({ row, onInfoClick, onEditKindClick, onEditRoleClick }) => (
+    <ActionButtonsContainer>
+        <Button variant="info" onClick={() => onInfoClick(row)}>
+            <InfoCircle aria-label="Datos completos" title="Información" />
+        </Button>
+        <Button variant="info" onClick={() => onEditKindClick(row)}>
+            <PersonGear aria-label="Modificar el estado del socio" title="Editar estado" />
+        </Button>
+        <Button variant="info" onClick={() => onEditRoleClick(row)}>
+            <Gear aria-label="Modificar rol del socio" title="Editar roles" />
+        </Button>
+    </ActionButtonsContainer>
+)
+
 interface Props {
     usersData: UserProfile[]
 }
 
-/**
- * Component that displays a table with members data and actions to modify them.
- * @param props The users data.
- * @returns Component with Table that contains members data and actions for modify members.
- */
-const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const [data, setData] = useState<UserProfile[]>(useMemo(() => usersData, [])) //Caching data
+const MembersManagerTable: React.FC<Props> = ({ usersData }) => {
+    const [data, setData] = useState<UserProfile[]>(useMemo(() => usersData, [usersData]))
     const [memberInfoModal, setMemberInfoModal] = useState(false)
     const [changeKindMemberModal, setChangeKindMemberModal] = useState(false)
     const [changeMemberRoleModal, setChangeMemberRoleModal] = useState(false)
-    const [selectedRow, setSelectedRow] = useState<UserProfile | undefined>() // Updated typing here
+    const [selectedRow, setSelectedRow] = useState<UserProfile | undefined>()
     const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null)
 
-    const updateKindMember = (newKindMember: KindMember) => {
-        if (selectedRowIndex !== null) {
-            setData((prevData) => {
-                const newData = [...prevData]
-                newData[selectedRowIndex].kindMember = newKindMember
-                return newData
-            })
-        }
-    }
+    const updateKindMember = useCallback(
+        (newKindMember: KindMember) => {
+            if (selectedRowIndex !== null) {
+                setData((prevData) => {
+                    const newData = [...prevData]
+                    newData[selectedRowIndex].kindMember = newKindMember
+                    return newData
+                })
+            }
+        },
+        [selectedRowIndex]
+    )
 
-    const updateMemberRoles = (newUserRoles: UserRole[]) => {
-        if (selectedRowIndex !== null) {
-            setData((prevData) => {
-                const newData = [...prevData]
-                newData[selectedRowIndex].userRoles = newUserRoles
-                return newData
-            })
-        }
-    }
+    const updateMemberRoles = useCallback(
+        (newUserRoles: UserRole[]) => {
+            if (selectedRowIndex !== null) {
+                setData((prevData) => {
+                    const newData = [...prevData]
+                    newData[selectedRowIndex].userRoles = newUserRoles
+                    return newData
+                })
+            }
+        },
+        [selectedRowIndex]
+    )
 
     const columns: Column<UserProfile>[] = useMemo(
         () => [
-            {
-                Header: 'D.N.I.',
-                accessor: (d: UserProfile) => d.dni
-            },
-            {
-                Header: 'Nombre',
-                accessor: (d: UserProfile) => d.name
-            },
-            {
-                Header: 'Apellidos',
-                accessor: (d: UserProfile) => d.firstSurname + ' ' + d.secondSurname
-            },
-            {
-                Header: 'Rol del socio',
-                accessor: (d: UserProfile) => <RoleCell>{renderUserRoles(d.userRoles)}</RoleCell>
-            },
-            {
-                Header: 'Estado',
-                accessor: (d: UserProfile) => renderKindMember(d.kindMember)
-            }
+            { Header: 'D.N.I.', accessor: 'dni' },
+            { Header: 'Nombre', accessor: 'name' },
+            { Header: 'Apellidos', accessor: (d) => `${d.firstSurname} ${d.secondSurname}` },
+            { Header: 'Rol del socio', accessor: (d) => <RoleCell>{renderUserRoles(d.userRoles)}</RoleCell> },
+            { Header: 'Estado', accessor: (d) => renderKindMember(d.kindMember) }
         ],
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        []
+    )
+
+    const InfoButtonClickHandler = useCallback(
+        (row: Row<UserProfile>) => {
+            setSelectedRow(data[row.index])
+            setMemberInfoModal(true)
+        },
         [data]
     )
 
-    const InfoButtonClickHandler = (props: {
-        row: {
-            index: number
-        }
-    }) => {
-        if (props.row) {
-            const clone = [...data]
-            const selRow = clone[props.row.index]
-            setSelectedRow(selRow)
-            setMemberInfoModal(true)
-        }
-    }
-
-    const EditKindMemberButtonClickHandler = (props: {
-        row: {
-            index: number
-        }
-    }) => {
-        if (props.row) {
-            const clone = [...data]
-            const selRow = clone[props.row.index]
-            setSelectedRow(selRow)
-            setSelectedRowIndex(props.row.index) // Set the selected row index
+    const EditKindMemberButtonClickHandler = useCallback(
+        (row: Row<UserProfile>) => {
+            setSelectedRow(data[row.index])
+            setSelectedRowIndex(row.index)
             setChangeKindMemberModal(true)
-        }
-    }
+        },
+        [data]
+    )
 
-    const EditMemberRoleButtonClickHandler = (props: {
-        row: {
-            index: number
-        }
-    }) => {
-        if (props.row) {
-            const clone = [...data]
-            const selRow = clone[props.row.index]
-            setSelectedRow(selRow)
-            setSelectedRowIndex(props.row.index) // Set the selected row index
+    const EditMemberRoleButtonClickHandler = useCallback(
+        (row: Row<UserProfile>) => {
+            setSelectedRow(data[row.index])
+            setSelectedRowIndex(row.index)
             setChangeMemberRoleModal(true)
-        }
-    }
+        },
+        [data]
+    )
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, preGlobalFilteredRows, setGlobalFilter, state } = useTable<UserProfile>(
         { columns, data },
@@ -142,33 +134,32 @@ const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
                 {
                     id: 'selection',
                     Header: () => <>GESTIONAR</>,
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    Cell: (tableProps: any) => (
-                        <div>
-                            <Button variant="info" onClick={() => InfoButtonClickHandler(tableProps)}>
-                                <InfoCircle aria-description="Datos completos" />
-                            </Button>
-                            <Button variant="info" onClick={() => EditKindMemberButtonClickHandler(tableProps)}>
-                                <PersonGear aria-description="Modificar el estado del socio" />
-                            </Button>
-                            <Button variant="info" onClick={() => EditMemberRoleButtonClickHandler(tableProps)}>
-                                <Gear aria-description="Modificar rol del socio" />
-                            </Button>
-                        </div>
+                    Cell: ({ row }) => (
+                        <ActionButtons
+                            row={row}
+                            onInfoClick={InfoButtonClickHandler}
+                            onEditKindClick={EditKindMemberButtonClickHandler}
+                            onEditRoleClick={EditMemberRoleButtonClickHandler}
+                        />
                     )
                 }
             ])
         }
     )
+
     return (
         <>
             <FilterBox>
-                {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment*/}
-                <p>Busqueda en la tabla:</p> <input type="text" value={state.globalFilter} onChange={(event) => setGlobalFilter(event.target.value)} />{' '}
+                <p>Búsqueda en la tabla:</p>
+                <input
+                    type="text"
+                    value={typeof state.globalFilter === 'string' ? state.globalFilter : ''}
+                    onChange={(e) => setGlobalFilter(e.target.value)}
+                    aria-label="Buscar socios por nombre, D.N.I., o apellidos"
+                />
                 <AmountMembersBox>
                     <p>
-                        {' '}
-                        Total de socios: <strong> {preGlobalFilteredRows.length} </strong>
+                        Total de socios: <strong>{preGlobalFilteredRows.length}</strong>
                     </p>
                 </AmountMembersBox>
             </FilterBox>
@@ -199,27 +190,33 @@ const MembersManagerTable: React.FC<Props> = ({ usersData }: Props) => {
                 </tbody>
             </Table>
 
-            <MemberModalProfileInfo show={memberInfoModal} onHide={() => setMemberInfoModal(false)} row={selectedRow} />
-            <ChangeKindMemberModal
-                show={changeKindMemberModal}
-                updateKindMember={updateKindMember}
-                onHide={() => setChangeKindMemberModal(false)}
-                memberFirstSurname={selectedRow?.firstSurname}
-                memberSecondSurname={selectedRow?.secondSurname}
-                memberEmail={selectedRow?.email}
-                memberName={selectedRow?.name}
-                kindMember={selectedRow?.kindMember}
-            />
-            <ChangeMemberRolesModal
-                show={changeMemberRoleModal}
-                updateMemberRoles={updateMemberRoles}
-                onHide={() => setChangeMemberRoleModal(false)}
-                memberFirstSurname={selectedRow?.firstSurname}
-                memberSecondSurname={selectedRow?.secondSurname}
-                memberEmail={selectedRow?.email ? selectedRow.email : ''}
-                memberName={selectedRow?.name}
-                memberRoles={selectedRow?.userRoles ? selectedRow.userRoles : []}
-            />
+            {selectedRow && (
+                <>
+                    <MemberModalProfileInfo show={memberInfoModal} onHide={() => setMemberInfoModal(false)} row={selectedRow} />
+                    <ChangeKindMemberModal
+                        show={changeKindMemberModal}
+                        updateKindMember={updateKindMember}
+                        onHide={() => setChangeKindMemberModal(false)}
+                        memberFirstSurname={selectedRow.firstSurname}
+                        memberSecondSurname={selectedRow.secondSurname}
+                        memberEmail={selectedRow.email}
+                        memberName={selectedRow.name}
+                        kindMember={selectedRow.kindMember}
+                        aria-label="Modal de cambio de estado de socio"
+                    />
+                    <ChangeMemberRolesModal
+                        show={changeMemberRoleModal}
+                        updateMemberRoles={updateMemberRoles}
+                        onHide={() => setChangeMemberRoleModal(false)}
+                        memberFirstSurname={selectedRow?.firstSurname ?? ''}
+                        memberSecondSurname={selectedRow?.secondSurname ?? ''}
+                        memberEmail={selectedRow?.email ?? ''}
+                        memberName={selectedRow?.name ?? ''}
+                        memberRoles={selectedRow?.userRoles ?? []}
+                        aria-label="Modal de cambio de roles de socio"
+                    />
+                </>
+            )}
         </>
     )
 }

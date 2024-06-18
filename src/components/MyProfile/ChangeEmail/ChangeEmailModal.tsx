@@ -19,6 +19,7 @@ const ModalFooter = styled(Modal.Footer)`
 `
 
 const ChangeEmailModal: React.FC<ChangeEmailModalProps> = (props) => {
+    const [buttonDisabled, setButtonDisabled] = React.useState(true)
     const formRef = useRef<FormikProps<ChangeEmailFormValues>>(null)
     const handleSubmit = () => {
         if (formRef.current) {
@@ -29,14 +30,14 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = (props) => {
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    <h2>Cambiar Email de: {props.name + ' ' + props.firstSurname + ' ' + props.secondSurname}</h2>
+                    <h2>Cambiar email de: {props.name + ' ' + props.firstSurname + ' ' + props.secondSurname}</h2>
                 </Modal.Title>
             </Modal.Header>
             <ModalBody>
-                <EmailChangeForm formikRef={formRef} initialEmail={props.userEmail}></EmailChangeForm>
+                <EmailChangeForm formikRef={formRef} initialEmail={props.userEmail} buttonDisabledHandler={setButtonDisabled}></EmailChangeForm>
             </ModalBody>
             <ModalFooter>
-                <Button variant="success" onClick={handleSubmit}>
+                <Button variant="success" onClick={handleSubmit} disabled={buttonDisabled}>
                     Cambiar
                 </Button>
                 <Button variant="danger" onClick={props.onHide}>

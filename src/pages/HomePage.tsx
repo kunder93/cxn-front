@@ -26,7 +26,8 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
                 buttonAction: ButtonOptions.MODAL,
                 component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'CLASES PARA NIÑOS'} category={'CLASES NIÑOS'} />
             }
-        ]
+        ],
+        modalAriaLabel: 'Clases niños'
     },
     {
         imageSrc: '/Principal/TorneoTablerosPiezasColocadas_optimizada.avif',
@@ -47,7 +48,8 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
                     ></MoreInfoForm>
                 )
             }
-        ]
+        ],
+        modalAriaLabel: 'Torneos niños'
     },
     {
         imageSrc: '/Principal/MayoresClaseOptimizada.avif',
@@ -61,7 +63,8 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
                 buttonAction: ButtonOptions.MODAL,
                 component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'CLASES PARA ADULTOS'} category={'CLASES ADULTOS'}></MoreInfoForm>
             }
-        ]
+        ],
+        modalAriaLabel: 'Clases adultos'
     }
 ]
 
@@ -70,7 +73,7 @@ const memberActivitiesCardsData: HomePageCardProps[] = [
         imageSrc: '/Principal/PremiosGallegoVeteranos_optimizada.avif',
         imageAlt: 'Recibiendo premios campoeonato gallego.',
         sources: [],
-        cardTitle: 'Torneos y competicion federada',
+        cardTitle: 'Torneos y competición federada',
         cardText: ['Participa en torneos y competición oficial.', 'Enfréntate a los mejores, supera tus límites.'],
         buttonProps: [
             {
@@ -78,7 +81,8 @@ const memberActivitiesCardsData: HomePageCardProps[] = [
                 buttonAction: ButtonOptions.MODAL,
                 component: <MembersBenefits benefitOption={MembersBenefitOption.COMPETICION_FEDERADA}></MembersBenefits>
             }
-        ]
+        ],
+        modalAriaLabel: 'Torneos y competición federada'
     },
     {
         imageSrc: '/Principal/LibrosAjedrez_optimizada.avif',
@@ -92,7 +96,8 @@ const memberActivitiesCardsData: HomePageCardProps[] = [
                 buttonAction: ButtonOptions.MODAL,
                 component: <MembersBenefits benefitOption={MembersBenefitOption.MATERIAL_AJEDREZ}></MembersBenefits>
             }
-        ]
+        ],
+        modalAriaLabel: 'Material deportivo'
     },
     {
         imageSrc: '/Principal/ClaseAdultos.avif',
@@ -108,7 +113,8 @@ const memberActivitiesCardsData: HomePageCardProps[] = [
                 buttonAction: ButtonOptions.MODAL,
                 component: <MembersBenefits benefitOption={MembersBenefitOption.TUTORIZACION}></MembersBenefits>
             }
-        ]
+        ],
+        modalAriaLabel: 'Tutorización y seguimiento'
     }
 ]
 const [activity1, activity2, activity3] = freeAticivitiesCardsData
@@ -116,7 +122,6 @@ const [memberActivity1, memberActivity2, memberActivity3] = memberActivitiesCard
 
 const StyledMainCarouselSection = styled.section`
     grid-area: mainCarousel;
-
 `
 
 const MainContentStyledSection = styled.section`

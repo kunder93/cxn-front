@@ -132,7 +132,7 @@ const CollapsibleNavigationBar: React.FC = () => {
                     </Nav.Link>
                 </InsideOptionsNav>
                 {isUserLoggedIn ? (
-                    <UserLoggedHeaderNavBar />
+                    <UserLoggedHeaderNavBar handleNavItemClick={handleNavItemClick} />
                 ) : (
                     <CustomNav className="ms-auto">
                         <Nav.Link as={Link} to={ROUTES.SIGNUP_ROUTE} onClick={handleNavItemClick}>

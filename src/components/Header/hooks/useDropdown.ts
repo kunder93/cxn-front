@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
-import useDocumentInteraction from './useDocumentInteraction' // Importa el nuevo hook
+import useDocumentInteraction from './useDocumentInteraction'
 
 const useDropdown = (onNavItemClick: () => void) => {
     const [showDropdown, setShowDropdown] = useState(false)
@@ -12,6 +12,10 @@ const useDropdown = (onNavItemClick: () => void) => {
         onNavItemClick()
     }, [onNavItemClick])
 
+    const toggleDropdown = useCallback(() => {
+        setShowDropdown(prevState => !prevState)
+    }, [])
+
     useDocumentInteraction(dropdownRef, setShowDropdown) // Usa el nuevo hook
 
     return {
@@ -19,7 +23,8 @@ const useDropdown = (onNavItemClick: () => void) => {
         dropdownRef,
         handleMouseOver,
         handleMouseLeave,
-        handleItemClick
+        handleItemClick,
+        toggleDropdown
     }
 }
 

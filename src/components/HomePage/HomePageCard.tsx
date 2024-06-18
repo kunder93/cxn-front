@@ -72,6 +72,7 @@ export interface HomePageCardProps {
     cardTitle: string
     cardText: string[]
     buttonProps: ButtonProps[]
+    modalAriaLabel: string
 }
 
 const HomePageCard: React.FC<HomePageCardProps> = (props) => {
@@ -135,6 +136,7 @@ const HomePageCard: React.FC<HomePageCardProps> = (props) => {
                 show={showModal}
                 closeModal={closeModal}
                 modalContentComponent={modalContent ?? null} // Renderizar contenido modal personalizado
+                ariaLabel={props.modalAriaLabel}
             />
         </>
     )

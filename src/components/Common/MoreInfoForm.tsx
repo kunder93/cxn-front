@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
-import axios from 'axios'
+import axios, { isAxiosError } from 'axios'
 import BootstrapForm from 'react-bootstrap/Form'
 import { Alert, Button, Collapse, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
@@ -91,23 +91,30 @@ const MoreInfoForm: React.FC<Props> = ({ initialTopic, formTitle, category /*, o
         setSubmitErrorNotification(false)
     }
     const handleSubmit = async (values: FormData, actions: FormikHelpers<FormData>) => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*' // Asegúrate de que coincida con la configuración de CORS en el backend
+            }
+        }
+        
         try {
             await axios.post<SubmitAxiosValues>(CHESS_QUESTION_URL, {
                 email: values.email,
                 category: category,
                 topic: values.asunto,
                 message: values.texto
-            })
+            },axiosConfig)
             setSubmitSuccessNotification(true)
             actions.resetForm()
             actions.setSubmitting(false)
-        } catch (error: any) {
+        } catch (error) {
             setSubmitErrorNotification(true)
 
-            if (error.response?.data) {
+            if (isAxiosError(error) && error.response?.data) {
                 // Request made and server responded
-                setAlertMessage(error.response.data.content)
-            } else if (error.request) {
+                setAlertMessage('Error enviando el formulario.')
+            } else if (isAxiosError(error) && error.request) {
                 // The request was made but no response was received
                 setAlertMessage('Error: no hay respuesta.')
             } else {

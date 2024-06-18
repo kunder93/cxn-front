@@ -29,6 +29,13 @@ const CheckBoxContainer = styled.div`
         margin: 0;
         line-height: 20px; /* Match the checkbox height */
     }
+    @media (max-width: 768px) {
+        .checkbox-style {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+    }
 `
 
 const CheckBoxWithLabel: React.FC<{ name: string; label: string }> = ({ name, label }) => (

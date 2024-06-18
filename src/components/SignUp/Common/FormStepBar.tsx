@@ -1,8 +1,8 @@
+import React from 'react'
 import { Container, ProgressBar } from 'react-bootstrap'
 import { FormSteps } from '../SignUpFormTypes'
 import { ProgressBarIconsContainer } from '../SignUpFormStyles'
 import { Icon1Circle, Icon1CircleFill, Icon2Circle, Icon2CircleFill, Icon3Circle, Icon3CircleFill, Icon4Circle, Icon4CircleFill } from 'react-bootstrap-icons'
-import React from 'react'
 
 const FormStepBar: React.FC<{ step: FormSteps }> = ({ step }) => {
     const stepProgress = {
@@ -28,7 +28,18 @@ const FormStepBar: React.FC<{ step: FormSteps }> = ({ step }) => {
                     <React.Fragment key={index}>{step === ((index + 1) as FormSteps) ? icon.filled : icon.regular}</React.Fragment>
                 ))}
             </ProgressBarIconsContainer>
-            <ProgressBar now={stepProgress[step]} />
+            <ProgressBar
+                now={stepProgress[step]}
+                min={0}
+                max={100}
+                role="progressbar"
+                aria-label={`Progreso paso ${step} de 4`}
+                aria-labelledby={`Progreso paso ${step} de 4`}
+                visuallyHidden={false}
+                striped
+                animated
+                tabIndex={0}
+            />
         </Container>
     )
 }

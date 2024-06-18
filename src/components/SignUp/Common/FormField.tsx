@@ -45,7 +45,11 @@ const FormField: React.FC<FormFieldProps> = React.memo(({ id, name, type, label,
             <Field as={BootstrapForm.Control} id={id} name={name} type={type} placeholder={placeholder} autoComplete="new-password" aria-required="true" />
         </FieldWrapper>
         <FieldWrapper>
-            {formikProps.errors[name] && formikProps.touched[name] && <ErrorMessage>{formikProps.errors[name] as string}</ErrorMessage>}
+            {formikProps.errors[name] && formikProps.touched[name] && (
+                <ErrorMessage>
+                    <strong>{formikProps.errors[name] as string}</strong>
+                </ErrorMessage>
+            )}
         </FieldWrapper>
     </FormRow>
 ))
