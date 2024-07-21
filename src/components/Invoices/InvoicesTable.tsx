@@ -1,25 +1,35 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useMemo, useState } from 'react'
-import { IInvoice } from '../Types/Types'
-import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'react-table'
-import { Button, Container } from 'react-bootstrap'
-import { INVOICES_URL } from '../../resources/server_urls'
-import axios from 'axios'
-import { Pencil, Trash3 } from 'react-bootstrap-icons'
-import Table from 'react-bootstrap/Table'
-import CreateInvoiceModal from './CreateInvoiceModal'
-import EditInvoiceModal from './EditInvoiceModal'
+import React, { useMemo, useState } from 'react';
+import { IInvoice } from '../Types/Types';
+import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect, CellProps } from 'react-table';
+import { Button, Container } from 'react-bootstrap';
+import { INVOICES_URL } from '../../resources/server_urls';
+import axios from 'axios';
+import { Trash3 } from 'react-bootstrap-icons';
+import Table from 'react-bootstrap/Table';
+import styled from 'styled-components';
+
+const TableFilterContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    padding-bottom: 0.5em;
+`;
+
+const FilterInputLabel = styled.label`
+    padding-right: 1em;
+`;
+
+const AmountRegistersBox = styled.div`
+    padding-left: 4em;
+`;
 
 interface Props {
-    data: IInvoice[]
+    data: IInvoice[];
 }
 
-const InvoicesTable: React.FC<Props> = (props: Props) => {
-    console.log(props.data)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const [data, setData] = useState(useMemo(() => props.data, [])) //Caching data
-    const [editModal, setEditModal] = useState(false)
-    const [selectedRow, setSelectedRow] = useState({})
+const InvoicesTable: React.FC<Props> = ({ data: initialData }) => {
+    const [data, setData] = useState(initialData); // Caching data
+
     const columns: Column<IInvoice>[] = useMemo(
         () => [
             {
@@ -50,40 +60,21 @@ const InvoicesTable: React.FC<Props> = (props: Props) => {
                 Header: 'Comprador NIF',
                 accessor: 'buyerNif'
             }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
         ],
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [data]
-    )
+        [] // Dependency array is empty because columns do not change based on data
+    );
 
-    // Function to add invoice tp data
-    const addInvoice = (newInvoice: IInvoice) => {
-        setData([...data, newInvoice])
-    }
-
-    function DeleteButtonClickHandler(props: any) {
-        // eslint-disable-next-line prefer-const
-        let clone = [...data]
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-        const modifiedClone: IInvoice[] = clone.splice(props.row.index, 1)
-        const row = modifiedClone[0]
+    function DeleteButtonClickHandler(props: CellProps<IInvoice>) {
+        const clone = [...data];
+        const modifiedClone: IInvoice[] = clone.splice(props.row.index, 1);
+        const row = modifiedClone[0];
         axios
-            .delete(INVOICES_URL + '/' + row.series + '/' + row.number)
+            .delete(`${INVOICES_URL}/${row.series}/${row.number}`)
             .then((/*response*/) => {
-                setData(clone)
+                setData(clone);
             })
             .catch((error) => console.log(error))
-            .finally(() => console.log('final'))
-    }
-
-    function EditButtonClickHandler(props: any) {
-        // eslint-disable-next-line prefer-const
-        let clone = [...data]
-
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        const a = clone[props.row.index]
-        setSelectedRow(a)
-        setEditModal(true)
+            .finally(() => console.log('final'));
     }
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, preGlobalFilteredRows, setGlobalFilter, state } = useTable(
@@ -97,89 +88,95 @@ const InvoicesTable: React.FC<Props> = (props: Props) => {
                 {
                     id: 'selection',
                     Header: () => <div> OPTIONS</div>,
-                    Cell: (tableProps: any) => (
+                    Cell: (tableProps: CellProps<IInvoice>) => (
                         <div>
-                            <Button variant="info" onClick={() => EditButtonClickHandler(tableProps)}>
-                                <Pencil title="Editar" />
-                            </Button>
                             <Button variant="danger" onClick={() => DeleteButtonClickHandler(tableProps)}>
                                 <Trash3 title="Borrar" />
                             </Button>
                         </div>
                     )
                 }
-            ])
+            ]);
         }
-    )
-    const [modalShow, setModalShow] = useState(false)
+    );
+
+    const globalFilterState = state.globalFilter as string | number | readonly string[] | undefined;
     return (
         <Container>
+            <TableFilterContainer>
+                <FilterInputLabel htmlFor="filterInput">Busca facturas:</FilterInputLabel>
+                <input
+                    type="text"
+                    value={globalFilterState ?? ''}
+                    onChange={(event) => setGlobalFilter(event.target.value)}
+                    aria-label="Buscar facturas"
+                />
+                <AmountRegistersBox>
+                    Total de registros: {preGlobalFilteredRows.length} (Mostrando: {rows.length})
+                </AmountRegistersBox>
+            </TableFilterContainer>
             <Table striped bordered hover responsive {...getTableProps()}>
                 <thead>
                     {
                         // Loop over the header rows
-                        headerGroups.map((headerGroup) => (
-                            // Apply the header row props
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {
-                                    // Loop over the headers in each row
-                                    headerGroup.headers.map((column) => (
-                                        // Apply the header cell props
-                                        <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                            {
-                                                // Render the header
-                                                column.render('Header')
-                                            }
-                                            <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
-                                        </th>
-                                    ))
-                                }
-                            </tr>
-                        ))
+                        headerGroups.map((headerGroup) => {
+                            const { key: headerGroupKey, ...headerGroupProps } = headerGroup.getHeaderGroupProps();
+                            return (
+                                // Apply the header row props
+                                <tr key={headerGroupKey} {...headerGroupProps}>
+                                    {
+                                        // Loop over the headers in each row
+                                        headerGroup.headers.map((column) => {
+                                            const { key: columnKey, ...columnProps } = column.getHeaderProps(column.getSortByToggleProps());
+                                            return (
+                                                // Apply the header cell props
+                                                <th key={columnKey} {...columnProps}>
+                                                    {
+                                                        // Render the header
+                                                        column.render('Header')
+                                                    }
+                                                    <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
+                                                </th>
+                                            );
+                                        })
+                                    }
+                                </tr>
+                            );
+                        })
                     }
                 </thead>
                 <tbody {...getTableBodyProps()}>
                     {
                         // Loop over the table rows
                         rows.map((row) => {
-                            // Prepare the row for display
-                            prepareRow(row)
+                            prepareRow(row);
+                            const { key: rowKey, ...rowProps } = row.getRowProps();
                             return (
                                 // Apply the row props
-                                <tr {...row.getRowProps()}>
+                                <tr key={rowKey} {...rowProps}>
                                     {
                                         // Loop over the rows cells
                                         row.cells.map((cell) => {
-                                            // Apply the cell props
+                                            const { key: cellKey, ...cellProps } = cell.getCellProps();
                                             return (
-                                                <td {...cell.getCellProps()}>
+                                                // Apply the cell props
+                                                <td key={cellKey} {...cellProps}>
                                                     {
                                                         // Render the cell contents
-
                                                         cell.render('Cell')
                                                     }
                                                 </td>
-                                            )
+                                            );
                                         })
                                     }
                                 </tr>
-                            )
+                            );
                         })
                     }
                 </tbody>
             </Table>
-            <div>
-                <p> Total de registros: {preGlobalFilteredRows.length}</p>
-            </div>
-            {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment*/}
-            <input type="text" value={state.globalFilter} onChange={(event) => setGlobalFilter(event.target.value)} />
-            <EditInvoiceModal show={editModal} onHide={() => setEditModal(false)} row={selectedRow} />
-            <Button variant="primary" onClick={() => setModalShow(true)}>
-                Añadir nueva factura
-            </Button>
-            <CreateInvoiceModal show={modalShow} onHide={() => setModalShow(false)} data={data} addInvoice={addInvoice} />
         </Container>
-    )
+    );
 }
 
-export default InvoicesTable
+export default InvoicesTable;

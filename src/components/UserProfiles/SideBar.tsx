@@ -94,11 +94,11 @@ const Sidebar: React.FC<SidebarProps> = ({ roles, setProfilePage, setSidebarSect
 
     const sections = [
         { section: ProfileSection.UserPage, icon: <BsPerson />, label: 'Mi Perfil', roles: [UserRole.SOCIO, UserRole.SOCIO_CANDIDATO] },
-        { section: ProfileSection.AdminPage, icon: <BsGear />, label: 'Administración', roles: [UserRole.ADMIN] },
+        { section: ProfileSection.AdminPage, icon: <BsGear />, label: 'Administración', roles: [UserRole.ADMIN, UserRole.SOCIO_CANDIDATO] },
         { section: ProfileSection.President, icon: <BsPeople />, label: 'Presidente', roles: [UserRole.PRESIDENTE] },
         { section: ProfileSection.Tesorero, icon: <BsClipboardData />, label: 'Tesorero', roles: [UserRole.TESORERO] },
         { section: ProfileSection.Secretario, icon: <BsCalendar />, label: 'Secretario', roles: [UserRole.SECRETARIO] },
-        { section: ProfileSection.ChessData, icon: <FaChessKnight />, label: 'Datos de Ajedrez', roles: [UserRole.SOCIO, UserRole.ADMIN] },
+        { section: ProfileSection.ChessData, icon: <FaChessKnight />, label: 'Datos de Ajedrez', roles: [UserRole.SOCIO] },
         { section: ProfileSection.MemberCandidate, icon: <BsPeople />, label: 'Bienvenida candidatos', roles: [UserRole.SOCIO_CANDIDATO, UserRole.ADMIN] }
     ]
 

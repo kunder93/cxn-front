@@ -1,289 +1,223 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-import 'react-app-polyfill/ie11'
-import * as React from 'react'
-import { Formik, Field, Form, FormikHelpers, useField, useFormikContext } from 'formik'
-import Select from 'react-select'
-import { COMPANIES_URL, INVOICES_URL } from '../../resources/server_urls'
-import { useAxiosGetCompanies } from '../../utility/CustomAxios'
-import { StateManagerProps } from 'react-select/dist/declarations/src/useStateManager'
-import axios from 'axios'
+import React, { useState, useEffect } from 'react'
+import { FormikProps } from 'formik'
 import BootstrapForm from 'react-bootstrap/Form'
-import { Container, Row, Col, Button, Collapse, Alert } from 'react-bootstrap'
-import { ErrorMessage } from './InvoicesStyles'
-import { useEffect, useState } from 'react'
+import { Container, Row, Col } from 'react-bootstrap'
+import styled from 'styled-components'
+import Select from 'react-select'
 import { IInvoice } from '../Types/Types'
-import { CreateInvoiceValidationSchema } from '../../pages/validation/FormValidationSchemas'
-import { FloatingNotificationContainer } from '../Common/FloatingNotificationContainer'
+import { COMPANIES_URL } from '../../resources/server_urls'
+import { useAxiosGetCompanies } from '../../utility/CustomAxios'
 
-interface MyValues {
+const InputLabel = styled(BootstrapForm.Label)`
+    font-weight: bold;
+`
+
+const StyledErrorMessage = styled.div`
+    color: #e20101;
+    font-weight: bold;
+`
+
+const FormColumn = styled(Col)`
+    padding-top: 0.5em;
+`
+
+const TaxExemptCheckboxColumn = styled(FormColumn)`
+    display: flex;
+    flex-direction: row;
+    align-items: baseline !important; /* Alinea verticalmente los elementos */
+    input {
+        margin-left: 1em;
+        width: 20px;
+        height: 20px;
+        vertical-align: middle; /* Alinea verticalmente el input con el texto */
+    }
+`
+
+interface CreateInvoiceFormProps {
+    formik: FormikProps<IInvoice>
+}
+
+interface ISelectionOptions {
     label: string
     value: string
 }
-type MyList = MyValues[]
 
-//define the group option type
-interface GroupedOption {
-    label: string // group label
-    options: MyValues[]
-}
-// component props
-type Props = {
-    name: string
-} & Omit<StateManagerProps<MyValues, false | true, GroupedOption>, 'value' | 'onChange'>
+const CreateInvoiceForm: React.FC<CreateInvoiceFormProps> = ({ formik }) => {
+    const [sellerOptions, setSellerOptions] = useState<ISelectionOptions[]>([])
+    const [buyerOptions, setBuyerOptions] = useState<ISelectionOptions[]>([])
+    const { data, loaded } = useAxiosGetCompanies(COMPANIES_URL)
 
-const FloatingNotification: React.FC<{ message: string; variant: string; onClose: () => void }> = ({ message, variant, onClose }) => {
-    const [visible, setVisible] = useState(true)
-
+    // Cargar datos de empresas en sellerOptions y buyerOptions usando useEffect
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setVisible(false)
-        }, 5000)
-
-        return () => {
-            clearTimeout(timer)
+        if (data?.companiesList) {
+            const updatedList = data.companiesList.map((company) => ({
+                label: company.nif,
+                value: company.nif
+            }))
+            setSellerOptions(updatedList)
+            setBuyerOptions(updatedList)
         }
-    }, [])
+    }, [data])
 
-    const handleExited = () => {
-        onClose()
-    }
-
-    return (
-        <Collapse in={visible} onExited={handleExited}>
-            <FloatingNotificationContainer>
-                <Alert variant={variant} onClose={onClose} dismissible>
-                    {message}
-                </Alert>
-            </FloatingNotificationContainer>
-        </Collapse>
-    )
-}
-
-const FormikReactSelect = (props: Props) => {
-    const { name, ...restProps } = props
-    const [field] = useField(name)
-    const { setFieldValue } = useFormikContext()
-    //flatten the options so that it will be easier to find the value
-    const flattenedOptions = props.options?.flatMap((o) => {
-        const isNotGrouped = 'value' in o
-        if (isNotGrouped) {
-            return o
-        } else {
-            return o.options
-        }
-    })
-    //get the value using flattenedOptions and field.value
-    const value = flattenedOptions?.filter((o) => {
-        const isArrayValue = Array.isArray(field.value)
-        if (isArrayValue) {
-            const values = field.value as any[]
-            return values.includes(o.value)
-        } else {
-            return field.value === o.value
-        }
-    })
-    return (
-        <Select
-            {...restProps}
-            value={value}
-            // onChange implementation
-            onChange={(val: any) => {
-                //here I used explicit typing but there maybe a better way to type the value.
-                const TempVal = val as MyValues[] | MyValues
-                const isArray = Array.isArray(TempVal)
-                if (isArray) {
-                    const values = TempVal.map((o) => o.value)
-                    setFieldValue(name, values)
-                } else {
-                    setFieldValue(name, TempVal.value)
-                }
-            }}
-        />
-    )
-}
-
-export interface ICreateInvoiceFormData {
-    addInvoice: (newInvoice: IInvoice) => void
-    data: IInvoice[]
-}
-
-const CreateInvoiceForm = (invoiceFormProps: ICreateInvoiceFormData) => {
-    const { data, error, loaded } = useAxiosGetCompanies(COMPANIES_URL)
-    console.log(error)
-    console.log(loaded)
-    const [alertMessage, setAlertMessage] = useState('')
-    const [submitSuccessNotification, setSubmitSuccessNotification] = useState(false)
-    const [submitErrorNotification, setSubmitErrorNotification] = useState(false)
-    const mylista: MyList = []
-    data.companiesList.forEach((company) => {
-        mylista.push({ label: company.nif, value: company.nif } as MyValues)
-    })
-    const initialValues: IInvoice = {
-        number: 0,
-        series: '',
-        expeditionDate: new Date(),
-        advancePaymentDate: new Date(),
-        taxExempt: false,
-        sellerNif: '',
-        buyerNif: ''
-    }
-    function changeSuccessNotificationState(): void {
-        setSubmitSuccessNotification(false)
-    }
-    function changeErrorNotificationState(): void {
-        setSubmitErrorNotification(false)
-    }
-
-    const handleSubmit = async (values: IInvoice, actions: FormikHelpers<IInvoice>) => {
+    const handleSelectChange = async (field: string, value: string) => {
         try {
-            const invoiceData: IInvoice = {
-                number: values.number,
-                series: values.series,
-                expeditionDate: values.expeditionDate,
-                advancePaymentDate: values.advancePaymentDate,
-                taxExempt: values.taxExempt,
-                sellerNif: values.sellerNif,
-                buyerNif: values.buyerNif
+            await formik.setFieldValue(field, value)
+            if (field === 'sellerNif') {
+                setBuyerOptions(sellerOptions.filter((option) => option.value !== value))
+            } else if (field === 'buyerNif') {
+                setSellerOptions(buyerOptions.filter((option) => option.value !== value))
             }
-
-            await axios.post<IInvoice>(INVOICES_URL, invoiceData)
-            console.log(invoiceFormProps.data)
-            const dateo = [...invoiceFormProps.data, invoiceData]
-            console.log('DATEO:')
-            console.log(dateo)
-            invoiceFormProps.addInvoice(invoiceData)
-            setSubmitSuccessNotification(true)
-        } catch (error: any) {
-            setSubmitErrorNotification(true)
-
-            if (error.response?.data) {
-                // Request made and server responded
-                setAlertMessage(error.response.data.content)
-            } else if (error.request) {
-                // The request was made but no response was received
-                setAlertMessage('Error: no hay respuesta.')
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                setAlertMessage('Error: algo inesperado. Recarga o intentalo mas tarde.')
-            }
+        } catch (error) {
+            console.error('Error setting field value:', error)
         }
-
-        actions.resetForm()
-        actions.setSubmitting(false)
     }
 
     return (
-        <div>
-            <Formik
-                initialValues={initialValues}
-                onSubmit={(values: IInvoice, actions) => {
-                    handleSubmit(values, actions)
-                }}
-                validationSchema={CreateInvoiceValidationSchema}
-                validateOnChange={true}
-                validateOnMount={true}
-            >
-                {({ isValid, isSubmitting, errors, touched }) => (
-                    <BootstrapForm as={Form}>
-                        <Container as={BootstrapForm.Group} fluid>
-                            <Row>
-                                <Col md="auto">
-                                    <BootstrapForm.Label htmlFor="number">Número:</BootstrapForm.Label>
-                                </Col>
-                                <Col md="auto">
-                                    <Field as={BootstrapForm.Control} id="number" name="number" type="number" placeholder="Put invoice number" />
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>{errors.number && touched.number ? <ErrorMessage>{errors.number}</ErrorMessage> : ''}</Col>
-                            </Row>
-                            <Row>
-                                <Col md="auto">
-                                    <BootstrapForm.Label htmlFor="series">Serie:</BootstrapForm.Label>
-                                </Col>
-                                <Col md="auto">
-                                    <Field as={BootstrapForm.Control} id="series" name="series" type="text" placeholder="Put invoice series" />
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>{errors.series && touched.series ? <ErrorMessage>{errors.series}</ErrorMessage> : ''}</Col>
-                            </Row>
-                            <Row>
-                                <Col md="auto">
-                                    <BootstrapForm.Label htmlFor="expeditionDate">Fecha de expedición: </BootstrapForm.Label>
-                                </Col>
-                                <Col md="auto">
-                                    <Field as={BootstrapForm.Control} id="expeditionDate" name="expeditionDate" type="date" />
-                                </Col>
-                            </Row>
-                            <Row></Row>
-                            <Row>
-                                <Col md="auto">
-                                    <BootstrapForm.Label htmlFor="advancePaymentDate">Fecha pago adelantado: </BootstrapForm.Label>
-                                </Col>
-                                <Col md="auto">
-                                    <Field as={BootstrapForm.Control} id="advancePaymentDate" name="advancePaymentDate" type="date" />
-                                </Col>
-                            </Row>
-                            <Row></Row>
-                            <Row>
-                                <Col md="auto">
-                                    <BootstrapForm.Label htmlFor="taxExempt">Exención impuestos: </BootstrapForm.Label>
-                                </Col>
-                                <Col md="auto">
-                                    <Field as={BootstrapForm.Check} id="taxExempt" name="taxExempt" />
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>{errors.taxExempt && touched.taxExempt ? <ErrorMessage>{errors.taxExempt}</ErrorMessage> : ''}</Col>
-                            </Row>
-                            <Row>
-                                <Col md="auto">
-                                    <BootstrapForm.Label htmlFor="sellerNif">NIF Vendedor: </BootstrapForm.Label>
-                                </Col>
-                                <Col md="auto">
-                                    <FormikReactSelect name="sellerNif" isMulti={false} options={mylista} />
-                                </Col>{' '}
-                            </Row>
-                            <Row>
-                                <Col>{errors.sellerNif && touched.sellerNif ? <ErrorMessage>{errors.sellerNif}</ErrorMessage> : ''}</Col>
-                            </Row>
-                            <Row>
-                                <Col md="auto">
-                                    <BootstrapForm.Label htmlFor="buyerNif">NIF Comprador: </BootstrapForm.Label>
-                                </Col>
-                                <Col md="auto">
-                                    <FormikReactSelect name="buyerNif" isMulti={false} options={mylista} />
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>{errors.buyerNif && touched.buyerNif ? <ErrorMessage>{errors.buyerNif}</ErrorMessage> : ''}</Col>
-                            </Row>
-                            <Row>
-                                <Col className="d-flex flex-row-reverse bd-highlight">
-                                    <Button variant="primary" type="submit" disabled={!isValid || isSubmitting}>
-                                        Submit
-                                    </Button>
-                                </Col>
-                            </Row>
-                        </Container>
-                        {submitSuccessNotification && (
-                            <FloatingNotification
-                                message={'FACTURA REGISTRADA CON EXITO'}
-                                variant={'success'}
-                                onClose={changeSuccessNotificationState}
-                            ></FloatingNotification>
-                        )}
-                        {submitErrorNotification && (
-                            <FloatingNotification message={alertMessage} variant={'danger'} onClose={changeErrorNotificationState}></FloatingNotification>
-                        )}
-                    </BootstrapForm>
-                )}
-            </Formik>
-        </div>
+        <Container>
+            <BootstrapForm onSubmit={formik.handleSubmit}>
+                <Container as={BootstrapForm.Group}>
+                    <Row>
+                        <FormColumn>
+                            <InputLabel htmlFor="number">Número:</InputLabel>
+                            <BootstrapForm.Control
+                                id="number"
+                                name="number"
+                                type="number"
+                                placeholder="El número de la factura"
+                                value={formik.values.number}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                            />
+                            {formik.touched.number && formik.errors.number && <StyledErrorMessage>{formik.errors.number}</StyledErrorMessage>}
+                        </FormColumn>
+                    </Row>
+                    <Row>
+                        <FormColumn>
+                            <InputLabel htmlFor="series">Nombre:</InputLabel>
+                            <BootstrapForm.Control
+                                id="series"
+                                name="series"
+                                type="text"
+                                placeholder="La serie de la factura"
+                                value={formik.values.series}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                            />
+                            {formik.touched.series && formik.errors.series && <StyledErrorMessage>{formik.errors.series}</StyledErrorMessage>}
+                        </FormColumn>
+                    </Row>
+                    <Row>
+                        <FormColumn>
+                            <InputLabel htmlFor="expeditionDate">Fecha de expedición:</InputLabel>
+                            <BootstrapForm.Control
+                                id="expeditionDate"
+                                name="expeditionDate"
+                                type="date"
+                                value={formik.values.expeditionDate.toISOString().split('T')[0]}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                            />
+                            {formik.touched.expeditionDate && formik.errors.expeditionDate && (
+                                <StyledErrorMessage>{'Error, coge otra fecha.'}</StyledErrorMessage>
+                            )}
+                        </FormColumn>
+                    </Row>
+                    <Row>
+                        <FormColumn>
+                            <InputLabel htmlFor="advancePaymentDate">Fecha de pago por adelantado:</InputLabel>
+                            <BootstrapForm.Control
+                                id="advancePaymentDate"
+                                name="advancePaymentDate"
+                                type="date"
+                                value={formik.values.advancePaymentDate.toISOString().split('T')[0]}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                            />
+                            {formik.touched.advancePaymentDate && formik.errors.advancePaymentDate && (
+                                <StyledErrorMessage>{'Error, coge otra fecha.'}</StyledErrorMessage>
+                            )}
+                        </FormColumn>
+                    </Row>
+                    <Row>
+                        <TaxExemptCheckboxColumn>
+                            <InputLabel htmlFor="taxExempt">Exención de impuestos:</InputLabel>
+                            <BootstrapForm.Check
+                                id="taxExempt"
+                                name="taxExempt"
+                                type="checkbox"
+                                checked={formik.values.taxExempt}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                isInvalid={!!formik.touched.taxExempt && !!formik.errors.taxExempt}
+                                feedback={formik.errors.taxExempt}
+                                aria-label="Seleccionar exencion impuestos"
+                            />
+                        </TaxExemptCheckboxColumn>
+                    </Row>
+                    <Row>
+                        <FormColumn>
+                            <InputLabel htmlFor="sellerNif">Vendedor NIF:</InputLabel>
+                            <div>
+                                <Select
+                                    id="sellerNif"
+                                    name="sellerNif"
+                                    options={sellerOptions}
+                                    value={sellerOptions.find((option) => option.value === formik.values.sellerNif)}
+                                    onChange={(option) => void handleSelectChange('sellerNif', option?.value ?? '')}
+                                    onBlur={formik.handleBlur}
+                                    placeholder={
+                                        loaded ? (
+                                            'Selecciona el NIF del vendedor'
+                                        ) : (
+                                            <span role="status" aria-live="polite">
+                                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando...
+                                            </span>
+                                        )
+                                    }
+                                    isDisabled={!loaded}
+                                    aria-describedby="sellerNifError"
+                                    aria-label="Seleccion nif o cif del vendedor"
+                                />
+                                {formik.touched.sellerNif && formik.errors.sellerNif && (
+                                    <StyledErrorMessage id="sellerNifError">{formik.errors.sellerNif}</StyledErrorMessage>
+                                )}
+                            </div>
+                        </FormColumn>
+                    </Row>
+                    <Row>
+                        <FormColumn>
+                            <InputLabel htmlFor="buyerNif">Comprador NIF:</InputLabel>
+                            <div>
+                                <Select
+                                    id="buyerNif"
+                                    name="buyerNif"
+                                    options={buyerOptions}
+                                    value={buyerOptions.find((option) => option.value === formik.values.buyerNif)}
+                                    onChange={(option) => void handleSelectChange('buyerNif', option?.value ?? '')}
+                                    onBlur={formik.handleBlur}
+                                    aria-label="Seleccion nif o cif del comprador"
+                                    placeholder={
+                                        loaded ? (
+                                            'Selecciona el NIF del comprador'
+                                        ) : (
+                                            <span role="status" aria-live="polite">
+                                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando...
+                                            </span>
+                                        )
+                                    }
+                                    isDisabled={!loaded}
+                                    aria-describedby="buyerNifError"
+                                />
+                                {formik.touched.buyerNif && formik.errors.buyerNif && (
+                                    <StyledErrorMessage id="buyerNifError">{formik.errors.buyerNif}</StyledErrorMessage>
+                                )}
+                            </div>
+                        </FormColumn>
+                    </Row>
+                </Container>
+            </BootstrapForm>
+        </Container>
     )
 }
+
 export default CreateInvoiceForm

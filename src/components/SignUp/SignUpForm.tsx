@@ -70,6 +70,7 @@ const SignUpForm: React.FC = () => {
             >
                 {(formikProps) => (
                     <Form>
+                        <>{console.log('Form values:', formikProps.values) }</>
                         <FormStepBar step={step} />
                         {renderStepComponent(formikProps)}
                         {alertMessage && <FormAlertMessage message={alertMessage} onClose={closeAlert} />}

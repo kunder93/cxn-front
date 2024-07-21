@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as Yup from 'yup'
 import { SignUpFormValues } from '../../components/SignUp/SignUpFormTypes'
@@ -89,13 +93,28 @@ const COMPANY_ADDRESS_MIN_LENGTH = 6
 
 export const CreateCompanyValidationSchema = Yup.object().shape({
     nif: Yup.string()
-        .test('valid-nif', 'NIF inválido', (value: any) => {
-            //  lógica de validación NIF personas jurídicas y entidades
-            // Validación básica NIF
-            const nifRegex = /^[A-HJ-NP-TV-Z]\d{7}[A-J0-9]$/i
-            return nifRegex.test(value as string)
-        })
-        .required('El NIF es obligatorio'),
+    .test('valid-nif', 'NIF o DNI inválido', (value: any) => {
+        // Validación básica NIF (personas jurídicas y entidades)
+        const nifRegex = /^[A-HJ-NP-TV-Z]\d{7}[A-J0-9]$/i;
+        const dniRegex = /^\d{8}[A-HJ-NP-TV-Z]$/i;
+
+        if (!value) return false;
+
+        if (nifRegex.test(value)) {
+            return true;
+        }
+
+        if (dniRegex.test(value)) {
+            const letters = 'TRWAGMYFPDXBNJZSQVHLCKET';
+            const numbers = value.slice(0, 8);
+            const letter = value.slice(8).toUpperCase();
+
+            return letters[parseInt(numbers) % 23] === letter;
+        }
+
+        return false;
+    })
+    .required('El NIF o DNI es necesario.'),
 
     name: Yup.string()
         .required('Se requiere un nombre.')

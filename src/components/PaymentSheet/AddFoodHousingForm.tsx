@@ -1,177 +1,153 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import axios from 'axios'
-import React, { useEffect } from 'react'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Field, Form, Formik } from 'formik'
-import { useState } from 'react'
-import { Alert, Button, Col, Collapse, Container, Row } from 'react-bootstrap'
-import { ExclamationTriangle } from 'react-bootstrap-icons'
+import axios, { AxiosError } from 'axios'
+import React from 'react'
+import { ErrorMessage, Field, Form, Formik } from 'formik'
+import { Button, Col, Container, Row, Spinner } from 'react-bootstrap'
 import BootstrapForm from 'react-bootstrap/Form'
 import styled from 'styled-components'
 import { PAYMENT_SHEET_URL } from '../../resources/server_urls'
-import { FloatingNotificationContainer } from '../Common/FloatingNotificationContainer'
 import { IFoodHousing } from '../Types/Types'
+import useNotification, { NotificationType } from '../../components/Common/hooks/useNotification'
+import FloatingNotificationA from '../../components/Common/FloatingNotificationA'
+import * as Yup from 'yup'
 
-const ErrorMessage = styled.div`
+const StyledErrorMessage = styled(ErrorMessage)`
     color: red;
+    font-weight: bold;
 `
 
-const ErrorAlert = styled(Alert)`
-    color: red;
-    font-size: 1em;
-    background-color: white;
-    margin: 3px;
-    padding: 0.5em 1.5em;
-    border: 1px solid palevioletred;
-    border-radius: 10px;
-`
-
-const ErrorTriangle = styled(ExclamationTriangle)`
-    height: 10%;
-    width: 10%;
-`
-
-const FloatingNotification: React.FC<{ message: string; variant: string; onClose: () => void }> = ({ message, variant, onClose }) => {
-    const [visible, setVisible] = useState(true)
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setVisible(false)
-        }, 5000)
-
-        return () => {
-            clearTimeout(timer)
-        }
-    }, [])
-
-    const handleExited = () => {
-        onClose()
+const FieldRow = styled(Row)`
+    padding-bottom: 1em;
+    align-items: center;
+    label {
+        font-weight: bold;
     }
+`
 
-    return (
-        <Collapse in={visible} onExited={handleExited}>
-            <FloatingNotificationContainer>
-                <Alert variant={variant} onClose={onClose} dismissible>
-                    {message}
-                </Alert>
-            </FloatingNotificationContainer>
-        </Collapse>
-    )
+const InputRow = styled(Row)`
+    align-content: end;
+`
+
+interface AddFoodHousingFormProps {
+    paymentSheetIdentifier: number
+    addPaymentSheetFoodHousing: (paymentSheetId: number, foodHousingData: IFoodHousing) => void
 }
 
-export const AddFoodHousingForm: React.FC<any> = (props: any) => {
+const validationSchema = Yup.object({
+    amountDays: Yup.number()
+        .required('Es necesario poner una cantidad de días.')
+        .positive('La cantidad de días debe ser un número positivo.')
+        .min(1, 'No se aceptan cantidad de días menores a 1.')
+        .max(30, 'La cantidad de días no puede ser mayor a 30'),
+
+    dayPrice: Yup.number()
+        .required('Es necesario poner un precio por día.')
+        .positive('El precio por día debe ser un valor positivo.')
+        .max(75, 'No se acepta más de 75 euros por día.')
+})
+
+export const AddFoodHousingForm: React.FC<AddFoodHousingFormProps> = ({ paymentSheetIdentifier, addPaymentSheetFoodHousing }) => {
     const initialValues: IFoodHousing = { amountDays: 0, dayPrice: 0, overnight: false }
-    const [alertMessage, setAlertMessage] = useState('')
-    const [submitSuccessNotification, setSubmitSuccessNotification] = useState(false)
-    const [submitErrorNotification, setSubmitErrorNotification] = useState(false)
-    const [isWellSubmited, setIsWellSubmited] = useState(false)
-    const closeAlert = () => {
-        setAlertMessage('')
-    }
-    function changeSuccessNotificationState(): void {
-        setSubmitSuccessNotification(false)
-    }
-    function changeErrorNotificationState(): void {
-        setSubmitErrorNotification(false)
-    }
+    const { notification, showNotification, hideNotification } = useNotification()
+
     return (
         <Formik
+            validateOnChange
+            validateOnMount
+            validationSchema={validationSchema}
             initialValues={initialValues}
             onSubmit={(values, actions) => {
-                const foodHousingData = { amountDays: values.amountDays, dayPrice: values.dayPrice, overnight: values.overnight }
+                const foodHousingData: IFoodHousing = { amountDays: values.amountDays, dayPrice: values.dayPrice, overnight: values.overnight }
                 axios
-                    .post<any>(PAYMENT_SHEET_URL + '/' + props.data + '/addFoodHousing', foodHousingData)
-                    .then((response) => {
-                        console.log(response)
-                        setSubmitSuccessNotification(true)
-                        setIsWellSubmited(true)
+                    .post(PAYMENT_SHEET_URL + '/' + paymentSheetIdentifier + '/addFoodHousing', foodHousingData)
+                    .then(() => {
+                        showNotification('Manutención - alojamiento añadido correctamente.', NotificationType.Success)
+                        addPaymentSheetFoodHousing(paymentSheetIdentifier, foodHousingData)
+                       
                     })
                     .catch((error) => {
-                        setSubmitErrorNotification(true)
-                        if (error.response.data) {
-                            // Request made and server responded
-                            setAlertMessage(error.response.data.content)
-                        } else if (error.request) {
-                            // The request was made but no response was received
-                            setAlertMessage('Error: no hay respuesta.')
-                        } else {
-                            // Something happened in setting up the request that triggered an Error
-                            setAlertMessage('Error: algo inesperado. Recarga o intentalo mas tarde.')
-                        }
+                        const axiosError = error as AxiosError
+                        showNotification(axiosError.message, NotificationType.Error)
                     })
-                //console.log('submited Login')
-                actions.setSubmitting(false)
+                    .finally(() => {
+                        actions.setSubmitting(false)
+                    })
             }}
-            //validationSchema={CreateCompanyValidationSchema}
-            validateOnChange={true}
         >
-            {({ errors, touched }) => (
+            {({ isSubmitting, dirty, isValid }) => (
                 <BootstrapForm as={Form}>
                     <Container as={BootstrapForm.Group}>
-                        <Row>
-                            <Col>
+                        <FieldRow>
+                            <Col md={3}>
                                 <BootstrapForm.Label htmlFor="amountDays">Cantidad de dias:</BootstrapForm.Label>
-                                <Field as={BootstrapForm.Control} id="amountDays" name="amountDays" step="1" type="number" placeholder="Cantidad de dias." />
+                            </Col>
+                            <Col md={9}>
+                                <Field
+                                    as={BootstrapForm.Control}
+                                    id="amountDays"
+                                    name="amountDays"
+                                    step="1"
+                                    type="number"
+                                    placeholder="Cantidad de dias."
+                                    min={'0'}
+                                />
+                            </Col>
+                        </FieldRow>
+                        <Row>
+                            <Col md={3}></Col>
+                            <Col md={9}>
+                                <StyledErrorMessage name="amountDays" component={'p'}></StyledErrorMessage>
                             </Col>
                         </Row>
-                        <Row>
-                            <Col>{errors.amountDays && touched.amountDays ? <ErrorMessage>{errors.amountDays}</ErrorMessage> : ''}</Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <BootstrapForm.Label htmlFor="dayPrice">Precio por día:</BootstrapForm.Label>
-                                <Field as={BootstrapForm.Control} id="dayPrice" type="number" step="0.01" name="dayPrice" placeholder="Cantidad de cada día." />
+                        <FieldRow>
+                            <Col md={3}>
+                                <BootstrapForm.Label htmlFor="dayPrice">Precio por día: (€)</BootstrapForm.Label>
                             </Col>
-                        </Row>
+                            <Col md={9}>
+                                <Field
+                                    as={BootstrapForm.Control}
+                                    id="dayPrice"
+                                    type="number"
+                                    step="0.01"
+                                    name="dayPrice"
+                                    placeholder="Cantidad de cada día."
+                                    min={'0'}
+                                />
+                            </Col>
+                        </FieldRow>
                         <Row>
-                            <Col>{errors.dayPrice && touched.dayPrice ? <ErrorMessage>{errors.dayPrice}</ErrorMessage> : ''}</Col>
+                            <Col md={3}></Col>
+                            <Col md={9}>
+                                <StyledErrorMessage name="dayPrice" component={'p'}></StyledErrorMessage>
+                            </Col>
                         </Row>
 
-                        <Row>
-                            <Col md="auto">
+                        <FieldRow>
+                            <Col md={3}>
                                 <BootstrapForm.Label htmlFor="overnight">Con pernocta? </BootstrapForm.Label>
                             </Col>
-                            <Col md="auto">
+                            <Col md={9}>
                                 <Field as={BootstrapForm.Check} id="overnight" name="overnight" />
                             </Col>
-                        </Row>
+                        </FieldRow>
                         <Row>
-                            <Col>{errors.overnight && touched.overnight ? <ErrorMessage>{errors.overnight}</ErrorMessage> : ''}</Col>
+                            <Col md={3}></Col>
+                            <Col md={9}>
+                                <StyledErrorMessage name="overnight" component={'p'}></StyledErrorMessage>
+                            </Col>
                         </Row>
-
-                        <Button disabled={isWellSubmited} type="submit">
-                            Añadir comida - alojamiento
-                        </Button>
+                        <InputRow>
+                            <Button variant="success" disabled={isSubmitting || !isValid || !dirty} type="submit">
+                                {isSubmitting ? (
+                                    <>
+                                        <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> Añadiendo...
+                                    </>
+                                ) : (
+                                    'Añadir comida - alojamiento'
+                                )}
+                            </Button>
+                        </InputRow>
                     </Container>
-                    {
-                        <Container>
-                            {alertMessage ? (
-                                <>
-                                    <ErrorAlert key={'danger'} variant={'danger'}>
-                                        <ErrorTriangle></ErrorTriangle>
-                                        {alertMessage}
-                                        <Button variant="outline-danger" onClick={closeAlert}>
-                                            Cerrar
-                                        </Button>
-                                    </ErrorAlert>
-                                </>
-                            ) : (
-                                ''
-                            )}
-                        </Container>
-                    }
-                    {submitSuccessNotification && (
-                        <FloatingNotification
-                            message={'Vehiculo propio añadido.'}
-                            variant={'success'}
-                            onClose={changeSuccessNotificationState}
-                        ></FloatingNotification>
-                    )}
-                    {submitErrorNotification && (
-                        <FloatingNotification message={alertMessage} variant={'danger'} onClose={changeErrorNotificationState}></FloatingNotification>
-                    )}
+                    <FloatingNotificationA notification={notification} hideNotification={hideNotification} />
                 </BootstrapForm>
             )}
         </Formik>

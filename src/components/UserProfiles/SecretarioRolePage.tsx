@@ -1,18 +1,27 @@
 // SecretarioRolePage.js
-import React, { useState } from 'react';
-import { Button } from 'react-bootstrap';
-import { People, CashCoin } from 'react-bootstrap-icons';
-import { useNavigate } from 'react-router';
-import { ROUTES } from '../../resources/routes-constants';
-import { PageContainer, Title, StyledAccordion, StyledAccordionItem, StyledAccordionHeader, StyledAccordionBody, buttonBaseStyle, buttonHoverStyle } from './CommonStyles';
+import React, { useState } from 'react'
+import { Button } from 'react-bootstrap'
+import { People, CashCoin } from 'react-bootstrap-icons'
+import { useNavigate } from 'react-router'
+import { ROUTES } from '../../resources/routes-constants'
+import {
+    PageContainer,
+    Title,
+    StyledAccordion,
+    StyledAccordionItem,
+    StyledAccordionHeader,
+    StyledAccordionBody,
+    buttonBaseStyle,
+    buttonHoverStyle
+} from './CommonStyles'
 
 const SecretarioRolePage: React.FC = () => {
-    const navigate = useNavigate();
-    const [hoveredButton, setHoveredButton] = useState<number | null>(null);
+    const navigate = useNavigate()
+    const [hoveredButton, setHoveredButton] = useState<number | null>(null)
 
     const handleNavigation = (route: string) => {
-        navigate(route);
-    };
+        navigate(route)
+    }
 
     return (
         <PageContainer>
@@ -66,7 +75,7 @@ const SecretarioRolePage: React.FC = () => {
                 </StyledAccordionItem>
             </StyledAccordion>
         </PageContainer>
-    );
-};
+    )
+}
 
-export default SecretarioRolePage;
+export default SecretarioRolePage

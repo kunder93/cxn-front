@@ -1,10 +1,13 @@
 import React from 'react'
 import { Formik, Field, Form, FormikValues, FormikProps } from 'formik'
-import { KindMember } from '../../../store/types/userTypes'
+import { KindMember, UserProfile } from '../../../store/types/userTypes'
 import { FormControl, FormGroup, FormLabel } from 'react-bootstrap'
 import { renderKindMember } from '../../../utility/userUtilities'
 import { Form as BootstrapForm } from 'react-bootstrap'
-import ChangeKindMemberSubmitResultAlert from './ChangeKindMemberSubmitResultAlert'
+import axios, { AxiosError, AxiosResponse } from 'axios'
+import { CHANGE_KIND_MEMBER_URL } from '../../../resources/server_urls'
+import useNotification, { NotificationType } from '../../../components/Common/hooks/useNotification'
+import FloatingNotificationA from '../../../components/Common/FloatingNotificationA'
 
 export interface ChangeKindMemberValues extends FormikValues {
     email: string
@@ -14,37 +17,40 @@ export interface ChangeKindMemberValues extends FormikValues {
 export interface ChangeKindMemberFormProps {
     formData: ChangeKindMemberValues
     formikRef: React.RefObject<FormikProps<ChangeKindMemberValues>>
-    updateKindMember: (newKindMember: KindMember) => void
+    updateLocalKindMember: (newKindMember: KindMember) => void
+    setBlockButton: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export interface ChangeKindMemberFormRef {
     submitForm: () => void
 }
 
-const ChangeKindMemberForm: React.FC<ChangeKindMemberFormProps> = ({ formikRef, formData, updateKindMember }) => {
+const ChangeKindMemberForm: React.FC<ChangeKindMemberFormProps> = ({ formikRef, formData, updateLocalKindMember, setBlockButton }) => {
     const { kindMember, email } = formData
-    const [visibleAlert, setVisibleAlert] = React.useState(false)
-    const [alertValues, setAlertValues] = React.useState<ChangeKindMemberValues>({ email: '', kindMember: KindMember.SOCIO_NUMERO })
+    const { notification, showNotification, hideNotification } = useNotification()
+
+    const handleSubmit = async (values: { kindMember: KindMember; email: string }) => {
+        try {
+            setBlockButton(true)
+            const response: AxiosResponse<UserProfile> = await axios.patch(CHANGE_KIND_MEMBER_URL, {
+                email: values.email,
+                kindMember: values.kindMember
+            })
+            showNotification('Se han cambiado el tipo de socio correctamente.', NotificationType.Success)
+            updateLocalKindMember(response.data.kindMember)
+        } catch (error) {
+            const axiosError = error as AxiosError
+            const message = axiosError.message
+            showNotification(message, NotificationType.Error)
+        } finally {
+            setBlockButton(false)
+        }
+    }
+
     return (
-        <Formik
-            innerRef={formikRef}
-            initialValues={{ kindMember, email }}
-            onSubmit={(values) => {
-                setVisibleAlert(true)
-                setAlertValues({ kindMember: values.kindMember, email: values.email })
-            }}
-        >
+        <Formik innerRef={formikRef} initialValues={{ kindMember, email }} onSubmit={handleSubmit}>
             {({ values, setFieldValue }) => (
                 <>
-                    {visibleAlert && (
-                        <ChangeKindMemberSubmitResultAlert
-                            visibleParam={visibleAlert}
-                            closeFunction={setVisibleAlert}
-                            formData={{ email: alertValues.email, kindMember: alertValues.kindMember }}
-                            updateKindMember={updateKindMember}
-                        />
-                    )}
-
                     <BootstrapForm as={Form}>
                         <FormGroup>
                             <FormLabel htmlFor="email">
@@ -73,6 +79,7 @@ const ChangeKindMemberForm: React.FC<ChangeKindMemberFormProps> = ({ formikRef, 
                                 ))}
                             </BootstrapForm.Select>
                         </FormGroup>
+                        <FloatingNotificationA notification={notification} hideNotification={hideNotification} />
                     </BootstrapForm>
                 </>
             )}

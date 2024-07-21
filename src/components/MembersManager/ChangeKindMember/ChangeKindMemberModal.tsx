@@ -1,10 +1,11 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal, { ModalProps } from 'react-bootstrap/Modal'
 import { KindMember } from '../../../store/types/userTypes'
 import ChangeKindMemberForm, { ChangeKindMemberValues } from './ChangeKindMemberForm'
 import styled from 'styled-components'
 import { FormikProps } from 'formik'
+import { Spinner } from 'react-bootstrap'
 
 interface ChangeKindMemberProps extends ModalProps {
     memberEmail: string | undefined
@@ -30,7 +31,7 @@ const ChangeKindMemberModal: React.FC<ChangeKindMemberProps> = ({
 }) => {
     // Attach this to your <Formik>
     const formRef = useRef<FormikProps<ChangeKindMemberValues>>(null)
-
+    const [blockButton, setBlockButton] = useState(false)
     const handleSubmit = () => {
         if (formRef.current) {
             formRef.current.handleSubmit()
@@ -49,13 +50,13 @@ const ChangeKindMemberModal: React.FC<ChangeKindMemberProps> = ({
                     <ChangeKindMemberForm
                         formikRef={formRef}
                         formData={{ email: memberEmail, kindMember: kindMember }}
-                        updateKindMember={updateKindMember}
-                    ></ChangeKindMemberForm>
+                        updateLocalKindMember={updateKindMember} setBlockButton={setBlockButton}     
+                        ></ChangeKindMemberForm>
                 )}
             </Modal.Body>
             <StyledModalFooter>
-                <Button variant="success" onClick={handleSubmit}>
-                    Cambiar
+                <Button variant="success" onClick={handleSubmit} >
+                {blockButton ? <Spinner animation="border" size="sm" /> : 'Cambiar'}
                 </Button>
                 <Button variant="danger" onClick={props.onHide}>
                     Cerrar

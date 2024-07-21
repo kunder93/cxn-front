@@ -9,18 +9,24 @@ import { KindMember, UserProfile, UserRole } from 'store/types/userTypes'
 import styled from 'styled-components'
 import { renderKindMember, renderUserRoles } from '../../utility/userUtilities'
 
+const TableFilterContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    padding-bottom: 0.5em;
+`
+
+const AmountRegistersBox = styled.div`
+    padding-left: 4em;
+`
+
+const FilterInputLabel = styled.label`
+    padding-right: 1em;
+`
+
 const RoleCell = styled.div`
     max-width: 100px;
     text-overflow: ellipsis;
-`
-
-const AmountMembersBox = styled.div``
-const FilterBox = styled.div`
-    padding-bottom: 2em;
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: baseline;
-    gap: 1em;
 `
 
 const ActionButtonsContainer = styled.div`
@@ -146,44 +152,49 @@ const MembersManagerTable: React.FC<Props> = ({ usersData }) => {
             ])
         }
     )
-
+    const globalFilterStatus = state.globalFilter as string | number | readonly string[] | undefined
     return (
         <>
-            <FilterBox>
-                <p>Búsqueda en la tabla:</p>
-                <input
-                    type="text"
-                    value={typeof state.globalFilter === 'string' ? state.globalFilter : ''}
-                    onChange={(e) => setGlobalFilter(e.target.value)}
-                    aria-label="Buscar socios por nombre, D.N.I., o apellidos"
-                />
-                <AmountMembersBox>
-                    <p>
-                        Total de socios: <strong>{preGlobalFilteredRows.length}</strong>
-                    </p>
-                </AmountMembersBox>
-            </FilterBox>
+            <TableFilterContainer>
+                <FilterInputLabel htmlFor="filterInput">Busca socios:</FilterInputLabel>
+                <input type="text" value={globalFilterStatus ?? ''} onChange={(event) => setGlobalFilter(event.target.value)} aria-label="Buscar empresas" />
+                <AmountRegistersBox>
+                    Total de registros: {preGlobalFilteredRows.length} (Mostrando: {rows.length})
+                </AmountRegistersBox>
+            </TableFilterContainer>
             <Table striped bordered hover responsive {...getTableProps()}>
                 <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column) => (
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                    {column.render('Header')}
-                                    <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
+                    {headerGroups.map((headerGroup) => {
+                        const { key: headerGroupKey, ...restHeaderGroupProps } = headerGroup.getHeaderGroupProps()
+                        return (
+                            <tr key={headerGroupKey} {...restHeaderGroupProps}>
+                                {headerGroup.headers.map((column) => {
+                                    const { key: columnKey, ...restColumnProps } = column.getHeaderProps(column.getSortByToggleProps())
+                                    return (
+                                        <th key={columnKey} {...restColumnProps}>
+                                            {column.render('Header')}
+                                            <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
+                                        </th>
+                                    )
+                                })}
+                            </tr>
+                        )
+                    })}
                 </thead>
                 <tbody {...getTableBodyProps()}>
                     {rows.map((row) => {
                         prepareRow(row)
+                        const { key: rowKey, ...rowProps } = row.getRowProps()
                         return (
-                            <tr {...row.getRowProps()}>
-                                {row.cells.map((cell) => (
-                                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                ))}
+                            <tr key={rowKey} {...rowProps}>
+                                {row.cells.map((cell, cellIndex) => {
+                                    const { key: cellKey, ...cellProps } = cell.getCellProps()
+                                    return (
+                                        <td key={cellKey ?? cellIndex} {...cellProps}>
+                                            {cell.render('Cell')}
+                                        </td>
+                                    )
+                                })}
                             </tr>
                         )
                     })}

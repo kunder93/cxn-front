@@ -18,7 +18,7 @@ interface MenuItem {
 }
 
 const MobileNavDropdown = styled(NavDropdown)`
-    font-size: 120%;
+    font-size: 100%;
     .dropdown-toggle::after {
         font-size: 230%;
     }

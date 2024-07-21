@@ -69,7 +69,6 @@ interface TeamCardProps {
     description: string
 }
 
-
 const MyCard = styled(Card)`
     aspect-ratio: 1.2;
 `
@@ -96,7 +95,7 @@ const TeamInfoCard: React.FC<TeamCardProps> = ({ teamName, division, description
 
 const teamsInfo: TeamCardProps[] = [
     {
-        teamName: 'NARONTEC CXN.',
+        teamName: 'NARONTEC CXN',
         division: 'Equipo en 1ª división.',
         description: 'Destinado a ajedrecistas con un nivel Elo 1700-2000 puntos.'
     },
@@ -137,19 +136,14 @@ const StyledLink = styled.a`
     &:focus:not(:focus-visible) {
         outline: none; // Eliminar el borde predeterminado
     }
-
-
 `
-const TeamInfoCardStyled = styled(TeamInfoCard)`
-
-`
+const TeamInfoCardStyled = styled(TeamInfoCard)``
 const AAA = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center; /* Centra verticalmente los elementos */
     align-items: center; /* Centra horizontalmente los elementos */
     height: 100%;
-
 `
 
 const CxnLeagueTeams: React.FC = () => {
@@ -162,9 +156,7 @@ const CxnLeagueTeams: React.FC = () => {
                     <StyledLink href={'https://www.fegaxa.org'} target="_blank" rel="noopener noreferrer" aria-description="Federacion Galega Xadrez link">
                         <LogoFegaxa src="/logo_fegaxa.avif" alt="Federacion Galega Xadrez Logo"></LogoFegaxa>
                     </StyledLink>{' '}
-                    <h2 style={{paddingTop:'0.5em'}}>
-                        Equipos en liga gallega:
-                    </h2>
+                    <h2 style={{ paddingTop: '0.5em' }}>Equipos en liga gallega:</h2>
                 </AAA>
             </TeamsSectionHeaderContainer>
             <BodyContainer>
@@ -173,7 +165,7 @@ const CxnLeagueTeams: React.FC = () => {
                 ))}
             </BodyContainer>
             <AdvertisingLeagueDate>
-                <p style={{ fontSize: '1.5em' }} >
+                <p style={{ fontSize: '1.5em' }}>
                     La liga comienza en {leagueStartDate} y finaliza en {leagueEndDate}.
                     <br /> Los enfrentamientos se realizan los sábados a las 17:30. <br />
                 </p>

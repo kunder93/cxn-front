@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Modal, ModalProps } from 'react-bootstrap'
+import { Button, Modal, ModalProps, Spinner } from 'react-bootstrap'
 import { UserRole } from 'store/types/userTypes'
 import styled from 'styled-components'
 import ChangeMemberRolesForm, { ChangeMemberRolesValues } from './ChangeMemberRolesForm'
@@ -10,18 +10,26 @@ const StyledModalFooter = styled(Modal.Footer)`
 `
 
 interface ChangeMemberRolesModalProps extends ModalProps {
-    memberEmail: string 
+    memberEmail: string
     memberName: string | undefined
     memberFirstSurname: string | undefined
     memberSecondSurname: string | undefined
-    memberRoles: UserRole[] 
+    memberRoles: UserRole[]
     updateMemberRoles: (newUserRoles: UserRole[]) => void
 }
 
-const ChangeMemberRolesModal: React.FC<ChangeMemberRolesModalProps> = ({ memberName,memberEmail, memberFirstSurname, memberSecondSurname, memberRoles,updateMemberRoles, ...props }) => {
+const ChangeMemberRolesModal: React.FC<ChangeMemberRolesModalProps> = ({
+    memberName,
+    memberEmail,
+    memberFirstSurname,
+    memberSecondSurname,
+    memberRoles,
+    updateMemberRoles,
+    ...props
+}) => {
     // Formik form ref for use submit when click Button.
     const formRef = React.useRef<FormikProps<ChangeMemberRolesValues>>(null)
-
+    const [blockButton, setBlockButton] = React.useState(false)
     const handleSubmit = () => {
         if (formRef.current) {
             formRef.current.handleSubmit()
@@ -36,14 +44,15 @@ const ChangeMemberRolesModal: React.FC<ChangeMemberRolesModalProps> = ({ memberN
             </Modal.Header>
             <Modal.Body>
                 <ChangeMemberRolesForm
-                    formData={{email: memberEmail, userRoles: memberRoles}}
+                    initialFormData={{ email: memberEmail, userRoles: memberRoles }}
                     formikRef={formRef}
-                    updateMemberRoles={updateMemberRoles}
+                    updateLocalMemberRoles={updateMemberRoles}
+                    setBlockButton={setBlockButton}
                 ></ChangeMemberRolesForm>
             </Modal.Body>
             <StyledModalFooter>
-                <Button variant="success" onClick={handleSubmit}>
-                    Cambiar
+                <Button variant="success" onClick={handleSubmit} disabled={blockButton}>
+                    {blockButton ? <Spinner animation="border" size="sm" /> : 'Cambiar'}
                 </Button>
                 <Button variant="danger" onClick={props.onHide}>
                     Cerrar

@@ -31,7 +31,7 @@ const MemberModalProfileInfo: React.FC<props> = (props) => {
                         <Row>
                             <Col>
                                 <span>
-                                    <strong>D:N:I</strong>:
+                                    <strong>DNI</strong>:
                                 </span>
                             </Col>
                             <Col>
@@ -90,91 +90,93 @@ const MemberModalProfileInfo: React.FC<props> = (props) => {
                             </Col>
                         </Row>
                         <Accordion>
-                        <Accordion.Item eventKey="0">
-                        <Accordion.Header><strong>Dirección</strong></Accordion.Header>
-                        <Accordion.Body>
-                        <Row>
-                            <Col>
-                                <span>
-                                    <strong>Género:</strong>
-                                </span>
-                            </Col>
-                            <Col>
-                                <span>{props.row.gender} </span>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <span>
-                                    <strong>Ciudad:</strong>
-                                </span>
-                            </Col>
-                            <Col>
-                                <span>{props.row.userAddress.city} </span>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <span>
-                                    <strong>País:</strong>
-                                </span>
-                            </Col>
-                            <Col>
-                                <span>{props.row.userAddress.countryName} </span>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <span>
-                                    <strong>Provincia:</strong>
-                                </span>
-                            </Col>
-                            <Col>
-                                <span>{props.row.userAddress.subCountryName} </span>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <span>
-                                    <strong>Calle:</strong>
-                                </span>
-                            </Col>
-                            <Col>
-                                <span>{props.row.userAddress.street} </span>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <span>
-                                    <strong>Código Postal:</strong>
-                                </span>
-                            </Col>
-                            <Col>
-                                <span>{props.row.userAddress.postalCode} </span>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <span>
-                                    <strong>Tipo vivienda:</strong>
-                                </span>
-                            </Col>
-                            <Col>
-                                <span>{props.row.userAddress.building} </span>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <span>
-                                    <strong>Número:</strong>
-                                </span>
-                            </Col>
-                            <Col>
-                                <span>{props.row.userAddress.apartmentNumber} </span>
-                            </Col>
-                        </Row>
-                        </Accordion.Body>
-                        </Accordion.Item>
+                            <Accordion.Item eventKey="0">
+                                <Accordion.Header>
+                                    <strong>Dirección</strong>
+                                </Accordion.Header>
+                                <Accordion.Body>
+                                    <Row>
+                                        <Col>
+                                            <span>
+                                                <strong>Género:</strong>
+                                            </span>
+                                        </Col>
+                                        <Col>
+                                            <span>{props.row.gender} </span>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <span>
+                                                <strong>Ciudad:</strong>
+                                            </span>
+                                        </Col>
+                                        <Col>
+                                            <span>{props.row.userAddress.city} </span>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <span>
+                                                <strong>País:</strong>
+                                            </span>
+                                        </Col>
+                                        <Col>
+                                            <span>{props.row.userAddress.countryName} </span>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <span>
+                                                <strong>Provincia:</strong>
+                                            </span>
+                                        </Col>
+                                        <Col>
+                                            <span>{props.row.userAddress.subCountryName} </span>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <span>
+                                                <strong>Calle:</strong>
+                                            </span>
+                                        </Col>
+                                        <Col>
+                                            <span>{props.row.userAddress.street} </span>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <span>
+                                                <strong>Código Postal:</strong>
+                                            </span>
+                                        </Col>
+                                        <Col>
+                                            <span>{props.row.userAddress.postalCode} </span>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <span>
+                                                <strong>Tipo vivienda:</strong>
+                                            </span>
+                                        </Col>
+                                        <Col>
+                                            <span>{props.row.userAddress.building} </span>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <span>
+                                                <strong>Número:</strong>
+                                            </span>
+                                        </Col>
+                                        <Col>
+                                            <span>{props.row.userAddress.apartmentNumber} </span>
+                                        </Col>
+                                    </Row>
+                                </Accordion.Body>
+                            </Accordion.Item>
                         </Accordion>
                     </Modal.Body>
                     <Modal.Footer>

@@ -46,7 +46,7 @@ const SignUpFormThirdStep: React.FC<SignUpFormStepProps> = ({ formikProps, previ
     )
 
     const countryOptions = useMemo(() => {
-        if (countriesList.loaded) {
+        if (countriesList.loaded && countriesList.data) {
             return countriesList.data.countryList.map((country: ICountryData) => (
                 <option key={country.numericCode} value={country.numericCode}>
                     {country.fullName}
@@ -58,10 +58,10 @@ const SignUpFormThirdStep: React.FC<SignUpFormStepProps> = ({ formikProps, previ
 
     const subCountryOptions = useMemo(() => {
         if (subCountriesLoading) {
-            return <option value="">Cargando subpaíses...</option>
+            return <option value="">Cargando provincias...</option>
         }
         if (subCountriesError) {
-            return <option value="">Error cargando subpaíses</option>
+            return <option value="">Error cargando provincias</option>
         }
         return subCountriesList.subCountryList.map((subcountry: ISubCountryData) => (
             <option key={subcountry.code} value={subcountry.name}>
@@ -81,7 +81,7 @@ const SignUpFormThirdStep: React.FC<SignUpFormStepProps> = ({ formikProps, previ
                 placeholder="El número de tu vivienda"
                 formikProps={formikProps}
             />
-            <FormField label="Casa/Edificio:" id="building" name="building" type="text" placeholder="Casa o edificio" formikProps={formikProps} />
+            <FormField label="Casa | Piso - puerta | otro:" id="building" name="building" type="text" placeholder="Casa o edificio" formikProps={formikProps} />
             <FormField label="Calle:" id="street" name="street" type="text" placeholder="Nombre de la calle" formikProps={formikProps} />
             <FormField label="Ciudad/Población:" id="city" name="city" type="text" placeholder="Ciudad o población" formikProps={formikProps} />
             <Row className="mb-3">
@@ -90,16 +90,16 @@ const SignUpFormThirdStep: React.FC<SignUpFormStepProps> = ({ formikProps, previ
                     <Field as={BootstrapForm.Select} name="countryNumericCode" onChange={handleCountryChange}>
                         {countryOptions}
                     </Field>
-                    <BootstrapForm.Text className="text-muted">Selecciona tu país</BootstrapForm.Text>
+                    <BootstrapForm.Text className="text-muted">Selecciona el país</BootstrapForm.Text>
                 </Col>
             </Row>
             <Row className="mb-3">
                 <Col>
-                    <BootstrapForm.Label>SUBPaís:</BootstrapForm.Label>
+                    <BootstrapForm.Label>Provincia:</BootstrapForm.Label>
                     <Field as={BootstrapForm.Select} name="countrySubdivisionName" onChange={handleSubCountryChange}>
                         {subCountryOptions}
                     </Field>
-                    <BootstrapForm.Text className="text-muted">Selecciona tu subpaís</BootstrapForm.Text>
+                    <BootstrapForm.Text className="text-muted">Selecciona la provincia</BootstrapForm.Text>
                 </Col>
             </Row>
             <ButtonRow>

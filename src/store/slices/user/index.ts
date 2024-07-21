@@ -1,5 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { KindMember, UserProfile, UserRole, UserState } from '../../../store/types/userTypes'
 
 const initialState: UserState = {
@@ -14,7 +13,8 @@ const initialState: UserState = {
         birthDate: new Date(),
         userRoles: [] as UserRole[], // Inicializamos como un array vacío de roles
         kindMember: KindMember.SOCIO_NUMERO, // Valor predeterminado para kindMember
-        userAddress: { // Dirección del usuario
+        userAddress: {
+            // Dirección del usuario
             postalCode: 0,
             apartmentNumber: 0,
             building: '',
@@ -26,7 +26,7 @@ const initialState: UserState = {
     }
 }
 
-export const userSlice = createSlice({
+const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {

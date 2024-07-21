@@ -1,53 +1,59 @@
-import React, { useState } from 'react'
-import { Button, Container } from 'react-bootstrap'
+import React, { useState, useEffect } from 'react'
+import { Alert, Button, Container } from 'react-bootstrap'
 import { BuildingAdd } from 'react-bootstrap-icons'
 import CompanyTable from '../components/Companies/CompaniesTable'
-import CrateCompanyModal from '../components/Companies/CreateCompanyModal'
+import CreateCompanyModal from '../components/Companies/CreateCompanyModal'
 import { ICompany } from '../components/Companies/Types'
 import { useAxiosGetCompanies } from '../utility/CustomAxios'
 import { COMPANIES_URL } from './../resources/server_urls'
+import LoadingTableContainer from '../components/Common/LoadingTableSpinnerContainer'
+import styled from 'styled-components'
+
+const ErrorMessage = styled(Alert)`
+    margin-top: 20px;
+`
+const Title = styled.h1`
+    text-align: left;
+    margin-top: 10px;
+    color: #333;
+`
+const NoCompaniesMessage = styled.p`
+    text-align: center;
+    margin-top: 20px;
+`
 
 const CompanyManagerPage: React.FC = () => {
     const [modalShow, setModalShow] = useState(false)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { data, error, loaded } = useAxiosGetCompanies(COMPANIES_URL)
-    console.log(error)
     const [companiesList, setCompaniesList] = useState<ICompany[]>([])
-    // Update the local state with the initial list of companies
-    React.useEffect(() => {
-        if (loaded) {
+
+    useEffect(() => {
+        if (loaded && data) {
             setCompaniesList(data.companiesList)
         }
     }, [loaded, data])
 
-    // Function to update the companies list when a new company is registered
     const updateCompaniesList = (newCompany: ICompany) => {
         setCompaniesList([...companiesList, newCompany])
     }
 
+    if (error) {
+        return <ErrorMessage variant="danger">Error: {error.message ?? 'Ocurrió un error al cargar las preguntas.'}</ErrorMessage>
+    }
+
+    if (!loaded) {
+        return <LoadingTableContainer />
+    }
+
     return (
         <Container>
-            <h1>Gestor de empresas:</h1>
-            {/* Check if data is loaded */}
-            {loaded ? <CompanyTable data={companiesList} /> : <p>Loading...</p>}
-            <Button
-                variant="primary"
-                onClick={() => setModalShow(true)}
-                style={{
-                    color: '#000000',
-                    fontSize: '1em',
-                    margin: '1em',
-                    padding: '0.25em 1em',
-                    border: '10px solid palevioletred',
-                    borderRadius: '10px',
-                    borderColor: '#0d6efd',
-                    backgroundColor: '#0d6efd'
-                }}
-            >
+            <Title>Gestor de empresas:</Title>
+            {companiesList?.length ? <CompanyTable data={companiesList} /> : <NoCompaniesMessage>No hay empresas disponibles.</NoCompaniesMessage>}
+            <Button variant="primary" onClick={() => setModalShow(true)}>
                 <BuildingAdd size={30} />
                 Registrar empresa
             </Button>
-            <CrateCompanyModal show={modalShow} onHide={() => setModalShow(false)} updateCompaniesList={updateCompaniesList} />
+            <CreateCompanyModal show={modalShow} onHide={() => setModalShow(false)} updateCompaniesList={updateCompaniesList} />
         </Container>
     )
 }

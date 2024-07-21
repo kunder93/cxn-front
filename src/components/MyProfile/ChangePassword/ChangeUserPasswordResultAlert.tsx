@@ -1,4 +1,3 @@
-import { FloatingNotificationContainer } from '../../Common/FloatingNotificationContainer'
 import React from 'react'
 import { Alert, Collapse, Spinner } from 'react-bootstrap'
 import { removeJwt, removeUserProfile, setUserProfile } from '../../../store/slices/user'
@@ -6,6 +5,7 @@ import { useAxiosChangeUserPassword } from '../../../utility/CustomAxios'
 import { ROUTES } from '../../../resources/routes-constants'
 import { useAppDispatch } from '../../../store/hooks'
 import { useNavigate } from 'react-router'
+import { FloatingNotificationContainer } from '../../../components/Common/FloatingNotificationA'
 
 export interface ChangePasswordAxiosValues {
     email: string
@@ -29,11 +29,11 @@ const ChangeUserPasswordResultAlert: React.FC<IChangePasswordSubmitResultAlert> 
         if (!loaded) {
             return <Spinner animation="border" variant="primary" />
         } else if (error) {
-            return 'Hubo un error al procesar la solicitud: ' + error.toString()
+            return 'Hubo un error al procesar la solicitud: ' + error.message
         } else {
             data && setUserProfile(data)
 
-            return 'Se ha cambiado el email a: ' + data?.email + ', vuelve a entrar en tu cuenta.'
+            return 'Se ha cambiado el email a: ' + data?.email + ', vuelve a entrar en tu cuenta. Redirigiendo, espera...'
         }
     }
 
@@ -57,7 +57,7 @@ const ChangeUserPasswordResultAlert: React.FC<IChangePasswordSubmitResultAlert> 
             closeFunction(false)
             if (!error && data) {
                 logoutHandler()
-                navigate('/')
+                navigate(ROUTES.LOGIN_ROUTE)
             }
         }, 5000)
 

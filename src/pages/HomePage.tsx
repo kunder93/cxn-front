@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
 import styled from 'styled-components'
 import { MainContainerStyled, mainContentContainerBackgroundColor } from '../components/Common/CommonStyles'
