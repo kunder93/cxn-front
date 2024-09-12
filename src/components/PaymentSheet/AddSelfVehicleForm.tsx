@@ -1,19 +1,18 @@
-import axios, { AxiosError } from 'axios';
-import React, { useState, useEffect } from 'react';
-import { ErrorMessage, Field, Form, Formik } from 'formik';
-import { Button, Col, Container, Row, Spinner } from 'react-bootstrap';
-import BootstrapForm from 'react-bootstrap/Form';
-import styled from 'styled-components';
-import { PAYMENT_SHEET_URL } from '../../resources/server_urls';
-import { ISelfVehicle } from '../Types/Types';
-import FloatingNotificationA from '../../components/Common/FloatingNotificationA';
-import useNotification, { NotificationType } from '../../components/Common/hooks/useNotification';
-import * as Yup from 'yup';
+import axios, { AxiosError } from 'axios'
+import { ErrorMessage, Field, Form, Formik } from 'formik'
+import { Button, Col, Container, Row, Spinner } from 'react-bootstrap'
+import BootstrapForm from 'react-bootstrap/Form'
+import styled from 'styled-components'
+import { PAYMENT_SHEET_URL } from '../../resources/server_urls'
+import { ISelfVehicle } from '../Types/Types'
+import * as Yup from 'yup'
+import { NotificationType } from '../../components/Common/hooks/useNotification'
+import { useNotificationContext } from '../../components/Common/NotificationContext'
 
 const StyledErrorMessage = styled(ErrorMessage)`
     color: red;
     font-weight: bold;
-`;
+`
 
 const FieldRow = styled(Row)`
     padding-bottom: 1em;
@@ -21,40 +20,33 @@ const FieldRow = styled(Row)`
     label {
         font-weight: bold;
     }
-`;
+`
 
 const SubmitButtonRow = styled(Row)`
     align-content: end;
-`;
+`
 
 interface AddSelfVehicleFormProps {
-    paymentSheetId: number;
-    addPaymentSheetSelfVehicle: (paymentSheetId: number, selfVehicleData: ISelfVehicle) => void;
+    paymentSheetId: number
+    addPaymentSheetSelfVehicle: (paymentSheetId: number, selfVehicleData: ISelfVehicle) => void
 }
 
 const validationSchema = Yup.object({
     places: Yup.string().required('Es necesario poner lugares !').max(150, 'Intenta ser breve, no más de 150 caracteres.'),
-    distance: Yup.number().required('Es necesario poner una distancia.').positive('La distancia debe ser un número positivo.').min(3, 'No se aceptan distancias menores a 3km.'),
+    distance: Yup.number()
+        .required('Es necesario poner una distancia.')
+        .positive('La distancia debe ser un número positivo.')
+        .min(3, 'No se aceptan distancias menores a 3km.'),
     kmPrice: Yup.number()
         .required('Es necesario poner un precio por kilómetro.')
         .positive('El precio debe ser un valor mayor a 0.')
         .max(0.3, 'No se acepta más de 30 céntimos (0.30) por Kilómetro.')
-});
+})
 
 export const AddSelfVehicleForm: React.FC<AddSelfVehicleFormProps> = ({ paymentSheetId, addPaymentSheetSelfVehicle }) => {
-    const initialValues: ISelfVehicle = { places: '', distance: 0.0, kmPrice: 0.19 };
+    const initialValues: ISelfVehicle = { places: '', distance: 0.0, kmPrice: 0.19 }
 
-    const { notification, showNotification, hideNotification } = useNotification();
-
-    // Estado para manejar el éxito de la adición
-    const [addSuccess, setAddSuccess] = useState(false);
-
-    useEffect(() => {
-        if (addSuccess) {
-            showNotification('Vehiculo propio añadido correctamente', NotificationType.Success);
-            setAddSuccess(false);
-        }
-    }, [addSuccess, showNotification]);
+    const { showNotification } = useNotificationContext()
 
     return (
         <Formik
@@ -63,26 +55,26 @@ export const AddSelfVehicleForm: React.FC<AddSelfVehicleFormProps> = ({ paymentS
             validateOnChange
             initialValues={initialValues}
             onSubmit={(values, actions) => {
-                const selfVehicleData: ISelfVehicle = { places: values.places, distance: values.distance, kmPrice: values.kmPrice };
+                const selfVehicleData: ISelfVehicle = { places: values.places, distance: values.distance, kmPrice: values.kmPrice }
                 axios
                     .post(PAYMENT_SHEET_URL + '/' + paymentSheetId + '/addSelfVehicle', selfVehicleData)
                     .then(() => {
-                        setAddSuccess(true);
-                        addPaymentSheetSelfVehicle(paymentSheetId, selfVehicleData);
+                        showNotification('Ruta con vehículo propio añadida.', NotificationType.Success)
+                        addPaymentSheetSelfVehicle(paymentSheetId, selfVehicleData)
                     })
                     .catch((error) => {
-                        const axiosError = error as AxiosError;
+                        const axiosError = error as AxiosError
                         if (axiosError?.response?.data) {
-                            showNotification(axiosError.message, NotificationType.Error);
+                            showNotification(axiosError.message, NotificationType.Error)
                         } else if (axiosError.request) {
-                            showNotification('Error: no hay respuesta.', NotificationType.Error);
+                            showNotification('Error: no hay respuesta.', NotificationType.Error)
                         } else {
-                            showNotification('Error: algo inesperado. Recarga o intentalo mas tarde.', NotificationType.Error);
+                            showNotification('Error: algo inesperado. Recarga o intentalo mas tarde.', NotificationType.Error)
                         }
                     })
                     .finally(() => {
-                        actions.setSubmitting(false);
-                    });
+                        actions.setSubmitting(false)
+                    })
             }}
         >
             {({ isValid, isSubmitting, dirty }) => (
@@ -166,11 +158,10 @@ export const AddSelfVehicleForm: React.FC<AddSelfVehicleFormProps> = ({ paymentS
                             </Button>
                         </SubmitButtonRow>
                     </Container>
-                    <FloatingNotificationA notification={notification} hideNotification={hideNotification}></FloatingNotificationA>
                 </BootstrapForm>
             )}
         </Formik>
-    );
-};
+    )
+}
 
-export default AddSelfVehicleForm;
+export default AddSelfVehicleForm

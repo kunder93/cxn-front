@@ -24,12 +24,12 @@ const FormColumn = styled(Col)`
 const TaxExemptCheckboxColumn = styled(FormColumn)`
     display: flex;
     flex-direction: row;
-    align-items: baseline !important; /* Alinea verticalmente los elementos */
+    align-items: baseline !important;
     input {
         margin-left: 1em;
         width: 20px;
         height: 20px;
-        vertical-align: middle; /* Alinea verticalmente el input con el texto */
+        vertical-align: middle;
     }
 `
 
@@ -43,32 +43,31 @@ interface ISelectionOptions {
 }
 
 const CreateInvoiceForm: React.FC<CreateInvoiceFormProps> = ({ formik }) => {
+    const [initialSellerOptions, setInitialSellerOptions] = useState<ISelectionOptions[]>([])
+    const [initialBuyerOptions, setInitialBuyerOptions] = useState<ISelectionOptions[]>([])
     const [sellerOptions, setSellerOptions] = useState<ISelectionOptions[]>([])
     const [buyerOptions, setBuyerOptions] = useState<ISelectionOptions[]>([])
     const { data, loaded } = useAxiosGetCompanies(COMPANIES_URL)
 
-    // Cargar datos de empresas en sellerOptions y buyerOptions usando useEffect
     useEffect(() => {
         if (data?.companiesList) {
             const updatedList = data.companiesList.map((company) => ({
                 label: company.nif,
                 value: company.nif
             }))
+            setInitialSellerOptions(updatedList)
+            setInitialBuyerOptions(updatedList)
             setSellerOptions(updatedList)
             setBuyerOptions(updatedList)
         }
     }, [data])
 
     const handleSelectChange = async (field: string, value: string) => {
-        try {
-            await formik.setFieldValue(field, value)
-            if (field === 'sellerNif') {
-                setBuyerOptions(sellerOptions.filter((option) => option.value !== value))
-            } else if (field === 'buyerNif') {
-                setSellerOptions(buyerOptions.filter((option) => option.value !== value))
-            }
-        } catch (error) {
-            console.error('Error setting field value:', error)
+        await formik.setFieldValue(field, value)
+        if (field === 'sellerNif') {
+            setBuyerOptions(initialBuyerOptions.filter((option) => option.value !== value))
+        } else if (field === 'buyerNif') {
+            setSellerOptions(initialSellerOptions.filter((option) => option.value !== value))
         }
     }
 
@@ -93,7 +92,7 @@ const CreateInvoiceForm: React.FC<CreateInvoiceFormProps> = ({ formik }) => {
                     </Row>
                     <Row>
                         <FormColumn>
-                            <InputLabel htmlFor="series">Nombre:</InputLabel>
+                            <InputLabel htmlFor="series">Serie:</InputLabel>
                             <BootstrapForm.Control
                                 id="series"
                                 name="series"
@@ -113,7 +112,7 @@ const CreateInvoiceForm: React.FC<CreateInvoiceFormProps> = ({ formik }) => {
                                 id="expeditionDate"
                                 name="expeditionDate"
                                 type="date"
-                                value={formik.values.expeditionDate.toISOString().split('T')[0]}
+                                value={new Date(formik.values.expeditionDate).toISOString().split('T')[0]}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                             />
@@ -129,7 +128,7 @@ const CreateInvoiceForm: React.FC<CreateInvoiceFormProps> = ({ formik }) => {
                                 id="advancePaymentDate"
                                 name="advancePaymentDate"
                                 type="date"
-                                value={formik.values.advancePaymentDate.toISOString().split('T')[0]}
+                                value={new Date(formik.values.advancePaymentDate).toISOString().split('T')[0]}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                             />
@@ -150,7 +149,7 @@ const CreateInvoiceForm: React.FC<CreateInvoiceFormProps> = ({ formik }) => {
                                 onBlur={formik.handleBlur}
                                 isInvalid={!!formik.touched.taxExempt && !!formik.errors.taxExempt}
                                 feedback={formik.errors.taxExempt}
-                                aria-label="Seleccionar exencion impuestos"
+                                aria-label="Seleccionar exención de impuestos"
                             />
                         </TaxExemptCheckboxColumn>
                     </Row>
@@ -176,7 +175,7 @@ const CreateInvoiceForm: React.FC<CreateInvoiceFormProps> = ({ formik }) => {
                                     }
                                     isDisabled={!loaded}
                                     aria-describedby="sellerNifError"
-                                    aria-label="Seleccion nif o cif del vendedor"
+                                    aria-label="Selecciona NIF o CIF del vendedor"
                                 />
                                 {formik.touched.sellerNif && formik.errors.sellerNif && (
                                     <StyledErrorMessage id="sellerNifError">{formik.errors.sellerNif}</StyledErrorMessage>
@@ -195,7 +194,6 @@ const CreateInvoiceForm: React.FC<CreateInvoiceFormProps> = ({ formik }) => {
                                     value={buyerOptions.find((option) => option.value === formik.values.buyerNif)}
                                     onChange={(option) => void handleSelectChange('buyerNif', option?.value ?? '')}
                                     onBlur={formik.handleBlur}
-                                    aria-label="Seleccion nif o cif del comprador"
                                     placeholder={
                                         loaded ? (
                                             'Selecciona el NIF del comprador'
@@ -207,6 +205,7 @@ const CreateInvoiceForm: React.FC<CreateInvoiceFormProps> = ({ formik }) => {
                                     }
                                     isDisabled={!loaded}
                                     aria-describedby="buyerNifError"
+                                    aria-label="Selecciona NIF o CIF del comprador"
                                 />
                                 {formik.touched.buyerNif && formik.errors.buyerNif && (
                                     <StyledErrorMessage id="buyerNifError">{formik.errors.buyerNif}</StyledErrorMessage>

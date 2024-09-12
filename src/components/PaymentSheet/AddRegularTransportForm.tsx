@@ -59,23 +59,24 @@ const TransportCategorySelector: React.FC<TransportCategorySelectorProps> = ({ n
 }
 
 const CustomSelector: React.FC<InvoicesSelectorProps> = ({ name, secondName, options }) => {
-    const [field] = useField(name)
-    const { setFieldValue } = useFormikContext()
+    const { values, setFieldValue } = useFormikContext<NewRegularTransportData>()
+
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        try {
-            const selectedOption = options.find((option) => option.value === event.target.value)
-            void setFieldValue(name, selectedOption?.value ?? '')
-            void setFieldValue(secondName, selectedOption?.value2 ?? '')
-        } catch (error) {
-            console.error(`Error setting field value for ${name} or ${secondName}:`, error)
+        const selectedOption = options.find((option) => `${option.value}-${option.value2}` === event.target.value)
+        if (selectedOption) {
+            void setFieldValue(name, selectedOption.value)
+            void setFieldValue(secondName, selectedOption.value2)
         }
     }
 
+    // Combinar valores para mostrar en el selector
+    const combinedValue = `${values.invoiceSeries}-${values.invoiceNumber}`
+
     return (
-        <FormSelect {...field} onChange={handleChange}>
+        <FormSelect onChange={handleChange} value={combinedValue}>
             {options.map((option) => (
-                <option key={`${option.value}-${option.value2}`} value={option.value}>
+                <option key={`${option.value}-${option.value2}`} value={`${option.value}-${option.value2}`}>
                     {option.label}
                 </option>
             ))}

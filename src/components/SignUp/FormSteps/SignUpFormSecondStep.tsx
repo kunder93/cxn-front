@@ -22,7 +22,7 @@ export interface SecondStepFormData {
     previousStepFunction: () => void
     formikProps: FormikProps<SignUpFormValues>
 }
-
+ 
 const SignUpFormSecondStep: React.FC<SecondStepFormData> = ({ formikProps, nextStepFunction, previousStepFunction }) => (
     <ResponsiveMainContainer>
         <FormField id="dni" name="dni" type="text" label="DNI:" placeholder="Tu DNI" formikProps={formikProps} />
@@ -33,6 +33,7 @@ const SignUpFormSecondStep: React.FC<SecondStepFormData> = ({ formikProps, nextS
             <Col>
                 <BootstrapForm.Label htmlFor="gender">Género:</BootstrapForm.Label>
                 <Field as={BootstrapForm.Select} id="gender" name="gender">
+                    <option value="">Selecciona uno:</option>
                     <option value="male">Hombre</option>
                     <option value="female">Mujer</option>
                     <option value="other">Otro</option>

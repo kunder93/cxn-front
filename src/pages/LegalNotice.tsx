@@ -1,7 +1,7 @@
+import usePageTitle from '../components/Common/hooks/usePageTitle'
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import styled from 'styled-components'
-import { SetPageTitle } from '../utility/functions'
 
 const CIF = 'G-15.227.556'
 const EMAIL = 'xadreznaron@hotmail.com'
@@ -16,22 +16,26 @@ const MainContainer = styled(Container)`
 `
 
 const LegalNotice: React.FC = () => {
-    SetPageTitle('CXN Aviso legal')
+    usePageTitle('CXN Aviso legal')
     return (
         <MainContainer>
             <h1>Aviso legal</h1>
             <p>Círculo Xadrez Naron, entidad sin ánimo de lucro, en adelante CXN, informa ser el responsable y propietario de este sitio web.</p>
             <p>
-                CXN proporciona los siguientes datos: 
-                <br/><strong>CIF:</strong>  {CIF}
-                <br/><strong>Nº Registro Xunta Galicia:</strong> 925 <br/><strong>Correo electrónico:</strong> {EMAIL}
-                <br/><strong>Domicilio social:</strong> {DIRECCION}
+                CXN proporciona los siguientes datos:
+                <br />
+                <strong>CIF:</strong> {CIF}
+                <br />
+                <strong>Nº Registro Xunta Galicia:</strong> 925 <br />
+                <strong>Correo electrónico:</strong> {EMAIL}
+                <br />
+                <strong>Domicilio social:</strong> {DIRECCION}
             </p>
             <h2>EL USUARIO DEL SITIO WEB Y CONDICIONES</h2>
             <p>
-                Mediante este sitio web CXN muestra sus servicios y actividades, también facilita la comunicacion de los usuarios con la entidad. La utilización del
-                sitio web supone la aceptación y cumplimiento de las <strong> condiciones de uso </strong>. Las <strong> Condiciones de uso </strong> pueden ser
-                modificadas en cualquier momento por CXN de acuerdo a la legislación vigente sin necesidad de aviso previo a los usuarios.
+                Mediante este sitio web CXN muestra sus servicios y actividades, también facilita la comunicacion de los usuarios con la entidad. La utilización
+                del sitio web supone la aceptación y cumplimiento de las <strong> condiciones de uso </strong>. Las <strong> Condiciones de uso </strong> pueden
+                ser modificadas en cualquier momento por CXN de acuerdo a la legislación vigente sin necesidad de aviso previo a los usuarios.
             </p>
             <h2>UTILIZACIÓN DEL SITIO WEB</h2>
             <h3>Normas:</h3>
@@ -65,8 +69,8 @@ const LegalNotice: React.FC = () => {
             </p>
             <p>CXN a través del sitio web no recopila ningún tipo de información personal a través de cookies.</p>
             <p>
-                <strong>Cookies de terceros:</strong> CXN utiliza un servicio 'Google Maps' para enseñar en una sección la situación geográfica del club. Esta ventana utiliza
-                cookies de terceros. Puede obtener informacion de las funciones de estas cookies en el sitio web:{' '}
+                <strong>Cookies de terceros:</strong> CXN utiliza un servicio 'Google Maps' para enseñar en una sección la situación geográfica del club. Esta
+                ventana utiliza cookies de terceros. Puede obtener informacion de las funciones de estas cookies en el sitio web:{' '}
                 <a href="https://support.google.com/maps/answer/7576020?hl=es&sjid=6175177243193965021-EU#null" target="_blank" rel="noopener noreferrer">
                     <strong>Información para consumidores de Google Maps</strong>{' '}
                 </a>

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { IInvoice } from '../Types/Types';
 import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect, CellProps } from 'react-table';
 import { Button, Container } from 'react-bootstrap';
@@ -28,7 +28,11 @@ interface Props {
 }
 
 const InvoicesTable: React.FC<Props> = ({ data: initialData }) => {
-    const [data, setData] = useState(initialData); // Caching data
+    const [data, setData] = useState(initialData);
+
+    useEffect(() => {
+        setData(initialData); // Ensure data is updated when props change
+    }, [initialData]);
 
     const columns: Column<IInvoice>[] = useMemo(
         () => [
@@ -118,23 +122,16 @@ const InvoicesTable: React.FC<Props> = ({ data: initialData }) => {
             <Table striped bordered hover responsive {...getTableProps()}>
                 <thead>
                     {
-                        // Loop over the header rows
                         headerGroups.map((headerGroup) => {
                             const { key: headerGroupKey, ...headerGroupProps } = headerGroup.getHeaderGroupProps();
                             return (
-                                // Apply the header row props
                                 <tr key={headerGroupKey} {...headerGroupProps}>
                                     {
-                                        // Loop over the headers in each row
                                         headerGroup.headers.map((column) => {
                                             const { key: columnKey, ...columnProps } = column.getHeaderProps(column.getSortByToggleProps());
                                             return (
-                                                // Apply the header cell props
                                                 <th key={columnKey} {...columnProps}>
-                                                    {
-                                                        // Render the header
-                                                        column.render('Header')
-                                                    }
+                                                    {column.render('Header')}
                                                     <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
                                                 </th>
                                             );
@@ -147,24 +144,17 @@ const InvoicesTable: React.FC<Props> = ({ data: initialData }) => {
                 </thead>
                 <tbody {...getTableBodyProps()}>
                     {
-                        // Loop over the table rows
                         rows.map((row) => {
                             prepareRow(row);
                             const { key: rowKey, ...rowProps } = row.getRowProps();
                             return (
-                                // Apply the row props
                                 <tr key={rowKey} {...rowProps}>
                                     {
-                                        // Loop over the rows cells
                                         row.cells.map((cell) => {
                                             const { key: cellKey, ...cellProps } = cell.getCellProps();
                                             return (
-                                                // Apply the cell props
                                                 <td key={cellKey} {...cellProps}>
-                                                    {
-                                                        // Render the cell contents
-                                                        cell.render('Cell')
-                                                    }
+                                                    {cell.render('Cell')}
                                                 </td>
                                             );
                                         })
@@ -177,6 +167,6 @@ const InvoicesTable: React.FC<Props> = ({ data: initialData }) => {
             </Table>
         </Container>
     );
-}
+};
 
 export default InvoicesTable;

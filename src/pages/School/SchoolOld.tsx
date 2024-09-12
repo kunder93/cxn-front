@@ -12,8 +12,8 @@ import {
     ShortSummaryPicture,
     SummaryContentSection
 } from '../../components/SchoolClass/CommonStyles'
-import { SetPageTitle } from '../../utility/functions'
-import { PhotoData } from 'components/SchoolClass/ClassPhotoGalleryCarousel'
+import { PhotoData } from '../../components/SchoolClass/ClassPhotoGalleryCarousel'
+import usePageTitle from '../../components/Common/hooks/usePageTitle'
 
 const pageTitle = 'Escuela adultos Círculo Xadrez Narón'
 
@@ -132,7 +132,7 @@ const accordionData: BenefitsAccordionProps = {
 }
 
 const SchoolOld: React.FC = () => {
-    SetPageTitle('CXN Escuela adultos')
+    usePageTitle('CXN Escuela adultos')
     return (
         <MainContainerStyled>
             <HeaderPicture>

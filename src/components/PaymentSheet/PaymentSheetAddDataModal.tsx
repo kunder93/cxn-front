@@ -51,7 +51,6 @@ const AddDataPaymentSheetModal: React.FC<AddDataPaymentSheetModalProps> = ({ row
     const formatDate = (date: Date) => {
         return date.toLocaleDateString()
     }
-    console.log('La row en el Modal es: ',row)
     const startDate = new Date(row.startDate)
     const endDate = new Date(row.endDate)
 

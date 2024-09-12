@@ -10,7 +10,7 @@ const isFirstStepNextButtonDisabled = (formikProps: FormikProps<SignUpFormValues
     const formErrors: FormikErrors<SignUpFormValues> = formikProps.errors
     return !!(formErrors.email ?? formErrors.password ?? formErrors.confirmPassword)
 }
-
+ 
 const SignUpFormFirstStep: React.FC<SignUpFormStepProps> = ({ formikProps, nextStepFunction }) => {
     return (
         <ResponsiveMainContainer>

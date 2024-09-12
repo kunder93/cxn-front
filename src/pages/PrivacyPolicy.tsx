@@ -1,7 +1,8 @@
+import usePageTitle from '../components/Common/hooks/usePageTitle'
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import styled from 'styled-components'
-import { SetPageTitle } from '../utility/functions'
+
 
 const CIF = 'G-15.227.556'
 const EMAIL = 'xadreznaron@hotmail.com'
@@ -13,7 +14,7 @@ const MainContainer = styled(Container)`
 `
 
 const PrivacyPolicy: React.FC = () => {
-    SetPageTitle('CXN Política de privacidad')
+    usePageTitle('CXN Política de privacidad')
     return (
         <MainContainer>
             <h1>POLÍTICA DE PRIVACIDAD Y PROTECCIÓN DE DATOS</h1>

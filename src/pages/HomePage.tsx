@@ -3,10 +3,9 @@ import styled from 'styled-components'
 import { MainContainerStyled, mainContentContainerBackgroundColor } from '../components/Common/CommonStyles'
 import HomePageCard, { ButtonOptions, HomePageCardProps } from '../components/HomePage/HomePageCard'
 import HomePageMainCarousel from '../components/HomePage/HomePageMainCarousel'
-//import { useAppSelector } from '../store/hooks'
-import { SetPageTitle } from '../utility/functions'
 import MoreInfoForm from '../components/Common/MoreInfoForm'
 import MembersBenefits, { MembersBenefitOption } from '../components/HomePage/MembersBenefits'
+import usePageTitle from '../components/Common/hooks/usePageTitle'
 
 const pageMainTitle = 'Circulo Xadrez Narón te da la bienvenida !'
 const freeActivitiesTitle = 'Prueba nuestras actividades de forma gratuita sin ser soci@:'
@@ -273,7 +272,7 @@ const MemberActivitiesArticle3 = styled(MemberActivitiesArticle)`
 `
 
 const HomePage: React.FC = () => {
-    SetPageTitle('CXN Principal')
+    usePageTitle('CXN Principal')
     return (
         <MainContainerStyled>
             <StyledMainCarouselSection>

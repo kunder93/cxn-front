@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '../../resources/routes-constants'
 import { MainContentHeader } from '../../components/SchoolClass/CommonStyles'
 import { HeaderPicture, MainContainerStyled, MainContentContainer, PageHeaderImage } from '../../components/Common/CommonStyles'
-import { SetPageTitle } from '../../utility/functions'
+import usePageTitle from '../../components/Common/hooks/usePageTitle'
 
 /**
  * Color used in image's border only in this page.
@@ -123,8 +123,8 @@ const articlesData: ArticleInfo[] = [
 ]
 
 const SchoolPage = () => {
+    usePageTitle('CXN Escuela')
     const navigate = useNavigate()
-    SetPageTitle('CXN Escuela')
     return (
         <MainContainerStyled>
             <HeaderPicture>

@@ -65,10 +65,11 @@ export enum ProfileSection {
     Tesorero = 'Tesorero',
     Secretario = 'Secretario',
     MembersManager = 'MembersManager',
-    InvoicesManger = 'InvoicesManager',
+    InvoicesManager = 'InvoicesManager',
     PaymentSheetsManager = 'PaymentSheetsManager',
     CompaniesManager = 'CompaniesManager',
-    MessagesManager = 'MessagesManager'
+    MessagesManager = 'MessagesManager',
+    TournamentParticipantManager = 'TournamentParticipantManager'
 }
 
 interface SidebarProps {
@@ -78,7 +79,7 @@ interface SidebarProps {
     currentSection: ProfileSection
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ roles, setProfilePage, setSidebarSection, currentSection }) => {
+const Sidebar: React.FC<SidebarProps> = ({ roles, setProfilePage, currentSection, setSidebarSection }) => {
     const handleClick = (section: ProfileSection) => {
         setProfilePage(section)
         setSidebarSection(section)

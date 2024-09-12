@@ -9,7 +9,8 @@ import {
     CHANGE_KIND_MEMBER_URL,
     GET_SUBCOUNTRIES_URL,
     GET_ALL_COUNTRIES_URL,
-    GET_ALL_USERS_URL
+    GET_ALL_USERS_URL,
+    GET_ALL_TOURNAMENT_PARTICIPANTS
 } from '../resources/server_urls'
 import { ICompany } from '../components/Companies/Types'
 import { LoginFormValues } from '../components/LoginForm'
@@ -18,7 +19,7 @@ import { ChangeMemberRolesValues } from '../components/MembersManager/ChangeMemb
 import { ChangeEmailAxiosValues } from '../components/MyProfile/ChangeEmail/ChangeUserEmailResultAlert'
 import { ChangePasswordAxiosValues } from '../components/MyProfile/ChangePassword/ChangeUserPasswordResultAlert'
 import { UnsubscribeMemberAxiosValues } from '../components/MyProfile/UnsubscribeMember/UnsubscribeMemberResultAlert'
-import { IBook, ICountryData, IInvoice, IPaymentSheet, ISubCountryData, IUsersListData } from '../components/Types/Types'
+import { IBook, ICountryData, IInvoice, IPaymentSheet, ISubCountryData,  ITournamentParticipant,  IUsersListData } from '../components/Types/Types'
 import { UserProfile } from '../store/types/userTypes'
 
 interface AxiosResponseData<T> {
@@ -147,6 +148,12 @@ export const useAxiosPostLogin = (url: string, payload: LoginFormValues) => {
 export const useAxiosGetAllUsersData = () => {
     return useAxios<IUsersListData>(GET_ALL_USERS_URL)
 }
+
+
+export const  useAxiosGetAllTournamentParticipants = () => {
+    return useAxios<ITournamentParticipant[]>(GET_ALL_TOURNAMENT_PARTICIPANTS)
+}
+
 
 export const useAxiosGetPaymentSheets = (url: string) => {
     return useAxios<PaymentSheetsAxiosResponse>(url)

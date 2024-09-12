@@ -49,7 +49,7 @@ export const SignUpFormValidationSchema: Yup.Schema<SignUpFormValues> = Yup.obje
     secondSurname: Yup.string()
         .required('Se requiere el segundo apellido.')
         .max(SECONDSURNAME_MAX_LENGTH, 'El segundo apellido puede contener máximo ' + SECONDSURNAME_MAX_LENGTH + ' caracteres'),
-    gender: Yup.string().oneOf(['male', 'female', 'other']).defined(),
+    gender: Yup.string().required('Se necesita seleccionar.').oneOf(['male', 'female', 'other']).defined('Se necesita seleccionar.'),
     birthDate: Yup.date()
         .required('Se necesita una fecha de nacimiento.')
         .max(new Date(), 'No debe exceder: ' + new Date().toString()),
@@ -61,8 +61,8 @@ export const SignUpFormValidationSchema: Yup.Schema<SignUpFormValues> = Yup.obje
     building: Yup.string().required('Casa o edificio requerido.'),
     street: Yup.string().required('Calle requerida.'),
     city: Yup.string().required('Se requiere una población.'),
-    countryNumericCode: Yup.number().required('Se requiere un código de país.'),
-    countrySubdivisionName: Yup.string().required('Se requiere'),
+    countryNumericCode: Yup.number().required('Se requiere un código de país.').min(0, 'Selecciona un país.') ,
+    countrySubdivisionName: Yup.string().required('Se requiere').defined('Selecciona una provincia.'),
     //Fourth step fields
     membersTerms: Yup.boolean().required('Para registrarse hay que aceptar los términos.').isTrue('Para registrarse hay que aceptar los términos.'),
     privacyTerms: Yup.boolean().required('Se requiere aceptar los términos de privacidad.').isTrue('Para registrarse hay que aceptar los términos.'),

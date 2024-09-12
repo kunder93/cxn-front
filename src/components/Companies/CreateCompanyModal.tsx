@@ -5,6 +5,7 @@ import Modal, { ModalProps } from 'react-bootstrap/Modal'
 import { ICompany } from './Types'
 import CreateCompanyForm from './CreateCompanyForm'
 import { useCreateCompanyForm } from './hooks/useCreateCompanyForm'
+import { Spinner } from 'react-bootstrap'
 
 interface ICreateCompanyModal {
     updateCompaniesList: (newCompany: ICompany) => void
@@ -26,8 +27,14 @@ const CreateCompanyModal: React.FC<ICreateCompanyModal & ModalProps> = (props) =
                 <CreateCompanyForm formik={formik} />
             </Modal.Body>
             <Modal.Footer>
-                <Button type="button" onClick={handleCreateCompanyClick} variant="success" disabled={formik.isSubmitting || !formik.isValid}>
-                    <strong>Crear empresa</strong>
+                <Button type="button" onClick={handleCreateCompanyClick} variant="success" disabled={formik.isSubmitting || !formik.isValid || !formik.dirty}>
+                    {formik.isSubmitting ? (
+                        <>
+                            <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> Creando...
+                        </>
+                    ) : (
+                        <strong>Añadir empresa</strong>
+                    )}
                 </Button>
                 <Button onClick={props.onHide} variant="danger">
                     <strong>Salir</strong>

@@ -1,6 +1,16 @@
 import { UserProfile } from "store/types/userTypes"
 
 
+export interface ITournamentParticipant{
+    fideId: number,
+    name: string,
+    club: string,
+    birthDate: Date,
+    category: string,
+    byes:string
+}
+
+
 export interface IUsersListData {
     usersList: UserProfile[]
 }

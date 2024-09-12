@@ -6,19 +6,19 @@ import { ICountryData, ISubCountryData } from '../../Types/Types'
 import { useAxiosGetCountriesList } from '../../../utility/CustomAxios'
 import { Field, FormikProps } from 'formik'
 import useSubCountries from '../CustomHooks/useSubCountries'
-import { ButtonRow } from '../../SignUpSingInCommonStyles'
+import { ButtonRow, ErrorMessage } from '../../SignUpSingInCommonStyles'
 import FormField from '../Common/FormField'
 import { ResponsiveMainContainer } from './Styles/FormStepsCommonStyles'
 
-const isThirdStepNextButtonDisabled = ({ errors, values }: FormikProps<SignUpFormValues>): boolean => {
+const isThirdStepNextButtonDisabled = ({ errors }: FormikProps<SignUpFormValues>): boolean => {
     return !!(
         errors.postalCode ??
         errors.apartmentNumber ??
         errors.building ??
         errors.street ??
         errors.city ??
-        !values.countryNumericCode ??
-        !values.countrySubdivisionName
+        errors.countryNumericCode ??
+        errors.countrySubdivisionName
     )
 }
 
@@ -47,11 +47,16 @@ const SignUpFormThirdStep: React.FC<SignUpFormStepProps> = ({ formikProps, previ
 
     const countryOptions = useMemo(() => {
         if (countriesList.loaded && countriesList.data) {
-            return countriesList.data.countryList.map((country: ICountryData) => (
-                <option key={country.numericCode} value={country.numericCode}>
-                    {country.fullName}
-                </option>
-            ))
+            return (
+                <>
+                    <option value={-1}>Selecciona el país</option>
+                    {countriesList.data.countryList.map((country: ICountryData) => (
+                        <option key={country.numericCode} value={country.numericCode}>
+                            {country.fullName}
+                        </option>
+                    ))}
+                </>
+            )
         }
         return <option value="">Cargando países...</option>
     }, [countriesList])
@@ -63,11 +68,16 @@ const SignUpFormThirdStep: React.FC<SignUpFormStepProps> = ({ formikProps, previ
         if (subCountriesError) {
             return <option value="">Error cargando provincias</option>
         }
-        return subCountriesList.subCountryList.map((subcountry: ISubCountryData) => (
-            <option key={subcountry.code} value={subcountry.name}>
-                {subcountry.name}
-            </option>
-        ))
+        return (
+            <>
+                <option value="">Selecciona la provincia</option>
+                {subCountriesList.subCountryList.map((subcountry: ISubCountryData) => (
+                    <option key={subcountry.code} value={subcountry.name}>
+                        {subcountry.name}
+                    </option>
+                ))}
+            </>
+        )
     }, [subCountriesList, subCountriesLoading, subCountriesError])
 
     return (
@@ -91,6 +101,9 @@ const SignUpFormThirdStep: React.FC<SignUpFormStepProps> = ({ formikProps, previ
                         {countryOptions}
                     </Field>
                     <BootstrapForm.Text className="text-muted">Selecciona el país</BootstrapForm.Text>
+                    {formikProps.errors.countryNumericCode && formikProps.touched.countryNumericCode && (
+                        <ErrorMessage>{formikProps.errors.countryNumericCode}</ErrorMessage>
+                    )}
                 </Col>
             </Row>
             <Row className="mb-3">
@@ -100,6 +113,9 @@ const SignUpFormThirdStep: React.FC<SignUpFormStepProps> = ({ formikProps, previ
                         {subCountryOptions}
                     </Field>
                     <BootstrapForm.Text className="text-muted">Selecciona la provincia</BootstrapForm.Text>
+                    {formikProps.errors.countrySubdivisionName && formikProps.touched.countrySubdivisionName && (
+                        <ErrorMessage>{formikProps.errors.countrySubdivisionName}</ErrorMessage>
+                    )}
                 </Col>
             </Row>
             <ButtonRow>

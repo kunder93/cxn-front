@@ -30,7 +30,7 @@ const CreateCompanyForm: React.FC<CreateCompanyFormProps> = ({ formik }) => {
                                 id="nif"
                                 name="nif"
                                 type="text"
-                                placeholder="El NIF o CIF"
+                                placeholder="El NIF o CIF."
                                 value={formik.values.nif}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
@@ -45,7 +45,7 @@ const CreateCompanyForm: React.FC<CreateCompanyFormProps> = ({ formik }) => {
                                 id="name"
                                 name="name"
                                 type="text"
-                                placeholder="El nombre"
+                                placeholder="El nombre completo."
                                 value={formik.values.name}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
@@ -55,12 +55,12 @@ const CreateCompanyForm: React.FC<CreateCompanyFormProps> = ({ formik }) => {
                     </Row>
                     <Row>
                         <Col>
-                            <InputLabel htmlFor="address">Direccion:</InputLabel>
+                            <InputLabel htmlFor="address">Dirección:</InputLabel>
                             <BootstrapForm.Control
                                 id="address"
                                 name="address"
                                 type="text"
-                                placeholder="La direccion"
+                                placeholder="La dirección completa."
                                 value={formik.values.address}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}

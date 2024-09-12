@@ -6,9 +6,9 @@ import BootstrapForm from 'react-bootstrap/Form'
 import styled from 'styled-components'
 import { PAYMENT_SHEET_URL } from '../../resources/server_urls'
 import { IFoodHousing } from '../Types/Types'
-import useNotification, { NotificationType } from '../../components/Common/hooks/useNotification'
-import FloatingNotificationA from '../../components/Common/FloatingNotificationA'
 import * as Yup from 'yup'
+import { useNotificationContext } from '../../components/Common/NotificationContext'
+import { NotificationType } from '../../components/Common/hooks/useNotification'
 
 const StyledErrorMessage = styled(ErrorMessage)`
     color: red;
@@ -47,7 +47,7 @@ const validationSchema = Yup.object({
 
 export const AddFoodHousingForm: React.FC<AddFoodHousingFormProps> = ({ paymentSheetIdentifier, addPaymentSheetFoodHousing }) => {
     const initialValues: IFoodHousing = { amountDays: 0, dayPrice: 0, overnight: false }
-    const { notification, showNotification, hideNotification } = useNotification()
+    const { showNotification } = useNotificationContext()
 
     return (
         <Formik
@@ -62,7 +62,6 @@ export const AddFoodHousingForm: React.FC<AddFoodHousingFormProps> = ({ paymentS
                     .then(() => {
                         showNotification('Manutención - alojamiento añadido correctamente.', NotificationType.Success)
                         addPaymentSheetFoodHousing(paymentSheetIdentifier, foodHousingData)
-                       
                     })
                     .catch((error) => {
                         const axiosError = error as AxiosError
@@ -147,7 +146,6 @@ export const AddFoodHousingForm: React.FC<AddFoodHousingFormProps> = ({ paymentS
                             </Button>
                         </InputRow>
                     </Container>
-                    <FloatingNotificationA notification={notification} hideNotification={hideNotification} />
                 </BootstrapForm>
             )}
         </Formik>

@@ -46,14 +46,18 @@ const PaymentSheetTable: React.FC<Props> = ({ initialData, deleteRow }) => {
     const { notification, showNotification, hideNotification } = useNotification()
     const navigate = useNavigate()
 
+    //Update selected row with data
+    useEffect(() => {
+        if (selectedRow) {
+            const updatedRow = data.find((item) => item.paymentSheetIdentifier === selectedRow.paymentSheetIdentifier)
+            setSelectedRow(updatedRow ?? null)
+        }
+    }, [data, selectedRow])
+
     useEffect(() => {
         setData(initialData)
         dataRef.current = initialData
     }, [initialData])
-
-    console.log('Las paymentsheets en la tabla son: ', data)
-    console.log('La row es: ', selectedRow)
-
 
     const columns: Column<IPaymentSheet>[] = useMemo(
         () => [

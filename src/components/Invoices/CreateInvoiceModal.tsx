@@ -1,7 +1,7 @@
 import Button from 'react-bootstrap/Button'
 import Modal, { ModalProps } from 'react-bootstrap/Modal'
 import React from 'react'
-import { Container } from 'react-bootstrap'
+import { Container, Spinner } from 'react-bootstrap'
 import { useCreateInvoiceForm } from './hooks/useCreateInvoiceForm'
 import { IInvoice } from 'components/Types/Types'
 import CreateInvoiceForm from './CreateInvoiceForm'
@@ -27,8 +27,19 @@ const CreateInvoiceModal: React.FC<ICreateInvoiceModal & ModalProps> = (props) =
                     <CreateInvoiceForm formik={formik}></CreateInvoiceForm>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="success" onClick={() => void formik.submitForm()} disabled={!formik.isValid}>
-                        <strong>Añadir nueva factura</strong>
+                    <Button
+                        type="submit"
+                        variant="success"
+                        onClick={() => void formik.submitForm()}
+                        disabled={!formik.isValid || !formik.dirty || formik.isSubmitting}
+                    >
+                        {formik.isSubmitting ? (
+                            <>
+                                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> Añadiendo...
+                            </>
+                        ) : (
+                            <strong>Añadir nueva factura</strong>
+                        )}
                     </Button>
                     <Button variant="danger" onClick={props.onHide}>
                         <strong>Cerrar</strong>

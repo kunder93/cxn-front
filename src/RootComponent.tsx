@@ -24,6 +24,9 @@ import ScrollTopWrapper from './components/Common/ScrollTopWrapper'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import LegalNotice from './pages/LegalNotice'
 import ChessQuestionsManager from './pages/ChessQuestionsManager'
+import TorneoBases from './components/TorneoPromocion/TorneoBases'
+import TorneoCartel from './components/TorneoPromocion/TorneoCartel'
+import TorneoInscripcion from './components/TorneoPromocion/TorneoInscripcion'
 const RootComponent: React.FC = () => {
     return (
         <ScrollTopWrapper>
@@ -48,7 +51,10 @@ const RootComponent: React.FC = () => {
                 <Route path={ROUTES.ACTIVITIES} element={<ActivitiesPage />} />
                 <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
                 <Route path={ROUTES.LEGAL_NOTICE} element={<LegalNotice />} />
-                <Route path ={ROUTES.CHESS_QUESTIONS_MANAGER} element={<ChessQuestionsManager />}/>
+                <Route path={ROUTES.CHESS_QUESTIONS_MANAGER} element={<ChessQuestionsManager />} />
+                <Route path={ROUTES.TORNEO_BASES} element={<TorneoBases />} />
+                <Route path={ROUTES.TORNEO_CARTEL} element={<TorneoCartel />} />
+                <Route path={ROUTES.TORNEO_INSCRIPCION} element={<TorneoInscripcion />} />
             </Routes>
         </ScrollTopWrapper>
     )

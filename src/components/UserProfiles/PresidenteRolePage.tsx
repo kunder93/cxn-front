@@ -93,7 +93,7 @@ const PresidenteRolePage: React.FC<PresidentRolePageProps> = ({ changePage }) =>
     }
 
     const handleInvoicesButton = () => {
-        changePage(ProfileSection.InvoicesManger)
+        changePage(ProfileSection.InvoicesManager)
     }
 
     const handlePaymentSheetsButton = () => {
@@ -104,6 +104,9 @@ const PresidenteRolePage: React.FC<PresidentRolePageProps> = ({ changePage }) =>
     }
     const handleMessagesButton = () => {
         changePage(ProfileSection.MessagesManager)
+    }
+    const handleTournamentParticipantsButton = () => {
+        changePage(ProfileSection.TournamentParticipantManager)
     }
 
     return (
@@ -131,25 +134,25 @@ const PresidenteRolePage: React.FC<PresidentRolePageProps> = ({ changePage }) =>
                     </StyledAccordionHeader>
                     <StyledAccordionBody>
                         <Button
-                            style={hoveredButton === 1 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
+                            style={hoveredButton === 2 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
                             onClick={handleInvoicesButton}
-                            onMouseEnter={() => setHoveredButton(1)}
+                            onMouseEnter={() => setHoveredButton(2)}
                             onMouseLeave={() => setHoveredButton(null)}
                         >
                             Ver listado facturas
                         </Button>
                         <Button
-                            style={hoveredButton === 1 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
+                            style={hoveredButton === 3 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
                             onClick={handlePaymentSheetsButton}
-                            onMouseEnter={() => setHoveredButton(1)}
+                            onMouseEnter={() => setHoveredButton(3)}
                             onMouseLeave={() => setHoveredButton(null)}
                         >
                             Ver listado hojas de liquidación
                         </Button>
                         <Button
-                            style={hoveredButton === 1 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
+                            style={hoveredButton === 4 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
                             onClick={handleCompaniesManagerButton}
-                            onMouseEnter={() => setHoveredButton(1)}
+                            onMouseEnter={() => setHoveredButton(4)}
                             onMouseLeave={() => setHoveredButton(null)}
                         >
                             Ver listado compañias (facturas)
@@ -162,12 +165,20 @@ const PresidenteRolePage: React.FC<PresidentRolePageProps> = ({ changePage }) =>
                     </StyledAccordionHeader>
                     <StyledAccordionBody>
                         <Button
-                            style={hoveredButton === 1 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
+                            style={hoveredButton === 5 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
                             onClick={handleMessagesButton}
-                            onMouseEnter={() => setHoveredButton(1)}
+                            onMouseEnter={() => setHoveredButton(5)}
                             onMouseLeave={() => setHoveredButton(null)}
                         >
                             Mensajes recibidos
+                        </Button>
+                        <Button
+                            style={hoveredButton === 6 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
+                            onClick={handleTournamentParticipantsButton}
+                            onMouseEnter={() => setHoveredButton(6)}
+                            onMouseLeave={() => setHoveredButton(null)}
+                        >
+                            Inscritos torneo
                         </Button>
                     </StyledAccordionBody>
                 </StyledAccordionItem>

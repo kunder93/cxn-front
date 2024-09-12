@@ -17,6 +17,8 @@ export const PAYMENT_SHEET_URL = BASE_URL + 'api/paymentSheet'
 
 export const GET_ALL_USERS_URL = BASE_URL + 'api/user/getAll'
 
+export const GET_ALL_TOURNAMENT_PARTICIPANTS = BASE_URL + 'api/participants'
+
 export const GET_ALL_COUNTRIES_URL = BASE_URL + "api/address/getCountries"
 
 export const GET_SUBCOUNTRIES_URL = BASE_URL + "api/address/country"
@@ -36,3 +38,5 @@ export const CHESS_QUESTION_URL = BASE_URL + 'api/chessQuestion'
 export const CHESS_QUESTION_CHANGE_SEEN_STATE = CHESS_QUESTION_URL + '/changeChessQuestionHasSeen'
 
 export const CHESS_QUESTION_DELETE = CHESS_QUESTION_URL;
+
+export const TOURNAMENT_PARTICIPANTS_URL = BASE_URL +'api/participants'

@@ -1,10 +1,9 @@
-// src/components/UserProfiles/Navbar.tsx
-import React from 'react'
-import styled from 'styled-components'
-import { BsPerson, BsGear, BsPeople, BsCalendar, BsClipboardData } from 'react-icons/bs'
-import { FaChessKnight } from 'react-icons/fa'
-import { UserRole } from '../../store/types/userTypes'
-import { ProfileSection } from './SideBar'
+import React from 'react';
+import styled from 'styled-components';
+import { BsPerson, BsGear, BsPeople, BsCalendar, BsClipboardData } from 'react-icons/bs';
+import { FaChessKnight } from 'react-icons/fa';
+import { UserRole } from '../../store/types/userTypes';
+import { ProfileSection } from './SideBar';
 
 const NavbarContainer = styled.nav`
     display: flex;
@@ -39,48 +38,72 @@ const NavbarContainer = styled.nav`
             color: #007bff;
         }
     }
-`
+`;
 
 interface NavbarProps {
-    roles: UserRole[]
-    currentSection: ProfileSection
-    setProfilePage: (section: ProfileSection) => void
-    setSidebarSection: (section: ProfileSection) => void
+    roles: UserRole[];
+    currentSection: ProfileSection;
+    setProfilePage: (section: ProfileSection) => void;
+    setSidebarSection: (section: ProfileSection) => void;
 }
 
 const UserProfileNavbar: React.FC<NavbarProps> = ({ roles, currentSection, setProfilePage, setSidebarSection }) => {
     const handleClick = (section: ProfileSection) => {
-        setProfilePage(section)
-        setSidebarSection(section)
-    }
+        setProfilePage(section);
+        setSidebarSection(section);
+    };
 
     return (
         <NavbarContainer>
-            <a href="#" className={currentSection === ProfileSection.UserPage ? 'active' : ''} onClick={() => handleClick(ProfileSection.UserPage)}>
+            <a
+                href="#"
+                className={currentSection === ProfileSection.UserPage ? 'active' : ''}
+                onClick={() => handleClick(ProfileSection.UserPage)}
+            >
                 <BsPerson />
                 <span>Personal</span>
             </a>
             {roles.includes(UserRole.SOCIO) && (
-                <a href="#" className={currentSection === ProfileSection.ChessData ? 'active' : ''} onClick={() => handleClick(ProfileSection.ChessData)}>
+                <a
+                    href="#"
+                    className={currentSection === ProfileSection.ChessData ? 'active' : ''}
+                    onClick={() => handleClick(ProfileSection.ChessData)}
+                >
                     <FaChessKnight />
                     <span>Ajedrez</span>
                 </a>
             )}
             {roles.includes(UserRole.ADMIN) && (
                 <>
-                    <a href="#" className={currentSection === ProfileSection.President ? 'active' : ''} onClick={() => handleClick(ProfileSection.President)}>
+                    <a
+                        href="#"
+                        className={currentSection === ProfileSection.President ? 'active' : ''}
+                        onClick={() => handleClick(ProfileSection.President)}
+                    >
                         <BsPeople />
                         <span>Presidente</span>
                     </a>
-                    <a href="#" className={currentSection === ProfileSection.Tesorero ? 'active' : ''} onClick={() => handleClick(ProfileSection.Tesorero)}>
+                    <a
+                        href="#"
+                        className={currentSection === ProfileSection.Tesorero ? 'active' : ''}
+                        onClick={() => handleClick(ProfileSection.Tesorero)}
+                    >
                         <BsCalendar />
                         <span>Tesorero</span>
                     </a>
-                    <a href="#" className={currentSection === ProfileSection.Secretario ? 'active' : ''} onClick={() => handleClick(ProfileSection.Secretario)}>
+                    <a
+                        href="#"
+                        className={currentSection === ProfileSection.Secretario ? 'active' : ''}
+                        onClick={() => handleClick(ProfileSection.Secretario)}
+                    >
                         <BsCalendar />
                         <span>Secretario</span>
                     </a>
-                    <a href="#" className={currentSection === ProfileSection.AdminPage ? 'active' : ''} onClick={() => handleClick(ProfileSection.AdminPage)}>
+                    <a
+                        href="#"
+                        className={currentSection === ProfileSection.AdminPage ? 'active' : ''}
+                        onClick={() => handleClick(ProfileSection.AdminPage)}
+                    >
                         <BsGear />
                         <span>Admin</span>
                     </a>
@@ -106,18 +129,26 @@ const UserProfileNavbar: React.FC<NavbarProps> = ({ roles, currentSection, setPr
             )}
             {roles.includes(UserRole.PRESIDENTE) && (
                 <>
-                    <a href="#" className={currentSection === ProfileSection.President ? 'active' : ''} onClick={() => handleClick(ProfileSection.President)}>
+                    <a
+                        href="#"
+                        className={currentSection === ProfileSection.President ? 'active' : ''}
+                        onClick={() => handleClick(ProfileSection.President)}
+                    >
                         <BsPeople />
                         <span>Presidente</span>
                     </a>
-                    <a href="#" className={currentSection === ProfileSection.ChessData ? 'active' : ''} onClick={() => handleClick(ProfileSection.ChessData)}>
+                    <a
+                        href="#"
+                        className={currentSection === ProfileSection.ChessData ? 'active' : ''}
+                        onClick={() => handleClick(ProfileSection.ChessData)}
+                    >
                         <FaChessKnight />
                         <span>Ajedrez</span>
                     </a>
                 </>
             )}
         </NavbarContainer>
-    )
-}
+    );
+};
 
-export default UserProfileNavbar
+export default UserProfileNavbar;
