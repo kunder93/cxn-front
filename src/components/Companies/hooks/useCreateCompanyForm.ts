@@ -5,10 +5,12 @@ import { CreateCompanyValidationSchema } from '../../../pages/validation/FormVal
 import { CreateCompanyFormValues, ICompany } from '../Types'
 import { useNotificationContext } from '../../../components/Common/NotificationContext'
 import { NotificationType } from '../../../components/Common/hooks/useNotification'
+import { useAppSelector } from '../../../store/hooks' // Asumiendo que este hook selecciona datos del estado
 
 export const useCreateCompanyForm = (updateCompaniesList: (newCompany: ICompany) => void): FormikProps<CreateCompanyFormValues> => {
     const initialValues: CreateCompanyFormValues = { nif: '', name: '', address: '' }
     const { showNotification } = useNotificationContext()
+    const userJwt = useAppSelector<string | null>((state) => state.users.jwt) // Obtener el JWT del estado
 
     return useFormik({
         initialValues,
@@ -17,7 +19,20 @@ export const useCreateCompanyForm = (updateCompaniesList: (newCompany: ICompany)
         validateOnMount: true,
         onSubmit: async (values, actions) => {
             try {
-                const response = await axios.post<ICompany>(COMPANIES_URL, values)
+                // Verificar si userJwt existe
+                if (!userJwt) {
+                    showNotification('Usuario no autenticado', NotificationType.Error)
+                    actions.setStatus({ error: 'Usuario no autenticado' })
+                    actions.setSubmitting(false)
+                    return
+                }
+
+                const response = await axios.post<ICompany>(COMPANIES_URL, values, {
+                    headers: {
+                        Authorization: `Bearer ${userJwt}`, // Incluir el token JWT en la cabecera
+                        'Content-Type': 'application/json'
+                    }
+                })
                 showNotification('Empresa registrada con éxito.', NotificationType.Success)
                 updateCompaniesList(response.data)
                 actions.setStatus({ success: true })

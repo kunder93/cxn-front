@@ -8,6 +8,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios'
 import { CHANGE_KIND_MEMBER_URL } from '../../../resources/server_urls'
 import useNotification, { NotificationType } from '../../../components/Common/hooks/useNotification'
 import FloatingNotificationA from '../../../components/Common/FloatingNotificationA'
+import { useAppSelector } from '../../../store/hooks'
 
 export interface ChangeKindMemberValues extends FormikValues {
     email: string
@@ -28,14 +29,28 @@ export interface ChangeKindMemberFormRef {
 const ChangeKindMemberForm: React.FC<ChangeKindMemberFormProps> = ({ formikRef, formData, updateLocalKindMember, setBlockButton }) => {
     const { kindMember, email } = formData
     const { notification, showNotification, hideNotification } = useNotification()
-
+    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const handleSubmit = async (values: { kindMember: KindMember; email: string }) => {
         try {
             setBlockButton(true)
-            const response: AxiosResponse<UserProfile> = await axios.patch(CHANGE_KIND_MEMBER_URL, {
-                email: values.email,
-                kindMember: values.kindMember
-            })
+            // Verificar si userJwt existe
+            if (!userJwt) {
+                showNotification('Usuario no autenticado', NotificationType.Error)
+                return
+            }
+            const response: AxiosResponse<UserProfile> = await axios.patch(
+                CHANGE_KIND_MEMBER_URL,
+                {
+                    email: values.email,
+                    kindMember: values.kindMember
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${userJwt}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            )
             showNotification('Se han cambiado el tipo de socio correctamente.', NotificationType.Success)
             updateLocalKindMember(response.data.kindMember)
         } catch (error) {

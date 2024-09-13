@@ -18,6 +18,7 @@ import useScrollTop from '../components/Common/hooks/useScrollTop'
 import useUserProfile from '../components/UsersServices/hooks/useUserProfile'
 import UserProfileNavbar from '../components/UserProfiles/UserProfileNavBar'
 import TorneoInscripcionManager from './TorneoInscripcionManager'
+import usePageTitle from '../components/Common/hooks/usePageTitle'
 
 const MainPageContainer = styled.div`
     display: grid;
@@ -62,6 +63,7 @@ const ProfilePage: React.FC = () => {
     const [sidebarSection, setSidebarSection] = useState<ProfileSection>(ProfileSection.UserPage)
     const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 768)
 
+    usePageTitle('CXN Menú de socio')
     useScrollTop(profilePage)
 
     useEffect(() => {

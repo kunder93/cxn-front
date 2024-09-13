@@ -8,6 +8,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios'
 import { CHANGE_MEMBER_ROLES_URL } from '../../../resources/server_urls'
 import useNotification, { NotificationType } from '../../../components/Common/hooks/useNotification'
 import FloatingNotificationA from '../../../components/Common/FloatingNotificationA'
+import { useAppSelector } from '../../../store/hooks'
 
 const CheckBoxesGroup = styled(FormGroup)`
     display: flex;
@@ -47,14 +48,30 @@ export interface ChangeMemberRolesFormProps {
 const ChangeMemberRolesForm: React.FC<ChangeMemberRolesFormProps> = ({ formikRef, initialFormData, updateLocalMemberRoles, setBlockButton }) => {
     const { userRoles, email } = initialFormData
     const { notification, showNotification, hideNotification } = useNotification()
-
+    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const handleSubmit = async (values: ChangeMemberRolesValues) => {
         try {
             setBlockButton(true)
-            const response: AxiosResponse<{ userName: string; userRoles: UserRole[] }> = await axios.patch(CHANGE_MEMBER_ROLES_URL, {
-                email: values.email,
-                userRoles: values.userRoles
-            })
+
+            // Verificar si userJwt existe
+            if (!userJwt) {
+                showNotification('Usuario no autenticado', NotificationType.Error)
+                return
+            }
+
+            const response: AxiosResponse<{ userName: string; userRoles: UserRole[] }> = await axios.patch(
+                CHANGE_MEMBER_ROLES_URL,
+                {
+                    email: values.email,
+                    userRoles: values.userRoles
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${userJwt}`, // Incluir el token JWT en la cabecera
+                        'Content-Type': 'application/json'
+                    }
+                }
+            )
             showNotification('Se han cambiado los roles correctamente.', NotificationType.Success)
             updateLocalMemberRoles(response.data.userRoles)
         } catch (error) {

@@ -10,6 +10,7 @@ import { CreatePaymentSheetFormValidationSchema } from './CreatePaymentSheetForm
 import FloatingNotificationA from '../../components/Common/FloatingNotificationA'
 import useNotification, { NotificationType } from '../../components/Common/hooks/useNotification'
 import { IPaymentSheet } from 'components/Types/Types'
+import { useAppSelector } from '../../store/hooks' // Asumiendo que tienes este hook para obtener el JWT
 
 export interface CreatePaymentSheetFormValues {
     userEmail: string
@@ -35,6 +36,8 @@ const CreatePaymentSheetForm: React.FC<CreatePaymentSheetFormProps> = ({ onValid
     const { data, error, loaded } = useAxiosGetAllUsersData()
     const { notification, showNotification, hideNotification } = useNotification()
 
+    const userJwt = useAppSelector<string | null>((state) => state.users.jwt) // Obtener el JWT del estado
+
     const userOptions: MyValues[] = data
         ? data.usersList.map((user) => ({
               label: `${user.name} ${user.firstSurname} ${user.secondSurname}`,
@@ -59,8 +62,21 @@ const CreatePaymentSheetForm: React.FC<CreatePaymentSheetFormProps> = ({ onValid
             validationSchema={CreatePaymentSheetFormValidationSchema}
             onSubmit={(values: CreatePaymentSheetFormValues, { setSubmitting, resetForm }: FormikHelpers<CreatePaymentSheetFormValues>) => {
                 isSubmitting(true)
+
+                // Verificar si el token JWT está disponible
+                if (!userJwt) {
+                    showNotification('Error: No autenticado.', NotificationType.Error)
+                    isSubmitting(false)
+                    return
+                }
+
                 axios
-                    .post<IPaymentSheet>(PAYMENT_SHEET_URL, values)
+                    .post<IPaymentSheet>(PAYMENT_SHEET_URL, values, {
+                        headers: {
+                            Authorization: `Bearer ${userJwt}`, // Incluir el JWT en la cabecera de autorización
+                            'Content-Type': 'application/json'
+                        }
+                    })
                     .then((response) => {
                         showNotification('Se ha añadido la hoja de liquidación correctamente.', NotificationType.Success)
                         addRow(response.data)

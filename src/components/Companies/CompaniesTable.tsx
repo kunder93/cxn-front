@@ -7,6 +7,7 @@ import { CompanyTableProps, ICompany } from './Types'
 import axios from 'axios'
 import styled from 'styled-components'
 import { FloatingNotificationContainer } from '../../components/Common/FloatingNotificationA'
+import { useAppSelector } from '../../store/hooks'  // Asumiendo que tienes este hook para acceder al estado de la aplicación
 
 const TableFilterContainer = styled.div`
     display: flex;
@@ -65,6 +66,7 @@ const FloatingNotification: React.FC<FloatingNotificationProps> = ({ message, va
 const CompanyTable: React.FC<CompanyTableProps> = ({ data: initialData }) => {
     const [data, setData] = useState<ICompany[]>(useMemo(() => initialData, [initialData]))
     const [notification, setNotification] = useState<{ message: string; variant: string } | null>(null)
+    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)  // Obtener JWT del estado
 
     useEffect(() => {
         setData(initialData)
@@ -83,21 +85,32 @@ const CompanyTable: React.FC<CompanyTableProps> = ({ data: initialData }) => {
         async (rowIndex: number) => {
             const companyToDelete = data[rowIndex]
             try {
-                await axios.delete(`${COMPANIES_URL}/${companyToDelete.nif}`)
+                if (!userJwt) {
+                    setNotification({ message: 'Error: No autenticado.', variant: 'danger' })
+                    return
+                }
+
+                // Agregar token JWT a la cabecera de la solicitud
+                await axios.delete(`${COMPANIES_URL}/${companyToDelete.nif}`, {
+                    headers: {
+                        'Authorization': `Bearer ${userJwt}`,  // Token JWT
+                        'Content-Type': 'application/json'
+                    }
+                })
+
                 setData((prevData) => prevData.filter((_, index) => index !== rowIndex))
-                setNotification({ message: 'COMPAÑIA BORRADA CON EXITO', variant: 'success' })
+                setNotification({ message: 'COMPAÑÍA BORRADA CON ÉXITO', variant: 'success' })
             } catch (error) {
                 if (axios.isAxiosError(error) && error.response?.data) {
                     setNotification({ message: 'Error: no hay respuesta del servidor.', variant: 'danger' })
                 } else {
-                    setNotification({ message: 'Error: algo inesperado. Recarga o intentalo más tarde.', variant: 'danger' })
+                    setNotification({ message: 'Error: algo inesperado. Recarga o inténtalo más tarde.', variant: 'danger' })
                 }
             }
         },
-        [data]
+        [data, userJwt]  // userJwt incluido en las dependencias
     )
 
-    // Function wrapper to avoid returning a promise directly
     const handleDeleteButtonClickWrapper = (rowIndex: number) => {
         handleDeleteButtonClick(rowIndex).catch((error) => {
             console.error('Error handling delete button click:', error)
@@ -131,7 +144,9 @@ const CompanyTable: React.FC<CompanyTableProps> = ({ data: initialData }) => {
             ])
         }
     )
+    
     const globalFilterStatus = state.globalFilter as string | number | readonly string[] | undefined
+    
     return (
         <>
             <TableFilterContainer>

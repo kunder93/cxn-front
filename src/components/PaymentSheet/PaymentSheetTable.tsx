@@ -11,6 +11,7 @@ import AddDataPaymentSheetModal from './PaymentSheetAddDataModal'
 import styled from 'styled-components'
 import useNotification, { NotificationType } from '../../components/Common/hooks/useNotification'
 import FloatingNotificationA from '../../components/Common/FloatingNotificationA'
+import { useAppSelector } from '../../store/hooks'
 
 const TableFilterContainer = styled.div`
     display: flex;
@@ -45,7 +46,7 @@ const PaymentSheetTable: React.FC<Props> = ({ initialData, deleteRow }) => {
     const [selectedRow, setSelectedRow] = useState<IPaymentSheet | null>(null)
     const { notification, showNotification, hideNotification } = useNotification()
     const navigate = useNavigate()
-
+    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     //Update selected row with data
     useEffect(() => {
         if (selectedRow) {
@@ -78,12 +79,14 @@ const PaymentSheetTable: React.FC<Props> = ({ initialData, deleteRow }) => {
     const deleteButtonClickHandler = useCallback(
         (identifier: number) => {
             const paymentSheetForDelete = dataRef.current.find((item) => item.paymentSheetIdentifier === identifier)
+            const jwt = userJwt;
+            console.log('EL JWT CUANDO ELIMINO EMPRESA ES: ' + jwt)
             if (paymentSheetForDelete) {
                 axios
-                    .delete(`${PAYMENT_SHEET_URL}/${paymentSheetForDelete.paymentSheetIdentifier}`)
+                    .delete(`${PAYMENT_SHEET_URL}/${paymentSheetForDelete.paymentSheetIdentifier}`,{headers:{Authorization: 'Bearer ' + jwt}})
                     .then(() => {
-                        deleteRow(paymentSheetForDelete.paymentSheetIdentifier)
                         showNotification('ELIMINADA CORRECTAMENTE', NotificationType.Success)
+                        deleteRow(paymentSheetForDelete.paymentSheetIdentifier)
                         setData((prevData) => prevData.filter((item) => item.paymentSheetIdentifier !== identifier))
                         dataRef.current = dataRef.current.filter((item) => item.paymentSheetIdentifier !== identifier)
                     })
@@ -93,7 +96,7 @@ const PaymentSheetTable: React.FC<Props> = ({ initialData, deleteRow }) => {
                     })
             }
         },
-        [deleteRow, showNotification]
+        [deleteRow, showNotification, userJwt]
     )
 
     const addDataButtonClickHandler = useCallback((identifier: number) => {

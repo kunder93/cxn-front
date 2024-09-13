@@ -273,6 +273,8 @@ const MemberActivitiesArticle3 = styled(MemberActivitiesArticle)`
 
 const HomePage: React.FC = () => {
     usePageTitle('CXN Principal')
+    console.log("ISADOASODASKPKDOPASKOPDKOPDASK")
+    console.log(process.env.NODE_ENV)
     return (
         <MainContainerStyled>
             <StyledMainCarouselSection>

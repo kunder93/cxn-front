@@ -19,8 +19,9 @@ import { ChangeMemberRolesValues } from '../components/MembersManager/ChangeMemb
 import { ChangeEmailAxiosValues } from '../components/MyProfile/ChangeEmail/ChangeUserEmailResultAlert'
 import { ChangePasswordAxiosValues } from '../components/MyProfile/ChangePassword/ChangeUserPasswordResultAlert'
 import { UnsubscribeMemberAxiosValues } from '../components/MyProfile/UnsubscribeMember/UnsubscribeMemberResultAlert'
-import { IBook, ICountryData, IInvoice, IPaymentSheet, ISubCountryData,  ITournamentParticipant,  IUsersListData } from '../components/Types/Types'
+import { IBook, ICountryData, IInvoice, IPaymentSheet, ISubCountryData, ITournamentParticipant, IUsersListData } from '../components/Types/Types'
 import { UserProfile } from '../store/types/userTypes'
+import { useAppSelector } from './../store/hooks'
 
 interface AxiosResponseData<T> {
     data: T | null
@@ -29,6 +30,7 @@ interface AxiosResponseData<T> {
 }
 
 const useAxios = <T, P = unknown>(url: string, method: Method = 'GET', payload?: P | null) => {
+    const userJwt = useAppSelector<string>((state) => state.users.jwt)
     const [response, setResponse] = useState<AxiosResponseData<T>>({
         data: null,
         loaded: false,
@@ -42,7 +44,8 @@ const useAxios = <T, P = unknown>(url: string, method: Method = 'GET', payload?:
                 const axiosConfig: AxiosRequestConfig = {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*'
+                        'Access-Control-Allow-Origin': '*',
+                        ...(userJwt && { Authorization: 'Bearer ' + userJwt })
                     },
                     method,
                     url,
@@ -61,7 +64,7 @@ const useAxios = <T, P = unknown>(url: string, method: Method = 'GET', payload?:
         }
 
         void fetchData()
-    }, [url, method, payload])
+    }, [url, method, payload, userJwt])
 
     return response
 }
@@ -103,7 +106,6 @@ export interface InvoicesAxiosResponse {
 export interface CompaniesAxiosResponse {
     companiesList: ICompany[]
 }
-
 
 export const useAxiosGetCompanies = (url: string) => {
     return useAxios<CompaniesAxiosResponse>(url)
@@ -149,11 +151,9 @@ export const useAxiosGetAllUsersData = () => {
     return useAxios<IUsersListData>(GET_ALL_USERS_URL)
 }
 
-
-export const  useAxiosGetAllTournamentParticipants = () => {
+export const useAxiosGetAllTournamentParticipants = () => {
     return useAxios<ITournamentParticipant[]>(GET_ALL_TOURNAMENT_PARTICIPANTS)
 }
-
 
 export const useAxiosGetPaymentSheets = (url: string) => {
     return useAxios<PaymentSheetsAxiosResponse>(url)
