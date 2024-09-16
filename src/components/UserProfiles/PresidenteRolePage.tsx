@@ -139,7 +139,7 @@ const PresidenteRolePage: React.FC<PresidentRolePageProps> = ({ changePage }) =>
                             onMouseEnter={() => setHoveredButton(2)}
                             onMouseLeave={() => setHoveredButton(null)}
                         >
-                            Ver listado facturas
+                            Ver lista de facturas
                         </Button>
                         <Button
                             style={hoveredButton === 3 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
@@ -147,7 +147,7 @@ const PresidenteRolePage: React.FC<PresidentRolePageProps> = ({ changePage }) =>
                             onMouseEnter={() => setHoveredButton(3)}
                             onMouseLeave={() => setHoveredButton(null)}
                         >
-                            Ver listado hojas de liquidación
+                            Ver lista hojas de liquidación
                         </Button>
                         <Button
                             style={hoveredButton === 4 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}

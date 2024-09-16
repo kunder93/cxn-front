@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { BsPerson, BsGear, BsPeople, BsCalendar, BsClipboardData } from 'react-icons/bs'
+import { BsPerson, BsPeople, BsCalendar, BsClipboardData } from 'react-icons/bs'
 import { FaChessKnight } from 'react-icons/fa'
 import { UserRole } from '../../store/types/userTypes'
 
@@ -57,7 +57,6 @@ const SideBarContainer = styled.aside`
 `
 
 export enum ProfileSection {
-    AdminPage = 'AdminPage',
     UserPage = 'UserPage',
     ChessData = 'ChessData',
     MemberCandidate = 'MemberCandidate',
@@ -95,7 +94,6 @@ const Sidebar: React.FC<SidebarProps> = ({ roles, setProfilePage, currentSection
 
     const sections = [
         { section: ProfileSection.UserPage, icon: <BsPerson />, label: 'Mi Perfil', roles: [UserRole.SOCIO, UserRole.SOCIO_CANDIDATO] },
-        { section: ProfileSection.AdminPage, icon: <BsGear />, label: 'Administración', roles: [UserRole.ADMIN, UserRole.SOCIO_CANDIDATO] },
         { section: ProfileSection.President, icon: <BsPeople />, label: 'Presidente', roles: [UserRole.PRESIDENTE] },
         { section: ProfileSection.Tesorero, icon: <BsClipboardData />, label: 'Tesorero', roles: [UserRole.TESORERO] },
         { section: ProfileSection.Secretario, icon: <BsCalendar />, label: 'Secretario', roles: [UserRole.SECRETARIO] },

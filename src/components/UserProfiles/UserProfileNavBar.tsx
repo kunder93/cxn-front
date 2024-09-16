@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BsPerson, BsGear, BsPeople, BsCalendar, BsClipboardData } from 'react-icons/bs';
+import { BsPerson, BsPeople, BsCalendar, BsClipboardData } from 'react-icons/bs';
 import { FaChessKnight } from 'react-icons/fa';
 import { UserRole } from '../../store/types/userTypes';
 import { ProfileSection } from './SideBar';
@@ -98,14 +98,6 @@ const UserProfileNavbar: React.FC<NavbarProps> = ({ roles, currentSection, setPr
                     >
                         <BsCalendar />
                         <span>Secretario</span>
-                    </a>
-                    <a
-                        href="#"
-                        className={currentSection === ProfileSection.AdminPage ? 'active' : ''}
-                        onClick={() => handleClick(ProfileSection.AdminPage)}
-                    >
-                        <BsGear />
-                        <span>Admin</span>
                     </a>
                     <a
                         href="#"

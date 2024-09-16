@@ -1,7 +1,6 @@
 // ProfilePage.tsx
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import AdminRolePage from '../components/UserProfiles/AdminRolePage'
 import SocioRolePage from '../components/UserProfiles/SocioRolePage'
 import MemberCandidate from '../components/UserProfiles/MemberCandidate'
 import PresidenteRolePage from '../components/UserProfiles/PresidenteRolePage'
@@ -42,7 +41,6 @@ const ProfileContent = styled.div`
 `
 
 const sectionComponents: Record<ProfileSection, React.FC<{ changePage: (section: ProfileSection) => void }>> = {
-    [ProfileSection.AdminPage]: AdminRolePage,
     [ProfileSection.UserPage]: SocioRolePage,
     [ProfileSection.ChessData]: ChessProfile,
     [ProfileSection.MemberCandidate]: MemberCandidate,

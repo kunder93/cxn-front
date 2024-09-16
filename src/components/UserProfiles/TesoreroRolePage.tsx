@@ -2,17 +2,33 @@
 import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { People, CashCoin } from 'react-bootstrap-icons';
-import { useNavigate } from 'react-router';
-import { ROUTES } from '../../resources/routes-constants';
 import { PageContainer, Title, StyledAccordion, StyledAccordionItem, StyledAccordionHeader, StyledAccordionBody, buttonBaseStyle, buttonHoverStyle } from './CommonStyles';
+import { ProfileSection } from './SideBar';
 
-const TesoreroRolePage: React.FC = () => {
-    const navigate = useNavigate();
+
+interface TesoreroRolePageProps {
+    changePage: (section: ProfileSection) => void
+}
+
+
+const TesoreroRolePage: React.FC<TesoreroRolePageProps> = ({ changePage }) => {
     const [hoveredButton, setHoveredButton] = useState<number | null>(null);
 
-    const handleNavigation = (route: string) => {
-        navigate(route);
-    };
+
+    const handleMembersManagerButton = () => {
+        changePage(ProfileSection.MembersManager)
+    }
+
+    const handleInvoicesButton = () => {
+        changePage(ProfileSection.InvoicesManager)
+    }
+
+    const handlePaymentSheetsButton = () => {
+        changePage(ProfileSection.PaymentSheetsManager)
+    }
+    const handleCompaniesManagerButton = () => {
+        changePage(ProfileSection.CompaniesManager)
+    }
 
     return (
         <PageContainer>
@@ -25,7 +41,7 @@ const TesoreroRolePage: React.FC = () => {
                     <StyledAccordionBody>
                         <Button
                             style={hoveredButton === 0 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={() => handleNavigation(ROUTES.MEMBERS_MANAGER)}
+                            onClick={handleMembersManagerButton}
                             onMouseEnter={() => setHoveredButton(0)}
                             onMouseLeave={() => setHoveredButton(null)}
                         >
@@ -40,23 +56,23 @@ const TesoreroRolePage: React.FC = () => {
                     <StyledAccordionBody>
                         <Button
                             style={hoveredButton === 1 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={() => handleNavigation(ROUTES.INVOICES_MANAGER_ROUTE)}
+                            onClick={handleInvoicesButton}
                             onMouseEnter={() => setHoveredButton(1)}
                             onMouseLeave={() => setHoveredButton(null)}
                         >
-                            Gestión de Facturas
+                            Ver lista de facturas
                         </Button>
                         <Button
                             style={hoveredButton === 2 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={() => handleNavigation(ROUTES.PAYMENT_SHEET_MANAGER_ROUTE)}
+                            onClick={handlePaymentSheetsButton}
                             onMouseEnter={() => setHoveredButton(2)}
                             onMouseLeave={() => setHoveredButton(null)}
                         >
-                            Gestión de hojas de pago
+                            Ver lista hojas de liquidación
                         </Button>
                         <Button
                             style={hoveredButton === 3 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={() => handleNavigation(ROUTES.COMPANIES_MANAGER_ROUTE)}
+                            onClick={handleCompaniesManagerButton}
                             onMouseEnter={() => setHoveredButton(3)}
                             onMouseLeave={() => setHoveredButton(null)}
                         >

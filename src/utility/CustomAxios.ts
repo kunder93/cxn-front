@@ -62,7 +62,6 @@ const useAxios = <T, P = unknown>(url: string, method: Method = 'GET', payload?:
                 setResponse({ data: null, loaded: true, error: axiosError })
             }
         }
-
         void fetchData()
     }, [url, method, payload, userJwt])
 
