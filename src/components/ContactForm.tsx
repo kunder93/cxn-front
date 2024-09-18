@@ -1,25 +1,36 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Formik, Field, Form, ErrorMessage, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
 import BootstrapForm from 'react-bootstrap/Form'
-import { Alert, Button, Collapse, Spinner } from 'react-bootstrap'
-import axios from 'axios'
-import { CHESS_QUESTION_URL } from '../resources/server_urls'
-import { FloatingNotificationContainer } from './Common/FloatingNotificationContainer'
-// Define validation schema using Yup
-const validationSchema = Yup.object({
-    email: Yup.string().required('Es necesario un email !').email('Es necesario un email !'),
-    reason: Yup.string().required('Es necesario un motivo o razón'),
-    messageContent: Yup.string().required('Es necesario por lo menos 20 caracteres.').min(20, 'Se necesitan 20 caracteres minimos.')
-})
+import { Button, Spinner } from 'react-bootstrap'
+import styled from 'styled-components'
 
-interface SubmitAxiosValues {
+import useNotification, { NotificationType } from './Common/hooks/useNotification'
+import FloatingNotificationA from './Common/FloatingNotificationA'
+import axios, { AxiosError } from 'axios'
+import { CHESS_QUESTION_URL } from '../resources/server_urls'
+
+export interface SubmitAxiosValues {
     email: string
     category: string
     topic: string
     message: string
 }
+
+const ErrorMessageStyled = styled(ErrorMessage)`
+    color: red;
+    font-weight: bold;
+`
+
+const FiledTittle = styled(BootstrapForm.Label)`
+    font-weight: 600;
+`
+
+const validationSchema = Yup.object({
+    email: Yup.string().required('Es necesario un email!').email('Es necesario un email válido!'),
+    reason: Yup.string().required('Es necesario un motivo o razón'),
+    messageContent: Yup.string().required('Es necesario por lo menos 20 caracteres.').min(20, 'Se necesitan 20 caracteres mínimos.')
+})
 
 interface FormData {
     messageContent: string
@@ -27,118 +38,68 @@ interface FormData {
     email: string
 }
 
-const FloatingNotification: React.FC<{ message: string; variant: string; onClose: () => void }> = ({ message, variant, onClose }) => {
-    const [visible, setVisible] = useState(true)
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setVisible(false)
-        }, 5000)
-
-        return () => {
-            clearTimeout(timer)
-        }
-    }, [])
-
-    const handleExited = () => {
-        onClose()
-    }
-
-    return (
-        <Collapse in={visible} onExited={handleExited}>
-            <FloatingNotificationContainer>
-                <Alert variant={variant} onClose={onClose} dismissible>
-                    {message}
-                </Alert>
-            </FloatingNotificationContainer>
-        </Collapse>
-    )
-}
-
-// Form component
 const ContactForm: React.FC = () => {
-    const [alertMessage, setAlertMessage] = useState('')
-    const [submitSuccessNotification, setSubmitSuccessNotification] = useState(false)
-    const [submitErrorNotification, setSubmitErrorNotification] = useState(false)
+    const { notification, showNotification, hideNotification } = useNotification()
+
     const initialValues = {
         reason: '',
         messageContent: '',
         email: ''
     }
-    function changeSuccessNotificationState(): void {
-        setSubmitSuccessNotification(false)
-    }
-    function changeErrorNotificationState(): void {
-        setSubmitErrorNotification(false)
-    }
-    const handleSubmit = async (values: FormData, actions: FormikHelpers<FormData>) => {
-        try {
-            await axios.post<SubmitAxiosValues>(CHESS_QUESTION_URL, {
-                email: values.email,
-                category: 'GENERAL',
-                topic: values.reason,
-                message: values.messageContent
-            })
-            setSubmitSuccessNotification(true)
-            actions.resetForm()
-            actions.setSubmitting(false)
-        } catch (error: any) {
-            setSubmitErrorNotification(true)
 
-            if (error.response?.data) {
-                // Request made and server responded
-                setAlertMessage(error.response.data.content)
-            } else if (error.request) {
-                // The request was made but no response was received
-                setAlertMessage('Error: no hay respuesta.')
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                setAlertMessage('Error: algo inesperado. Recarga o intentalo mas tarde.')
-            }
+    const handleSubmit = (values: FormData, actions: FormikHelpers<FormData>) => {
+        const axiosData: SubmitAxiosValues = {
+            email: values.email,
+            category: 'GENERAL',
+            topic: values.reason,
+            message: values.messageContent
         }
+        axios
+            .post(CHESS_QUESTION_URL, axiosData)
+            .then(function () {
+                showNotification('Se ha enviado correctamente', NotificationType.Success)
+            })
+            .catch(function (error: AxiosError) {
+                showNotification(error.message, NotificationType.Error)
+            })
+        actions.resetForm()
+        actions.setSubmitting(false)
     }
+
     return (
-        <div>
+        <>
             <h2>Formulario de contacto:</h2>
-            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
-                {({ isSubmitting, isValid }) => (
-                    <BootstrapForm as={Form}>
+            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit} validateOnMount={true}>
+                {(
+                    { isSubmitting, isValid, dirty } // Access dirty property from Formik
+                ) => (
+                    <Form>
                         <BootstrapForm.Group className="mb-3">
-                            <BootstrapForm.Label htmlFor="email">Correo electrónico:</BootstrapForm.Label>
-                            <BootstrapForm.Control as={Field} type="email" name="email" title="email" id="email" placeholder="Tu correo electrónico!" />
-                            <ErrorMessage name="email" component="div" className="alert alert-danger" />
-                            <BootstrapForm.Label htmlFor="reason">Tema: / Razón:</BootstrapForm.Label>
-                            <BootstrapForm.Control as={Field} type="text" name="reason" title="reason" id="reason" placeholder="Motivo del mensaje." />
-                            <ErrorMessage name="reason" component="div" className="alert alert-danger" />
-                            <BootstrapForm.Label htmlFor="messageContent">Detalles:</BootstrapForm.Label>
+                            <FiledTittle htmlFor="email">Correo electrónico:</FiledTittle>
+                            <BootstrapForm.Control as={Field} type="email" name="email" id="email" placeholder="Tu correo electrónico!" />
+                            <ErrorMessageStyled name="email" component="div" className="" />
+                            <FiledTittle htmlFor="reason">Tema: / Razón:</FiledTittle>
+                            <BootstrapForm.Control as={Field} type="text" name="reason" id="reason" placeholder="Motivo del mensaje." />
+                            <ErrorMessageStyled name="reason" component="div" />
+                            <FiledTittle htmlFor="messageContent">Detalles:</FiledTittle>
                             <BootstrapForm.Control
                                 as={Field}
                                 component={'textarea'}
                                 id="messageContent"
                                 name="messageContent"
                                 rows={4}
-                                title="messageContent"
                                 placeholder="Escribe aquí el mensaje."
                             />
-                            <ErrorMessage name="messageContent" component="div" className="alert alert-danger" />
+                            <ErrorMessageStyled name="messageContent" component="div" />
                         </BootstrapForm.Group>
-                        <Button variant="success" type="submit" disabled={isSubmitting || !isValid}>
+                        <Button variant="success" type="submit" disabled={isSubmitting || !isValid || !dirty}>
                             {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Enviar'}
                         </Button>
-                        {submitSuccessNotification && (
-                            <FloatingNotification
-                                message={'SOLICITUD ENVIADA CORRECTAMENTE'}
-                                variant={'success'}
-                                onClose={changeSuccessNotificationState}
-                            ></FloatingNotification>
-                        )}
-                        {submitErrorNotification && (
-                            <FloatingNotification message={alertMessage} variant={'danger'} onClose={changeErrorNotificationState}></FloatingNotification>
-                        )}
-                    </BootstrapForm>
+                        <FloatingNotificationA notification={notification} hideNotification={hideNotification} />
+                    </Form>
                 )}
             </Formik>
-        </div>
+        </>
     )
 }
 

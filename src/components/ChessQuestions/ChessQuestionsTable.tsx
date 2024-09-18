@@ -1,200 +1,216 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-import React, { useEffect, useMemo, useState } from 'react'
-import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'react-table'
-import { Button } from 'react-bootstrap'
+import React, { useEffect, useMemo, useState, useCallback } from 'react'
+import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect, CellProps } from 'react-table'
+import { Button, Table, Spinner } from 'react-bootstrap'
 import { Trash3, Eye, EyeSlash } from 'react-bootstrap-icons'
-import { Table } from 'react-bootstrap'
+import axios, { AxiosError } from 'axios'
+import { format } from 'date-fns'
 import { IChessQuestion, IChessQuestionsList } from '../../utility/CustomAxios'
-import axios from 'axios'
 import { CHESS_QUESTION_CHANGE_SEEN_STATE, CHESS_QUESTION_DELETE } from '../../resources/server_urls'
-import { format, parseISO } from 'date-fns'
+import useNotification, { NotificationType } from '../../components/Common/hooks/useNotification'
+import FloatingNotificationA from '../../components/Common/FloatingNotificationA'
+import styled from 'styled-components'
+
+const TableFilterContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    padding-bottom: 0.5em;
+`
+
+const AmountRegistersBox = styled.div`
+    padding-left: 4em;
+`
+
+const FilterInputLabel = styled.label`
+    padding-right: 1em;
+`
 
 interface ChessQuestionsTableProps {
     data: IChessQuestionsList
 }
 
-function handleDeleteButton(id: number, onDeleteSuccess: (id: number) => void) {
-    console.log('Deleting question with id:', id)
-    axios
-        .delete(`${CHESS_QUESTION_DELETE}/${id}`, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((response) => {
-            console.log('Delete response:', response)
-            onDeleteSuccess(id) // Llama a la función callback para actualizar el estado
-        })
-        .catch((error) => {
-            console.error('There was an error deleting the question:', error)
-        })
-}
+const ChessQuestionsTable: React.FC<ChessQuestionsTableProps> = ({ data: initialData }) => {
+    const [data, setData] = useState<IChessQuestion[]>([])
+    const [loadingRows, setLoadingRows] = useState<number[]>([])
+    const [deletingRows, setDeletingRows] = useState<number[]>([])
+    const { notification, showNotification, hideNotification } = useNotification()
 
-const ChessQuestionsTable: React.FC<ChessQuestionsTableProps> = (props) => {
-    const [data, setData] = useState(useMemo(() => props.data.chessQuestionList, [])) // Caching data
-
-    // Data state is being updated when the props.data changes.
     useEffect(() => {
-        setData(props.data.chessQuestionList)
-    }, [props.data])
+        setData(initialData.chessQuestionList)
+    }, [initialData])
 
-    const handleDeleteButtonWrapper = (id: number) => {
-        handleDeleteButton(id, (deletedId) => {
-            // Actualiza el estado para eliminar la pregunta de la tabla
-            setData((prevData) => prevData.filter((question) => question.id !== deletedId))
-        })
-    }
-
-    const ChangeSeenState = (rowIndex: number) => {
-        const clone = [...data]
-        const row = clone[rowIndex]
-        axios
-            .post<IChessQuestion>(
-                CHESS_QUESTION_CHANGE_SEEN_STATE,
-                { id: row.id },
-                {
+    const handleDeleteButton = useCallback(
+        (id: number, onDeleteSuccess: (id: number) => void) => {
+            axios
+                .delete(`${CHESS_QUESTION_DELETE}/${id}`, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
-                }
-            )
-            .then((response) => {
-                // Update the specific row data with the response
-                clone[rowIndex] = response.data
-                // Update the state with the new data
-                setData(clone)
+                })
+                .then(() => {
+                    onDeleteSuccess(id)
+                    showNotification('Pregunta eliminada correctamente', NotificationType.Success)
+                })
+                .catch((error) => {
+                    const axiosError = error as AxiosError
+                    console.error('There was an error deleting the question:', axiosError.message)
+                    showNotification('Hubo un error al eliminar la pregunta.', NotificationType.Error)
+                })
+        },
+        [showNotification]
+    )
+
+    const handleDeleteButtonWrapper = useCallback(
+        (id: number) => {
+            setDeletingRows((prevDeletingRows) => [...prevDeletingRows, id])
+            handleDeleteButton(id, (deletedId) => {
+                setData((prevData) => prevData.filter((question) => question.id !== deletedId))
+                setDeletingRows((prevDeletingRows) => prevDeletingRows.filter((rowId) => rowId !== id))
             })
-            .catch((error) => console.log(error))
-            .finally(() => console.log('final'))
-    }
+        },
+        [handleDeleteButton]
+    )
+
+    const changeSeenState = useCallback(
+        (rowIndex: number) => {
+            const clone = [...data]
+            const row = clone[rowIndex]
+            setLoadingRows((prevLoadingRows) => [...prevLoadingRows, row.id])
+
+            axios
+                .post<IChessQuestion>(
+                    CHESS_QUESTION_CHANGE_SEEN_STATE,
+                    { id: row.id },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                )
+                .then((response) => {
+                    clone[rowIndex] = response.data
+                    setData(clone)
+                })
+                .catch((error) => console.error(error))
+                .finally(() => {
+                    setLoadingRows((prevLoadingRows) => prevLoadingRows.filter((id) => id !== row.id))
+                })
+        },
+        [data]
+    )
 
     const columns: Column<IChessQuestion>[] = useMemo(
         () => [
-            {
-                Header: 'Correo',
-                accessor: 'email'
-            },
+            { Header: 'Correo', accessor: 'email' },
             {
                 Header: 'Fecha',
                 accessor: 'date',
-                Cell: ({ value }) => {
-                    const formattedDate = format(parseISO(value.toString()), 'dd-MM-yyyy - HH:mm')
+                Cell: ({ value }: CellProps<IChessQuestion>) => {
+                    const formattedDate = format(new Date(value as string), 'dd-MM-yyyy - HH:mm')
                     return <span>{formattedDate}</span>
                 }
             },
-            {
-                Header: 'Categoria',
-                accessor: 'category'
-            },
-            {
-                Header: 'Título',
-                accessor: 'topic'
-            },
-            {
-                Header: 'Mensaje',
-                accessor: 'message'
-            },
+            { Header: 'Categoria', accessor: 'category' },
+            { Header: 'Título', accessor: 'topic' },
+            { Header: 'Mensaje', accessor: 'message' },
             {
                 Header: 'Visto',
                 accessor: 'seen',
-                Cell: ({ row }) => (
+                Cell: ({ row }: CellProps<IChessQuestion>) => (
                     <div className="d-flex w-100">
-                        <Button className="w-100" variant="info" onClick={() => ChangeSeenState(row.index)}>
-                            {row.original.seen ? <Eye color="green" size={30} title="Visto" /> : <EyeSlash size={30} color="red" title="No visto" />}
+                        <Button className="w-100" variant="info" onClick={() => changeSeenState(row.index)} disabled={loadingRows.includes(row.original.id)}>
+                            {loadingRows.includes(row.original.id) ? (
+                                <Spinner animation="border" size="sm" />
+                            ) : row.original.seen ? (
+                                <Eye color="green" size={30} title="Visto" />
+                            ) : (
+                                <EyeSlash color="red" size={30} title="No visto" />
+                            )}
+                        </Button>
+                    </div>
+                )
+            },
+            {
+                id: 'deleteButton',
+                Header: 'Borrar',
+                accessor: 'id',
+                Cell: ({ row }: CellProps<IChessQuestion>) => (
+                    <div className="d-flex w-100">
+                        <Button
+                            className="w-100"
+                            variant="danger"
+                            onClick={() => handleDeleteButtonWrapper(row.original.id)}
+                            disabled={deletingRows.includes(row.original.id)}
+                        >
+                            {deletingRows.includes(row.original.id) ? <Spinner animation="border" size="sm" /> : <Trash3 size={30} title="Borrar" />}
                         </Button>
                     </div>
                 )
             }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [data]
+        [changeSeenState, loadingRows, deletingRows]
     )
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, preGlobalFilteredRows, setGlobalFilter, state } = useTable(
         { columns, data },
         useGlobalFilter,
         useSortBy,
-        useRowSelect,
-        (hooks) => {
-            hooks.visibleColumns.push((columns) => [
-                ...columns,
-                {
-                    id: 'selection',
-                    Header: () => <div>BORRAR</div>,
-                    Cell: (tableProps: any) => (
-                        <div>
-                            <Button variant="danger" onClick={() => handleDeleteButtonWrapper(tableProps.row.original.id)}>
-                                <Trash3 size={30} title="Borrar" />
-                            </Button>
-                        </div>
-                    )
-                }
-            ])
-        }
+        useRowSelect
     )
+
+    const globalFilterStatus = state.globalFilter as string | number | readonly string[] | undefined
 
     return (
         <>
+            <TableFilterContainer>
+                <FilterInputLabel htmlFor="filterInput">Busca empresas:</FilterInputLabel>
+                <input type="text" value={globalFilterStatus ?? ''} onChange={(event) => setGlobalFilter(event.target.value)} aria-label="Buscar empresas" />
+                <AmountRegistersBox>
+                    Total de registros: {preGlobalFilteredRows.length} (Mostrando: {rows.length})
+                </AmountRegistersBox>
+            </TableFilterContainer>
+
+            <FloatingNotificationA notification={notification} hideNotification={hideNotification} />
             <Table striped bordered hover responsive {...getTableProps()}>
                 <thead>
-                    {
-                        // Loop over the header rows
-                        headerGroups.map((headerGroup) => (
-                            // Apply the header row props
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {
-                                    // Loop over the headers in each row
-                                    headerGroup.headers.map((column) => (
-                                        // Apply the header cell props
-                                        <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                            {
-                                                // Render the header
-                                                column.render('Header')
-                                            }
+                    {headerGroups.map((headerGroup) => {
+                        const { key: headerGroupKey, ...restHeaderGroupProps } = headerGroup.getHeaderGroupProps()
+                        return (
+                            <tr key={headerGroupKey} {...restHeaderGroupProps}>
+                                {headerGroup.headers.map((column) => {
+                                    const { key: columnKey, ...restColumnProps } = column.getHeaderProps(column.getSortByToggleProps())
+                                    return (
+                                        <th key={columnKey} {...restColumnProps}>
+                                            {column.render('Header')}
                                             <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
                                         </th>
-                                    ))
-                                }
+                                    )
+                                })}
                             </tr>
-                        ))
-                    }
+                        )
+                    })}
                 </thead>
+
                 <tbody {...getTableBodyProps()}>
-                    {
-                        // Loop over the table rows
-                        rows.map((row) => {
-                            // Prepare the row for display
-                            prepareRow(row)
-                            return (
-                                // Apply the row props
-                                <tr {...row.getRowProps()}>
-                                    {
-                                        // Loop over the rows cells
-                                        row.cells.map((cell) => {
-                                            // Apply the cell props
-                                            return (
-                                                <td {...cell.getCellProps()}>
-                                                    {
-                                                        // Render the cell contents
-                                                        cell.render('Cell')
-                                                    }
-                                                </td>
-                                            )
-                                        })
-                                    }
-                                </tr>
-                            )
-                        })
-                    }
+                    {rows.map((row) => {
+                        prepareRow(row)
+                        const { key: rowKey, ...restRowProps } = row.getRowProps()
+                        return (
+                            <tr key={rowKey} {...restRowProps}>
+                                {row.cells.map((cell) => {
+                                    const { key: cellKey, ...cellProps } = cell.getCellProps()
+                                    return (
+                                        <td key={cellKey} {...cellProps}>
+                                            {cell.render('Cell')}
+                                        </td>
+                                    )
+                                })}
+                            </tr>
+                        )
+                    })}
                 </tbody>
             </Table>
-            <div>
-                <p> Total de registros: {preGlobalFilteredRows.length}</p>
-            </div>
-            <input type="text" value={state.globalFilter} onChange={(event) => setGlobalFilter(event.target.value)} />
         </>
     )
 }

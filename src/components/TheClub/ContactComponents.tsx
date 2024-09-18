@@ -22,7 +22,9 @@ const ContactFormWrapper = styled.div`
     border-bottom: 0.1rem solid grey;
     border-top: 0.1rem solid grey;
     padding: 1.5rem;
-    box-shadow: 0 0 0 2px #c7c7c7, 0 0 0 3px gray;
+    box-shadow:
+        0 0 0 2px #c7c7c7,
+        0 0 0 3px gray;
     border-radius: 1%;
 `
 
@@ -33,10 +35,11 @@ const ContactListContainer = styled(ListGroup)`
     padding-top: 1em;
     font-size: 110%;
     border: 3px solid grey;
-    background-color:  #fae986c3;
+    background-color: #ffffff;
     padding-right: 1em;
     @media screen and (max-width: 1200px) {
-        grid-template-columns: 1fr; /* Cambia a una columna cuando la resolución es igual o menor a 768px */
+        grid-template-columns: 1fr; /* Cambia a una columna cuando la resolución es igual o menor a 1200px */
+        font-size: 100%;
     }
 `
 

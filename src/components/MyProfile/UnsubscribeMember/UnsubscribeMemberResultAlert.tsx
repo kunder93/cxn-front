@@ -1,4 +1,3 @@
-import { FloatingNotificationContainer } from '../../Common/FloatingNotificationContainer'
 import React from 'react'
 import { Alert, Collapse, Spinner } from 'react-bootstrap'
 import { useAxiosUnsubscribeMember } from '../../../utility/CustomAxios'
@@ -6,6 +5,7 @@ import { removeJwt, removeUserProfile, setUserProfile } from '../../../store/sli
 import { useNavigate } from 'react-router'
 import { ROUTES } from '../../../resources/routes-constants'
 import { useAppDispatch } from '../../../store/hooks'
+import { FloatingNotificationContainer } from '../../../components/Common/FloatingNotificationA'
 
 export interface UnsubscribeMemberAxiosValues {
     email: string
@@ -28,7 +28,7 @@ const ChangeUserEmailResultAlert: React.FC<IUnsubscribeMemberSubmitResultAlert> 
         if (!loaded) {
             return <Spinner animation="border" variant="primary" />
         } else if (error) {
-            return 'Hubo un error al procesar la solicitud: ' + error.toString()
+            return 'Hubo un error al procesar la solicitud: ' + error.message
         } else {
             data && setUserProfile(data)
 

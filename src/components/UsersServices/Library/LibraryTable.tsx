@@ -6,60 +6,22 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'react-table'
 import axios from 'axios'
 import { Trash3 } from 'react-bootstrap-icons'
-import { Alert, Button, Collapse, Table } from 'react-bootstrap'
+import {  Button,  Table } from 'react-bootstrap'
 import { IBook } from '../../Types/Types'
 import { LIBRARY_URL } from '../../../resources/server_urls'
-import { FloatingNotificationContainer } from '../../Common/FloatingNotificationContainer'
-
 interface LibraryTableProps {
     data: IBook[]
 }
 
-const FloatingNotification: React.FC<{ message: string; variant: string; onClose: () => void }> = ({ message, variant, onClose }) => {
-    const [visible, setVisible] = useState(true)
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setVisible(false)
-        }, 5000)
-
-        return () => {
-            clearTimeout(timer)
-        }
-    }, [])
-
-    const handleExited = () => {
-        onClose()
-    }
-
-    return (
-        <Collapse in={visible} onExited={handleExited}>
-            <FloatingNotificationContainer>
-                <Alert variant={variant} onClose={onClose} dismissible>
-                    {message}
-                </Alert>
-            </FloatingNotificationContainer>
-        </Collapse>
-    )
-}
-
-function LibraryTable(props: LibraryTableProps) {
+const LibraryTable:React.FC<LibraryTableProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const [data, setData] = useState(useMemo(() => props.data, [])) //Caching data
-    const [deleteErrorMessage, setDeleteErrorMessage] = useState('')
-    const [deleteSuccessNotification, setDeleteSuccessNotification] = useState(false)
-    const [deleteErrorNotification, setDeleteErrorNotification] = useState(false)
     // data state is being updated when the props.data changes.
     useEffect(() => {
         setData(props.data)
     }, [props.data])
 
-    function changeSuccessNotificationState(): void {
-        setDeleteSuccessNotification(false)
-    }
-    function changeErrorNotificationState(): void {
-        setDeleteErrorNotification(false)
-    }
     const columns: Column<IBook>[] = useMemo(
         () => [
             {
@@ -95,19 +57,19 @@ function LibraryTable(props: LibraryTableProps) {
         const row = modifiedClone[0]
         try {
             await axios.delete(LIBRARY_URL + '/' + row.isbn)
-            setDeleteSuccessNotification(true)
+            
             setData(clone)
         } catch (error: any) {
-            setDeleteErrorNotification(true)
+      
             if (error.response?.data) {
                 // Request made and server responded
-                setDeleteErrorMessage(error.response.data.content)
+               
             } else if (error.request) {
                 // The request was made but no response was received
-                setDeleteErrorMessage('Error: no hay respuesta.')
+               
             } else {
                 // Something happened in setting up the request that triggered an Error
-                setDeleteErrorMessage('Error: algo inesperado. Recarga o intentalo mas tarde.')
+               
             }
         }
     }
@@ -195,16 +157,7 @@ function LibraryTable(props: LibraryTableProps) {
                 <p> Total de registros: {preGlobalFilteredRows.length}</p>
             </div>
             <input type="text" value={state.globalFilter} onChange={(event) => setGlobalFilter(event.target.value)} />
-            {deleteSuccessNotification && (
-                <FloatingNotification
-                    message={'COMPAÑIA BORRADA CON EXITO'}
-                    variant={'success'}
-                    onClose={changeSuccessNotificationState}
-                ></FloatingNotification>
-            )}
-            {deleteErrorNotification && (
-                <FloatingNotification message={deleteErrorMessage} variant={'danger'} onClose={changeErrorNotificationState}></FloatingNotification>
-            )}
+            
         </>
     )
 }

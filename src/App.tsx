@@ -6,17 +6,19 @@ import './App.css'
 import { Provider } from 'react-redux'
 import store from './store/store'
 import { BrowserRouter } from 'react-router-dom'
-
+import { NotificationProvider } from './components/Common/NotificationContext'
 
 const App: React.FC = () => {
     return (
         <Provider store={store}>
             <BrowserRouter>
-                <Header />
-                <main>
-                    <RootComponent />
-                </main>
-                <Footer />
+                <NotificationProvider>
+                    <Header />
+                    <main>
+                        <RootComponent />
+                    </main>
+                    <Footer />
+                </NotificationProvider>
             </BrowserRouter>
         </Provider>
     )

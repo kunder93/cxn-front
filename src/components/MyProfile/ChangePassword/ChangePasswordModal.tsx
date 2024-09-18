@@ -12,7 +12,6 @@ interface ChangePasswordModalProps extends ModalProps {
     secondSurname: string
 }
 
-
 const ModalBody = styled(Modal.Body)`
     padding-top: 0px !important;
 `
@@ -36,7 +35,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = (props) => {
                 </Modal.Title>
             </Modal.Header>
             <ModalBody>
-                <PasswordChangeForm formikRef={formRef} userEmail={props.userEmail} ></PasswordChangeForm>
+                <PasswordChangeForm formikRef={formRef} userEmail={props.userEmail}></PasswordChangeForm>
             </ModalBody>
             <ModalFooter>
                 <Button variant="success" onClick={handleSubmit}>

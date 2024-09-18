@@ -1,66 +1,18 @@
-import * as React from 'react'
-import { Form, Formik, FormikProps } from 'formik'
-import { useState, useCallback } from 'react'
-import BootstrapForm from 'react-bootstrap/Form'
+// src/components/SignUpForm.tsx
+import React, { useState, useCallback } from 'react'
+import { Formik, Form, FormikProps } from 'formik'
 import { SignUpFormValidationSchema } from '../../pages/validation/FormValidationSchemas'
-import SignUpFormFirstStep from './SignUpFormFirstStep'
-import SignUpFormFourthStep from './SignUpFormFourthStep'
-import SignUpFormSecondStep from './SignUpFormSecondStep'
-import SignUpFormThirdStep from './SignUpFormThirdStep'
-import FormStepBar from './FormStepBar'
-import FormAlertMessage from './FormAlertMessage'
+import SignUpFormFirstStep from './FormSteps/SignUpFormFirstStep'
+import SignUpFormFourthStep from './FormSteps/SignUpFormFourthStep'
+import SignUpFormSecondStep from './FormSteps/SignUpFormSecondStep'
+import SignUpFormThirdStep from './FormSteps/SignUpFormThirdStep'
+import FormStepBar from './Common/FormStepBar'
 import { FormSteps, SignUpFormValues } from './SignUpFormTypes'
 import useFormSubmit from './CustomHooks/useFormSubmit'
 import useFormSteps from './CustomHooks/useFormSteps'
-import styled from 'styled-components'
+import { FormStyledContainer } from '../../components/SignUpSingInCommonStyles'
+import FormAlertMessage from './Common/FormAlertMessage'
 
-const FormContainer = styled.div`
-    padding: 2em;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    max-width: 800px;
-    margin: 0 auto;
-
-    @media (max-width: 768px) {
-        padding: 1em;
-    }
-`
-
-const FormTitle = styled.h2`
-    text-align: center;
-    margin-bottom: 1em;
-    @media (max-width: 768px) {
-            font-weight: 600;
-        }
-`
-
-const StyledForm = styled(BootstrapForm)`
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-
-    input, select, textarea {
-        width: 100%;
-        padding: 0.75em;
-        margin-bottom: 0.5em;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 1em;
-
-v
-    }
-
-    button {
-        padding: 1em 1.5em;
-        font-size: 1em;
-
-        @media (max-width: 768px) {
-            padding: 1em 2em;
-            font-size: 1.1em;
-        }
-    }
-`
- 
 const initialValues: SignUpFormValues = {
     email: '',
     name: '',
@@ -69,7 +21,7 @@ const initialValues: SignUpFormValues = {
     confirmPassword: '',
     firstSurname: '',
     secondSurname: '',
-    gender: 'male',
+    gender: '',
     birthDate: new Date(),
     postalCode: '',
     apartmentNumber: '',
@@ -106,8 +58,8 @@ const SignUpForm: React.FC = () => {
     }
 
     return (
-        <FormContainer>
-            <FormTitle>¡ Solicita ser socio !</FormTitle>
+        <FormStyledContainer>
+            <h1>¡ Solicita ser socio !</h1>
             <Formik
                 initialValues={initialValues}
                 onSubmit={handleSubmit}
@@ -117,14 +69,14 @@ const SignUpForm: React.FC = () => {
                 validateOnBlur
             >
                 {(formikProps) => (
-                    <StyledForm as={Form}>
+                    <Form>
                         <FormStepBar step={step} />
                         {renderStepComponent(formikProps)}
                         {alertMessage && <FormAlertMessage message={alertMessage} onClose={closeAlert} />}
-                    </StyledForm>
+                    </Form>
                 )}
             </Formik>
-        </FormContainer>
+        </FormStyledContainer>
     )
 }
 

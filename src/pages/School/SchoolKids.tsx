@@ -12,10 +12,10 @@ import {
     ShortSummaryPicture,
     SummaryContentSection
 } from '../../components/SchoolClass/CommonStyles'
-import { SetPageTitle } from '../../utility/functions'
 import { PhotoData } from 'components/SchoolClass/ClassPhotoGalleryCarousel'
 import { Button } from 'react-bootstrap'
 import { FiletypePdf } from 'react-bootstrap-icons'
+import usePageTitle from '../../components/Common/hooks/usePageTitle'
 
 const pageTitle = 'Escuela infantil Círculo Xadrez Narón'
 
@@ -39,7 +39,7 @@ const carouselBenefits = [
                 text: 'Un gimnasio para la mente. Cuando juegas entrenas tu cerebro para pensar en grande y a largo plazo. Planificas tus movimientos y estrategias para ganar. En cada jugada, hay un montón de opciones y tienes que aprender a elegir la mejor decisión.'
             }
         ]
-    },
+    }, 
     {
         IconUrl: IconOptions.HABILIDADES_ACADEMICAS,
         title: 'Como ir a la academia',
@@ -126,7 +126,7 @@ const faqKidsSchoolPairsQuestionAnswer = [
     },
     {
         question:'¿Cuánto cuesta?',
-        answer:'El precio para la temporada 2023/2024 es de 13,05  € al mes.'
+        answer:'El precio para la curso 2023/2024 fue de 13,05  € al mes.'
     },
     {
         question: '¿Necesito comprar algo para las clases o llevar algún material?',
@@ -160,14 +160,14 @@ const accordionData: BenefitsAccordionProps = {
 
 function openPdfWindow() {
     // URL del PDF
-    const pdfUrl = '/ChessClass/KidsClass/Cartel_Curso_2023_2024.pdf';
+    const pdfUrl = '/ChessClass/KidsClass/CartelClases2425.pdf';
   
     // Abre una nueva ventana y carga el PDF
     window.open(pdfUrl, '_blank');
   }
 
 const SchoolKids: React.FC = () => {
-    SetPageTitle('CXN Escuela infantil')
+    usePageTitle('CXN Escuela infantil')
     return (
         <MainContainerStyled>
             <HeaderPicture>
@@ -179,7 +179,7 @@ const SchoolKids: React.FC = () => {
                     <PageTitle>{pageTitle}</PageTitle>
                     <PageSubTittle>{pageSubTitle}</PageSubTittle>
                         <div className="d-flex align-items-center justify-content-center">
-                            <Button style={{}} variant="success" onClick={openPdfWindow} > <FiletypePdf size={40}></FiletypePdf>¡ Mira el cartel de las clases !</Button>
+                            <Button style={{}} variant="success" onClick={openPdfWindow} > <FiletypePdf size={40}></FiletypePdf>¡ Cartel de las clases 24-25 !</Button>
                         </div>
                 </MainContentHeader>
                 <SummaryContentSection>

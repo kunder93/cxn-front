@@ -1,27 +1,51 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Alert } from 'react-bootstrap'
+import styled from 'styled-components'
 import { IChessQuestionsList, useAxiosGetChessQuestions } from '../utility/CustomAxios'
 import ChessQuestionsTable from '../components/ChessQuestions/ChessQuestionsTable'
+import LoadingTableSpinnerContainer from '../components/Common/LoadingTableSpinnerContainer'
 
-const ChessQuestionsManager:React.FC = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+const Title = styled.h1`
+    text-align: left;
+    margin-top: 20px;
+    color: #333;
+`
+
+const ErrorMessage = styled(Alert)`
+    margin-top: 20px;
+`
+
+const NoQuestionsMessage = styled.p`
+    text-align: center;
+    margin-top: 20px;
+`
+
+const ChessQuestionsManager: React.FC = () => {
     const { data, error, loaded } = useAxiosGetChessQuestions()
-
     const [chessQuestionsList, setChessQuestionsList] = useState<IChessQuestionsList>({ chessQuestionList: [] })
-    console.log(error)
-    // Update the local state with the initial list of companies
-    React.useEffect(() => {
-        if (loaded) {
-            data && setChessQuestionsList({ chessQuestionList: data.chessQuestionList })
+
+    useEffect(() => {
+        if (loaded && data) {
+            setChessQuestionsList(data)
         }
     }, [loaded, data])
 
+    if (error) {
+        return <ErrorMessage variant="danger">Error: {error.message ?? 'Ocurrió un error al cargar las preguntas.'}</ErrorMessage>
+    }
 
+    if (!loaded) {
+        return <LoadingTableSpinnerContainer />
+    }
 
     return (
         <>
-            <h1>Gestion de preguntas realizadas por visitantes de la web:</h1>
-            {/* Check if data is loaded */}
-            {loaded ? <ChessQuestionsTable data={chessQuestionsList} /> : <p>Loading...</p>}
+            <Title>Gestión de preguntas realizadas por visitantes de la web:</Title>
+            {chessQuestionsList?.chessQuestionList.length ? (
+                <ChessQuestionsTable data={chessQuestionsList} />
+            ) : (
+                <NoQuestionsMessage>No hay preguntas disponibles.</NoQuestionsMessage>
+            )}
         </>
     )
 }

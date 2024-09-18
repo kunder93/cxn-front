@@ -18,17 +18,18 @@ const cxnHistorySpecialDates = [
             'José Manuel Paz Gómez, Ricardo Tuimil Martinez, Luis Angel Pantín Pérez, José Ramón Pantín Soto, Manuel Carpente Rodeiro y Francisco Couce Rodriguez forman la junta directiva.'
     },
     {
-        date: 'July 2005',
-        title: 'Milestone Reached',
-        description: 'We reached a significant milestone in July 2005.'
+        date: '1988',
+        title: 'Máxima categoría galega',
+        description: 'En 1988, dous anos tras fundarse, ascéndese na liga galega a máxima categoria "Preferente", hoxe coñecida como division de Honra.'
     },
     {
-        date: 'July 2005',
-        title: 'Milestone Reached',
-        description: 'We reached a significant milestone in July 2005.'
+        date: '1993',
+        title: 'Primer torneo internacional',
+        description:
+            'Circulo Xadrez Narón organiza su primer torneo internacional con asistencia de jugadores provenientes de diferentes países y mostrando un altísimo nivel. Resulta ganador de este torneo '
     },
     {
-        date: 'July 2005',
+        date: '15-17 de Maio do 1993',
         title: 'Milestone Reached',
         description: 'We reached a significant milestone in July 2005.'
     }

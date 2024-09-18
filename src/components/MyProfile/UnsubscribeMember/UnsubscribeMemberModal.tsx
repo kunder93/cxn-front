@@ -6,12 +6,11 @@ import { FormikProps } from 'formik'
 import UnsubscribeMemberForm, { UnsubscribeMemberFormValues } from './UnsubscribeMemberForm'
 
 interface UnsubscribeMemberModalProps extends ModalProps {
-    userEmail: string
+    useremail: string
     name: string
-    firstSurname: string
-    secondSurname: string
+    firstsurname: string
+    secondsurname: string
 }
-
 
 const ModalBody = styled(Modal.Body)`
     padding-top: 0px !important;
@@ -33,11 +32,11 @@ const UnsubscribeMemberModal: React.FC<UnsubscribeMemberModalProps> = (props) =>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
                     <h2>Darse de baja como socio: </h2>
-                    <h2>{props.name + ' ' + props.firstSurname + ' ' + props.secondSurname}</h2>
+                    <h2>{props.name + ' ' + props.firstsurname + ' ' + props.secondsurname}</h2>
                 </Modal.Title>
             </Modal.Header>
             <ModalBody>
-                <UnsubscribeMemberForm formikRef={formRef} userEmail={props.userEmail} ></UnsubscribeMemberForm>
+                <UnsubscribeMemberForm formikRef={formRef} userEmail={props.useremail}></UnsubscribeMemberForm>
             </ModalBody>
             <ModalFooter>
                 <Button variant="success" onClick={handleSubmit}>

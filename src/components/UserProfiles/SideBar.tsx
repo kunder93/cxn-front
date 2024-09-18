@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { BsPerson, BsGear, BsPeople, BsCalendar, BsClipboardData } from 'react-icons/bs'
+import { BsPerson, BsPeople, BsCalendar, BsClipboardData } from 'react-icons/bs'
 import { FaChessKnight } from 'react-icons/fa'
 import { UserRole } from '../../store/types/userTypes'
 
@@ -57,7 +57,6 @@ const SideBarContainer = styled.aside`
 `
 
 export enum ProfileSection {
-    AdminPage = 'AdminPage',
     UserPage = 'UserPage',
     ChessData = 'ChessData',
     MemberCandidate = 'MemberCandidate',
@@ -65,10 +64,11 @@ export enum ProfileSection {
     Tesorero = 'Tesorero',
     Secretario = 'Secretario',
     MembersManager = 'MembersManager',
-    InvoicesManger = 'InvoicesManager',
+    InvoicesManager = 'InvoicesManager',
     PaymentSheetsManager = 'PaymentSheetsManager',
     CompaniesManager = 'CompaniesManager',
-    MessagesManager = 'MessagesManager'
+    MessagesManager = 'MessagesManager',
+    TournamentParticipantManager = 'TournamentParticipantManager'
 }
 
 interface SidebarProps {
@@ -78,7 +78,7 @@ interface SidebarProps {
     currentSection: ProfileSection
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ roles, setProfilePage, setSidebarSection, currentSection }) => {
+const Sidebar: React.FC<SidebarProps> = ({ roles, setProfilePage, currentSection, setSidebarSection }) => {
     const handleClick = (section: ProfileSection) => {
         setProfilePage(section)
         setSidebarSection(section)
@@ -93,13 +93,12 @@ const Sidebar: React.FC<SidebarProps> = ({ roles, setProfilePage, setSidebarSect
     )
 
     const sections = [
-        { section: ProfileSection.UserPage, icon: <BsPerson />, label: 'Mi Perfil', roles: [UserRole.SOCIO] },
-        { section: ProfileSection.AdminPage, icon: <BsGear />, label: 'Administración', roles: [UserRole.ADMIN] },
+        { section: ProfileSection.UserPage, icon: <BsPerson />, label: 'Mi Perfil', roles: [UserRole.SOCIO, UserRole.SOCIO_CANDIDATO] },
         { section: ProfileSection.President, icon: <BsPeople />, label: 'Presidente', roles: [UserRole.PRESIDENTE] },
         { section: ProfileSection.Tesorero, icon: <BsClipboardData />, label: 'Tesorero', roles: [UserRole.TESORERO] },
         { section: ProfileSection.Secretario, icon: <BsCalendar />, label: 'Secretario', roles: [UserRole.SECRETARIO] },
-        { section: ProfileSection.ChessData, icon: <FaChessKnight />, label: 'Datos de Ajedrez', roles: [UserRole.SOCIO, UserRole.ADMIN] },
-        { section: ProfileSection.MemberCandidate, icon: <BsPeople />, label: 'Candidatos a Socios', roles: [UserRole.SOCIO_CANDIDATO, UserRole.ADMIN] }
+        { section: ProfileSection.ChessData, icon: <FaChessKnight />, label: 'Datos de Ajedrez', roles: [UserRole.SOCIO] },
+        { section: ProfileSection.MemberCandidate, icon: <BsPeople />, label: 'Bienvenida candidatos', roles: [UserRole.SOCIO_CANDIDATO, UserRole.ADMIN] }
     ]
 
     return (

@@ -1,18 +1,46 @@
 // SecretarioRolePage.js
-import React, { useState } from 'react';
-import { Button } from 'react-bootstrap';
-import { People, CashCoin } from 'react-bootstrap-icons';
-import { useNavigate } from 'react-router';
-import { ROUTES } from '../../resources/routes-constants';
-import { PageContainer, Title, StyledAccordion, StyledAccordionItem, StyledAccordionHeader, StyledAccordionBody, buttonBaseStyle, buttonHoverStyle } from './CommonStyles';
+import React, { useState } from 'react'
+import { Button } from 'react-bootstrap'
+import { People, CashCoin, Gear } from 'react-bootstrap-icons'
+import {
+    PageContainer,
+    Title,
+    StyledAccordion,
+    StyledAccordionItem,
+    StyledAccordionHeader,
+    StyledAccordionBody,
+    buttonBaseStyle,
+    buttonHoverStyle
+} from './CommonStyles'
+import { ProfileSection } from './SideBar'
 
-const SecretarioRolePage: React.FC = () => {
-    const navigate = useNavigate();
-    const [hoveredButton, setHoveredButton] = useState<number | null>(null);
+interface SecretarioRolePageProps {
+    changePage: (section: ProfileSection) => void
+}
 
-    const handleNavigation = (route: string) => {
-        navigate(route);
-    };
+const SecretarioRolePage: React.FC<SecretarioRolePageProps> = ({ changePage }) => {
+
+    const [hoveredButton, setHoveredButton] = useState<number | null>(null)
+    const handleMembersManagerButton = () => {
+        changePage(ProfileSection.MembersManager)
+    }
+
+    const handleInvoicesButton = () => {
+        changePage(ProfileSection.InvoicesManager)
+    }
+
+    const handlePaymentSheetsButton = () => {
+        changePage(ProfileSection.PaymentSheetsManager)
+    }
+    const handleCompaniesManagerButton = () => {
+        changePage(ProfileSection.CompaniesManager)
+    }
+    const handleMessagesButton = () => {
+        changePage(ProfileSection.MessagesManager)
+    }
+    const handleTournamentParticipantsButton = () => {
+        changePage(ProfileSection.TournamentParticipantManager)
+    }
 
     return (
         <PageContainer>
@@ -25,7 +53,7 @@ const SecretarioRolePage: React.FC = () => {
                     <StyledAccordionBody>
                         <Button
                             style={hoveredButton === 0 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={() => handleNavigation(ROUTES.MEMBERS_MANAGER)}
+                            onClick={handleMembersManagerButton}
                             onMouseEnter={() => setHoveredButton(0)}
                             onMouseLeave={() => setHoveredButton(null)}
                         >
@@ -40,7 +68,7 @@ const SecretarioRolePage: React.FC = () => {
                     <StyledAccordionBody>
                         <Button
                             style={hoveredButton === 1 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={() => handleNavigation(ROUTES.INVOICES_MANAGER_ROUTE)}
+                            onClick={handleInvoicesButton}
                             onMouseEnter={() => setHoveredButton(1)}
                             onMouseLeave={() => setHoveredButton(null)}
                         >
@@ -48,7 +76,7 @@ const SecretarioRolePage: React.FC = () => {
                         </Button>
                         <Button
                             style={hoveredButton === 2 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={() => handleNavigation(ROUTES.PAYMENT_SHEET_MANAGER_ROUTE)}
+                            onClick={handlePaymentSheetsButton}
                             onMouseEnter={() => setHoveredButton(2)}
                             onMouseLeave={() => setHoveredButton(null)}
                         >
@@ -56,7 +84,7 @@ const SecretarioRolePage: React.FC = () => {
                         </Button>
                         <Button
                             style={hoveredButton === 3 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={() => handleNavigation(ROUTES.COMPANIES_MANAGER_ROUTE)}
+                            onClick={handleCompaniesManagerButton}
                             onMouseEnter={() => setHoveredButton(3)}
                             onMouseLeave={() => setHoveredButton(null)}
                         >
@@ -64,9 +92,32 @@ const SecretarioRolePage: React.FC = () => {
                         </Button>
                     </StyledAccordionBody>
                 </StyledAccordionItem>
+                <StyledAccordionItem eventKey="2">
+                    <StyledAccordionHeader>
+                        <Gear size="3rem" /> Gestión de administración
+                    </StyledAccordionHeader>
+                    <StyledAccordionBody>
+                        <Button
+                            style={hoveredButton === 5 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
+                            onClick={handleMessagesButton}
+                            onMouseEnter={() => setHoveredButton(5)}
+                            onMouseLeave={() => setHoveredButton(null)}
+                        >
+                            Mensajes recibidos
+                        </Button>
+                        <Button
+                            style={hoveredButton === 6 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
+                            onClick={handleTournamentParticipantsButton}
+                            onMouseEnter={() => setHoveredButton(6)}
+                            onMouseLeave={() => setHoveredButton(null)}
+                        >
+                            Inscritos torneo
+                        </Button>
+                    </StyledAccordionBody>
+                </StyledAccordionItem>
             </StyledAccordion>
         </PageContainer>
-    );
-};
+    )
+}
 
-export default SecretarioRolePage;
+export default SecretarioRolePage

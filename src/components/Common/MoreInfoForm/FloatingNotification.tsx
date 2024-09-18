@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Collapse } from 'react-bootstrap';
-import { FloatingNotificationContainer } from '../FloatingNotificationContainer';
+import { FloatingNotificationContainer } from '../FloatingNotificationA';
+
 
 
 interface FloatingNotificationProps {

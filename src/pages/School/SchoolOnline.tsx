@@ -12,8 +12,8 @@ import {
     ShortSummaryPicture,
     SummaryContentSection
 } from '../../components/SchoolClass/CommonStyles'
-import { SetPageTitle } from '../../utility/functions'
-import { PhotoData } from 'components/SchoolClass/ClassPhotoGalleryCarousel'
+import { PhotoData } from '../../components/SchoolClass/ClassPhotoGalleryCarousel'
+import usePageTitle from '../../components/Common/hooks/usePageTitle'
 
 const pageTitle = 'Escola online Círculo Xadrez Narón'
 
@@ -124,7 +124,7 @@ const accordionData: BenefitsAccordionProps = {
 }
 
 const SchoolOnline: React.FC = () => {
-    SetPageTitle('CXN Escuela online')
+    usePageTitle('CXN Escuela online')
     return (
         <MainContainerStyled>
             <HeaderPicture>

@@ -16,6 +16,7 @@ export interface UnsubscribeMemberFormProps {
 
 const StyledErrorMessage = styled(ErrorMessage)`
     color: red;
+    font-weight: bold;
 `
 
 const StyledFormContainer = styled(Container)`
@@ -46,15 +47,16 @@ const PasswordChangeForm: React.FC<UnsubscribeMemberFormProps> = ({ formikRef, u
                 onSubmit={handleSubmit}
             >
                 {({ values }) => (
-                    <BootstrapForm>
+                    <BootstrapForm as={Form}>
                         <Form>
+                            <Field type="hidden" name="email" value={userEmail} readOnly autoComplete="username" />
                             <Row>
                                 <Col>
                                     <FormGroup>
                                         <FormLabel>
                                             <strong>Contraseña actual:</strong>
                                         </FormLabel>
-                                        <Field as={FormControl} type="password" name="currentPassword" />
+                                        <Field as={FormControl} type="password" name="currentPassword" autoComplete="current-password" />
                                         <StyledErrorMessage name="currentPassword" component="div" />
                                     </FormGroup>
                                 </Col>
@@ -65,7 +67,7 @@ const PasswordChangeForm: React.FC<UnsubscribeMemberFormProps> = ({ formikRef, u
                                         <FormLabel>
                                             <strong>Repite la contraseña actual:</strong>
                                         </FormLabel>
-                                        <Field as={FormControl} type="password" name="confirmCurrentPassword" />
+                                        <Field as={FormControl} type="password" name="confirmCurrentPassword" autoComplete="current-password" />
                                         <StyledErrorMessage name="confirmCurrentPassword" component="div" />
                                     </FormGroup>
                                 </Col>

@@ -1,100 +1,28 @@
-import React from 'react'
-import { Formik, Form, Field, ErrorMessage, FormikProps } from 'formik'
-import styled from 'styled-components'
-import { Container, Row, Col, Form as BootstrapForm, FormGroup, FormLabel, FormControl } from 'react-bootstrap'
-import ChangeUserEmailResultAlert from './ChangeUserEmailResultAlert'
+import { withFormik } from 'formik'
+import * as Yup from 'yup'
+import InnerForm, { EmailChangeFormProps, ChangeEmailFormValues } from './InnerForm'
 
-export interface EmailChangeFormProps {
-    initialEmail: string
-    formikRef: React.RefObject<FormikProps<ChangeEmailFormValues>>
-}
+const validationSchema = Yup.object().shape({
+    newEmail: Yup.string().required('Debes ingresar un nuevo email').email('Debe ser un email válido').min(4, 'El email debe tener al menos 4 caracteres'),
+    confirmNewEmail: Yup.string()
+        .required('Debes confirmar el nuevo email')
+        .oneOf([Yup.ref('newEmail')], 'Los emails no coinciden')
+})
 
-export interface ChangeEmailFormValues {
-    currentEmail: string
-    newEmail: string
-    confirmNewEmail: string
-}
+const ChangeEmailForm = withFormik<EmailChangeFormProps, ChangeEmailFormValues>({
+    mapPropsToValues: ({ initialEmail }) => ({
+        currentEmail: initialEmail,
+        newEmail: '',
+        confirmNewEmail: ''
+    }),
+    validationSchema: validationSchema,
+    handleSubmit: (values, { setSubmitting, resetForm }) => {
+        // Aquí podrías hacer el llamado a la API si fuera necesario
+        console.log('Form submitted with values:', values)
+        setSubmitting(false)
+        resetForm()
+    },
+    validateOnMount: true
+})(InnerForm)
 
-const StyledErrorMessage = styled(ErrorMessage)`
-    color: red;
-`
-
-const StyledFormContainer = styled(Container)`
-    padding-top: 1em;
-`
-
-const EmailChangeForm: React.FC<EmailChangeFormProps> = ({ initialEmail, formikRef }) => {
-    const [visibleAlert, setVisibleAlert] = React.useState(false)
-    const handleSubmit = () => {
-        setVisibleAlert(true)
-    }
-
-    return (
-        <StyledFormContainer>
-            <Formik
-                innerRef={formikRef}
-                initialValues={{ confirmNewEmail: '', newEmail: '', currentEmail: initialEmail }}
-                validate={(values) => {
-                    const errors: Partial<ChangeEmailFormValues> = {}
-
-                    if (!values.newEmail) {
-                        errors.newEmail = 'Debes ingresar un nuevo email'
-                    } else if (values.newEmail !== values.confirmNewEmail) {
-                        errors.confirmNewEmail = 'Los emails no coinciden'
-                    }
-
-                    return errors
-                }}
-                onSubmit={handleSubmit}
-            >
-                {({ values }) => (
-                    <BootstrapForm>
-                        <Form>
-                            <Row>
-                                <Col>
-                                    <FormGroup>
-                                        <FormLabel>
-                                            <strong>Email Actual:</strong>
-                                        </FormLabel>
-                                        <FormControl type="text" name="currentEmail" value={initialEmail} disabled />
-                                    </FormGroup>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <FormGroup>
-                                        <FormLabel>
-                                            <strong>Nuevo Email:</strong>
-                                        </FormLabel>
-                                        <Field as={FormControl} type="email" name="newEmail" />
-                                        <StyledErrorMessage name="newEmail" component="div" />
-                                    </FormGroup>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <FormGroup>
-                                        <FormLabel>
-                                            <strong>Confirmar Nuevo Email:</strong>
-                                        </FormLabel>
-                                        <Field as={FormControl} type="email" name="confirmNewEmail" />
-                                        <StyledErrorMessage name="confirmNewEmail" component="div" />
-                                    </FormGroup>
-                                </Col>
-                            </Row>
-                            {visibleAlert && (
-                                <ChangeUserEmailResultAlert
-                                    visibleParam={visibleAlert}
-                                    closeFunction={setVisibleAlert}
-                                    formData={{ email: values.currentEmail, newEmail: values.newEmail }}
-                                />
-                            )}
-                        </Form>
-                    </BootstrapForm>
-                )}
-            </Formik>
-        </StyledFormContainer>
-    )
-}
-
-export default EmailChangeForm
+export default ChangeEmailForm

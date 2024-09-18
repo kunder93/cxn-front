@@ -111,7 +111,7 @@ const CollapsibleNavigationBar: React.FC = () => {
                         ]}
                         onNavItemClick={handleNavItemClick}
                     />
-                     <Nav.Link as={Link} title="Actividades" to={ROUTES.ACTIVITIES} onClick={handleNavItemClick}>
+                    <Nav.Link as={Link} title="Actividades" to={ROUTES.ACTIVITIES} onClick={handleNavItemClick}>
                         Actividades
                     </Nav.Link>
                     <CustomDropdownMenu
@@ -127,13 +127,26 @@ const CollapsibleNavigationBar: React.FC = () => {
                         ]}
                         onNavItemClick={handleNavItemClick}
                     />
-                   
-                    <Nav.Link title=" Blog noticias CXN" href={CXN_BLOG_URL} target="_blank" rel="noopener noreferrer" onClick={handleNavItemClick}>
+
+                    <CustomDropdownMenu
+                        title="IV Torneo promoción"
+                        route={ROUTES.TORNEO_BASES}
+                        menuItems={[
+                            { text: 'Cartel', href: ROUTES.TORNEO_CARTEL },
+                            { text: 'Bases', href: ROUTES.TORNEO_BASES },
+                            { text: 'Inscripción', href: ROUTES.TORNEO_INSCRIPCION }
+                        ]}
+                        onNavItemClick={handleNavItemClick}
+                    />
+                    <Nav.Link as={Link} title="Actividades" to={ROUTES.ACTIVITIES} onClick={handleNavItemClick}>
+                        Actividades
+                    </Nav.Link>
+                    <Nav.Link title="Blog CXN" href={CXN_BLOG_URL} target="_blank" rel="noopener noreferrer" onClick={handleNavItemClick}>
                         Blog
                     </Nav.Link>
                 </InsideOptionsNav>
                 {isUserLoggedIn ? (
-                    <UserLoggedHeaderNavBar />
+                    <UserLoggedHeaderNavBar handleNavItemClick={handleNavItemClick} />
                 ) : (
                     <CustomNav className="ms-auto">
                         <Nav.Link as={Link} to={ROUTES.SIGNUP_ROUTE} onClick={handleNavItemClick}>

@@ -3,6 +3,7 @@ import axios from 'axios'
 import { UserProfile } from '../../../store/types/userTypes'
 import { useAppDispatch, useAppSelector } from '../../../store/hooks'
 import { setUserProfile } from '../../../store/slices/user'
+import { GET_USER_PROFILE_URL } from './../../../resources/server_urls'
 
 const useUserProfile = () => {
     const userJwt = useAppSelector((state) => state.users.jwt)
@@ -14,10 +15,11 @@ const useUserProfile = () => {
         if (userJwt) {
             const fetchUserProfile = async () => {
                 try {
-                    const response = await axios.get<UserProfile>('https://xadreznaron.es:4443/api/user', {
+                    const response = await axios.get<UserProfile>(GET_USER_PROFILE_URL, {
                         headers: {
                             Authorization: `Bearer ${userJwt}`,
-                            'Access-Control-Allow-Origin': '*' //  CORS
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*'
                         }
                     })
                     const profile = response.data

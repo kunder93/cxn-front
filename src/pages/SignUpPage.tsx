@@ -1,21 +1,15 @@
 import React from 'react'
-
 import SignUpForm from '../components/SignUp/SignUpForm'
-import styled from 'styled-components'
-import { Container } from 'react-bootstrap'
+import { MainContainer } from '../components/SignUpSingInCommonStyles'
+import usePageTitle from '../components/Common/hooks/usePageTitle'
 
-const Page = styled.div`
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-`
-
-const SignUpPage: React.FC = () => (
-    <Page>
-        <Container>
+const SignUpPage: React.FC = () => {
+    usePageTitle('CXN Solicitud de socio')
+    return (
+        <MainContainer fluid="md">
             <SignUpForm></SignUpForm>
-        </Container>
-    </Page>
-)
+        </MainContainer>
+    )
+}
 
 export default SignUpPage
