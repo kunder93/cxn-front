@@ -1,88 +1,110 @@
-// TesoreroRolePage.js
-import React, { useState } from 'react';
-import { Button } from 'react-bootstrap';
-import { People, CashCoin } from 'react-bootstrap-icons';
-import { PageContainer, Title, StyledAccordion, StyledAccordionItem, StyledAccordionHeader, StyledAccordionBody, buttonBaseStyle, buttonHoverStyle } from './CommonStyles';
-import { ProfileSection } from './SideBar';
+import React, { useState } from 'react'
+import { People, CashCoin } from 'react-bootstrap-icons'
+import { PageContainer, Title, StyledAccordion, StyledAccordionItem, StyledAccordionHeader, StyledAccordionBody } from './CommonStyles'
+import { ProfileSection } from './SideBar'
+import { ProfileMenuSection, RolePageProps } from './types'
+import NavigationButton from './CommonComponents/NavigationButton'
 
-
-interface TesoreroRolePageProps {
-    changePage: (section: ProfileSection) => void
-}
-
-
-const TesoreroRolePage: React.FC<TesoreroRolePageProps> = ({ changePage }) => {
-    const [hoveredButton, setHoveredButton] = useState<number | null>(null);
-
-
-    const handleMembersManagerButton = () => {
-        changePage(ProfileSection.MembersManager)
+/**
+ * An array of sections for the profile menu in the Tesorero role page.
+ *
+ * Each section represents a category of management functionalities available to the Treasurer role,
+ * including management of members and financial accounting.
+ *
+ * @constant {ProfileMenuSection[]} sections
+ * @type {ProfileMenuSection[]}
+ * @property {string} key - A unique key for each section, used as the event key in the accordion.
+ * @property {JSX.Element} icon - The icon associated with the section, displayed in the accordion header.
+ * @property {string} title - The title of the section, shown in the accordion header.
+ * @property {Object[]} buttons - An array of button objects for the section, allowing navigation to different management pages.
+ * @property {ProfileSection} buttons.section - The section that the button navigates to when clicked.
+ * @property {string} buttons.text - The display text of the button, shown to the user.
+ * @property {number} buttons.buttonIndex - The index of the button, used for hover effects.
+ *
+ */
+const sections: ProfileMenuSection[] = [
+    {
+        key: '0',
+        icon: <People size="3rem" />,
+        title: 'Gestión de socios',
+        buttons: [
+            {
+                text: 'Ver listado socios',
+                section: ProfileSection.MembersManager,
+                buttonIndex: 0
+            }
+        ]
+    },
+    {
+        key: '1',
+        icon: <CashCoin size="3rem" />,
+        title: 'Gestión de contabilidad financiera',
+        buttons: [
+            {
+                text: 'Ver lista de facturas',
+                section: ProfileSection.InvoicesManager,
+                buttonIndex: 1
+            },
+            {
+                text: 'Ver lista hojas de liquidación',
+                section: ProfileSection.PaymentSheetsManager,
+                buttonIndex: 2
+            },
+            {
+                text: 'Gestión de empresas (para facturas)',
+                section: ProfileSection.CompaniesManager,
+                buttonIndex: 3
+            }
+        ]
     }
+]
 
-    const handleInvoicesButton = () => {
-        changePage(ProfileSection.InvoicesManager)
-    }
-
-    const handlePaymentSheetsButton = () => {
-        changePage(ProfileSection.PaymentSheetsManager)
-    }
-    const handleCompaniesManagerButton = () => {
-        changePage(ProfileSection.CompaniesManager)
-    }
+/**
+ * TesoreroRolePage component for managing the Treasurer role in the application.
+ *
+ * This component displays an accordion menu with sections for managing members and financial accounting.
+ * Each section contains buttons that allow navigation to different management pages.
+ *
+ * @component
+ * @param {RolePageProps} props - The props for the component.
+ * @param {function} props.changePage - A function to change the page based on the selected section.
+ *
+ * @returns {JSX.Element} The rendered component.
+ *
+ * @example
+ * // Usage
+ * <TesoreroRolePage changePage={handleChangePage} />
+ */
+const TesoreroRolePage: React.FC<RolePageProps> = ({ changePage }) => {
+    const [hoveredButton, setHoveredButton] = useState<number | null>(null)
 
     return (
         <PageContainer>
             <Title>SECCIÓN DEL TESORERO</Title>
             <StyledAccordion>
-                <StyledAccordionItem eventKey="0">
-                    <StyledAccordionHeader>
-                        <People size="3rem" /> Gestión de socios
-                    </StyledAccordionHeader>
-                    <StyledAccordionBody>
-                        <Button
-                            style={hoveredButton === 0 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={handleMembersManagerButton}
-                            onMouseEnter={() => setHoveredButton(0)}
-                            onMouseLeave={() => setHoveredButton(null)}
-                        >
-                            Ver listado socios
-                        </Button>
-                    </StyledAccordionBody>
-                </StyledAccordionItem>
-                <StyledAccordionItem eventKey="1">
-                    <StyledAccordionHeader>
-                        <CashCoin size="3rem" /> Gestión de contabilidad financiera
-                    </StyledAccordionHeader>
-                    <StyledAccordionBody>
-                        <Button
-                            style={hoveredButton === 1 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={handleInvoicesButton}
-                            onMouseEnter={() => setHoveredButton(1)}
-                            onMouseLeave={() => setHoveredButton(null)}
-                        >
-                            Ver lista de facturas
-                        </Button>
-                        <Button
-                            style={hoveredButton === 2 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={handlePaymentSheetsButton}
-                            onMouseEnter={() => setHoveredButton(2)}
-                            onMouseLeave={() => setHoveredButton(null)}
-                        >
-                            Ver lista hojas de liquidación
-                        </Button>
-                        <Button
-                            style={hoveredButton === 3 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={handleCompaniesManagerButton}
-                            onMouseEnter={() => setHoveredButton(3)}
-                            onMouseLeave={() => setHoveredButton(null)}
-                        >
-                            Gestión de empresas (para facturas)
-                        </Button>
-                    </StyledAccordionBody>
-                </StyledAccordionItem>
+                {sections.map(({ key, icon, title, buttons }) => (
+                    <StyledAccordionItem eventKey={key} key={key}>
+                        <StyledAccordionHeader>
+                            {icon} {title}
+                        </StyledAccordionHeader>
+                        <StyledAccordionBody>
+                            {buttons.map(({ section, text, buttonIndex }) => (
+                                <NavigationButton
+                                    key={text}
+                                    section={section}
+                                    text={text}
+                                    hoveredButton={hoveredButton}
+                                    setHoveredButton={setHoveredButton}
+                                    buttonIndex={buttonIndex}
+                                    changePage={changePage}
+                                />
+                            ))}
+                        </StyledAccordionBody>
+                    </StyledAccordionItem>
+                ))}
             </StyledAccordion>
         </PageContainer>
-    );
-};
+    )
+}
 
-export default TesoreroRolePage;
+export default TesoreroRolePage

@@ -1,120 +1,107 @@
-// SecretarioRolePage.js
 import React, { useState } from 'react'
-import { Button } from 'react-bootstrap'
 import { People, CashCoin, Gear } from 'react-bootstrap-icons'
-import {
-    PageContainer,
-    Title,
-    StyledAccordion,
-    StyledAccordionItem,
-    StyledAccordionHeader,
-    StyledAccordionBody,
-    buttonBaseStyle,
-    buttonHoverStyle
-} from './CommonStyles'
+import { PageContainer, Title, StyledAccordion, StyledAccordionItem, StyledAccordionHeader, StyledAccordionBody } from './CommonStyles'
 import { ProfileSection } from './SideBar'
+import NavigationButton from './CommonComponents/NavigationButton'
+import { ProfileMenuSection, RolePageProps } from './types'
 
-interface SecretarioRolePageProps {
-    changePage: (section: ProfileSection) => void
-}
+/**
+ * An array of sections for the profile menu in the Secretario role page.
+ *
+ * @constant {ProfileMenuSection[]} sections
+ * @type {ProfileMenuSection[]}
+ * @description Each section includes a unique key, an icon, a title, and an array of buttons
+ * that navigate to different profile sections.
+ */
+const sections: ProfileMenuSection[] = [
+    {
+        key: '0',
+        icon: <People size="3rem" />,
+        title: 'Gestión de socios',
+        buttons: [
+            {
+                text: 'Ver listado socios',
+                section: ProfileSection.MembersManager,
+                buttonIndex: 1
+            }
+        ]
+    },
+    {
+        key: '1',
+        icon: <CashCoin size="3rem" />,
+        title: 'Gestión de contabilidad financiera',
+        buttons: [
+            {
+                text: 'Gestión de Facturas',
+                section: ProfileSection.InvoicesManager,
+                buttonIndex: 2
+            },
+            {
+                text: 'Gestión de hojas de pago',
+                section: ProfileSection.PaymentSheetsManager,
+                buttonIndex: 3
+            },
+            {
+                text: 'Gestión de empresas (para facturas)',
+                section: ProfileSection.CompaniesManager,
+                buttonIndex: 4
+            }
+        ]
+    },
+    {
+        key: '2',
+        icon: <Gear size="3rem" />,
+        title: 'Gestión de administración',
+        buttons: [
+            {
+                text: 'Mensajes recibidos',
+                section: ProfileSection.MessagesManager,
+                buttonIndex: 5
+            },
+            {
+                text: 'Inscritos torneo',
+                section: ProfileSection.TournamentParticipantManager,
+                buttonIndex: 6
+            }
+        ]
+    }
+]
 
-const SecretarioRolePage: React.FC<SecretarioRolePageProps> = ({ changePage }) => {
-
+/**
+ * Represents the Secretario Role Page component.
+ *
+ * @component
+ * @param {RolePageProps} props - The properties for the SecretarioRolePage component.
+ * @param {function} props.changePage - A function to change the current page based on the selected section.
+ * @returns {JSX.Element} The rendered SecretarioRolePage component.
+ */
+const SecretarioRolePage: React.FC<RolePageProps> = ({ changePage }) => {
     const [hoveredButton, setHoveredButton] = useState<number | null>(null)
-    const handleMembersManagerButton = () => {
-        changePage(ProfileSection.MembersManager)
-    }
-
-    const handleInvoicesButton = () => {
-        changePage(ProfileSection.InvoicesManager)
-    }
-
-    const handlePaymentSheetsButton = () => {
-        changePage(ProfileSection.PaymentSheetsManager)
-    }
-    const handleCompaniesManagerButton = () => {
-        changePage(ProfileSection.CompaniesManager)
-    }
-    const handleMessagesButton = () => {
-        changePage(ProfileSection.MessagesManager)
-    }
-    const handleTournamentParticipantsButton = () => {
-        changePage(ProfileSection.TournamentParticipantManager)
-    }
 
     return (
         <PageContainer>
             <Title>SECCIÓN DEL SECRETARIO</Title>
             <StyledAccordion>
-                <StyledAccordionItem eventKey="0">
-                    <StyledAccordionHeader>
-                        <People size="3rem" /> Gestión de socios
-                    </StyledAccordionHeader>
-                    <StyledAccordionBody>
-                        <Button
-                            style={hoveredButton === 0 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={handleMembersManagerButton}
-                            onMouseEnter={() => setHoveredButton(0)}
-                            onMouseLeave={() => setHoveredButton(null)}
-                        >
-                            Ver listado socios
-                        </Button>
-                    </StyledAccordionBody>
-                </StyledAccordionItem>
-                <StyledAccordionItem eventKey="1">
-                    <StyledAccordionHeader>
-                        <CashCoin size="3rem" /> Gestión de contabilidad financiera
-                    </StyledAccordionHeader>
-                    <StyledAccordionBody>
-                        <Button
-                            style={hoveredButton === 1 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={handleInvoicesButton}
-                            onMouseEnter={() => setHoveredButton(1)}
-                            onMouseLeave={() => setHoveredButton(null)}
-                        >
-                            Gestión de Facturas
-                        </Button>
-                        <Button
-                            style={hoveredButton === 2 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={handlePaymentSheetsButton}
-                            onMouseEnter={() => setHoveredButton(2)}
-                            onMouseLeave={() => setHoveredButton(null)}
-                        >
-                            Gestión de hojas de pago
-                        </Button>
-                        <Button
-                            style={hoveredButton === 3 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={handleCompaniesManagerButton}
-                            onMouseEnter={() => setHoveredButton(3)}
-                            onMouseLeave={() => setHoveredButton(null)}
-                        >
-                            Gestión de empresas (para facturas)
-                        </Button>
-                    </StyledAccordionBody>
-                </StyledAccordionItem>
-                <StyledAccordionItem eventKey="2">
-                    <StyledAccordionHeader>
-                        <Gear size="3rem" /> Gestión de administración
-                    </StyledAccordionHeader>
-                    <StyledAccordionBody>
-                        <Button
-                            style={hoveredButton === 5 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={handleMessagesButton}
-                            onMouseEnter={() => setHoveredButton(5)}
-                            onMouseLeave={() => setHoveredButton(null)}
-                        >
-                            Mensajes recibidos
-                        </Button>
-                        <Button
-                            style={hoveredButton === 6 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={handleTournamentParticipantsButton}
-                            onMouseEnter={() => setHoveredButton(6)}
-                            onMouseLeave={() => setHoveredButton(null)}
-                        >
-                            Inscritos torneo
-                        </Button>
-                    </StyledAccordionBody>
-                </StyledAccordionItem>
+                {sections.map(({ key, icon, title, buttons }) => (
+                    <StyledAccordionItem eventKey={key} key={key}>
+                        <StyledAccordionHeader>
+                            {icon} {title}
+                        </StyledAccordionHeader>
+                        <StyledAccordionBody>
+                            {buttons.map(({ section, text, buttonIndex }) => (
+                                <NavigationButton
+                                    key={text}
+                                    section={section}
+                                    text={text}
+                                    hoveredButton={hoveredButton}
+                                    setHoveredButton={setHoveredButton}
+                                    buttonIndex={buttonIndex}
+                                    changePage={changePage}
+                                />
+                            ))}
+                        </StyledAccordionBody>
+                    </StyledAccordionItem>
+                ))}
             </StyledAccordion>
         </PageContainer>
     )

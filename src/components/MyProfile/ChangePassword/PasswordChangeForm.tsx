@@ -34,7 +34,7 @@ const validationSchema = Yup.object().shape({
         .required('Debes confirmar tu nueva contraseña.')
 })
 
-const PasswordChangeForm: React.FC<ChangePasswordFormProps> = ({ formikRef, userEmail }) => {
+const PasswordChangeForm = ({ formikRef, userEmail }: ChangePasswordFormProps): JSX.Element => {
     const [visibleAlert, setVisibleAlert] = React.useState(false)
 
     const handleSubmit = () => {

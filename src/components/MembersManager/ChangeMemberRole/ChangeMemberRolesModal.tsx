@@ -18,7 +18,7 @@ interface ChangeMemberRolesModalProps extends ModalProps {
     updateMemberRoles: (newUserRoles: UserRole[]) => void
 }
 
-const ChangeMemberRolesModal: React.FC<ChangeMemberRolesModalProps> = ({
+const ChangeMemberRolesModal = ({
     memberName,
     memberEmail,
     memberFirstSurname,
@@ -26,7 +26,7 @@ const ChangeMemberRolesModal: React.FC<ChangeMemberRolesModalProps> = ({
     memberRoles,
     updateMemberRoles,
     ...props
-}) => {
+}: ChangeMemberRolesModalProps): JSX.Element => {
     // Formik form ref for use submit when click Button.
     const formRef = React.useRef<FormikProps<ChangeMemberRolesValues>>(null)
     const [blockButton, setBlockButton] = React.useState(false)

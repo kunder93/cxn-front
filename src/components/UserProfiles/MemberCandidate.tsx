@@ -2,44 +2,68 @@ import React from 'react'
 import { useAppSelector } from '../../store/hooks'
 import styled from 'styled-components'
 
-// Contenedor del mensaje
+/**
+ * Styled container for displaying a welcome message to the user.
+ * Features a light pink background, rounded borders, and subtle shadow effects.
+ */
 const MessageContainer = styled.div`
-    background-color: #fff0f5; /* Color de fondo suave */
-    border: 1px solid #ffb6c1; /* Borde rosa claro */
-    border-radius: 10px; /* Bordes redondeados */
-    padding: 2rem; /* Más espacio interno */
-    margin: 2rem 0; /* Más espacio externo */
+    background-color: #fff0f5;
+    border: 1px solid #ffb6c1;
+    border-radius: 10px;
+    padding: 2rem;
+    margin: 2rem 0;
     margin-left: 2rem;
     margin-right: 2rem;
     font-family: 'Montserrat', sans-serif;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition:
         transform 0.3s ease,
-        box-shadow 0.3s ease; /* Transición suave */
+        box-shadow 0.3s ease;
 
     &:hover {
-        transform: translateY(-5px); /* Levantar un poco el contenedor al pasar el ratón */
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra más fuerte al pasar el ratón */
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
 `
 
-// Título del mensaje
+/**
+ * Styled heading for the message title.
+ * Displays the user's name in a bold, large, pink-colored font.
+ */
 const MessageTitle = styled.h2`
-    color: #f5459d; /* Color rosa intenso */
-    font-size: 1.8rem; /* Tamaño de fuente más grande */
+    color: #f5459d;
+    font-size: 1.8rem;
     margin-bottom: 1rem;
 `
 
-// Párrafo del mensaje
+/**
+ * Styled paragraph for the message text.
+ * Provides information with a dark grey color, large font, and increased line height.
+ */
 const MessageText = styled.p`
-    color: #696969; /* Color gris oscuro */
-    font-size: 1.2rem; /* Tamaño de fuente más grande */
-    line-height: 1.6; /* Altura de línea mayor */
+    color: #696969;
+    font-size: 1.2rem;
+    line-height: 1.6;
     margin: 0;
 `
 
+/**
+ * MemberCandidate component.
+ * Displays a personalized welcome message for the user.
+ *
+ * The user's profile information (name and surname) is retrieved from the Redux store.
+ * This component informs the user that their membership application is being processed.
+ *
+ * @component
+ * @example
+ * return (
+ *   <MemberCandidate />
+ * )
+ */
 const MemberCandidate: React.FC = () => {
+    // Retrieve the user data from the Redux store
     const user = useAppSelector((state) => state.users)
+
     return (
         <MessageContainer>
             <MessageTitle>

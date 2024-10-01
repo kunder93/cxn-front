@@ -1,4 +1,3 @@
-import React from 'react'
 import RootComponent from './RootComponent'
 import Header from './components/Header/Header'
 import Footer from './components/Footer/Footer'
@@ -8,7 +7,7 @@ import store from './store/store'
 import { BrowserRouter } from 'react-router-dom'
 import { NotificationProvider } from './components/Common/NotificationContext'
 
-const App: React.FC = () => {
+const App = (): JSX.Element => {
     return (
         <Provider store={store}>
             <BrowserRouter>

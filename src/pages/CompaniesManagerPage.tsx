@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Alert, Button, Container } from 'react-bootstrap'
 import { BuildingAdd } from 'react-bootstrap-icons'
 import CompanyTable from '../components/Companies/CompaniesTable'
@@ -22,7 +22,16 @@ const NoCompaniesMessage = styled.p`
     margin-top: 20px;
 `
 
-const CompanyManagerPage: React.FC = () => {
+/**
+ * Manages the display and creation of companies in the application.
+ *
+ * This component fetches a list of companies from an API and allows users to add new companies through a modal.
+ * It displays a table of existing companies or a message when there are no companies available.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered CompanyManagerPage component.
+ */
+const CompanyManagerPage = (): JSX.Element => {
     const [modalShow, setModalShow] = useState(false)
     const { data, error, loaded } = useAxiosGetCompanies(COMPANIES_URL)
     const [companiesList, setCompaniesList] = useState<ICompany[]>([])
@@ -33,6 +42,11 @@ const CompanyManagerPage: React.FC = () => {
         }
     }, [loaded, data])
 
+    /**
+     * Updates the list of companies by adding a new company.
+     *
+     * @param {ICompany} newCompany - The new company to be added to the list.
+     */
     const updateCompaniesList = (newCompany: ICompany) => {
         setCompaniesList([...companiesList, newCompany])
     }

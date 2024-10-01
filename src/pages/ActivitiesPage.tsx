@@ -1,4 +1,3 @@
-import React from 'react'
 import { Card, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { format } from 'date-fns'
@@ -6,6 +5,16 @@ import { es } from 'date-fns/locale/es'
 import { backGroundColor, backgroundImageUrl } from '../components/Common/CommonStyles'
 import usePageTitle from '../components/Common/hooks/usePageTitle'
 
+/**
+ * Represents the data for an activity card.
+ *
+ * @interface CardData
+ * @property {Date} startDate - The starting date of the activity.
+ * @property {Date} endDate - The ending date of the activity.
+ * @property {string} title - The title of the activity.
+ * @property {string} description - A brief description of the activity.
+ * @property {'torneo federado' | 'torneo informal' | 'torneo online' | 'otro' | 'clases'} category - The category of the activity.
+ */
 interface CardData {
     startDate: Date
     endDate: Date
@@ -14,7 +23,19 @@ interface CardData {
     category: 'torneo federado' | 'torneo informal' | 'torneo online' | 'otro' | 'clases'
 }
 
-const ActivityCard: React.FC<CardData> = ({ startDate, endDate, title, description, category }) => {
+/**
+ * ActivityCard component displays individual activity details
+ * such as title, description, date range, and category.
+ *
+ * @param {Object} props - The properties of the ActivityCard component.
+ * @param {Date} props.startDate - The starting date of the activity.
+ * @param {Date} props.endDate - The ending date of the activity.
+ * @param {string} props.title - The title of the activity.
+ * @param {string} props.description - A brief description of the activity.
+ * @param {'torneo federado' | 'torneo informal' | 'torneo online' | 'otro' | 'clases'} props.category - The category of the activity.
+ * @returns {JSX.Element} The rendered ActivityCard component.
+ */
+const ActivityCard = ({ startDate, endDate, title, description, category }: CardData) => {
     return (
         <article>
             <Card style={{ width: '18rem' }}>
@@ -98,6 +119,7 @@ const StyledContainer = styled(Container)`
         }
     }
 `
+
 const pageTitleMsg = 'Próximas actividades a realizar:'
 
 const PageTitle = styled.h1`
@@ -109,7 +131,15 @@ const PageTitle = styled.h1`
     padding-bottom: 1em;
 `
 
-const ActivitiesPage: React.FC = () => {
+/**
+ * ActivitiesPage component that displays a list of upcoming activities.
+ *
+ * This component fetches and renders multiple activity cards,
+ * along with a title for the page.
+ *
+ * @returns {JSX.Element} The rendered Activities page component.
+ */
+const ActivitiesPage = (): JSX.Element => {
     usePageTitle('CXN Actividades')
     return (
         <MainContainer>

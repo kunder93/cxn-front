@@ -17,8 +17,7 @@ const ChangeEmailForm = withFormik<EmailChangeFormProps, ChangeEmailFormValues>(
     }),
     validationSchema: validationSchema,
     handleSubmit: (values, { setSubmitting, resetForm }) => {
-        // Aquí podrías hacer el llamado a la API si fuera necesario
-        console.log('Form submitted with values:', values)
+        console.log(values)
         setSubmitting(false)
         resetForm()
     },

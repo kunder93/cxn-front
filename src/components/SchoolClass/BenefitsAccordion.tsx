@@ -1,4 +1,3 @@
-import React from 'react'
 import { Accordion } from 'react-bootstrap'
 import { CustomAccordionStyled } from '../../components/Common/CommonStyles'
 import ClassBenefitsCarousel, { CarouselItemMessage } from './ClassBenefitsCarousel'
@@ -23,13 +22,13 @@ export interface BenefitsAccordionProps {
     chessQuestionsFormCategory: string
 }
 
-const BenefitsAccordion: React.FC<BenefitsAccordionProps> = ({
+const BenefitsAccordion = ({
     carouselBenefits,
     initialQuestionsFormTopic,
     faqList,
     photosData,
     chessQuestionsFormCategory
-}) => {
+}: BenefitsAccordionProps): JSX.Element => {
     const chessBenefitsHeaderMsg = 'Beneficios del ajedrez:'
     const contactHeaderMsg = 'Contacto'
     const faqHeaderMsg = 'Preguntas frecuentes:'

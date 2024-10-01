@@ -1,4 +1,3 @@
-import React from 'react'
 import { HeaderPicture, MainContainerStyled, MainContentContainer, PageHeaderImage } from '../../components/Common/CommonStyles'
 import BenefitsAccordion, { BenefitsAccordionProps } from '../../components/SchoolClass/BenefitsAccordion'
 import {
@@ -39,7 +38,7 @@ const carouselBenefits = [
                 text: 'Un gimnasio para la mente. Cuando juegas entrenas tu cerebro para pensar en grande y a largo plazo. Planificas tus movimientos y estrategias para ganar. En cada jugada, hay un montón de opciones y tienes que aprender a elegir la mejor decisión.'
             }
         ]
-    }, 
+    },
     {
         IconUrl: IconOptions.HABILIDADES_ACADEMICAS,
         title: 'Como ir a la academia',
@@ -111,27 +110,26 @@ const carouselBenefits = [
 ]
 
 const faqKidsSchoolPairsQuestionAnswer = [
-    {   
-        question: '¿Cuándo empiezan las clases?', 
-        answer: 'Las clases empiezan en Octubre y duran hasta Junio.' 
+    {
+        question: '¿Cuándo empiezan las clases?',
+        answer: 'Las clases empiezan en Octubre y duran hasta Junio.'
     },
     {
-        question: '¿Qué dias y cuántas horas?', 
-        answer: 'Jueves y viernes, 1 hora cada día, de 16:00 a 19:00.' 
-
+        question: '¿Qué dias y cuántas horas?',
+        answer: 'Jueves y viernes, 1 hora cada día, de 16:00 a 19:00.'
     },
     {
         question: '¿Dónde puedo apuntarme?',
         answer: 'En el padroado de deportes en C.P.M A Gándara o en nuestras oficinas.'
     },
     {
-        question:'¿Cuánto cuesta?',
-        answer:'El precio para la curso 2023/2024 fue de 13,05  € al mes.'
+        question: '¿Cuánto cuesta?',
+        answer: 'El precio para la curso 2023/2024 fue de 13,05  € al mes.'
     },
     {
         question: '¿Necesito comprar algo para las clases o llevar algún material?',
         answer: 'Todo el material necesario lo proporciona el club.'
-    },
+    }
 ]
 
 const photosData: PhotoData[] = [
@@ -157,16 +155,15 @@ const accordionData: BenefitsAccordionProps = {
     chessQuestionsFormCategory: 'CLASES NIÑOS'
 }
 
-
 function openPdfWindow() {
     // URL del PDF
-    const pdfUrl = '/ChessClass/KidsClass/CartelClases2425.pdf';
-  
-    // Abre una nueva ventana y carga el PDF
-    window.open(pdfUrl, '_blank');
-  }
+    const pdfUrl = '/ChessClass/KidsClass/CartelClases2425.pdf'
 
-const SchoolKids: React.FC = () => {
+    // Abre una nueva ventana y carga el PDF
+    window.open(pdfUrl, '_blank')
+}
+
+const SchoolKids = (): JSX.Element => {
     usePageTitle('CXN Escuela infantil')
     return (
         <MainContainerStyled>
@@ -178,9 +175,12 @@ const SchoolKids: React.FC = () => {
                 <MainContentHeader>
                     <PageTitle>{pageTitle}</PageTitle>
                     <PageSubTittle>{pageSubTitle}</PageSubTittle>
-                        <div className="d-flex align-items-center justify-content-center">
-                            <Button style={{}} variant="success" onClick={openPdfWindow} > <FiletypePdf size={40}></FiletypePdf>¡ Cartel de las clases 24-25 !</Button>
-                        </div>
+                    <div className="d-flex align-items-center justify-content-center">
+                        <Button style={{}} variant="success" onClick={openPdfWindow}>
+                            {' '}
+                            <FiletypePdf size={40}></FiletypePdf>¡ Cartel de las clases 24-25 !
+                        </Button>
+                    </div>
                 </MainContentHeader>
                 <SummaryContentSection>
                     <ShortSummaryParagraph>{summaryParagraph}</ShortSummaryParagraph>

@@ -44,3 +44,7 @@ export const CHESS_QUESTION_DELETE = CHESS_QUESTION_URL;
 export const TOURNAMENT_PARTICIPANTS_URL = BASE_URL +'api/participants'
 
 export const GET_USER_PROFILE_URL = BASE_URL + 'api/user'
+
+export const GET_MY_LICHESS_PROFILE = BASE_URL + 'api/getMyLichessProfile'
+
+export const GET_ALL_LICHESS_PROFILES = BASE_URL + 'api/getAllLichessProfiles'

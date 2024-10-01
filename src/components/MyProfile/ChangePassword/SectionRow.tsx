@@ -26,7 +26,7 @@ interface SectionRowProps {
     value: string | React.ReactNode
 }
 
-const SectionRow: React.FC<SectionRowProps> = ({ label, value }) => (
+const SectionRow = ({ label, value }: SectionRowProps): JSX.Element => (
     <StyledSectionRow>
         <StyledSectionCol>{label}:</StyledSectionCol>
         <StyledSectionCol>{value}</StyledSectionCol>

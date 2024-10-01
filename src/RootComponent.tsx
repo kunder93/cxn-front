@@ -1,4 +1,3 @@
-import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
@@ -27,7 +26,7 @@ import ChessQuestionsManager from './pages/ChessQuestionsManager'
 import TorneoBases from './components/TorneoPromocion/TorneoBases'
 import TorneoCartel from './components/TorneoPromocion/TorneoCartel'
 import TorneoInscripcion from './components/TorneoPromocion/TorneoInscripcion'
-const RootComponent: React.FC = () => {
+const RootComponent = (): JSX.Element => {
     return (
         <ScrollTopWrapper>
             <Routes>

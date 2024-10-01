@@ -1,4 +1,3 @@
-import React from 'react'
 import { Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
 
@@ -20,7 +19,7 @@ const LoadingMessage = styled.p`
     font-size: 1.5rem; /* Ajusta el tamaño del mensaje */
     color: #333;
 `
-const LoadingTableSpinnerContainer: React.FC = () => {
+const LoadingTableSpinnerContainer = (): JSX.Element => {
     return (
         <LoadingContainer>
             <LargeSpinner animation="border" role="status" />

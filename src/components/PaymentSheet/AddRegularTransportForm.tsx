@@ -61,7 +61,6 @@ const TransportCategorySelector: React.FC<TransportCategorySelectorProps> = ({ n
 const CustomSelector: React.FC<InvoicesSelectorProps> = ({ name, secondName, options }) => {
     const { values, setFieldValue } = useFormikContext<NewRegularTransportData>()
 
-
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedOption = options.find((option) => `${option.value}-${option.value2}` === event.target.value)
         if (selectedOption) {
@@ -119,8 +118,7 @@ const AddRegularTransportForm: React.FC<{ paymentSheetId: number }> = ({ payment
             }}
             onSubmit={async (values: NewRegularTransportData, { setSubmitting }: FormikHelpers<NewRegularTransportData>) => {
                 try {
-                    const response = await axios.post(`${PAYMENT_SHEET_URL}/${paymentSheetId}/addRegularTransport`, values)
-                    console.log(response)
+                    await axios.post(`${PAYMENT_SHEET_URL}/${paymentSheetId}/addRegularTransport`, values)
                     showNotification('El transporte regular se ha añadido correctamente', NotificationType.Success)
                 } catch (error) {
                     const axiosError = error as AxiosError

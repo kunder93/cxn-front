@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import { FormConditionsModalProps, UserAceptanceModalOption } from './SignUpFormTypes'
 import {
@@ -10,7 +10,7 @@ import {
     RelativoSociosModalTittle
 } from './UserAceptanceTextStyle'
 
-const UserAceptanceModal: React.FC<FormConditionsModalProps> = ({ show, onClose, userAceptanceOption }) => {
+const UserAceptanceModal = ({ show, onClose, userAceptanceOption }: FormConditionsModalProps) => {
     const renderModalContent = useMemo(() => {
         switch (userAceptanceOption) {
             case UserAceptanceModalOption.CesionDatos:

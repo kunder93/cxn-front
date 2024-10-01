@@ -1,4 +1,3 @@
-import React from 'react'
 import { HeaderPicture, MainContainerStyled, MainContentContainer, PageHeaderImage } from '../../components/Common/CommonStyles'
 import BenefitsAccordion, { BenefitsAccordionProps } from '../../components/SchoolClass/BenefitsAccordion'
 import {
@@ -113,7 +112,7 @@ const photosData: PhotoData[] = [
         url: '/ChessClass/KidsClass/CarouselImage3.avif',
         alt: 'Imagen 3'
     }
-];
+]
 
 const accordionData: BenefitsAccordionProps = {
     carouselBenefits: carouselBenefits,
@@ -123,7 +122,7 @@ const accordionData: BenefitsAccordionProps = {
     chessQuestionsFormCategory: 'CLASES ONLINE'
 }
 
-const SchoolOnline: React.FC = () => {
+const SchoolOnline = (): JSX.Element => {
     usePageTitle('CXN Escuela online')
     return (
         <MainContainerStyled>

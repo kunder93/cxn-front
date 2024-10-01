@@ -1,4 +1,3 @@
-import React from 'react'
 import { Container, Button, Col, Spinner, Row, FormCheck } from 'react-bootstrap'
 import { Formik, Field, Form as FormikForm, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
@@ -114,7 +113,7 @@ const validationSchema = Yup.object({
         .required('La categoría es obligatoria')
 })
 
-const TournamentRegistration: React.FC = () => {
+const TournamentRegistration = (): JSX.Element => {
     usePageTitle('Inscripción torneo')
     const { showNotification } = useNotificationContext()
 

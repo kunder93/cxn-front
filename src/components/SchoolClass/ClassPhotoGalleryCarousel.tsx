@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Carousel from 'react-bootstrap/Carousel'
 import styled from 'styled-components'
 
@@ -24,7 +24,7 @@ export interface PhotoGalleryCarouselProps {
     photosUrl: PhotoData[]
 }
 
-const ClassPhotoGalleryCarousel: React.FC<PhotoGalleryCarouselProps> = ({ photosUrl }) => {
+const ClassPhotoGalleryCarousel = ({ photosUrl }: PhotoGalleryCarouselProps) => {
     const [index, setIndex] = useState(0)
 
     const handleSelect = (selectedIndex: number) => {

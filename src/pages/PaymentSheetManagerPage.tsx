@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Alert, Button, Container } from 'react-bootstrap'
 import { useAxiosGetPaymentSheets } from '../utility/CustomAxios'
 import { PAYMENT_SHEET_URL } from '../resources/server_urls'
@@ -21,7 +21,7 @@ const NoCompaniesMessage = styled.p`
     margin-top: 20px;
 `
 
-const PaymentSheetManagerPage: React.FC = () => {
+const PaymentSheetManagerPage = (): JSX.Element => {
     const [createPaymentSheetModalShow, setCreatePaymentSheetModalShow] = useState(false)
     const { data, error, loaded } = useAxiosGetPaymentSheets(PAYMENT_SHEET_URL)
     const [paymentSheets, setPaymentSheets] = useState<IPaymentSheet[]>([])
