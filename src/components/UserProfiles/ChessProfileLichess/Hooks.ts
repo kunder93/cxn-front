@@ -13,7 +13,7 @@ import axios from 'axios'
  * @example
  * const { lichessProfile, loading, error } = useLichessProfile(userJwt);
  */
-export const useLichessProfile = (userJwt: string | null) => {
+export const useLichessProfile = (userJwt: string | null): { lichessProfile: LichessProfileResponse; loading: boolean; error: string | null } => {
     const [lichessProfile, setLichessProfile] = useState<LichessProfileResponse>(emptyLichessProfile)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
@@ -39,6 +39,40 @@ export const useLichessProfile = (userJwt: string | null) => {
             void fetchLichessProfile()
         }
     }, [userJwt])
+
+    return { lichessProfile, loading, error }
+}
+
+export const useLichessProfileNow = (
+    userJwt: string | null,
+    fetchNow: number
+): { lichessProfile: LichessProfileResponse; loading: boolean; error: string | null } => {
+    const [lichessProfile, setLichessProfile] = useState<LichessProfileResponse>(emptyLichessProfile)
+    const [loading, setLoading] = useState<boolean>(false) // Initially not loading
+    const [error, setError] = useState<string | null>(null)
+
+    useEffect(() => {
+        const fetchLichessProfile = async () => {
+            setLoading(true) // Start loading when the fetch is initiated
+            try {
+                const response = await axios.get<LichessProfileResponse>(GET_MY_LICHESS_PROFILE, {
+                    headers: {
+                        Authorization: `Bearer ${userJwt}`
+                    }
+                })
+                setLichessProfile(response.data)
+            } catch (error) {
+                setError('Error fetching Lichess profile')
+                console.error(error)
+            } finally {
+                setLoading(false) // Stop loading when the fetch is complete
+            }
+        }
+
+        if (userJwt && fetchNow) {
+            void fetchLichessProfile()
+        }
+    }, [userJwt, fetchNow]) // Fetch profile whenever fetchNow changes
 
     return { lichessProfile, loading, error }
 }

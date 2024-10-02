@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Accordion } from 'react-bootstrap'
 import { Trophy } from 'react-bootstrap-icons'
 import { useAppSelector } from '../../../store/hooks'
 import styled from 'styled-components'
 import LichessPlayersTable from './LichessPlayersTable'
-import { isLichessProfileEmpty } from './lichess'
+import { emptyLichessProfile, isLichessProfileEmpty, LichessProfileResponse } from './lichess'
 import { useLichessProfile, useLichessProfiles } from './Hooks'
 import ProfileRow from './ProfileRow'
 import LinkLichessAccountButton from './LinkLichessAccountButton'
@@ -39,6 +39,12 @@ const ChessProfileLichess: React.FC = () => {
     const { lichessProfile, loading: profileLoading } = useLichessProfile(userJwt)
     const { players, loading: playersLoading } = useLichessProfiles(userJwt)
 
+    const [myLichessProfile, setMyLichessProfile] = useState<LichessProfileResponse>(emptyLichessProfile)
+
+    useEffect(() => {
+        setMyLichessProfile(lichessProfile)
+    }, [lichessProfile])
+
     if (profileLoading || playersLoading) {
         return <div>Cargando...</div>
     }
@@ -49,10 +55,9 @@ const ChessProfileLichess: React.FC = () => {
                 <Accordion.Header>
                     <strong>
                         <img src="/Lichess/LichessLogo.png" width={40} alt="Lichess Logo" />
-                        {isLichessProfileEmpty(lichessProfile) ? (
+                        {isLichessProfileEmpty(myLichessProfile) ? (
                             <>
-                                <span>No tienes perfil de lichess: </span>
-                                <LinkLichessAccountButton></LinkLichessAccountButton>
+                                <span> ¡¡ No tienes perfil de lichess !! Desplegar para ver más. </span>
                             </>
                         ) : (
                             'Mi perfil'
@@ -60,22 +65,24 @@ const ChessProfileLichess: React.FC = () => {
                     </strong>
                 </Accordion.Header>
                 <FirstStyledAccordionBody>
-                    {isLichessProfileEmpty(lichessProfile) ? (
-                        '¡¡ No se ha encontrado un perfil de Lichess vinculado !!'
+                    {isLichessProfileEmpty(myLichessProfile) ? (
+                        <>
+                            <LinkLichessAccountButton setLichessProfileCallback={setMyLichessProfile}></LinkLichessAccountButton>
+                        </>
                     ) : (
                         <>
-                            <ProfileRow label="Última vez actualizado:" value={new Date(lichessProfile.lastUpdate).toLocaleString()} />
-                            <ProfileRow label="Nombre en Lichess:" value={lichessProfile.lichessUserName} />
-                            <ProfileRow label="ELO Blitz:" value={lichessProfile.blitzGame.elo} />
-                            <ProfileRow label="Blitz, cantidad de partidas jugadas:" value={lichessProfile.blitzGame.amountOfGames} />
-                            <ProfileRow label="ELO Bullet:" value={lichessProfile.bulletGame.elo} />
-                            <ProfileRow label="Bullet, cantidad de partidas jugadas:" value={lichessProfile.bulletGame.amountOfGames} />
-                            <ProfileRow label="ELO Clásico:" value={lichessProfile.classicalGame.elo} />
-                            <ProfileRow label="Clásicas, cantidad de partidas jugadas:" value={lichessProfile.classicalGame.amountOfGames} />
-                            <ProfileRow label="ELO Rápidas:" value={lichessProfile.rapidGame.elo} />
-                            <ProfileRow label="Rápidas, cantidad de partidas jugadas:" value={lichessProfile.rapidGame.amountOfGames} />
-                            <ProfileRow label="ELO Problemas:" value={lichessProfile.puzzleGame.elo} />
-                            <ProfileRow label="Cantidad de problemas realizados:" value={lichessProfile.puzzleGame.amountOfGames} />
+                            <ProfileRow label="Última vez actualizado:" value={new Date(myLichessProfile.lastUpdate).toLocaleString()} />
+                            <ProfileRow label="Nombre en Lichess:" value={myLichessProfile.lichessUserName} />
+                            <ProfileRow label="ELO Blitz:" value={myLichessProfile.blitzGame.elo} />
+                            <ProfileRow label="Blitz, cantidad de partidas jugadas:" value={myLichessProfile.blitzGame.amountOfGames} />
+                            <ProfileRow label="ELO Bullet:" value={myLichessProfile.bulletGame.elo} />
+                            <ProfileRow label="Bullet, cantidad de partidas jugadas:" value={myLichessProfile.bulletGame.amountOfGames} />
+                            <ProfileRow label="ELO Clásico:" value={myLichessProfile.classicalGame.elo} />
+                            <ProfileRow label="Clásicas, cantidad de partidas jugadas:" value={myLichessProfile.classicalGame.amountOfGames} />
+                            <ProfileRow label="ELO Rápidas:" value={myLichessProfile.rapidGame.elo} />
+                            <ProfileRow label="Rápidas, cantidad de partidas jugadas:" value={myLichessProfile.rapidGame.amountOfGames} />
+                            <ProfileRow label="ELO Problemas:" value={myLichessProfile.puzzleGame.elo} />
+                            <ProfileRow label="Cantidad de problemas realizados:" value={myLichessProfile.puzzleGame.amountOfGames} />
                         </>
                     )}
                 </FirstStyledAccordionBody>
