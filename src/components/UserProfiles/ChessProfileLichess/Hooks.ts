@@ -2,21 +2,22 @@ import { useEffect, useState } from 'react'
 import { emptyLichessProfile, LichessProfileListResponse, LichessProfileResponse } from './lichess'
 import { GET_ALL_LICHESS_PROFILES, GET_MY_LICHESS_PROFILE } from '../../../resources/server_urls'
 import axios from 'axios'
+import { useAppSelector } from '../../../store/hooks'
 
 /**
  * Custom hook to fetch the user's Lichess profile.
  *
- * @param {string | null} userJwt - The JWT token for the authenticated user. Used for authorization.
  * @returns {{lichessProfile: LichessProfileResponse, loading: boolean, error: string | null}}
  *          Object containing the Lichess profile, loading state, and error state.
  *
  * @example
  * const { lichessProfile, loading, error } = useLichessProfile(userJwt);
  */
-export const useLichessProfile = (userJwt: string | null): { lichessProfile: LichessProfileResponse; loading: boolean; error: string | null } => {
+export const useLichessProfile = (): { lichessProfile: LichessProfileResponse; loading: boolean; error: string | null } => {
     const [lichessProfile, setLichessProfile] = useState<LichessProfileResponse>(emptyLichessProfile)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
+    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
 
     useEffect(() => {
         const fetchLichessProfile = async () => {
@@ -43,13 +44,11 @@ export const useLichessProfile = (userJwt: string | null): { lichessProfile: Lic
     return { lichessProfile, loading, error }
 }
 
-export const useLichessProfileNow = (
-    userJwt: string | null,
-    fetchNow: number
-): { lichessProfile: LichessProfileResponse; loading: boolean; error: string | null } => {
+export const useLichessProfileNow = (fetchNow: number): { lichessProfile: LichessProfileResponse; loading: boolean; error: string | null } => {
     const [lichessProfile, setLichessProfile] = useState<LichessProfileResponse>(emptyLichessProfile)
     const [loading, setLoading] = useState<boolean>(false) // Initially not loading
     const [error, setError] = useState<string | null>(null)
+    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
 
     useEffect(() => {
         const fetchLichessProfile = async () => {
@@ -80,17 +79,17 @@ export const useLichessProfileNow = (
 /**
  * Custom hook to fetch the list of Lichess profiles.
  *
- * @param {string | null} userJwt - The JWT token for the authenticated user. Used for authorization.
  * @returns {{players: LichessProfileListResponse, loading: boolean, error: string | null}}
  *          Object containing the list of Lichess profiles, loading state, and error state.
  *
  * @example
  * const { players, loading, error } = useLichessProfiles(userJwt);
  */
-export const useLichessProfiles = (userJwt: string | null) => {
+export const useLichessProfiles = (myLichessProfile: LichessProfileResponse) => {
     const [players, setPlayers] = useState<LichessProfileListResponse>({ profilesList: [] })
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
+    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
 
     useEffect(() => {
         const fetchLichessProfiles = async () => {
@@ -112,7 +111,7 @@ export const useLichessProfiles = (userJwt: string | null) => {
         if (userJwt) {
             void fetchLichessProfiles()
         }
-    }, [userJwt])
+    }, [myLichessProfile, userJwt])
 
     return { players, loading, error }
 }

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Accordion } from 'react-bootstrap'
 import { Trophy } from 'react-bootstrap-icons'
-import { useAppSelector } from '../../../store/hooks'
 import styled from 'styled-components'
 import LichessPlayersTable from './LichessPlayersTable'
 import { emptyLichessProfile, isLichessProfileEmpty, LichessProfileResponse } from './lichess'
@@ -35,12 +34,9 @@ const FirstStyledAccordionBody = styled(Accordion.Body)`
 // Default empty values for LichessProfileResponse
 
 const ChessProfileLichess: React.FC = () => {
-    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
-    const { lichessProfile, loading: profileLoading } = useLichessProfile(userJwt)
-    const { players, loading: playersLoading } = useLichessProfiles(userJwt)
-
+    const { lichessProfile, loading: profileLoading } = useLichessProfile()
     const [myLichessProfile, setMyLichessProfile] = useState<LichessProfileResponse>(emptyLichessProfile)
-
+    const { players, loading: playersLoading } = useLichessProfiles(myLichessProfile)
     useEffect(() => {
         setMyLichessProfile(lichessProfile)
     }, [lichessProfile])

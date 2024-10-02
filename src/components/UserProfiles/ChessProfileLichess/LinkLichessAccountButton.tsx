@@ -100,14 +100,7 @@ const LinkLichessAccountButton: React.FC<LinkLichessAccountButtonProps> = ({ set
     const [isLoading, setIsLoading] = useState(false) // Manage button loading state
     const [oAuthCompleted, setOAuthCompleted] = useState(false) // Manage OAuth completion
     const [fetchNow, setFetchNow] = useState(0)
-
-    const { lichessProfile, loading, error } = useLichessProfileNow(userJwt, fetchNow)
-
-    console.log('FETCH PROFILE VALOR ES:' + fetchNow)
-    console.log('HOOK, LICHESS PROFILE USER NAME ES: ' + lichessProfile.userName)
-    console.log('HOOK, LOADING ES: ' + loading)
-    console.log('HOOK, ERROR ES: ' + error)
-    console.log('valor de isLichessProfileEmpty: ' + isLichessProfileEmpty(lichessProfile))
+    const { lichessProfile, /* loading,*/ error } = useLichessProfileNow(fetchNow)
 
     const handleGetProfileClick = () => {
         setFetchNow(fetchNow + 1) // Start fetching the profile when button is clicked
