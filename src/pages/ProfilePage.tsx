@@ -1,4 +1,3 @@
-// ProfilePage.tsx
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import SocioRolePage from '../components/UserProfiles/SocioRolePage'
@@ -55,7 +54,7 @@ const sectionComponents: Record<ProfileSection, React.FC<{ changePage: (section:
     [ProfileSection.TournamentParticipantManager]: TorneoInscripcionManager
 }
 
-const ProfilePage: React.FC = () => {
+const ProfilePage = (): JSX.Element => {
     const { userProfile, error } = useUserProfile()
     const [profilePage, setProfilePage] = useState<ProfileSection>(ProfileSection.UserPage)
     const [sidebarSection, setSidebarSection] = useState<ProfileSection>(ProfileSection.UserPage)

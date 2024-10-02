@@ -39,7 +39,7 @@ interface Props {
     initialOpenElement?: string
 }
 
-const TheClubInfoAccordion: React.FC<Props> = ({ initialOpenElement }) => {
+const TheClubInfoAccordion = ({ initialOpenElement }: Props) => {
     const [activeItem, setActiveItem] = useState<string | null>(initialOpenElement ?? null)
     const accordionRef = React.useRef<HTMLDivElement>(null)
 

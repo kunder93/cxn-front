@@ -65,7 +65,7 @@ const TextInputField: React.FC<{ id: string; name: string; label: string; placeh
     </BootstrapForm.Group>
 )
 
-const MoreInfoForm: React.FC<MoreInfoFormProps> = ({ initialTopic, formTitle, category }) => {
+const MoreInfoForm = ({ initialTopic, formTitle, category }: MoreInfoFormProps): JSX.Element => {
     const { notification, showNotification, hideNotification } = useNotification()
     const initialValues: FormData = {
         texto: '',

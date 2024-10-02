@@ -1,4 +1,3 @@
-import React from 'react'
 import { Accordion, Col, Row } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
 import Modal, { ModalProps } from 'react-bootstrap/Modal'
@@ -9,7 +8,7 @@ interface props extends ModalProps {
     row: UserProfile | undefined
 }
 
-const MemberModalProfileInfo: React.FC<props> = (props) => {
+const MemberModalProfileInfo = (props: props): JSX.Element => {
     return (
         <>
             {props.row ? (

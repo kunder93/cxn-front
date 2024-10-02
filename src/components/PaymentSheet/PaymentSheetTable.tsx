@@ -79,11 +79,10 @@ const PaymentSheetTable: React.FC<Props> = ({ initialData, deleteRow }) => {
     const deleteButtonClickHandler = useCallback(
         (identifier: number) => {
             const paymentSheetForDelete = dataRef.current.find((item) => item.paymentSheetIdentifier === identifier)
-            const jwt = userJwt;
-            console.log('EL JWT CUANDO ELIMINO EMPRESA ES: ' + jwt)
+            const jwt = userJwt
             if (paymentSheetForDelete) {
                 axios
-                    .delete(`${PAYMENT_SHEET_URL}/${paymentSheetForDelete.paymentSheetIdentifier}`,{headers:{Authorization: 'Bearer ' + jwt}})
+                    .delete(`${PAYMENT_SHEET_URL}/${paymentSheetForDelete.paymentSheetIdentifier}`, { headers: { Authorization: 'Bearer ' + jwt } })
                     .then(() => {
                         showNotification('ELIMINADA CORRECTAMENTE', NotificationType.Success)
                         deleteRow(paymentSheetForDelete.paymentSheetIdentifier)

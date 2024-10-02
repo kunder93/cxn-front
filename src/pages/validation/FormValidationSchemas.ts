@@ -61,7 +61,7 @@ export const SignUpFormValidationSchema: Yup.Schema<SignUpFormValues> = Yup.obje
     building: Yup.string().required('Casa o edificio requerido.'),
     street: Yup.string().required('Calle requerida.'),
     city: Yup.string().required('Se requiere una población.'),
-    countryNumericCode: Yup.number().required('Se requiere un código de país.').min(0, 'Selecciona un país.') ,
+    countryNumericCode: Yup.number().required('Se requiere un código de país.').min(0, 'Selecciona un país.'),
     countrySubdivisionName: Yup.string().required('Se requiere').defined('Selecciona una provincia.'),
     //Fourth step fields
     membersTerms: Yup.boolean().required('Para registrarse hay que aceptar los términos.').isTrue('Para registrarse hay que aceptar los términos.'),
@@ -93,28 +93,28 @@ const COMPANY_ADDRESS_MIN_LENGTH = 6
 
 export const CreateCompanyValidationSchema = Yup.object().shape({
     nif: Yup.string()
-    .test('valid-nif', 'NIF o DNI inválido', (value: any) => {
-        // Validación básica NIF (personas jurídicas y entidades)
-        const nifRegex = /^[A-HJ-NP-TV-Z]\d{7}[A-J0-9]$/i;
-        const dniRegex = /^\d{8}[A-HJ-NP-TV-Z]$/i;
+        .test('valid-nif', 'NIF o DNI inválido', (value: any) => {
+            // Validación básica NIF (personas jurídicas y entidades)
+            const nifRegex = /^[A-HJ-NP-TV-Z]\d{7}[A-J0-9]$/i
+            const dniRegex = /^\d{8}[A-HJ-NP-TV-Z]$/i
 
-        if (!value) return false;
+            if (!value) return false
 
-        if (nifRegex.test(value)) {
-            return true;
-        }
+            if (nifRegex.test(value)) {
+                return true
+            }
 
-        if (dniRegex.test(value)) {
-            const letters = 'TRWAGMYFPDXBNJZSQVHLCKET';
-            const numbers = value.slice(0, 8);
-            const letter = value.slice(8).toUpperCase();
+            if (dniRegex.test(value)) {
+                const letters = 'TRWAGMYFPDXBNJZSQVHLCKET'
+                const numbers = value.slice(0, 8)
+                const letter = value.slice(8).toUpperCase()
 
-            return letters[parseInt(numbers) % 23] === letter;
-        }
+                return letters[parseInt(numbers) % 23] === letter
+            }
 
-        return false;
-    })
-    .required('El NIF o DNI es necesario.'),
+            return false
+        })
+        .required('El NIF o DNI es necesario.'),
 
     name: Yup.string()
         .required('Se requiere un nombre.')

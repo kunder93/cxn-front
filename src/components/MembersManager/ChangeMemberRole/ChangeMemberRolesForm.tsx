@@ -45,7 +45,7 @@ export interface ChangeMemberRolesFormProps {
     setBlockButton: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const ChangeMemberRolesForm: React.FC<ChangeMemberRolesFormProps> = ({ formikRef, initialFormData, updateLocalMemberRoles, setBlockButton }) => {
+const ChangeMemberRolesForm = ({ formikRef, initialFormData, updateLocalMemberRoles, setBlockButton }: ChangeMemberRolesFormProps) => {
     const { userRoles, email } = initialFormData
     const { notification, showNotification, hideNotification } = useNotification()
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)

@@ -1,4 +1,3 @@
-import React from 'react'
 import { HeaderPicture, MainContainerStyled, MainContentContainer, PageHeaderImage } from '../../components/Common/CommonStyles'
 import BenefitsAccordion, { BenefitsAccordionProps } from '../../components/SchoolClass/BenefitsAccordion'
 import {
@@ -27,7 +26,10 @@ const headerImageSrc = '/ChessClass/SchoolHeaderImage.avif'
 const summaryImageSrc = '/ChessClass/oldClass/GreenArrowGoingUp.avif'
 
 const faqOldSchoolPairsQuestionAnswer = [
-    { question: '¿Cuándo empiezan las clases?', answer: 'Las clases comienzan en octubre y se extienden hasta junio. ¡Asegúrate de reservar tu lugar con anticipación!' },
+    {
+        question: '¿Cuándo empiezan las clases?',
+        answer: 'Las clases comienzan en octubre y se extienden hasta junio. ¡Asegúrate de reservar tu lugar con anticipación!'
+    },
     {
         question: '¿Necesito comprar algo para las clases o llevar algún material?',
         answer: 'No necesitas traer nada. Todo el material necesario, incluidos tableros, piezas y material de estudio, lo proporciona el club.'
@@ -131,7 +133,7 @@ const accordionData: BenefitsAccordionProps = {
     chessQuestionsFormCategory: 'CLASES ADULTOS'
 }
 
-const SchoolOld: React.FC = () => {
+const SchoolOld = (): JSX.Element => {
     usePageTitle('CXN Escuela adultos')
     return (
         <MainContainerStyled>

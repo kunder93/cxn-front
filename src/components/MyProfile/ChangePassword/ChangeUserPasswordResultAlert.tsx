@@ -19,7 +19,7 @@ interface IChangePasswordSubmitResultAlert {
     formData: ChangePasswordAxiosValues
 }
 
-const ChangeUserPasswordResultAlert: React.FC<IChangePasswordSubmitResultAlert> = ({ visibleParam, closeFunction, formData }) => {
+const ChangeUserPasswordResultAlert = ({ visibleParam, closeFunction, formData }: IChangePasswordSubmitResultAlert): JSX.Element => {
     const [variant, setVariant] = React.useState('info')
     const dispatch = useAppDispatch()
     const navigate = useNavigate()

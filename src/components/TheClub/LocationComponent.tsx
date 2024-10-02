@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 
 const LocationContainer = styled.div`
@@ -6,7 +5,7 @@ const LocationContainer = styled.div`
     height: 300px;
 `
 
-const LocationComponent: React.FC = () => {
+const LocationComponent = (): JSX.Element => {
     return (
         <LocationContainer>
             <iframe

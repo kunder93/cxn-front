@@ -1,27 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, Collapse } from 'react-bootstrap';
-import { FloatingNotificationContainer } from '../FloatingNotificationA';
-
-
+import React, { useEffect, useState } from 'react'
+import { Alert, Collapse } from 'react-bootstrap'
+import { FloatingNotificationContainer } from '../FloatingNotificationA'
 
 interface FloatingNotificationProps {
-    message: string;
-    variant: string;
-    onClose: () => void;
+    message: string
+    variant: string
+    onClose: () => void
 }
 
-const FloatingNotification: React.FC<FloatingNotificationProps> = ({ message, variant, onClose }) => {
-    const [visible, setVisible] = useState(true);
+const FloatingNotification = ({ message, variant, onClose }: FloatingNotificationProps): JSX.Element => {
+    const [visible, setVisible] = useState(true)
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setVisible(false);
-        }, 5000);
+            setVisible(false)
+        }, 5000)
 
         return () => {
-            clearTimeout(timer);
-        };
-    }, []);
+            clearTimeout(timer)
+        }
+    }, [])
 
     return (
         <Collapse in={visible} onExited={onClose}>
@@ -31,7 +29,7 @@ const FloatingNotification: React.FC<FloatingNotificationProps> = ({ message, va
                 </Alert>
             </FloatingNotificationContainer>
         </Collapse>
-    );
-};
+    )
+}
 
-export default React.memo(FloatingNotification);
+export default React.memo(FloatingNotification)

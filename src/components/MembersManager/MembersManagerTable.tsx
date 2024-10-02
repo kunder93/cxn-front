@@ -58,7 +58,7 @@ interface Props {
     usersData: UserProfile[]
 }
 
-const MembersManagerTable: React.FC<Props> = ({ usersData }) => {
+const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
     const [data, setData] = useState<UserProfile[]>(useMemo(() => usersData, [usersData]))
     const [memberInfoModal, setMemberInfoModal] = useState(false)
     const [changeKindMemberModal, setChangeKindMemberModal] = useState(false)

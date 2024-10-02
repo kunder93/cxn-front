@@ -10,6 +10,13 @@ import { ButtonRow, ErrorMessage } from '../../SignUpSingInCommonStyles'
 import FormField from '../Common/FormField'
 import { ResponsiveMainContainer } from './Styles/FormStepsCommonStyles'
 
+/**
+ * Checks if the "Siguiente" (Next) button should be disabled
+ * based on the errors in the Formik form.
+ *
+ * @param {FormikProps<SignUpFormValues>} formikProps - The Formik props containing the form state and errors.
+ * @returns {boolean} - Returns true if any of the specified fields have errors, otherwise false.
+ */
 const isThirdStepNextButtonDisabled = ({ errors }: FormikProps<SignUpFormValues>): boolean => {
     return !!(
         errors.postalCode ??
@@ -22,13 +29,25 @@ const isThirdStepNextButtonDisabled = ({ errors }: FormikProps<SignUpFormValues>
     )
 }
 
-const SignUpFormThirdStep: React.FC<SignUpFormStepProps> = ({ formikProps, previousStepFunction, nextStepFunction }) => {
+/**
+ * Component representing the third step of the sign-up form.
+ *
+ * @param {SignUpFormStepProps} formikProps - The Formik props for managing form state and validation.
+ * @param {Function} previousStepFunction - Function to navigate to the previous step.
+ * @param {Function} nextStepFunction - Function to navigate to the next step.
+ * @returns {JSX.Element} - The rendered component.
+ */
+const SignUpFormThirdStep = ({ formikProps, previousStepFunction, nextStepFunction }: SignUpFormStepProps) => {
     const [selectedCountryNumber, setSelectedCountry] = useState<number | undefined>()
     const countriesList = useAxiosGetCountriesList()
     const { subCountriesList, loading: subCountriesLoading, error: subCountriesError } = useSubCountries(selectedCountryNumber)
-
     const isNextButtonDisabled = useMemo(() => isThirdStepNextButtonDisabled(formikProps), [formikProps])
 
+    /**
+     * Handles the change event for selecting a sub-country (province).
+     *
+     * @param {React.ChangeEvent<HTMLSelectElement>} event - The change event from the select element.
+     */
     const handleSubCountryChange = useCallback(
         (event: React.ChangeEvent<HTMLSelectElement>) => {
             void formikProps.setFieldValue('countrySubdivisionName', event.target.value)
@@ -36,6 +55,11 @@ const SignUpFormThirdStep: React.FC<SignUpFormStepProps> = ({ formikProps, previ
         [formikProps]
     )
 
+    /**
+     * Handles the change event for selecting a country.
+     *
+     * @param {React.ChangeEvent<HTMLSelectElement>} event - The change event from the select element.
+     */
     const handleCountryChange = useCallback(
         (event: React.ChangeEvent<HTMLSelectElement>) => {
             const selectedCountry = Number(event.target.value)
@@ -45,6 +69,11 @@ const SignUpFormThirdStep: React.FC<SignUpFormStepProps> = ({ formikProps, previ
         [formikProps]
     )
 
+    /**
+     * Generates options for the country select field.
+     *
+     * @returns {JSX.Element} - The options for the country select field.
+     */
     const countryOptions = useMemo(() => {
         if (countriesList.loaded && countriesList.data) {
             return (
@@ -61,6 +90,11 @@ const SignUpFormThirdStep: React.FC<SignUpFormStepProps> = ({ formikProps, previ
         return <option value="">Cargando países...</option>
     }, [countriesList])
 
+    /**
+     * Generates options for the sub-country (province) select field.
+     *
+     * @returns {JSX.Element} - The options for the sub-country select field.
+     */
     const subCountryOptions = useMemo(() => {
         if (subCountriesLoading) {
             return <option value="">Cargando provincias...</option>

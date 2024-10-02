@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 import { MainContainerStyled, mainContentContainerBackgroundColor } from '../components/Common/CommonStyles'
 import HomePageCard, { ButtonOptions, HomePageCardProps } from '../components/HomePage/HomePageCard'
@@ -271,10 +270,8 @@ const MemberActivitiesArticle3 = styled(MemberActivitiesArticle)`
     grid-area: memberActivitiesArticle3;
 `
 
-const HomePage: React.FC = () => {
+const HomePage = (): JSX.Element => {
     usePageTitle('CXN Principal')
-    console.log("ISADOASODASKPKDOPASKOPDKOPDASK")
-    console.log(process.env.NODE_ENV)
     return (
         <MainContainerStyled>
             <StyledMainCarouselSection>

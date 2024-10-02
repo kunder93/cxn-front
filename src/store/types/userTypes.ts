@@ -11,9 +11,8 @@ export enum KindMember {
     SOCIO_NUMERO = 'SOCIO_NUMERO',
     SOCIO_ASPIRANTE = 'SOCIO_ASPIRANTE',
     SOCIO_HONORARIO = 'SOCIO_HONORARIO',
-    SOCIO_FAMILIAR = 'SOCIO_FAMILIAR'   
+    SOCIO_FAMILIAR = 'SOCIO_FAMILIAR'
 }
-
 
 export interface UserData {
     dni: string
@@ -31,7 +30,7 @@ export interface UserProfile extends UserData {
     userAddress: UserAddress
 }
 
-export interface UserAddress{
+export interface UserAddress {
     postalCode: number
     apartmentNumber: number
     building: string

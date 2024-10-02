@@ -1,4 +1,3 @@
-import React from 'react'
 import { Building, EnvelopeAt, Facebook, Telephone, Whatsapp } from 'react-bootstrap-icons'
 import styled from 'styled-components'
 import ContactForm from '../ContactForm'
@@ -43,8 +42,7 @@ const ContactListContainer = styled(ListGroup)`
     }
 `
 
-
-const ContactContainer: React.FC = () => {
+const ContactContainer = (): JSX.Element => {
     return (
         <MainContactContainerStyled>
             <ContactFormWrapper>

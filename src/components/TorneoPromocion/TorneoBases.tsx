@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 import { Container } from 'react-bootstrap'
 import { ROUTES } from '../../resources/routes-constants'
@@ -70,7 +69,7 @@ const Anchor = styled(Link)`
     }
 `
 
-const TorneoBases: React.FC = () => {
+const TorneoBases = (): JSX.Element => {
     usePageTitle('Bases torneo')
     return (
         <StyledContainer>

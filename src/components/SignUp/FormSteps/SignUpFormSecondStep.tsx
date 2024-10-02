@@ -1,5 +1,4 @@
 import { Field, FormikProps } from 'formik'
-import React from 'react'
 import { Button, Col, Row } from 'react-bootstrap'
 import BootstrapForm from 'react-bootstrap/Form'
 import styled from 'styled-components'
@@ -12,18 +11,37 @@ const FormRowFieldDateGender = styled(Row)`
     margin-bottom: 2em;
 `
 
+/**
+ * Checks if the Next button for the second step is disabled.
+ * @param {FormikProps<SignUpFormValues>} formikProps - The Formik props containing the form state and errors.
+ * @returns {boolean} True if the Next button should be disabled; otherwise, false.
+ */
 const isSecondStepNextButtonDisabled = (formikProps: FormikProps<SignUpFormValues>): boolean => {
     const { errors } = formikProps
     return !!(errors.dni ?? errors.name ?? errors.firstSurname ?? errors.secondSurname ?? errors.gender ?? errors.birthDate)
 }
 
+/**
+ * Interface representing the props for the SignUpFormSecondStep component.
+ * @interface SecondStepFormData
+ * @property {() => void} nextStepFunction - Function to call when proceeding to the next step.
+ * @property {() => void} previousStepFunction - Function to call when going back to the previous step.
+ * @property {FormikProps<SignUpFormValues>} formikProps - Formik props to manage form state and validation.
+ */
 export interface SecondStepFormData {
     nextStepFunction: () => void
     previousStepFunction: () => void
     formikProps: FormikProps<SignUpFormValues>
 }
- 
-const SignUpFormSecondStep: React.FC<SecondStepFormData> = ({ formikProps, nextStepFunction, previousStepFunction }) => (
+
+/**
+ * Second step of the sign-up form.
+ * This component collects user details such as DNI, name, surnames, gender, and birth date.
+ *
+ * @param {SecondStepFormData} props - The props for the component.
+ * @returns {JSX.Element} The rendered component.
+ */
+const SignUpFormSecondStep = ({ formikProps, nextStepFunction, previousStepFunction }: SecondStepFormData): JSX.Element => (
     <ResponsiveMainContainer>
         <FormField id="dni" name="dni" type="text" label="DNI:" placeholder="Tu DNI" formikProps={formikProps} />
         <FormField id="name" name="name" type="text" label="Nombre:" placeholder="Tu nombre" formikProps={formikProps} />

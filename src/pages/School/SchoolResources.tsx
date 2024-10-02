@@ -1,6 +1,5 @@
 import usePageTitle from '../../components/Common/hooks/usePageTitle'
 import { backGroundColor, backgroundImageUrl, mainContentContainerBackgroundColor } from '../../components/Common/CommonStyles'
-import React from 'react'
 import { Container, Table } from 'react-bootstrap'
 import styled from 'styled-components'
 
@@ -42,7 +41,7 @@ const ResourceLinkStyled = styled.a`
     }
 `
 
-const ChessResources: React.FC = () => {
+const ChessResources = (): JSX.Element => {
     usePageTitle('CXN Recursos didácticos.')
     const resources: Resource[] = [
         {

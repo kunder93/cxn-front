@@ -1,9 +1,8 @@
-import React from 'react'
 import SignUpForm from '../components/SignUp/SignUpForm'
 import { MainContainer } from '../components/SignUpSingInCommonStyles'
 import usePageTitle from '../components/Common/hooks/usePageTitle'
 
-const SignUpPage: React.FC = () => {
+const SignUpPage = (): JSX.Element => {
     usePageTitle('CXN Solicitud de socio')
     return (
         <MainContainer fluid="md">

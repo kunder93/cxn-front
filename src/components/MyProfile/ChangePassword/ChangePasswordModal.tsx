@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import { Button, Modal, ModalProps } from 'react-bootstrap'
 
 import styled from 'styled-components'
@@ -20,7 +20,7 @@ const ModalFooter = styled(Modal.Footer)`
     justify-content: space-between !important; /* Distribuye los elementos a lo largo del contenedor */
 `
 
-const ChangePasswordModal: React.FC<ChangePasswordModalProps> = (props) => {
+const ChangePasswordModal = (props: ChangePasswordModalProps): JSX.Element => {
     const formRef = useRef<FormikProps<ChangePasswordFormValues>>(null)
     const handleSubmit = () => {
         if (formRef.current) {

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import { Button, Modal, ModalProps } from 'react-bootstrap'
 
 import styled from 'styled-components'
@@ -20,7 +20,7 @@ const ModalFooter = styled(Modal.Footer)`
     justify-content: space-between !important; /* Distribuye los elementos a lo largo del contenedor */
 `
 
-const UnsubscribeMemberModal: React.FC<UnsubscribeMemberModalProps> = (props) => {
+const UnsubscribeMemberModal = (props: UnsubscribeMemberModalProps): JSX.Element => {
     const formRef = useRef<FormikProps<UnsubscribeMemberFormValues>>(null)
     const handleSubmit = () => {
         if (formRef.current) {

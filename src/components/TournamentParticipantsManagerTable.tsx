@@ -1,10 +1,8 @@
-import React, { useMemo, useState } from 'react'
-import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect, } from 'react-table'
-import {Table } from 'react-bootstrap'
-
+import { useMemo, useState } from 'react'
+import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'react-table'
+import { Table } from 'react-bootstrap'
 import styled from 'styled-components'
-
-import { ITournamentParticipant,  } from './Types/Types'
+import { ITournamentParticipant } from './Types/Types'
 
 const TableFilterContainer = styled.div`
     display: flex;
@@ -21,14 +19,23 @@ const FilterInputLabel = styled.label`
     padding-right: 1em;
 `
 
-
 interface Props {
+    /** Array of tournament participants. */
     membersData: ITournamentParticipant[]
 }
 
-const TournamentParticipantsManagerTable: React.FC<Props> = ({ membersData }) => {
+/**
+ * TournamentParticipantsManagerTable component to display and manage tournament participants.
+ *
+ * This component uses react-table to render a sortable and filterable table of
+ * tournament participants, displaying their FIDE ID, name, club, birth date,
+ * category, and byes. It also includes a global filter for searching through the participants.
+ *
+ * @param {Props} props - The component props.
+ * @returns {JSX.Element} The rendered table component.
+ */
+const TournamentParticipantsManagerTable = ({ membersData }: Props) => {
     const [data] = useState<ITournamentParticipant[]>(useMemo(() => membersData, [membersData]))
-
 
     const columns: Column<ITournamentParticipant>[] = useMemo(
         () => [
@@ -37,23 +44,15 @@ const TournamentParticipantsManagerTable: React.FC<Props> = ({ membersData }) =>
             { Header: 'Club', accessor: 'club' },
             { Header: 'Fecha de nacimiento', accessor: (d) => `${d.birthDate.toString()}` },
             { Header: 'Categoria', accessor: (d) => d.category },
-            { Header: 'Byes', accessor: 'byes' },
+            { Header: 'Byes', accessor: 'byes' }
         ],
         []
     )
 
-
-
-
-
-
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, preGlobalFilteredRows, setGlobalFilter, state } = useTable<ITournamentParticipant>(
-        { columns, data },
-        useGlobalFilter,
-        useSortBy,
-        useRowSelect, 
-    )
+    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, preGlobalFilteredRows, setGlobalFilter, state } =
+        useTable<ITournamentParticipant>({ columns, data }, useGlobalFilter, useSortBy, useRowSelect)
     const globalFilterStatus = state.globalFilter as string | number | readonly string[] | undefined
+
     return (
         <>
             <TableFilterContainer>

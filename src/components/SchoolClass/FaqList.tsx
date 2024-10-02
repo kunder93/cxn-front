@@ -1,4 +1,3 @@
-import React from 'react'
 import { ListGroup } from 'react-bootstrap'
 import styled from 'styled-components'
 
@@ -32,7 +31,7 @@ const Answer = styled.p`
  * @param {Props} props - Component props. The list of pair question-answer
  * @returns {JSX.Element} - FAQ List with questions and answers
  */
-const FaqList: React.FC<Props> = ({ faqPairsQuestionAnswer }) => {
+const FaqList = ({ faqPairsQuestionAnswer }: Props): JSX.Element => {
     return (
         <ListGroup as="ol">
             {faqPairsQuestionAnswer.map((pair, index) => (

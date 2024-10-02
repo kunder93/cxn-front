@@ -1,6 +1,4 @@
-import React from 'react'
 import MembersManagerTable from '../components/MembersManager/MembersManagerTable'
-
 import { useAxiosGetAllUsersData } from '../utility/CustomAxios'
 import { Alert } from 'react-bootstrap'
 import styled from 'styled-components'
@@ -15,13 +13,22 @@ const Title = styled.h1`
 const ErrorMessage = styled(Alert)`
     margin-top: 20px;
 `
- 
+
 const NoQuestionsMessage = styled.p`
     text-align: center;
     margin-top: 20px;
 `
 
-const MembersManagerPage: React.FC = () => {
+/**
+ * MembersManagerPage component to manage club members.
+ *
+ * This page fetches and displays a list of users (club members)
+ * and shows a loading spinner or an error message based on the
+ * loading state and the result of the API call.
+ *
+ * @returns {JSX.Element} The rendered Members Manager page.
+ */
+const MembersManagerPage = (): JSX.Element => {
     const { data, error, loaded } = useAxiosGetAllUsersData()
 
     if (error) {

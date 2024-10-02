@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Alert } from 'react-bootstrap'
 import styled from 'styled-components'
 import { IChessQuestionsList, useAxiosGetChessQuestions } from '../utility/CustomAxios'
@@ -20,7 +20,13 @@ const NoQuestionsMessage = styled.p`
     margin-top: 20px;
 `
 
-const ChessQuestionsManager: React.FC = () => {
+/**
+ * Manages and displays chess questions submitted by visitors on the website.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered ChessQuestionsManager component.
+ */
+const ChessQuestionsManager = (): JSX.Element => {
     const { data, error, loaded } = useAxiosGetChessQuestions()
     const [chessQuestionsList, setChessQuestionsList] = useState<IChessQuestionsList>({ chessQuestionList: [] })
 

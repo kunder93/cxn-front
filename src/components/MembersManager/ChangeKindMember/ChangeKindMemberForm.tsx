@@ -26,7 +26,7 @@ export interface ChangeKindMemberFormRef {
     submitForm: () => void
 }
 
-const ChangeKindMemberForm: React.FC<ChangeKindMemberFormProps> = ({ formikRef, formData, updateLocalKindMember, setBlockButton }) => {
+const ChangeKindMemberForm = ({ formikRef, formData, updateLocalKindMember, setBlockButton }: ChangeKindMemberFormProps): JSX.Element => {
     const { kindMember, email } = formData
     const { notification, showNotification, hideNotification } = useNotification()
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)

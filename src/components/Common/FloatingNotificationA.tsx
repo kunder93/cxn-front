@@ -1,4 +1,3 @@
-import React from 'react'
 import { Alert, Collapse } from 'react-bootstrap'
 import styled from 'styled-components'
 import { NotificationAOptions } from './hooks/useNotification'
@@ -16,7 +15,7 @@ interface IFloatingNotificationA {
     hideNotification: () => void
 }
 
-const FloatingNotificationA: React.FC<IFloatingNotificationA> = ({ notification, hideNotification }) => {
+const FloatingNotificationA = ({ notification, hideNotification }: IFloatingNotificationA): JSX.Element => {
     const handleExited = () => {
         hideNotification()
     }

@@ -1,187 +1,80 @@
 import React, { useState } from 'react'
-import { Accordion, Button } from 'react-bootstrap'
 import { People, CashCoin, Gear } from 'react-bootstrap-icons'
-import styled from 'styled-components'
 import { ProfileSection } from './SideBar'
+import NavigationButton from './CommonComponents/NavigationButton'
+import { ProfileMenuSection, RolePageProps } from './types'
+import { PageContainer, StyledAccordion, StyledAccordionBody, StyledAccordionHeader, StyledAccordionItem, Title } from './CommonStyles'
 
-const PageContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2em;
-    font-family: 'Montserrat', sans-serif;
-    background-color: #f4f4f9;
-    min-height: 100vh;
-`
-
-const Title = styled.h3`
-    margin-bottom: 1.5em;
-    color: #343a40;
-    font-size: 2em;
-`
-
-const StyledAccordion = styled(Accordion)`
-    width: 100%;
-    max-width: 800px;
-    border: none;
-`
-
-const StyledAccordionItem = styled(Accordion.Item)`
-    background-color: #fff;
-    border: 1px solid #dee2e6;
-    border-radius: 5px;
-    margin-bottom: 1em;
-
-    .accordion-header {
-        font-size: 1.75rem;
-        background-color: #f8f9fa;
-        &:hover {
-            background-color: #e9ecef;
-        }
+/**
+ * An array of sections available in the President's role page.
+ * Each section contains an icon, title, and a set of buttons that navigate to different profile sections.
+ *
+ * @type {ProfileMenuSection[]}
+ */
+const sections: ProfileMenuSection[] = [
+    {
+        key: '0',
+        icon: <People size="3rem" />,
+        title: 'Gestión de socios',
+        buttons: [{ section: ProfileSection.MembersManager, text: 'Ver listado socios', buttonIndex: 1 }]
+    },
+    {
+        key: '1',
+        icon: <CashCoin size="3rem" />,
+        title: 'Gestión de contabilidad financiera',
+        buttons: [
+            { section: ProfileSection.InvoicesManager, text: 'Ver lista de facturas', buttonIndex: 2 },
+            { section: ProfileSection.PaymentSheetsManager, text: 'Ver lista hojas de liquidación', buttonIndex: 3 },
+            { section: ProfileSection.CompaniesManager, text: 'Ver listado compañias (facturas)', buttonIndex: 4 }
+        ]
+    },
+    {
+        key: '2',
+        icon: <Gear size="3rem" />,
+        title: 'Gestión de administración',
+        buttons: [
+            { section: ProfileSection.MessagesManager, text: 'Mensajes recibidos', buttonIndex: 5 },
+            { section: ProfileSection.TournamentParticipantManager, text: 'Inscritos torneo', buttonIndex: 6 }
+        ]
     }
+]
 
-    .show {
-        background-color: #343a40;
-        color: #fff;
-    }
-`
-
-const StyledAccordionHeader = styled(Accordion.Header)`
-    display: flex;
-    align-items: center;
-    font-size: inherit;
-    color: inherit;
-    svg {
-        margin-right: 1rem;
-    }
-`
-
-const StyledAccordionBody = styled(Accordion.Body)`
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-`
-
-const buttonBaseStyle = {
-    width: '100%',
-    height: '100%',
-    fontSize: '1.2rem',
-    color: '#fff',
-    backgroundColor: '#343a40',
-    border: 'none',
-    borderRadius: 0,
-    padding: '1rem 0',
-    borderTop: '1px solid #dee2e6',
-    borderBottom: '1px solid #dee2e6',
-    margin: 0,
-    cursor: 'pointer'
-}
-
-const buttonHoverStyle = {
-    backgroundColor: '#495057'
-}
-
-interface PresidentRolePageProps {
-    changePage: (section: ProfileSection) => void
-}
-
-const PresidenteRolePage: React.FC<PresidentRolePageProps> = ({ changePage }) => {
+/**
+ * Renders the President's role page with sections and associated buttons.
+ * Displays an accordion with buttons that navigate to different sections
+ * when clicked, and highlights the hovered button.
+ *
+ * @component
+ * @param {PresidentRolePageProps} props - The properties for the PresidenteRolePage.
+ * @returns {JSX.Element} The rendered PresidenteRolePage component.
+ */
+const PresidenteRolePage: React.FC<RolePageProps> = ({ changePage }: { changePage: (section: ProfileSection) => void }): JSX.Element => {
     const [hoveredButton, setHoveredButton] = useState<number | null>(null)
-
-    const handleMembersManagerButton = () => {
-        changePage(ProfileSection.MembersManager)
-    }
-
-    const handleInvoicesButton = () => {
-        changePage(ProfileSection.InvoicesManager)
-    }
-
-    const handlePaymentSheetsButton = () => {
-        changePage(ProfileSection.PaymentSheetsManager)
-    }
-    const handleCompaniesManagerButton = () => {
-        changePage(ProfileSection.CompaniesManager)
-    }
-    const handleMessagesButton = () => {
-        changePage(ProfileSection.MessagesManager)
-    }
-    const handleTournamentParticipantsButton = () => {
-        changePage(ProfileSection.TournamentParticipantManager)
-    }
 
     return (
         <PageContainer>
             <Title>SECCIÓN DEL PRESIDENTE</Title>
             <StyledAccordion>
-                <StyledAccordionItem eventKey="0">
-                    <StyledAccordionHeader>
-                        <People size="3rem" /> Gestión de socios
-                    </StyledAccordionHeader>
-                    <StyledAccordionBody>
-                        <Button
-                            style={hoveredButton === 1 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={handleMembersManagerButton}
-                            onMouseEnter={() => setHoveredButton(1)}
-                            onMouseLeave={() => setHoveredButton(null)}
-                        >
-                            Ver listado socios
-                        </Button>
-                    </StyledAccordionBody>
-                </StyledAccordionItem>
-                <StyledAccordionItem eventKey="1">
-                    <StyledAccordionHeader>
-                        <CashCoin size="3rem" /> Gestión de contabilidad financiera
-                    </StyledAccordionHeader>
-                    <StyledAccordionBody>
-                        <Button
-                            style={hoveredButton === 2 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={handleInvoicesButton}
-                            onMouseEnter={() => setHoveredButton(2)}
-                            onMouseLeave={() => setHoveredButton(null)}
-                        >
-                            Ver lista de facturas
-                        </Button>
-                        <Button
-                            style={hoveredButton === 3 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={handlePaymentSheetsButton}
-                            onMouseEnter={() => setHoveredButton(3)}
-                            onMouseLeave={() => setHoveredButton(null)}
-                        >
-                            Ver lista hojas de liquidación
-                        </Button>
-                        <Button
-                            style={hoveredButton === 4 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={handleCompaniesManagerButton}
-                            onMouseEnter={() => setHoveredButton(4)}
-                            onMouseLeave={() => setHoveredButton(null)}
-                        >
-                            Ver listado compañias (facturas)
-                        </Button>
-                    </StyledAccordionBody>
-                </StyledAccordionItem>
-                <StyledAccordionItem eventKey="2">
-                    <StyledAccordionHeader>
-                        <Gear size="3rem" /> Gestión de administración
-                    </StyledAccordionHeader>
-                    <StyledAccordionBody>
-                        <Button
-                            style={hoveredButton === 5 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={handleMessagesButton}
-                            onMouseEnter={() => setHoveredButton(5)}
-                            onMouseLeave={() => setHoveredButton(null)}
-                        >
-                            Mensajes recibidos
-                        </Button>
-                        <Button
-                            style={hoveredButton === 6 ? { ...buttonBaseStyle, ...buttonHoverStyle } : buttonBaseStyle}
-                            onClick={handleTournamentParticipantsButton}
-                            onMouseEnter={() => setHoveredButton(6)}
-                            onMouseLeave={() => setHoveredButton(null)}
-                        >
-                            Inscritos torneo
-                        </Button>
-                    </StyledAccordionBody>
-                </StyledAccordionItem>
+                {sections.map(({ key, icon, title, buttons }) => (
+                    <StyledAccordionItem eventKey={key} key={key}>
+                        <StyledAccordionHeader>
+                            {icon} {title}
+                        </StyledAccordionHeader>
+                        <StyledAccordionBody>
+                            {buttons.map(({ section, text, buttonIndex }) => (
+                                <NavigationButton
+                                    key={text}
+                                    section={section}
+                                    text={text}
+                                    hoveredButton={hoveredButton}
+                                    setHoveredButton={setHoveredButton}
+                                    buttonIndex={buttonIndex}
+                                    changePage={changePage}
+                                />
+                            ))}
+                        </StyledAccordionBody>
+                    </StyledAccordionItem>
+                ))}
             </StyledAccordion>
         </PageContainer>
     )

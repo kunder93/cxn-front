@@ -128,16 +128,18 @@ const CollapsibleNavigationBar: React.FC = () => {
                         onNavItemClick={handleNavItemClick}
                     />
 
-                    <CustomDropdownMenu
-                        title="IV Torneo promoción"
-                        route={ROUTES.TORNEO_BASES}
-                        menuItems={[
-                            { text: 'Cartel', href: ROUTES.TORNEO_CARTEL },
-                            { text: 'Bases', href: ROUTES.TORNEO_BASES },
-                            { text: 'Inscripción', href: ROUTES.TORNEO_INSCRIPCION }
-                        ]}
-                        onNavItemClick={handleNavItemClick}
-                    />
+                    {/* 
+<CustomDropdownMenu
+    title="IV Torneo promoción" // Título que aparecerá en el menú desplegable
+    route={ROUTES.TORNEO_BASES} // Ruta a la que redirige el botón principal del menú
+    menuItems={[
+        { text: 'Cartel', href: ROUTES.TORNEO_CARTEL }, // Primer ítem del menú con enlace a 'Cartel'
+        { text: 'Bases', href: ROUTES.TORNEO_BASES }, // Segundo ítem del menú con enlace a 'Bases'
+        { text: 'Inscripción', href: ROUTES.TORNEO_INSCRIPCION } // Tercer ítem del menú con enlace a 'Inscripción'
+    ]}
+    onNavItemClick={handleNavItemClick} // Evento manejador al hacer clic en un ítem del menú
+/>
+*/}
                     <Nav.Link as={Link} title="Actividades" to={ROUTES.ACTIVITIES} onClick={handleNavItemClick}>
                         Actividades
                     </Nav.Link>

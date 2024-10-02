@@ -50,7 +50,7 @@ const IconButtonStyle = styled.button`
  * IconButton component to represent a button with a chevron icon for carousel navigation.
  * @param {IconButtonProps} props - The component properties.
  */
-const IconButton: React.FC<IconButtonProps> = ({ direction, onClick }: IconButtonProps) => {
+const IconButton = ({ direction, onClick }: IconButtonProps) => {
     const buttonTitle: string = direction === IconDirection.Right ? nextButtonTitle : previousButtonTitle
     return (
         <IconButtonStyle onClick={onClick} aria-describedby={buttonTitle} type="button" aria-label={buttonTitle}>
@@ -129,7 +129,7 @@ interface Props {
     benefits: CarouselItemMessage[]
 }
 
-const ClassBenefitsCarousel: React.FC<Props> = ({ benefits }) => {
+const ClassBenefitsCarousel = ({ benefits }: Props) => {
     const [index, setIndex] = useState(0)
     const totalItems = benefits.length
 
@@ -152,26 +152,25 @@ const ClassBenefitsCarousel: React.FC<Props> = ({ benefits }) => {
                 <ChessPieceStyled src={currentPieceUrl} title="Carousel chess piece" alt="piece changes like carousel content"></ChessPieceStyled>
                 <IconButton direction={IconDirection.Right} onClick={handleNextStep} />
             </CarouselSectionHeader>
-            
-                <StyledCarousel fade={true} controls={false} indicators={false} interval={null} activeIndex={index}>
-                    {benefits.map((item, idx) => (
-                        <Carousel.Item key={`item-${idx}`}>
-                            <CarouselItemContainerSection key={`container-${idx}`}>
-                                <IconStyle src={item.IconUrl} alt={item.IconAlt}/>
-                                <h4>{item.title}</h4>
-                                {item.benefit.map((benefit, pIdx) => (
-                                    <React.Fragment key={`benefit-${idx}-${pIdx}`}>
-                                        <div>
-                                            <h5>{benefit.subtitle}</h5>
-                                            <h6>{benefit.text}</h6>
-                                        </div>
-                                    </React.Fragment>
-                                ))}
-                            </CarouselItemContainerSection>
-                        </Carousel.Item>
-                    ))}
-                </StyledCarousel>
-           
+
+            <StyledCarousel fade={true} controls={false} indicators={false} interval={null} activeIndex={index}>
+                {benefits.map((item, idx) => (
+                    <Carousel.Item key={`item-${idx}`}>
+                        <CarouselItemContainerSection key={`container-${idx}`}>
+                            <IconStyle src={item.IconUrl} alt={item.IconAlt} />
+                            <h4>{item.title}</h4>
+                            {item.benefit.map((benefit, pIdx) => (
+                                <React.Fragment key={`benefit-${idx}-${pIdx}`}>
+                                    <div>
+                                        <h5>{benefit.subtitle}</h5>
+                                        <h6>{benefit.text}</h6>
+                                    </div>
+                                </React.Fragment>
+                            ))}
+                        </CarouselItemContainerSection>
+                    </Carousel.Item>
+                ))}
+            </StyledCarousel>
         </section>
     )
 }

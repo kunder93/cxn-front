@@ -23,7 +23,7 @@ const StyledFormContainer = styled(Container)`
     padding-top: 1em;
 `
 
-const PasswordChangeForm: React.FC<UnsubscribeMemberFormProps> = ({ formikRef, userEmail }) => {
+const PasswordChangeForm = ({ formikRef, userEmail }: UnsubscribeMemberFormProps): JSX.Element => {
     const [visibleAlert, setVisibleAlert] = React.useState(false)
     const handleSubmit = () => {
         setVisibleAlert(true)

@@ -1,22 +1,47 @@
 import usePageTitle from '../components/Common/hooks/usePageTitle'
-import React from 'react'
 import { Container } from 'react-bootstrap'
 import styled from 'styled-components'
 
+/**
+ * Constant for the CIF (Tax ID) of the organization.
+ * @constant {string}
+ */
 const CIF = 'G-15.227.556'
+
+/**
+ * Constant for the email address of the organization.
+ * @constant {string}
+ */
 const EMAIL = 'xadreznaron@hotmail.com'
+
+/**
+ * Constant for the address of the organization.
+ * @constant {string}
+ */
 const DIRECCION = 'Rúa Manoel Antonio, 9 San Xosé Obrero 15570 Narón, A Coruña'
 
+/**
+ * Styled component for the main container.
+ * Adds padding to the top and bottom of the container.
+ */
 const MainContainer = styled(Container)`
     padding-top: 2em;
     padding-bottom: 2em;
     p {
-        margin-bottom: 1em; /* Agrega un espacio entre párrafos */
+        margin-bottom: 1em; /* Adds space between paragraphs */
     }
 `
 
-const LegalNotice: React.FC = () => {
+/**
+ * Component that renders the legal notice page.
+ * It sets the page title and displays legal information about the organization.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered legal notice page.
+ */
+const LegalNotice = (): JSX.Element => {
     usePageTitle('CXN Aviso legal')
+
     return (
         <MainContainer>
             <h1>Aviso legal</h1>
@@ -42,7 +67,7 @@ const LegalNotice: React.FC = () => {
             <p>
                 Es responsabilidad del usuario cómo utilice y acceda al sitio web. El usuario se compromete a hacer un uso adecuado y responsable de los
                 contenidos y servicios del sitio web conforme la legislación vigente. El usuario se compromete a, utilizando el sitio web, no realizar acciones
-                que perjudiquen o dañen la imagen y derechos de CXN o de terceros relacionados, como también de otros usuarios del sitio web.{' '}
+                que perjudiquen o dañen la imagen y derechos de CXN o de terceros relacionados, como también de otros usuarios del sitio web.
             </p>
             <h3>Contenido:</h3>
             <p>
@@ -70,9 +95,9 @@ const LegalNotice: React.FC = () => {
             <p>CXN a través del sitio web no recopila ningún tipo de información personal a través de cookies.</p>
             <p>
                 <strong>Cookies de terceros:</strong> CXN utiliza un servicio 'Google Maps' para enseñar en una sección la situación geográfica del club. Esta
-                ventana utiliza cookies de terceros. Puede obtener informacion de las funciones de estas cookies en el sitio web:{' '}
+                ventana utiliza cookies de terceros. Puede obtener informacion de las funciones de estas cookies en el sitio web:
                 <a href="https://support.google.com/maps/answer/7576020?hl=es&sjid=6175177243193965021-EU#null" target="_blank" rel="noopener noreferrer">
-                    <strong>Información para consumidores de Google Maps</strong>{' '}
+                    <strong>Información para consumidores de Google Maps</strong>
                 </a>
             </p>
             <h2>PROPIEDAD INTELECTUAL E INDUSTRIAL</h2>
@@ -83,9 +108,9 @@ const LegalNotice: React.FC = () => {
             </p>
             <h2>LEY APLICABLE Y JURISDICCIÓN</h2>
             <p>
-                El acceso y utilización de este sitio web implioca que el usuario acepta que todas las reclamaciones o quejas que tenga contra CXN, que
-                provengan o estén relacionadas con el funcionamiento o el uso del sitio web serán resueltas por el tribunal competente situado en Ferrol,
-                España, o el lugar mas cercano.
+                El acceso y utilización de este sitio web implica que el usuario acepta que todas las reclamaciones o quejas que tenga contra CXN, que provengan
+                o estén relacionadas con el funcionamiento o el uso del sitio web serán resueltas por el tribunal competente situado en Ferrol, España, o el
+                lugar más cercano.
             </p>
         </MainContainer>
     )

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useCallback } from 'react'
+import { useEffect, useMemo, useState, useCallback } from 'react'
 import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect, CellProps } from 'react-table'
 import { Button, Table, Spinner } from 'react-bootstrap'
 import { Trash3, Eye, EyeSlash } from 'react-bootstrap-icons'
@@ -29,7 +29,7 @@ interface ChessQuestionsTableProps {
     data: IChessQuestionsList
 }
 
-const ChessQuestionsTable: React.FC<ChessQuestionsTableProps> = ({ data: initialData }) => {
+const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): JSX.Element => {
     const [data, setData] = useState<IChessQuestion[]>([])
     const [loadingRows, setLoadingRows] = useState<number[]>([])
     const [deletingRows, setDeletingRows] = useState<number[]>([])
