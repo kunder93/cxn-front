@@ -1,12 +1,19 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-base-to-string */
 import React, { useEffect, useState } from 'react'
 import { Accordion } from 'react-bootstrap'
 import { Trophy } from 'react-bootstrap-icons'
-import styled from 'styled-components'
+import styled, { keyframes, css } from 'styled-components'
 import LichessPlayersTable from './LichessPlayersTable'
 import { emptyLichessProfile, isLichessProfileEmpty, LichessProfileResponse } from './lichess'
 import { useLichessProfile, useLichessProfiles } from './Hooks'
 import ProfileRow from './ProfileRow'
 import LinkLichessAccountButton from './LinkLichessAccountButton'
+import { GrUpdate } from 'react-icons/gr'
+import axios from 'axios'
+import { useAppSelector } from '../../../store/hooks'
+import { useNotificationContext } from '../../../components/Common/NotificationContext'
+import { NotificationType } from '../../../components/Common/hooks/useNotification'
 
 const StyledAccordionBody = styled(Accordion.Body)`
     display: flex;
@@ -30,6 +37,28 @@ const FirstStyledAccordionBody = styled(Accordion.Body)`
     background-color: #222;
     color: #fff;
 `
+// Definir la animación de rotación
+const rotate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(2160deg);
+  }
+`
+
+const IconButton = styled(GrUpdate)<{ isRotating: boolean }>`
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+
+    ${({ isRotating }) =>
+        isRotating &&
+        css`
+            color: #000;
+            animation: ${rotate} 5s linear;
+        `}
+`
 
 // Default empty values for LichessProfileResponse
 
@@ -37,6 +66,42 @@ const ChessProfileLichess: React.FC = () => {
     const { lichessProfile, loading: profileLoading } = useLichessProfile()
     const [myLichessProfile, setMyLichessProfile] = useState<LichessProfileResponse>(emptyLichessProfile)
     const { players, loading: playersLoading } = useLichessProfiles(myLichessProfile)
+    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
+    const [isRotating, setIsRotating] = useState(false)
+    const { showNotification } = useNotificationContext()
+    const handleUpdateClick = async () => {
+        setIsRotating(true)
+        try {
+            const response = await axios.post<LichessProfileResponse>(
+                'http://localhost:8080/api/updateLichessProfile',
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${userJwt}` // Agregar el token JWT en el encabezado
+                    }
+                }
+            )
+
+            // Imprimir el valor de la respuesta en la consola
+            console.log('EL PERFIL DE LICHESS ACTUALIZADO ES:')
+            console.log(response.data)
+            showNotification('Perfil de lichess actualizada', NotificationType.Success)
+            setMyLichessProfile(response.data)
+            // También puedes almacenar el mensaje en el estado si lo deseas
+        } catch (error) {
+            // Manejo de errores
+            if (axios.isAxiosError(error)) {
+                showNotification(error.message, NotificationType.Error)
+                console.error('Error al realizar la solicitud:', error.message)
+            } else {
+                showNotification('Error inesperado', NotificationType.Error)
+                console.error('Error inesperado:', error)
+            }
+        } finally {
+            setIsRotating(false)
+        }
+    }
+
     useEffect(() => {
         setMyLichessProfile(lichessProfile)
     }, [lichessProfile])
@@ -67,7 +132,15 @@ const ChessProfileLichess: React.FC = () => {
                         </>
                     ) : (
                         <>
-                            <ProfileRow label="Última vez actualizado:" value={new Date(myLichessProfile.lastUpdate).toLocaleString()} />
+                            <ProfileRow
+                                label="Última vez actualizado:"
+                                value={
+                                    <>
+                                        {new Date(myLichessProfile.lastUpdate).toLocaleString()}{' '}
+                                        <IconButton isRotating={isRotating} onClick={handleUpdateClick} />
+                                    </>
+                                }
+                            />
                             <ProfileRow label="Nombre en Lichess:" value={myLichessProfile.lichessUserName} />
                             <ProfileRow label="ELO Blitz:" value={myLichessProfile.blitzGame.elo} />
                             <ProfileRow label="Blitz, cantidad de partidas jugadas:" value={myLichessProfile.blitzGame.amountOfGames} />
