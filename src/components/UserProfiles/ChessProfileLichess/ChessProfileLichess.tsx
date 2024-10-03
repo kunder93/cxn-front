@@ -85,7 +85,7 @@ const ChessProfileLichess: React.FC = () => {
             // Imprimir el valor de la respuesta en la consola
             console.log('EL PERFIL DE LICHESS ACTUALIZADO ES:')
             console.log(response.data)
-            showNotification('Perfil de lichess actualizada', NotificationType.Success)
+            showNotification('Perfil de lichess actualizado', NotificationType.Success)
             setMyLichessProfile(response.data)
             // También puedes almacenar el mensaje en el estado si lo deseas
         } catch (error) {
@@ -137,7 +137,12 @@ const ChessProfileLichess: React.FC = () => {
                                 value={
                                     <>
                                         {new Date(myLichessProfile.lastUpdate).toLocaleString()}{' '}
-                                        <IconButton isRotating={isRotating} onClick={handleUpdateClick} />
+                                        <IconButton
+                                            isRotating={isRotating}
+                                            onClick={() => {
+                                                void handleUpdateClick()
+                                            }}
+                                        />
                                     </>
                                 }
                             />
