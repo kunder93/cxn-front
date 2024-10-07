@@ -27,6 +27,7 @@ export interface UserData {
 }
 
 export interface UserProfile extends UserData {
+    profileImageUrl?: string
     userAddress: UserAddress
 }
 

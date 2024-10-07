@@ -3,6 +3,7 @@ import { KindMember, UserProfile, UserRole, UserState } from '../../../store/typ
 
 const initialState: UserState = {
     jwt: '',
+
     userProfile: {
         dni: '',
         name: '',
@@ -13,6 +14,7 @@ const initialState: UserState = {
         birthDate: new Date(),
         userRoles: [] as UserRole[], // Inicializamos como un array vacío de roles
         kindMember: KindMember.SOCIO_NUMERO, // Valor predeterminado para kindMember
+        profileImageUrl: undefined,
         userAddress: {
             // Dirección del usuario
             postalCode: 0,

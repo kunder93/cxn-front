@@ -1,5 +1,4 @@
 import useModal from '../../components/MyProfile/ChangePassword/hooks/useModal'
-import React from 'react'
 import { Button, Container } from 'react-bootstrap'
 import styled from 'styled-components'
 import SectionRow from './ChangePassword/SectionRow'
@@ -8,6 +7,9 @@ import { UserProfile } from 'store/types/userTypes'
 import { renderGenderValues, renderKindMember, renderUserRoles } from '../../utility/userUtilities'
 import UnsubscribeMemberModal from './UnsubscribeMember/UnsubscribeMemberModal'
 import ChangePasswordModal from './ChangePassword/ChangePasswordModal'
+import Image from 'react-bootstrap/Image'
+import PersonalImageButtonChanger from './PersonalImageButtonChanger'
+import { useAppSelector } from '../../store/hooks'
 
 const StyledContainer = styled(Container)`
     display: flex;
@@ -52,11 +54,14 @@ const Title = styled.h1`
     align-self: flex-start;
 `
 
-const SocioRolePageDataTable: React.FC<{ userProfile: UserProfile }> = ({ userProfile }) => {
+const SocioRolePageDataTable = (): JSX.Element => {
     const { modalType, openModal, closeModal } = useModal()
+    const userProfile: UserProfile = useAppSelector((state) => state.users.userProfile)
+    console.log('LA IMAGEN DE PERFIL EN SOCIO ROLE PAGE DATA TABLE ES: ' + userProfile.profileImageUrl)
     return (
         <StyledContainer>
             <Title>Información personal:</Title>
+            <Image src={userProfile.profileImageUrl} alt="Imagen de perfil" rounded />
             <SectionRow label="DNI" value={userProfile.dni} />
             <SectionRow label="Nombre" value={userProfile.name} />
             <SectionRow label="Apellidos" value={`${userProfile.firstSurname} ${userProfile.secondSurname}`} />
@@ -75,6 +80,7 @@ const SocioRolePageDataTable: React.FC<{ userProfile: UserProfile }> = ({ userPr
                 <Button onClick={() => openModal('unsubscribe')} variant="danger">
                     Darse de baja
                 </Button>
+                <PersonalImageButtonChanger></PersonalImageButtonChanger>
             </ButtonRow>
             <ChangeEmailModal
                 show={modalType === 'email'}

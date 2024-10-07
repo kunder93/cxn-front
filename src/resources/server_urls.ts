@@ -1,15 +1,10 @@
+export const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://xadreznaron.es:4443/' : 'http://localhost:8080/'
 
-export const BASE_URL = process.env.NODE_ENV === 'production' 
-    ? 'https://xadreznaron.es:4443/' 
-    : 'http://localhost:8080/';
+export const COMPANIES_URL = BASE_URL + 'api/company'
 
-export const COMPANIES_URL = BASE_URL  +  'api/company'
+export const LOGIN_URL = BASE_URL + 'api/auth/signinn'
 
-export const LOGIN_URL = 
-BASE_URL + 'api/auth/signinn'
-
-export const SIGN_UP_URL = 
-BASE_URL + 'api/auth/signup'
+export const SIGN_UP_URL = BASE_URL + 'api/auth/signup'
 
 export const INVOICES_URL = BASE_URL + 'api/invoice'
 
@@ -21,9 +16,9 @@ export const GET_ALL_USERS_URL = BASE_URL + 'api/user/getAll'
 
 export const GET_ALL_TOURNAMENT_PARTICIPANTS = BASE_URL + 'api/participants'
 
-export const GET_ALL_COUNTRIES_URL = BASE_URL + "api/address/getCountries"
+export const GET_ALL_COUNTRIES_URL = BASE_URL + 'api/address/getCountries'
 
-export const GET_SUBCOUNTRIES_URL = BASE_URL + "api/address/country"
+export const GET_SUBCOUNTRIES_URL = BASE_URL + 'api/address/country'
 
 export const CHANGE_KIND_MEMBER_URL = BASE_URL + 'api/user/changeKindOfMember'
 
@@ -39,12 +34,14 @@ export const CHESS_QUESTION_URL = BASE_URL + 'api/chessQuestion'
 
 export const CHESS_QUESTION_CHANGE_SEEN_STATE = CHESS_QUESTION_URL + '/changeChessQuestionHasSeen'
 
-export const CHESS_QUESTION_DELETE = CHESS_QUESTION_URL;
+export const CHESS_QUESTION_DELETE = CHESS_QUESTION_URL
 
-export const TOURNAMENT_PARTICIPANTS_URL = BASE_URL +'api/participants'
+export const TOURNAMENT_PARTICIPANTS_URL = BASE_URL + 'api/participants'
 
 export const GET_USER_PROFILE_URL = BASE_URL + 'api/user'
 
 export const GET_MY_LICHESS_PROFILE = BASE_URL + 'api/getMyLichessProfile'
 
 export const GET_ALL_LICHESS_PROFILES = BASE_URL + 'api/getAllLichessProfiles'
+
+export const UPDATE_PROFILE_IMAGE_URL = BASE_URL + 'api/user'

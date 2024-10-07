@@ -1,13 +1,27 @@
 import React, { useState } from 'react'
 import { Nav } from 'react-bootstrap'
 import { PersonCircle } from 'react-bootstrap-icons'
-import { useAppDispatch } from '../../store/hooks'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { removeJwt } from '../../store/slices/user'
 import { ROUTES } from '../../resources/routes-constants'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import Image from 'react-bootstrap/Image'
+import { UserProfile } from 'store/types/userTypes'
 
-const UserProfileIcon = styled(PersonCircle)`
+const UserProfileIcon = styled(Image)`
+    width: 50px;
+    height: 50px;
+    min-height: 50px;
+    min-width: 50px;
+    background-color: grey;
+    fill: #ffffff;
+    border-radius: 50%;
+    &:hover {
+        box-shadow: 0 0 0 8px #343b41;
+    }
+`
+const UserProfileNotDefined = styled(PersonCircle)`
     width: 50px;
     height: 50px;
     min-height: 50px;
@@ -69,6 +83,9 @@ const UserLoggedHeaderNavBar: React.FC<IUserLoggedHeaderNavBar> = ({ handleNavIt
     const [imagePopOver, setImagePopOver] = useState(false)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
+    const userProfile: UserProfile = {
+        ...useAppSelector((state) => state.users.userProfile)
+    }
 
     const handleImageMouseEnter = () => {
         setImagePopOver(true)
@@ -85,7 +102,11 @@ const UserLoggedHeaderNavBar: React.FC<IUserLoggedHeaderNavBar> = ({ handleNavIt
 
     return (
         <StyledNav className="ms-auto">
-            <UserProfileIcon onMouseEnter={handleImageMouseEnter} onMouseLeave={handleImageMouseLeave} />
+            {userProfile.profileImageUrl ? (
+                <UserProfileIcon src={userProfile.profileImageUrl} onMouseEnter={handleImageMouseEnter} onMouseLeave={handleImageMouseLeave} />
+            ) : (
+                <UserProfileNotDefined />
+            )}
             <Nav.Link as={Link} to={ROUTES.MYPROFILE_ROUTE} onClick={handleNavItemClick}>
                 Zona Socio
             </Nav.Link>

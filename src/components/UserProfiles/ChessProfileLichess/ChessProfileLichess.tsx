@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-base-to-string */
 import React, { useEffect, useState } from 'react'
 import { Accordion } from 'react-bootstrap'
 import { Trophy } from 'react-bootstrap-icons'
