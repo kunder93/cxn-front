@@ -17,6 +17,7 @@ import useUserProfile from '../components/UsersServices/hooks/useUserProfile'
 import UserProfileNavbar from '../components/UserProfiles/UserProfileNavBar'
 import TorneoInscripcionManager from './TorneoInscripcionManager'
 import usePageTitle from '../components/Common/hooks/usePageTitle'
+import { useFetchProfileImage } from '../components/MyProfile/Hooks/ProfilesHooks'
 
 const MainPageContainer = styled.div`
     display: grid;
@@ -59,10 +60,10 @@ const ProfilePage = (): JSX.Element => {
     const [profilePage, setProfilePage] = useState<ProfileSection>(ProfileSection.UserPage)
     const [sidebarSection, setSidebarSection] = useState<ProfileSection>(ProfileSection.UserPage)
     const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 768)
-
+    // Ejecuta la petición asíncrona
+    /*const { loading, error } =*/ useFetchProfileImage()
     usePageTitle('CXN Menú de socio')
     useScrollTop(profilePage)
-
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth <= 768)
         window.addEventListener('resize', handleResize)
@@ -72,9 +73,7 @@ const ProfilePage = (): JSX.Element => {
     const changePage = (newSection: ProfileSection) => {
         setProfilePage(newSection)
     }
-
     const CurrentPageComponent = sectionComponents[profilePage]
-
     return (
         <MainPageContainer>
             {userProfile && (
