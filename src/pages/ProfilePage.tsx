@@ -64,7 +64,6 @@ const ProfilePage = (): JSX.Element => {
     /*const { loading, error } =*/ useFetchProfileImage()
     usePageTitle('CXN Menú de socio')
     useScrollTop(profilePage)
-
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth <= 768)
         window.addEventListener('resize', handleResize)
@@ -74,9 +73,7 @@ const ProfilePage = (): JSX.Element => {
     const changePage = (newSection: ProfileSection) => {
         setProfilePage(newSection)
     }
-
     const CurrentPageComponent = sectionComponents[profilePage]
-
     return (
         <MainPageContainer>
             {userProfile && (
