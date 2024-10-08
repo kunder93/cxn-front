@@ -5,15 +5,18 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { setProfileImage } from '../../store/slices/user'
 import { UserProfileImage } from '../../store/types/userTypes'
 import styled from 'styled-components'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { UPDATE_PROFILE_IMAGE_URL } from '../../resources/server_urls'
 import UploadProfileImageButton from './UploadProfileImageButton'
+import { useNotificationContext } from '../../components/Common/NotificationContext'
+import { NotificationType } from '../../components/Common/hooks/useNotification'
+
+// Sample image URLs
 const imageUrlList: string[] = Array.from({ length: 16 }, (_, i) => `/User/ProfileImagesExample/Image${i + 1}.webp`)
 
-// Styled Image component with hover and click effects
 const ImageStyled = styled(Image)<{ selected: boolean }>`
     padding: 0.33em;
-    border: ${({ selected }) => (selected ? '2px solid #28a745' : '2px solid transparent')};
+    border: ${({ selected }) => (selected ? '3px solid #28a745' : '2px solid transparent')};
     border-radius: 8px;
     transition:
         transform 0.2s ease,
@@ -29,16 +32,44 @@ const ImageStyled = styled(Image)<{ selected: boolean }>`
         transform: scale(1.05);
     }
 `
+
 const ModalHeaderStyled = styled(Modal.Header)`
     font-size: 150%;
     font-weight: bold;
+    background-color: #007bff; // Bootstrap primary color
+    color: white; // Text color
+    border-bottom: 1px solid #0056b3; // Darker border for emphasis
+`
+
+const ModalBodyStyled = styled(Modal.Body)`
+    background-color: #f8f9fa; // Light background
+    padding: 2rem; // Increased padding for comfort
+`
+
+const ModalFooterStyled = styled(Modal.Footer)`
+    display: flex;
+    justify-content: space-between;
+    background-color: #f1f1f1; // Slightly darker footer
+    border-top: 1px solid #dee2e6; // Light border
+`
+
+const StyledButton = styled(Button)`
+    background-color: #28a745; // Green color for the change button
+    border: none; // Remove default border
+    transition: background-color 0.3s ease; // Transition for hover effect
+
+    &:hover {
+        background-color: #218838; // Darker shade on hover
+    }
 `
 
 const PersonalImageButtonChanger = (): JSX.Element => {
     const [changeProfileImage, setChangeProfileImage] = React.useState(false)
     const [selectedImage, setSelectedImage] = React.useState<string | null>(null) // Track selected image
+    const { showNotification } = useNotificationContext()
     const dispatch = useAppDispatch()
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
+
     const handleChangeProfileImage = () => {
         setSelectedImage(null)
         setChangeProfileImage(!changeProfileImage)
@@ -46,12 +77,10 @@ const PersonalImageButtonChanger = (): JSX.Element => {
 
     const handleImageSelect = (url: string) => {
         setSelectedImage(url)
-        console.log(`Selected image: ${url}`)
     }
 
     const handleChangeProfileImagePersist = () => {
         if (selectedImage) {
-            console.log('SELECTED IMAGE IS: ' + selectedImage)
             axios
                 .patch<UserProfileImage>(
                     UPDATE_PROFILE_IMAGE_URL,
@@ -64,11 +93,16 @@ const PersonalImageButtonChanger = (): JSX.Element => {
                     }
                 )
                 .then((response) => {
-                    const updatedUserProfileImage: UserProfileImage = response.data // Assuming the response contains the updated user profile
+                    const updatedUserProfileImage: UserProfileImage = response.data
+                    showNotification('Imagen de perfil actualizada', NotificationType.Success)
                     dispatch(setProfileImage(updatedUserProfileImage))
                 })
                 .catch((error) => {
-                    console.error('Error updating profile image: ', error)
+                    if (error instanceof AxiosError) {
+                        showNotification('Error al actualizar la imagen de perfil: ' + error.message, NotificationType.Error)
+                    } else {
+                        showNotification('Ocurrió un error inesperado.', NotificationType.Error)
+                    }
                 })
         }
     }
@@ -80,7 +114,7 @@ const PersonalImageButtonChanger = (): JSX.Element => {
             </Button>
             <Modal show={changeProfileImage} onHide={handleChangeProfileImage}>
                 <ModalHeaderStyled closeButton>Selecciona una de las imágenes:</ModalHeaderStyled>
-                <Modal.Body>
+                <ModalBodyStyled>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                         {imageUrlList.map((url, index) => (
                             <ImageStyled
@@ -93,17 +127,14 @@ const PersonalImageButtonChanger = (): JSX.Element => {
                             />
                         ))}
                     </div>
-                </Modal.Body>
-                <Modal.Footer>
-                    <UploadProfileImageButton></UploadProfileImageButton>
-
-                    <Button onClick={() => handleChangeProfileImagePersist()} variant="success">
-                        Cambiar
-                    </Button>
-                    <Button variant="secondary" onClick={handleChangeProfileImage}>
+                </ModalBodyStyled>
+                <ModalFooterStyled>
+                    <UploadProfileImageButton />
+                    <StyledButton onClick={handleChangeProfileImagePersist}>Cambiar</StyledButton>
+                    <Button variant="danger" onClick={handleChangeProfileImage}>
                         Cerrar
                     </Button>
-                </Modal.Footer>
+                </ModalFooterStyled>
             </Modal>
         </>
     )

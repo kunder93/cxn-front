@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { Button } from 'react-bootstrap'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { useAppSelector } from '../../store/hooks'
 import { UserProfileImage } from '../../store/types/userTypes'
 import { setProfileImage } from '../../store/slices/user'
 import { useDispatch } from 'react-redux'
+import { useNotificationContext } from '../../components/Common/NotificationContext'
+import { NotificationType } from '../../components/Common/hooks/useNotification'
 
 const validationSchema = Yup.object().shape({
     profileImage: Yup.mixed()
@@ -46,6 +48,7 @@ const validationSchema = Yup.object().shape({
 const ProfileImageUploadForm: React.FC = () => {
     const [preview, setPreview] = useState<string | ArrayBuffer | null>(null)
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
+    const { showNotification } = useNotificationContext()
     const dispatch = useDispatch()
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>, setFieldValue: (field: string, value: any) => void) => {
         const file = event.currentTarget.files?.[0]
@@ -72,13 +75,16 @@ const ProfileImageUploadForm: React.FC = () => {
                     Authorization: `Bearer ${userJwt}`
                 }
             })
-            console.log('Image uploaded successfully:', response.data)
             const updatedUserProfileImage: UserProfileImage = response.data
             updatedUserProfileImage.file = preview as string
-
+            showNotification('Imagen de perfil actualizada', NotificationType.Success)
             dispatch(setProfileImage(updatedUserProfileImage))
         } catch (error) {
-            console.error('Error uploading image:', error)
+            if (error instanceof AxiosError) {
+                showNotification('Error al actualizar la imagen de perfil: ' + error.message, NotificationType.Error)
+            } else {
+                showNotification('Ocurrió un error inesperado.', NotificationType.Error)
+            }
         }
     }
 
@@ -103,12 +109,12 @@ const ProfileImageUploadForm: React.FC = () => {
 
                     {preview && (
                         <div className="mb-3">
-                            <img onClick={() => console.log(preview)} src={preview as string} alt="Vista previa" width={100} height={100} />
+                            <img src={preview as string} alt="Vista previa" width={100} height={100} />
                         </div>
                     )}
 
-                    <Button variant="primary" type="submit">
-                        Subir
+                    <Button variant="success" type="submit">
+                        Cambiar
                     </Button>
                 </Form>
             )}
