@@ -7,7 +7,6 @@ import { ROUTES } from '../../resources/routes-constants'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import Image from 'react-bootstrap/Image'
-import { UserProfile } from 'store/types/userTypes'
 
 const UserProfileIcon = styled(Image)`
     width: 50px;
@@ -83,9 +82,7 @@ const UserLoggedHeaderNavBar: React.FC<IUserLoggedHeaderNavBar> = ({ handleNavIt
     const [imagePopOver, setImagePopOver] = useState(false)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
-    const userProfile: UserProfile = {
-        ...useAppSelector((state) => state.users.userProfile)
-    }
+    const profileImage = useAppSelector((state) => state.users.profileImage) // Fetch profile image separately
 
     const handleImageMouseEnter = () => {
         setImagePopOver(true)
@@ -99,11 +96,17 @@ const UserLoggedHeaderNavBar: React.FC<IUserLoggedHeaderNavBar> = ({ handleNavIt
         dispatch(removeJwt())
         navigate(ROUTES.HOMEPAGE_ROUTE)
     }
-
+    const isInitialProfileImage = profileImage?.url === '' && profileImage?.stored === false
+    console.log('EL VALOR DE IS INITIAL ES: ', isInitialProfileImage)
+    console.log('EL VALOR DE URL ES: ', profileImage.url)
     return (
         <StyledNav className="ms-auto">
-            {userProfile.profileImageUrl ? (
-                <UserProfileIcon src={userProfile.profileImageUrl} onMouseEnter={handleImageMouseEnter} onMouseLeave={handleImageMouseLeave} />
+            {profileImage && !isInitialProfileImage ? (
+                <UserProfileIcon
+                    src={profileImage.stored ? profileImage.file : profileImage.url}
+                    onMouseEnter={handleImageMouseEnter}
+                    onMouseLeave={handleImageMouseLeave}
+                />
             ) : (
                 <UserProfileNotDefined />
             )}

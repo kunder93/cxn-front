@@ -25,9 +25,13 @@ export interface UserData {
     kindMember: KindMember
     userRoles: UserRole[]
 }
-
+export interface UserProfileImage {
+    imageExtension: string // New field for image extension
+    stored: boolean // New field for storage status
+    url: string // New field for image URL
+    file?: string
+}
 export interface UserProfile extends UserData {
-    profileImageUrl?: string
     userAddress: UserAddress
 }
 
@@ -42,6 +46,7 @@ export interface UserAddress {
 }
 
 export interface UserState {
+    profileImage: UserProfileImage
     jwt: string
     userProfile: UserProfile
 }

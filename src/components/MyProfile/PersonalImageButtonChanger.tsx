@@ -2,11 +2,12 @@ import React from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import Image from 'react-bootstrap/Image'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { setUserProfile } from '../../store/slices/user'
-import { UserProfile } from '../../store/types/userTypes'
+import { setProfileImage } from '../../store/slices/user'
+import { UserProfileImage } from '../../store/types/userTypes'
 import styled from 'styled-components'
 import axios from 'axios'
 import { UPDATE_PROFILE_IMAGE_URL } from '../../resources/server_urls'
+import UploadProfileImageButton from './UploadProfileImageButton'
 const imageUrlList: string[] = Array.from({ length: 16 }, (_, i) => `/User/ProfileImagesExample/Image${i + 1}.webp`)
 
 // Styled Image component with hover and click effects
@@ -52,7 +53,7 @@ const PersonalImageButtonChanger = (): JSX.Element => {
         if (selectedImage) {
             console.log('SELECTED IMAGE IS: ' + selectedImage)
             axios
-                .patch<UserProfile>(
+                .patch<UserProfileImage>(
                     UPDATE_PROFILE_IMAGE_URL,
                     { profileImageUrl: selectedImage.toString() },
                     {
@@ -63,11 +64,8 @@ const PersonalImageButtonChanger = (): JSX.Element => {
                     }
                 )
                 .then((response) => {
-                    const updatedUserProfile = response.data // Assuming the response contains the updated user profile
-                    console.log('Updated UserProfile: ' + JSON.stringify(updatedUserProfile))
-                    console.log('updated url of image profile: ' + updatedUserProfile.profileImageUrl)
-                    console.log('LO QUE DEBERIA APARECER ES: ' + selectedImage)
-                    dispatch(setUserProfile(updatedUserProfile))
+                    const updatedUserProfileImage: UserProfileImage = response.data // Assuming the response contains the updated user profile
+                    dispatch(setProfileImage(updatedUserProfileImage))
                 })
                 .catch((error) => {
                     console.error('Error updating profile image: ', error)
@@ -97,6 +95,8 @@ const PersonalImageButtonChanger = (): JSX.Element => {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
+                    <UploadProfileImageButton></UploadProfileImageButton>
+
                     <Button onClick={() => handleChangeProfileImagePersist()} variant="success">
                         Cambiar
                     </Button>

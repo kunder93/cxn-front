@@ -10,6 +10,7 @@ import ChangePasswordModal from './ChangePassword/ChangePasswordModal'
 import Image from 'react-bootstrap/Image'
 import PersonalImageButtonChanger from './PersonalImageButtonChanger'
 import { useAppSelector } from '../../store/hooks'
+import { PersonBoundingBox } from 'react-bootstrap-icons'
 
 const StyledContainer = styled(Container)`
     display: flex;
@@ -57,11 +58,17 @@ const Title = styled.h1`
 const SocioRolePageDataTable = (): JSX.Element => {
     const { modalType, openModal, closeModal } = useModal()
     const userProfile: UserProfile = useAppSelector((state) => state.users.userProfile)
-    console.log('LA IMAGEN DE PERFIL EN SOCIO ROLE PAGE DATA TABLE ES: ' + userProfile.profileImageUrl)
+    const profileImage = useAppSelector((state) => state.users.profileImage) // Fetch profile image separately
+    const isInitialProfileImage = profileImage?.url === '' && profileImage?.stored === false
     return (
         <StyledContainer>
             <Title>Información personal:</Title>
-            <Image src={userProfile.profileImageUrl} alt="Imagen de perfil" rounded />
+            {/* Si no hay imagen, muestra el ícono; si hay, muestra la imagen */}
+            {isInitialProfileImage ? (
+                <PersonBoundingBox size={150} /> // Tamaño personalizado del ícono
+            ) : (
+                <Image src={profileImage.stored ? profileImage.file : profileImage.url} alt="Imagen de perfil" rounded />
+            )}
             <SectionRow label="DNI" value={userProfile.dni} />
             <SectionRow label="Nombre" value={userProfile.name} />
             <SectionRow label="Apellidos" value={`${userProfile.firstSurname} ${userProfile.secondSurname}`} />

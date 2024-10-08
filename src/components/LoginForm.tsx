@@ -56,6 +56,7 @@ const LoginForm = (): JSX.Element => {
         try {
             const response: AxiosResponse<LoginAxiosResponse> = await axios.post(LOGIN_URL, values)
             dispatch(setJwt(response.data.jwt))
+            actions.resetForm()
             navigate(ROUTES.MYPROFILE_ROUTE)
         } catch (error) {
             const axiosError = error as AxiosError<{ content: string }>
