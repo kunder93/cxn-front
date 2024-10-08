@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Nav } from 'react-bootstrap'
+import { useState } from 'react'
+import { Dropdown, Nav } from 'react-bootstrap'
 import { PersonCircle } from 'react-bootstrap-icons'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { removeJwt } from '../../store/slices/user'
@@ -7,8 +7,9 @@ import { ROUTES } from '../../resources/routes-constants'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import Image from 'react-bootstrap/Image'
+import { UserProfile } from 'store/types/userTypes'
 
-const UserProfileIcon = styled(Image)`
+const UserProfileImage = styled(Image)`
     width: 50px;
     height: 50px;
     min-height: 50px;
@@ -16,6 +17,7 @@ const UserProfileIcon = styled(Image)`
     background-color: grey;
     fill: #ffffff;
     border-radius: 50%;
+    object-fit: cover;
     &:hover {
         box-shadow: 0 0 0 8px #343b41;
     }
@@ -74,48 +76,49 @@ const StyledNav = styled(Nav)`
     }
 `
 
-interface IUserLoggedHeaderNavBar {
-    handleNavItemClick: () => void
-}
+const ProfileImageContainer = styled.div`
+    padding-right: 0.5em;
+`
 
-const UserLoggedHeaderNavBar: React.FC<IUserLoggedHeaderNavBar> = ({ handleNavItemClick }) => {
+const UserLoggedHeaderNavBar = (): JSX.Element => {
     const [imagePopOver, setImagePopOver] = useState(false)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const profileImage = useAppSelector((state) => state.users.profileImage) // Fetch profile image separately
-
-    const handleImageMouseEnter = () => {
-        setImagePopOver(true)
-    }
-
-    const handleImageMouseLeave = () => {
-        setImagePopOver(false)
-    }
+    const userProfile: UserProfile = useAppSelector((state) => state.users.userProfile)
 
     const logoutHandler = () => {
         dispatch(removeJwt())
         navigate(ROUTES.HOMEPAGE_ROUTE)
     }
     const isInitialProfileImage = profileImage?.url === '' && profileImage?.stored === false
-    console.log('EL VALOR DE IS INITIAL ES: ', isInitialProfileImage)
-    console.log('EL VALOR DE URL ES: ', profileImage.url)
+
     return (
         <StyledNav className="ms-auto">
-            {profileImage && !isInitialProfileImage ? (
-                <UserProfileIcon
-                    src={profileImage.stored ? profileImage.file : profileImage.url}
-                    onMouseEnter={handleImageMouseEnter}
-                    onMouseLeave={handleImageMouseLeave}
-                />
-            ) : (
-                <UserProfileNotDefined />
-            )}
-            <Nav.Link as={Link} to={ROUTES.MYPROFILE_ROUTE} onClick={handleNavItemClick}>
-                Zona Socio
-            </Nav.Link>
-            <Nav.Link as={Link} to={ROUTES.HOMEPAGE_ROUTE} onClick={logoutHandler}>
-                Salir
-            </Nav.Link>
+            <ProfileImageContainer>
+                {profileImage && !isInitialProfileImage ? (
+                    <UserProfileImage
+                        src={profileImage.stored ? profileImage.file : profileImage.url}
+                        onMouseEnter={() => setImagePopOver(true)}
+                        onMouseLeave={() => setImagePopOver(false)}
+                    />
+                ) : (
+                    <UserProfileNotDefined />
+                )}
+            </ProfileImageContainer>
+            {/* Dropdown for the user's name and logout option */}
+            <Dropdown align="end">
+                <Dropdown.Toggle as="a" className="nav-link">
+                    {userProfile.name + ' ' + userProfile.firstSurname + ' ' + userProfile.secondSurname}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                    <Dropdown.Item as={Link} to={ROUTES.MYPROFILE_ROUTE}>
+                        Mi Perfil
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={logoutHandler}>Salir</Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
 
             <FloatingWindow hidden={!imagePopOver}>
                 {/* Content for the floating window */}
