@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { UserProfileImage } from '../../../store/types/userTypes'
 import { setProfileImage } from '../../../store/slices/user'
 import { useAppSelector } from '../../../store/hooks'
+import { OBTAIN_PROFILE_IMAGE_URL } from '../../../resources/server_urls'
 
 // Hook para obtener la imagen de perfil
 export const useFetchProfileImage = () => {
@@ -16,7 +17,7 @@ export const useFetchProfileImage = () => {
         const fetchProfileImage = async () => {
             setLoading(true)
             try {
-                const response = await axios.get<UserProfileImage>('http://localhost:8080/api/user/obtainProfileImage', {
+                const response = await axios.get<UserProfileImage>(OBTAIN_PROFILE_IMAGE_URL, {
                     headers: {
                         Authorization: `Bearer ${userJwt}`
                     }

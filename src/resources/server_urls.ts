@@ -45,3 +45,9 @@ export const GET_MY_LICHESS_PROFILE = BASE_URL + 'api/getMyLichessProfile'
 export const GET_ALL_LICHESS_PROFILES = BASE_URL + 'api/getAllLichessProfiles'
 
 export const UPDATE_PROFILE_IMAGE_URL = BASE_URL + 'api/user/uploadProfileImage'
+
+export const UPDATE_LICHESS_PROFILE_URL = BASE_URL + 'api/updateLichessProfile'
+
+export const OBTAIN_PROFILE_IMAGE_URL = BASE_URL + 'api/user/obtainProfileImage'
+
+export const UPLOAD_PROFILE_IMAGE_FILE_URL = BASE_URL + 'api/user/uploadProfileImageFile'

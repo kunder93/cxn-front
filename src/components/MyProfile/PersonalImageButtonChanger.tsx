@@ -112,7 +112,7 @@ const PersonalImageButtonChanger = (): JSX.Element => {
             <Button variant="success" onClick={handleChangeProfileImage}>
                 Imagen de perfil
             </Button>
-            <Modal show={changeProfileImage} onHide={handleChangeProfileImage}>
+            <Modal aria-labelledby="contained-modal-title-vcenter" centered show={changeProfileImage} onHide={handleChangeProfileImage}>
                 <ModalHeaderStyled closeButton>Selecciona una de las imágenes:</ModalHeaderStyled>
                 <ModalBodyStyled>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>

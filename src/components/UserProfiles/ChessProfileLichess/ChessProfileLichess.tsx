@@ -12,6 +12,7 @@ import axios from 'axios'
 import { useAppSelector } from '../../../store/hooks'
 import { useNotificationContext } from '../../../components/Common/NotificationContext'
 import { NotificationType } from '../../../components/Common/hooks/useNotification'
+import { UPDATE_LICHESS_PROFILE_URL } from '../../../resources/server_urls'
 
 const StyledAccordionBody = styled(Accordion.Body)`
     display: flex;
@@ -71,7 +72,7 @@ const ChessProfileLichess: React.FC = () => {
         setIsRotating(true)
         try {
             const response = await axios.post<LichessProfileResponse>(
-                'http://localhost:8080/api/updateLichessProfile',
+                UPDATE_LICHESS_PROFILE_URL,
                 {},
                 {
                     headers: {

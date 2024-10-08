@@ -46,7 +46,7 @@ const UploadProfileImageButton = (): JSX.Element => {
     return (
         <>
             <StyledButton onClick={() => setActiveModal(true)}>Subir imagen propia</StyledButton>
-            <ModalStyled show={activeModal} onHide={() => setActiveModal(false)}>
+            <ModalStyled aria-labelledby="contained-modal-title-vcenter" centered show={activeModal} onHide={() => setActiveModal(false)}>
                 <ModalHeaderStyled closeButton>
                     <Modal.Title>Sube una imagen de perfil propia:</Modal.Title>
                 </ModalHeaderStyled>

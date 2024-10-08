@@ -9,6 +9,7 @@ import { setProfileImage } from '../../store/slices/user'
 import { useDispatch } from 'react-redux'
 import { useNotificationContext } from '../../components/Common/NotificationContext'
 import { NotificationType } from '../../components/Common/hooks/useNotification'
+import { UPLOAD_PROFILE_IMAGE_FILE_URL } from '../../resources/server_urls'
 
 const validationSchema = Yup.object().shape({
     profileImage: Yup.mixed()
@@ -69,7 +70,7 @@ const ProfileImageUploadForm: React.FC = () => {
         formData.append('file', values.profileImage)
 
         try {
-            const response = await axios.patch<UserProfileImage>('http://localhost:8080/api/user/uploadProfileImageFile', formData, {
+            const response = await axios.patch<UserProfileImage>(UPLOAD_PROFILE_IMAGE_FILE_URL, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${userJwt}`
