@@ -16,7 +16,10 @@ const sections: ProfileMenuSection[] = [
         key: '0',
         icon: <People size="3rem" />,
         title: 'Gestión de socios',
-        buttons: [{ section: ProfileSection.MembersManager, text: 'Ver listado socios', buttonIndex: 1 }]
+        buttons: [
+            { section: ProfileSection.MembersManager, text: 'Ver listado socios', buttonIndex: 1 },
+            { section: ProfileSection.FederateManager, text: 'Ver listado federados', buttonIndex: 2 }
+        ]
     },
     {
         key: '1',

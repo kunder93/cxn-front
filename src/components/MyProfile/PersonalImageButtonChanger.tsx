@@ -54,7 +54,6 @@ const ModalFooterStyled = styled(Modal.Footer)`
 `
 
 const StyledButton = styled(Button)`
-    background-color: #28a745; // Green color for the change button
     border: none; // Remove default border
     transition: background-color 0.3s ease; // Transition for hover effect
 
@@ -130,7 +129,9 @@ const PersonalImageButtonChanger = (): JSX.Element => {
                 </ModalBodyStyled>
                 <ModalFooterStyled>
                     <UploadProfileImageButton />
-                    <StyledButton onClick={handleChangeProfileImagePersist}>Cambiar</StyledButton>
+                    <StyledButton variant="success" onClick={handleChangeProfileImagePersist} disabled={!selectedImage}>
+                        Cambiar
+                    </StyledButton>
                     <Button variant="danger" onClick={handleChangeProfileImage}>
                         Cerrar
                     </Button>

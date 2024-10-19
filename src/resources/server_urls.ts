@@ -51,3 +51,15 @@ export const UPDATE_LICHESS_PROFILE_URL = BASE_URL + 'api/updateLichessProfile'
 export const OBTAIN_PROFILE_IMAGE_URL = BASE_URL + 'api/user/obtainProfileImage'
 
 export const UPLOAD_PROFILE_IMAGE_FILE_URL = BASE_URL + 'api/user/uploadProfileImageFile'
+
+export const FEDERATE_USER_URL = BASE_URL + 'api/user/federate'
+
+export const GET_ALL_FEDERATE_STATE_MEMBERS = BASE_URL + 'api/user/federate/getAll'
+
+export const UPLOAD_DNI_URL = BASE_URL + 'api/user/dni'
+
+export const UPDATE_DNI_URL = BASE_URL + 'api/user/federate/updateDni'
+
+export const CONFIR_CANCEL_FEDERATE_URL = BASE_URL + 'api/user/federate'
+
+export const FEDERATE_CHANGE_AUTORENEW_URL = BASE_URL + 'api/user/federate/changeAutoRenew'

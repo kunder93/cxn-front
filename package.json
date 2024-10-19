@@ -4,6 +4,8 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@floating-ui/react": "^0.26.25",
+        "@floating-ui/react-dom": "^2.1.2",
         "@react-pdf/renderer": "^3.3.8",
         "@reduxjs/toolkit": "^2.2.1",
         "@rollup/plugin-terser": "^0.4.4",

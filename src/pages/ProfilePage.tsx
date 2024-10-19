@@ -18,6 +18,7 @@ import UserProfileNavbar from '../components/UserProfiles/UserProfileNavBar'
 import TorneoInscripcionManager from './TorneoInscripcionManager'
 import usePageTitle from '../components/Common/hooks/usePageTitle'
 import { useFetchProfileImage } from '../components/MyProfile/Hooks/ProfilesHooks'
+import { FederateManager } from './FederateManager'
 
 const MainPageContainer = styled.div`
     display: grid;
@@ -52,7 +53,8 @@ const sectionComponents: Record<ProfileSection, React.FC<{ changePage: (section:
     [ProfileSection.PaymentSheetsManager]: PaymentSheetManagerPage,
     [ProfileSection.CompaniesManager]: CompaniesManagerPage,
     [ProfileSection.MessagesManager]: ChessQuestionsManager,
-    [ProfileSection.TournamentParticipantManager]: TorneoInscripcionManager
+    [ProfileSection.TournamentParticipantManager]: TorneoInscripcionManager,
+    [ProfileSection.FederateManager]: FederateManager
 }
 
 const ProfilePage = (): JSX.Element => {

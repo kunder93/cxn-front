@@ -81,9 +81,6 @@ const ChessProfileLichess: React.FC = () => {
                 }
             )
 
-            // Imprimir el valor de la respuesta en la consola
-            console.log('EL PERFIL DE LICHESS ACTUALIZADO ES:')
-            console.log(response.data)
             showNotification('Perfil de lichess actualizado', NotificationType.Success)
             setMyLichessProfile(response.data)
             // También puedes almacenar el mensaje en el estado si lo deseas
@@ -91,10 +88,8 @@ const ChessProfileLichess: React.FC = () => {
             // Manejo de errores
             if (axios.isAxiosError(error)) {
                 showNotification(error.message, NotificationType.Error)
-                console.error('Error al realizar la solicitud:', error.message)
             } else {
                 showNotification('Error inesperado', NotificationType.Error)
-                console.error('Error inesperado:', error)
             }
         } finally {
             setIsRotating(false)
@@ -110,67 +105,70 @@ const ChessProfileLichess: React.FC = () => {
     }
 
     return (
-        <Accordion defaultActiveKey="0">
-            <Accordion.Item eventKey="0">
-                <Accordion.Header>
-                    <strong>
-                        <img src="/Lichess/LichessLogo.png" width={40} alt="Lichess Logo" />
+        <>
+            <h2>Lichess:</h2>
+            <Accordion>
+                <Accordion.Item eventKey="0">
+                    <Accordion.Header>
+                        <strong>
+                            <img src="/Lichess/LichessLogo.png" width={40} alt="Lichess Logo" />
+                            {isLichessProfileEmpty(myLichessProfile) ? (
+                                <>
+                                    <span> ¡¡ No tienes perfil de lichess !! Desplegar para ver más. </span>
+                                </>
+                            ) : (
+                                'Mi perfil'
+                            )}
+                        </strong>
+                    </Accordion.Header>
+                    <FirstStyledAccordionBody>
                         {isLichessProfileEmpty(myLichessProfile) ? (
                             <>
-                                <span> ¡¡ No tienes perfil de lichess !! Desplegar para ver más. </span>
+                                <LinkLichessAccountButton setLichessProfileCallback={setMyLichessProfile}></LinkLichessAccountButton>
                             </>
                         ) : (
-                            'Mi perfil'
+                            <>
+                                <ProfileRow
+                                    label="Última vez actualizado:"
+                                    value={
+                                        <>
+                                            {new Date(myLichessProfile.lastUpdate).toLocaleString()}{' '}
+                                            <IconButton
+                                                isRotating={isRotating}
+                                                onClick={() => {
+                                                    void handleUpdateClick()
+                                                }}
+                                            />
+                                        </>
+                                    }
+                                />
+                                <ProfileRow label="Nombre en Lichess:" value={myLichessProfile.lichessUserName} />
+                                <ProfileRow label="ELO Blitz:" value={myLichessProfile.blitzGame.elo} />
+                                <ProfileRow label="Blitz, cantidad de partidas jugadas:" value={myLichessProfile.blitzGame.amountOfGames} />
+                                <ProfileRow label="ELO Bullet:" value={myLichessProfile.bulletGame.elo} />
+                                <ProfileRow label="Bullet, cantidad de partidas jugadas:" value={myLichessProfile.bulletGame.amountOfGames} />
+                                <ProfileRow label="ELO Clásico:" value={myLichessProfile.classicalGame.elo} />
+                                <ProfileRow label="Clásicas, cantidad de partidas jugadas:" value={myLichessProfile.classicalGame.amountOfGames} />
+                                <ProfileRow label="ELO Rápidas:" value={myLichessProfile.rapidGame.elo} />
+                                <ProfileRow label="Rápidas, cantidad de partidas jugadas:" value={myLichessProfile.rapidGame.amountOfGames} />
+                                <ProfileRow label="ELO Problemas:" value={myLichessProfile.puzzleGame.elo} />
+                                <ProfileRow label="Cantidad de problemas realizados:" value={myLichessProfile.puzzleGame.amountOfGames} />
+                            </>
                         )}
-                    </strong>
-                </Accordion.Header>
-                <FirstStyledAccordionBody>
-                    {isLichessProfileEmpty(myLichessProfile) ? (
-                        <>
-                            <LinkLichessAccountButton setLichessProfileCallback={setMyLichessProfile}></LinkLichessAccountButton>
-                        </>
-                    ) : (
-                        <>
-                            <ProfileRow
-                                label="Última vez actualizado:"
-                                value={
-                                    <>
-                                        {new Date(myLichessProfile.lastUpdate).toLocaleString()}{' '}
-                                        <IconButton
-                                            isRotating={isRotating}
-                                            onClick={() => {
-                                                void handleUpdateClick()
-                                            }}
-                                        />
-                                    </>
-                                }
-                            />
-                            <ProfileRow label="Nombre en Lichess:" value={myLichessProfile.lichessUserName} />
-                            <ProfileRow label="ELO Blitz:" value={myLichessProfile.blitzGame.elo} />
-                            <ProfileRow label="Blitz, cantidad de partidas jugadas:" value={myLichessProfile.blitzGame.amountOfGames} />
-                            <ProfileRow label="ELO Bullet:" value={myLichessProfile.bulletGame.elo} />
-                            <ProfileRow label="Bullet, cantidad de partidas jugadas:" value={myLichessProfile.bulletGame.amountOfGames} />
-                            <ProfileRow label="ELO Clásico:" value={myLichessProfile.classicalGame.elo} />
-                            <ProfileRow label="Clásicas, cantidad de partidas jugadas:" value={myLichessProfile.classicalGame.amountOfGames} />
-                            <ProfileRow label="ELO Rápidas:" value={myLichessProfile.rapidGame.elo} />
-                            <ProfileRow label="Rápidas, cantidad de partidas jugadas:" value={myLichessProfile.rapidGame.amountOfGames} />
-                            <ProfileRow label="ELO Problemas:" value={myLichessProfile.puzzleGame.elo} />
-                            <ProfileRow label="Cantidad de problemas realizados:" value={myLichessProfile.puzzleGame.amountOfGames} />
-                        </>
-                    )}
-                </FirstStyledAccordionBody>
-            </Accordion.Item>
-            <Accordion.Item eventKey="1">
-                <Accordion.Header>
-                    <strong>
-                        <Trophy size={40} /> ELO Xadrez Narón Lichess
-                    </strong>
-                </Accordion.Header>
-                <StyledAccordionBody>
-                    <FullWidthTable data={players.profilesList} />
-                </StyledAccordionBody>
-            </Accordion.Item>
-        </Accordion>
+                    </FirstStyledAccordionBody>
+                </Accordion.Item>
+                <Accordion.Item eventKey="1">
+                    <Accordion.Header>
+                        <strong>
+                            <Trophy size={40} /> ELO Xadrez Narón Lichess
+                        </strong>
+                    </Accordion.Header>
+                    <StyledAccordionBody>
+                        <FullWidthTable data={players.profilesList} />
+                    </StyledAccordionBody>
+                </Accordion.Item>
+            </Accordion>
+        </>
     )
 }
 

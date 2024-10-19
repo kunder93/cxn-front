@@ -44,7 +44,7 @@ const faqOldSchoolPairsQuestionAnswer = [
     },
     {
         question: '¿Qué días se imparten las clases?',
-        answer: 'Las clases se imparten dos días a la semana. Los días específicos dependen del número de alumnos y los grupos disponibles. Para más detalles, por favor solicita información a través del formulario o correo electrónico.'
+        answer: 'Las clases se imparten dos días a la semana. Los Lunes de 19:00 a 20:00 y los Viernes de 19:15 a 20:15.'
     }
 ]
 

@@ -51,6 +51,7 @@ const ProfileImageUploadForm: React.FC = () => {
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const { showNotification } = useNotificationContext()
     const dispatch = useDispatch()
+
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>, setFieldValue: (field: string, value: any) => void) => {
         const file = event.currentTarget.files?.[0]
         if (file) {
@@ -91,7 +92,7 @@ const ProfileImageUploadForm: React.FC = () => {
 
     return (
         <Formik initialValues={{ profileImage: null }} validationSchema={validationSchema} onSubmit={handleSubmit}>
-            {({ setFieldValue, errors, touched }) => (
+            {({ setFieldValue, errors, touched, isValid, dirty }) => (
                 <Form>
                     <div className="mb-3">
                         <label htmlFor="profileImage" className="form-label">
@@ -114,7 +115,7 @@ const ProfileImageUploadForm: React.FC = () => {
                         </div>
                     )}
 
-                    <Button variant="success" type="submit">
+                    <Button variant="success" type="submit" disabled={!isValid || !dirty}>
                         Cambiar
                     </Button>
                 </Form>
