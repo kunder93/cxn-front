@@ -14,6 +14,7 @@ import { useNotificationContext } from '../../../components/Common/NotificationC
 import { NotificationType } from '../../../components/Common/hooks/useNotification'
 import { UPDATE_LICHESS_PROFILE_URL } from '../../../resources/server_urls'
 
+// Styled components
 const StyledAccordionBody = styled(Accordion.Body)`
     display: flex;
     flex-direction: column;
@@ -36,7 +37,7 @@ const FirstStyledAccordionBody = styled(Accordion.Body)`
     background-color: #222;
     color: #fff;
 `
-// Definir la animación de rotación
+
 const rotate = keyframes`
   from {
     transform: rotate(0deg);
@@ -59,7 +60,18 @@ const IconButton = styled(GrUpdate)<{ isRotating: boolean }>`
         `}
 `
 
-// Default empty values for LichessProfileResponse
+const Logo = styled.img`
+    width: 30px; /* Fixed size for smaller screens */
+    height: auto;
+    margin-right: 10px; /* Spacing between logo and text */
+`
+
+const Heading = styled.h2`
+    font-size: 1.5rem; /* Responsive font size */
+    @media (max-width: 768px) {
+        font-size: 1.2rem; /* Smaller size for mobile */
+    }
+`
 
 const ChessProfileLichess: React.FC = () => {
     const { lichessProfile, loading: profileLoading } = useLichessProfile()
@@ -68,6 +80,7 @@ const ChessProfileLichess: React.FC = () => {
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const [isRotating, setIsRotating] = useState(false)
     const { showNotification } = useNotificationContext()
+
     const handleUpdateClick = async () => {
         setIsRotating(true)
         try {
@@ -76,16 +89,13 @@ const ChessProfileLichess: React.FC = () => {
                 {},
                 {
                     headers: {
-                        Authorization: `Bearer ${userJwt}` // Agregar el token JWT en el encabezado
+                        Authorization: `Bearer ${userJwt}`
                     }
                 }
             )
-
             showNotification('Perfil de lichess actualizado', NotificationType.Success)
             setMyLichessProfile(response.data)
-            // También puedes almacenar el mensaje en el estado si lo deseas
         } catch (error) {
-            // Manejo de errores
             if (axios.isAxiosError(error)) {
                 showNotification(error.message, NotificationType.Error)
             } else {
@@ -106,26 +116,18 @@ const ChessProfileLichess: React.FC = () => {
 
     return (
         <>
-            <h2>Lichess:</h2>
+            <Heading>Lichess:</Heading>
             <Accordion>
                 <Accordion.Item eventKey="0">
                     <Accordion.Header>
                         <strong>
-                            <img src="/Lichess/LichessLogo.png" width={40} alt="Lichess Logo" />
-                            {isLichessProfileEmpty(myLichessProfile) ? (
-                                <>
-                                    <span> ¡¡ No tienes perfil de lichess !! Desplegar para ver más. </span>
-                                </>
-                            ) : (
-                                'Mi perfil'
-                            )}
+                            <Logo src="/Lichess/LichessLogo.png" alt="Lichess Logo" />
+                            {isLichessProfileEmpty(myLichessProfile) ? <span> ¡¡ No tienes perfil de lichess !! </span> : 'Mi perfil'}
                         </strong>
                     </Accordion.Header>
                     <FirstStyledAccordionBody>
                         {isLichessProfileEmpty(myLichessProfile) ? (
-                            <>
-                                <LinkLichessAccountButton setLichessProfileCallback={setMyLichessProfile}></LinkLichessAccountButton>
-                            </>
+                            <LinkLichessAccountButton setLichessProfileCallback={setMyLichessProfile}></LinkLichessAccountButton>
                         ) : (
                             <>
                                 <ProfileRow
@@ -133,12 +135,7 @@ const ChessProfileLichess: React.FC = () => {
                                     value={
                                         <>
                                             {new Date(myLichessProfile.lastUpdate).toLocaleString()}{' '}
-                                            <IconButton
-                                                isRotating={isRotating}
-                                                onClick={() => {
-                                                    void handleUpdateClick()
-                                                }}
-                                            />
+                                            <IconButton isRotating={isRotating} onClick={() => void handleUpdateClick()} />
                                         </>
                                     }
                                 />

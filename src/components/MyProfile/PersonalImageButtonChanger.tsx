@@ -31,6 +31,12 @@ const ImageStyled = styled(Image)<{ selected: boolean }>`
     &:active {
         transform: scale(1.05);
     }
+
+    // Responsive image size for mobile
+    @media (max-width: 768px) {
+        width: 75px;
+        height: 75px;
+    }
 `
 
 const ModalHeaderStyled = styled(Modal.Header)`
@@ -42,23 +48,50 @@ const ModalHeaderStyled = styled(Modal.Header)`
 `
 
 const ModalBodyStyled = styled(Modal.Body)`
-    background-color: #f8f9fa; // Light background
-    padding: 2rem; // Increased padding for comfort
+    background-color: #f8f9fa;
+    padding: 2rem;
+
+    // Adjust padding for mobile devices
+    @media (max-width: 768px) {
+        padding: 1rem;
+    }
+
+    // Make images scrollable in a flex container for smaller screens
+    div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        max-height: 300px; // Limit height on mobile
+        overflow-y: auto; // Enable scrolling on mobile
+    }
 `
 
 const ModalFooterStyled = styled(Modal.Footer)`
     display: flex;
     justify-content: space-between;
-    background-color: #f1f1f1; // Slightly darker footer
-    border-top: 1px solid #dee2e6; // Light border
+    background-color: #f1f1f1;
+    border-top: 1px solid #dee2e6;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 10px; // Add space between buttons on mobile
+        button {
+            width: 100%; // Make buttons full-width on mobile
+        }
+    }
 `
 
 const StyledButton = styled(Button)`
-    border: none; // Remove default border
-    transition: background-color 0.3s ease; // Transition for hover effect
+    border: none;
+    transition: background-color 0.3s ease;
 
     &:hover {
-        background-color: #218838; // Darker shade on hover
+        background-color: #218838;
+    }
+
+    // Make buttons more responsive for mobile
+    @media (max-width: 768px) {
+        width: 100%;
     }
 `
 

@@ -19,14 +19,30 @@ export interface ChangePasswordFormProps {
 
 const StyledErrorMessage = styled(ErrorMessage)`
     color: red;
+    font-weight: bold;
+
+    @media (max-width: 768px) {
+        font-size: 0.9rem; // Ajuste del tamaño del texto en pantallas pequeñas
+    }
 `
 
 const StyledFormContainer = styled(Container)`
     padding-top: 1em;
+
+    @media (max-width: 768px) {
+        padding: 0.5em; // Menor padding en pantallas pequeñas
+    }
+`
+
+const StyledFormGroup = styled(FormGroup)`
+    margin-bottom: 1.5em;
+
+    @media (max-width: 768px) {
+        margin-bottom: 1em; // Ajuste del espaciado en pantallas pequeñas
+    }
 `
 
 const validationSchema = Yup.object().shape({
-    username: Yup.string(),
     currentPassword: Yup.string().required('Debes ingresar tu contraseña actual.'),
     newPassword: Yup.string().required('Debes ingresar una nueva contraseña.'),
     confirmNewPassword: Yup.string()
@@ -53,36 +69,36 @@ const PasswordChangeForm = ({ formikRef, userEmail }: ChangePasswordFormProps): 
                     <BootstrapForm as={Form}>
                         <Field hidden type="hidden" name="username" value={userEmail} />
                         <Row>
-                            <Col>
-                                <FormGroup>
+                            <Col xs={12}>
+                                <StyledFormGroup>
                                     <FormLabel>
                                         <strong>Contraseña actual:</strong>
                                     </FormLabel>
                                     <Field as={FormControl} type="password" name="currentPassword" autoComplete="current-password" />
                                     <StyledErrorMessage name="currentPassword" component="div" />
-                                </FormGroup>
+                                </StyledFormGroup>
                             </Col>
                         </Row>
                         <Row>
-                            <Col>
-                                <FormGroup>
+                            <Col xs={12}>
+                                <StyledFormGroup>
                                     <FormLabel>
                                         <strong>Nueva contraseña:</strong>
                                     </FormLabel>
                                     <Field as={FormControl} type="password" name="newPassword" autoComplete="new-password" />
                                     <StyledErrorMessage name="newPassword" component="div" />
-                                </FormGroup>
+                                </StyledFormGroup>
                             </Col>
                         </Row>
                         <Row>
-                            <Col>
-                                <FormGroup>
+                            <Col xs={12}>
+                                <StyledFormGroup>
                                     <FormLabel>
                                         <strong>Confirmar nueva contraseña:</strong>
                                     </FormLabel>
                                     <Field as={FormControl} type="password" name="confirmNewPassword" autoComplete="new-password" />
                                     <StyledErrorMessage name="confirmNewPassword" component="div" />
-                                </FormGroup>
+                                </StyledFormGroup>
                             </Col>
                         </Row>
                         {visibleAlert && (

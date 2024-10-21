@@ -37,6 +37,12 @@ const StyledFaQuestionCircle = styled(FaQuestionCircle)`
     }
 `
 
+const CloseModalButton = styled(Button)`
+    @media (max-width: 768px) {
+        width: 100%; /* Botones ocupan el 100% del ancho en móviles */
+    }
+`
+
 const StyledHelpMessageContainer = styled.div`
     background-color: #d1cbcb;
     border-radius: 20px; /* Ajusta el radio de las esquinas */
@@ -281,7 +287,12 @@ const ChessProfileFederate = (): JSX.Element => {
                 <Modal.Body>
                     <UpdateDniForm setFederateState={setFederateState} closeModal={() => setUploadDniform(false)}></UpdateDniForm>
                 </Modal.Body>
-                <Modal.Footer></Modal.Footer>
+                <Modal.Footer>
+                    {' '}
+                    <CloseModalButton variant="danger" onClick={() => setUploadDniform(false)}>
+                        Cerrar
+                    </CloseModalButton>
+                </Modal.Footer>
             </Modal>
 
             <Modal show={showFederateModal} onHide={() => setShowFederateModal(false)} centered>
@@ -289,7 +300,11 @@ const ChessProfileFederate = (): JSX.Element => {
                 <Modal.Body>
                     <FederateRequestForm setFederateState={setFederateState} closeModal={() => setShowFederateModal(false)}></FederateRequestForm>
                 </Modal.Body>
-                <Modal.Footer></Modal.Footer>
+                <Modal.Footer>
+                    <CloseModalButton variant="danger" onClick={() => setShowFederateModal(false)}>
+                        Cerrar
+                    </CloseModalButton>
+                </Modal.Footer>
             </Modal>
         </>
     )

@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { Container, Row, Col, Form as BootstrapForm, FormGroup, FormLabel, FormControl } from 'react-bootstrap'
 import ChangeUserEmailResultAlert, { ChangeEmailAxiosValues } from './ChangeUserEmailResultAlert'
 
+// Styled components
 const StyledErrorMessage = styled(ErrorMessage)`
     color: #e20101;
     font-weight: bold;
@@ -11,8 +12,27 @@ const StyledErrorMessage = styled(ErrorMessage)`
 
 const StyledFormContainer = styled(Container)`
     padding-top: 1em;
+
+    @media (max-width: 768px) {
+        padding: 0.5em; // Reducir el padding en pantallas pequeñas
+    }
 `
 
+const StyledFormControl = styled(FormControl)`
+    width: 100%;
+
+    @media (max-width: 768px) {
+        font-size: 0.9rem; // Ajustar tamaño de la fuente para móviles
+    }
+`
+
+const StyledFormLabel = styled(FormLabel)`
+    @media (max-width: 768px) {
+        font-size: 1rem; // Ajustar tamaño de la fuente en móviles
+    }
+`
+
+// Interfaces
 export interface EmailChangeFormProps {
     initialEmail: string
     buttonDisabledHandler: (isDisabled: boolean) => void
@@ -24,6 +44,7 @@ export interface ChangeEmailFormValues {
     confirmNewEmail: string
 }
 
+// Component
 const InnerForm: React.FC<FormikProps<ChangeEmailFormValues> & EmailChangeFormProps> = ({
     values,
     handleChange,
@@ -55,34 +76,34 @@ const InnerForm: React.FC<FormikProps<ChangeEmailFormValues> & EmailChangeFormPr
         <StyledFormContainer>
             <BootstrapForm id="emailChangeForm" onSubmit={onSubmit}>
                 <Row>
-                    <Col>
+                    <Col xs={12}>
                         <FormGroup>
-                            <FormLabel htmlFor="currentEmail">
+                            <StyledFormLabel htmlFor="currentEmail">
                                 <strong>Email actual:</strong>
-                            </FormLabel>
-                            <FormControl type="text" id="currentEmail" name="currentEmail" value={values.currentEmail} disabled />
+                            </StyledFormLabel>
+                            <StyledFormControl type="text" id="currentEmail" name="currentEmail" value={values.currentEmail} disabled />
                         </FormGroup>
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
+                    <Col xs={12}>
                         <FormGroup>
-                            <FormLabel htmlFor="newEmail">
+                            <StyledFormLabel htmlFor="newEmail">
                                 <strong>Nuevo Email:</strong>
-                            </FormLabel>
-                            <FormControl type="email" id="newEmail" name="newEmail" onChange={handleChange} onBlur={handleBlur} />
-                            <StyledErrorMessage name="newEmail" component="div"></StyledErrorMessage>
+                            </StyledFormLabel>
+                            <StyledFormControl type="email" id="newEmail" name="newEmail" onChange={handleChange} onBlur={handleBlur} />
+                            <StyledErrorMessage name="newEmail" component="div" />
                         </FormGroup>
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
+                    <Col xs={12}>
                         <FormGroup>
-                            <FormLabel htmlFor="confirmNewEmail">
+                            <StyledFormLabel htmlFor="confirmNewEmail">
                                 <strong>Confirmar Nuevo Email:</strong>
-                            </FormLabel>
-                            <FormControl type="email" id="confirmNewEmail" name="confirmNewEmail" onChange={handleChange} onBlur={handleBlur} />
-                            <StyledErrorMessage name="confirmNewEmail" component="div"></StyledErrorMessage>
+                            </StyledFormLabel>
+                            <StyledFormControl type="email" id="confirmNewEmail" name="confirmNewEmail" onChange={handleChange} onBlur={handleBlur} />
+                            <StyledErrorMessage name="confirmNewEmail" component="div" />
                         </FormGroup>
                     </Col>
                 </Row>
