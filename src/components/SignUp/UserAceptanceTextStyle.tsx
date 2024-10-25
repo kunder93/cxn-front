@@ -91,7 +91,7 @@ export const RelativoSociosTextContainer = () => {
             <p>LA CONDICIÓN DE SOCIO SE PIERDE SI:</p>
             <p>Uno mismo lo desea.</p>
             <p>
-                Por falta de pago de las cuotas socioales durante trese meses consecutivos, previo requerimiento de pago, y consecuente Resolucion del
+                Por falta de pago de las cuotas sociales durante trese meses consecutivos, previo requerimiento de pago, y consecuente Resolucion del
                 presidente.
             </p>
             <p>

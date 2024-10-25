@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import { Formik, Form } from 'formik'
-import * as Yup from 'yup'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useRef, useState } from 'react'
+import { Formik, Form, FormikTouched, FormikErrors } from 'formik'
+import { Form as BootstrapForm } from 'react-bootstrap'
 import { Button } from 'react-bootstrap'
 import axios, { AxiosError } from 'axios'
 import { useAppSelector } from '../../store/hooks'
@@ -10,114 +11,154 @@ import { useDispatch } from 'react-redux'
 import { useNotificationContext } from '../../components/Common/NotificationContext'
 import { NotificationType } from '../../components/Common/hooks/useNotification'
 import { UPLOAD_PROFILE_IMAGE_FILE_URL } from '../../resources/server_urls'
+import { FileInput } from '../../components/UserProfiles/ChessProfileFederate/Forms/Common/FormComponents'
+import { uploadFormValidationSchema } from './ProfileImage/FormValidations'
+import styled from 'styled-components'
+import Image from 'react-bootstrap/Image'
 
-const validationSchema = Yup.object().shape({
-    profileImage: Yup.mixed()
-        .required('La imagen es requerida')
-        .test(
-            'fileSize',
-            'El archivo es muy grande',
-            (value) => value && value instanceof File && value.size <= 4 * 1024 * 1024 // Tamaño máximo de 4MB
-        )
-        .test(
-            'fileType',
-            'Formato no soportado',
-            (value) => value && value instanceof File && ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'image/avif'].includes(value.type)
-        )
-        .test(
-            'fileDimensions',
-            'Las dimensiones de la imagen deben ser 500x500 píxeles o menos',
-            (value) =>
-                new Promise((resolve) => {
-                    if (!value || !(value instanceof File)) {
-                        return resolve(false) // Validamos que sea un File antes de continuar
-                    }
+export const SubmitButton = styled(Button)`
+    @media (max-width: 768px) {
+        width: 100%; /* Botones ocupan el 100% del ancho en móviles */
+        margin-bottom: 10px;
+    }
+`
 
-                    const img = new Image()
-                    const objectUrl = URL.createObjectURL(value as Blob) // Aseguramos que 'value' es un Blob
+export const StyledPreviewRow = styled.div`
+    display: flex;
 
-                    img.src = objectUrl
-                    img.onload = () => {
-                        const { width, height } = img
-                        URL.revokeObjectURL(objectUrl) // Liberar memoria después de la carga
-                        resolve(width <= 500 && height <= 500)
-                    }
-                })
-        )
-})
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    align-items: center;
+    justify-content: center; /* Centra la imagen horizontalmente */
+    align-content: center;
+
+    div {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Asegura que el contenido interno también esté centrado */
+        align-items: center;
+        align-content: center;
+        padding-top: 1em;
+    }
+    img {
+        width: 50%;
+        border-radius: 8px;
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+    @media (max-width: 768px) {
+        gap: 5px;
+    }
+`
+
+interface ProfileImageFormValues {
+    profileImage: File | null
+}
+
+const initialFormValues: ProfileImageFormValues = {
+    profileImage: null
+}
 
 const ProfileImageUploadForm: React.FC = () => {
-    const [preview, setPreview] = useState<string | ArrayBuffer | null>(null)
+    const [profileImagePreview, setProfileImagePreview] = useState<string | null>(null)
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const { showNotification } = useNotificationContext()
     const dispatch = useDispatch()
-    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>, setFieldValue: (field: string, value: any) => void) => {
-        const file = event.currentTarget.files?.[0]
-        if (file) {
-            setFieldValue('profileImage', file)
-            const reader = new FileReader()
-            reader.onloadend = () => {
-                setPreview(reader.result)
-            }
-            reader.readAsDataURL(file)
-        }
-    }
+    const profileImageInputRef = useRef<HTMLInputElement | null>(null)
 
-    const handleSubmit = async (values: { profileImage: File | null }) => {
-        if (!values.profileImage) return
-
+    const handleSubmit = (values: ProfileImageFormValues) => {
         const formData = new FormData()
-        formData.append('file', values.profileImage)
+        if (values.profileImage) {
+            formData.append('profileImage', values.profileImage) // Only append if it's not null
+        }
 
-        try {
-            const response = await axios.patch<UserProfileImage>(UPLOAD_PROFILE_IMAGE_FILE_URL, formData, {
+        axios
+            .patch<UserProfileImage>(UPLOAD_PROFILE_IMAGE_FILE_URL, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${userJwt}`
                 }
             })
-            const updatedUserProfileImage: UserProfileImage = response.data
-            updatedUserProfileImage.file = preview as string
-            showNotification('Imagen de perfil actualizada', NotificationType.Success)
-            dispatch(setProfileImage(updatedUserProfileImage))
-        } catch (error) {
-            if (error instanceof AxiosError) {
-                showNotification('Error al actualizar la imagen de perfil: ' + error.message, NotificationType.Error)
-            } else {
-                showNotification('Ocurrió un error inesperado.', NotificationType.Error)
-            }
+            .then((response) => {
+                const updatedUserProfileImage: UserProfileImage = response.data
+                profileImagePreview && (updatedUserProfileImage.file = profileImagePreview)
+                showNotification('Imagen de perfil actualizada', NotificationType.Success)
+                dispatch(setProfileImage(updatedUserProfileImage))
+            })
+            .catch((error) => {
+                if (error instanceof AxiosError) {
+                    showNotification('Error al actualizar la imagen de perfil: ' + error.message, NotificationType.Error)
+                } else {
+                    showNotification('Ocurrió un error inesperado.', NotificationType.Error)
+                }
+            })
+    }
+
+    const handleImagePreview = (file: File, setPreview: (value: string | null) => void) => {
+        const reader = new FileReader()
+        reader.onload = () => {
+            setPreview(reader.result as string)
         }
+        reader.readAsDataURL(file)
+    }
+
+    const handleFileChange = (
+        event: React.ChangeEvent<HTMLInputElement>,
+        setFieldValue: (field: string, value: File | null, shouldValidate?: boolean) => Promise<void>,
+        setTouched: (touched: FormikTouched<ProfileImageFormValues>) => void,
+        validateForm: () => Promise<any>,
+        field: keyof ProfileImageFormValues,
+        setPreview: React.Dispatch<React.SetStateAction<string | null>>
+    ) => {
+        const file = event.currentTarget.files?.[0] ?? null
+        void setFieldValue(field, file).then(() => {
+            setTouched({ [field]: true })
+            void validateForm().then((validationErrors: FormikErrors<ProfileImageFormValues>) => {
+                if (file && !validationErrors[field]) {
+                    handleImagePreview(file, setPreview)
+                }
+            })
+        })
     }
 
     return (
-        <Formik initialValues={{ profileImage: null }} validationSchema={validationSchema} onSubmit={handleSubmit}>
-            {({ setFieldValue, errors, touched }) => (
-                <Form>
-                    <div className="mb-3">
-                        <label htmlFor="profileImage" className="form-label">
-                            Máximo 4Mb. Máximo 500 x 500 pixeles. Formatos admitidos: Jpeg, jpg, png , webp y avif.
-                        </label>
-                        <input
-                            id="profileImage"
-                            name="profileImage"
-                            type="file"
-                            accept="image/*"
-                            className="form-control"
-                            onChange={(event) => handleImageChange(event, setFieldValue)}
-                        />
-                        {errors.profileImage && touched.profileImage && <div className="text-danger">{errors.profileImage}</div>}
-                    </div>
+        <Formik initialValues={initialFormValues} validationSchema={uploadFormValidationSchema} onSubmit={handleSubmit}>
+            {({ setFieldValue, errors, touched, isValid, dirty, setTouched, validateForm }) => (
+                <BootstrapForm as={Form}>
+                    <FileInput
+                        label="Imagen del perfil:"
+                        inputRef={profileImageInputRef}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                            handleFileChange(
+                                event,
+                                setFieldValue as (field: string, value: File | null) => Promise<void>,
+                                () => setTouched,
+                                validateForm,
+                                'profileImage',
+                                setProfileImagePreview
+                            )
+                        }
+                        isInvalid={!!errors.profileImage && touched.profileImage}
+                        errorMessage={errors.profileImage}
+                    />
 
-                    {preview && (
-                        <div className="mb-3">
-                            <img src={preview as string} alt="Vista previa" width={100} height={100} />
-                        </div>
-                    )}
+                    <StyledPreviewRow>
+                        {profileImagePreview && (
+                            <div className="mb-3">
+                                <Image src={profileImagePreview} alt="Vista previa" width={100} height={100} roundedCircle />
+                                <p>Previsualización</p>
+                            </div>
+                        )}
+                    </StyledPreviewRow>
 
-                    <Button variant="success" type="submit">
+                    <SubmitButton variant="success" type="submit" disabled={!isValid || !dirty}>
                         Cambiar
-                    </Button>
-                </Form>
+                    </SubmitButton>
+                </BootstrapForm>
             )}
         </Formik>
     )

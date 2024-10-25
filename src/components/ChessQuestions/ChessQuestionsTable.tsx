@@ -9,6 +9,7 @@ import { CHESS_QUESTION_CHANGE_SEEN_STATE, CHESS_QUESTION_DELETE } from '../../r
 import useNotification, { NotificationType } from '../../components/Common/hooks/useNotification'
 import FloatingNotificationA from '../../components/Common/FloatingNotificationA'
 import styled from 'styled-components'
+import { useAppSelector } from '../../store/hooks'
 
 const TableFilterContainer = styled.div`
     display: flex;
@@ -34,7 +35,7 @@ const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): J
     const [loadingRows, setLoadingRows] = useState<number[]>([])
     const [deletingRows, setDeletingRows] = useState<number[]>([])
     const { notification, showNotification, hideNotification } = useNotification()
-
+    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     useEffect(() => {
         setData(initialData.chessQuestionList)
     }, [initialData])
@@ -44,7 +45,8 @@ const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): J
             axios
                 .delete(`${CHESS_QUESTION_DELETE}/${id}`, {
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${userJwt}`
                     }
                 })
                 .then(() => {
@@ -53,8 +55,7 @@ const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): J
                 })
                 .catch((error) => {
                     const axiosError = error as AxiosError
-                    console.error('There was an error deleting the question:', axiosError.message)
-                    showNotification('Hubo un error al eliminar la pregunta.', NotificationType.Error)
+                    showNotification('Hubo un error al eliminar la pregunta: ' + axiosError.message, NotificationType.Error)
                 })
         },
         [showNotification]
@@ -83,7 +84,8 @@ const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): J
                     { id: row.id },
                     {
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${userJwt}`
                         }
                     }
                 )
