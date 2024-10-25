@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { Formik, Form, FormikState, FormikErrors, FormikTouched } from 'formik'
-
 import axios, { AxiosError } from 'axios'
 import { Form as BootstrapForm } from 'react-bootstrap'
-import { UPDATE_DNI_URL } from '../../../resources/server_urls'
-import { useAppSelector } from '../../../store/hooks'
-import { FederateStateResponse } from './Hooks/getFederateState'
-import { useNotificationContext } from '../../../components/Common/NotificationContext'
-import { NotificationType } from '../../../components/Common/hooks/useNotification'
 import { dniValidationSchema } from './DniFilesValidation'
+import { ButtonsWrapper, ResetButton, SubmitButton } from './Common/styles'
 import { DniPreviewRow, FileInput } from './Common/FormComponents'
-import { ResetButton, SubmitButton } from './Common/styles'
+import { NotificationType } from 'components/Common/hooks/useNotification'
+import { useNotificationContext } from 'components/Common/NotificationContext'
+import { FederateStateResponse } from '../Hooks/getFederateState'
+import { UPDATE_DNI_URL } from 'resources/server_urls'
+import { useAppSelector } from 'store/hooks'
 
 // Tipo de los archivos a enviar
 interface DniFormValues {
@@ -149,12 +148,14 @@ const UpdateDniForm = ({ setFederateState, closeModal }: UpdateDniRequestFormPro
                                 backDniPreview={backDniPreview}
                                 backDniErrors={errors.backDni}
                             />
-                            <SubmitButton variant="primary" type="submit">
-                                Actualizar DNI
-                            </SubmitButton>
-                            <ResetButton variant="secondary" onClick={() => resetFormAndImages(resetForm)}>
-                                Restablecer formulario
-                            </ResetButton>
+                            <ButtonsWrapper>
+                                <SubmitButton variant="primary" type="submit">
+                                    Actualizar DNI
+                                </SubmitButton>
+                                <ResetButton variant="secondary" onClick={() => resetFormAndImages(resetForm)}>
+                                    Restablecer formulario
+                                </ResetButton>
+                            </ButtonsWrapper>
                         </BootstrapForm>
                     )
                 }}

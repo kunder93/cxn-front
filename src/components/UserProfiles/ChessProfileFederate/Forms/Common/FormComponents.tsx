@@ -36,10 +36,20 @@ interface FileInputProps {
     errorMessage?: string
 }
 
-export const FileInput = ({ label, inputRef, onChange, isInvalid, errorMessage }: FileInputProps) => (
-    <Form.Group>
-        <StyledLabel>{label}</StyledLabel>
-        <Form.Control type="file" accept="image/png, image/jpeg, image/jpg, image/avif, image/webp" ref={inputRef} onChange={onChange} isInvalid={isInvalid} />
-        {isInvalid && <Form.Control.Feedback type="invalid">{errorMessage}</Form.Control.Feedback>}
-    </Form.Group>
-)
+export const FileInput = ({ label, inputRef, onChange, isInvalid, errorMessage }: FileInputProps) => {
+    console.log('LOS ERRORS SON : ' + errorMessage)
+    console.log('ES INVALID: ' + isInvalid)
+    return (
+        <Form.Group>
+            <StyledLabel>{label}</StyledLabel>
+            <Form.Control
+                type="file"
+                accept="image/png, image/jpeg, image/jpg, image/avif, image/webp"
+                ref={inputRef}
+                onChange={onChange}
+                isInvalid={isInvalid}
+            />
+            {isInvalid && <Form.Control.Feedback type="invalid">{errorMessage}</Form.Control.Feedback>}
+        </Form.Group>
+    )
+}
