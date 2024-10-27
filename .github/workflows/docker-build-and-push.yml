@@ -32,3 +32,6 @@ jobs:
                   file: ./Dockerfile
                   push: true
                   tags: kunder9/cxn-app:latest
+                  build-args: |
+                      NO_CACHE=true
+                  no-cache: true
