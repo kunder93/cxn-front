@@ -1,4 +1,3 @@
-import React from 'react'
 import { HeaderPicture, MainContainerStyled, MainContentContainer, PageHeaderImage } from '../../components/Common/CommonStyles'
 import BenefitsAccordion, { BenefitsAccordionProps } from '../../components/SchoolClass/BenefitsAccordion'
 import {
@@ -12,8 +11,8 @@ import {
     ShortSummaryPicture,
     SummaryContentSection
 } from '../../components/SchoolClass/CommonStyles'
-import { SetPageTitle } from '../../utility/functions'
-import { PhotoData } from 'components/SchoolClass/ClassPhotoGalleryCarousel'
+import { PhotoData } from '../../components/SchoolClass/ClassPhotoGalleryCarousel'
+import usePageTitle from '../../components/Common/hooks/usePageTitle'
 
 const pageTitle = 'Escuela adultos Círculo Xadrez Narón'
 
@@ -27,14 +26,25 @@ const headerImageSrc = '/ChessClass/SchoolHeaderImage.avif'
 const summaryImageSrc = '/ChessClass/oldClass/GreenArrowGoingUp.avif'
 
 const faqOldSchoolPairsQuestionAnswer = [
-    { question: '¿Cuándo empiezan las clases?', answer: 'Las clases empiezan en Octubre y duran hasta Junio.' },
     {
-        question: '¿Necesito comprar algo para las clases o llevar algún material?',
-        answer: 'Todo el material necesario lo proporciona el club.'
+        question: '¿Cuándo empiezan las clases?',
+        answer: 'Las clases comienzan en octubre y se extienden hasta junio. ¡Asegúrate de reservar tu lugar con anticipación!'
     },
     {
-        question: '¿Dónde puedo apuntarme, cuánto cuesta?',
-        answer: 'En el padroado de deportes o en nuestras oficinas. Mas info: (link de contacto) '
+        question: '¿Necesito comprar algo para las clases o llevar algún material?',
+        answer: 'No necesitas traer nada. Todo el material necesario, incluidos tableros, piezas y material de estudio, lo proporciona el club.'
+    },
+    {
+        question: '¿Dónde puedo apuntarme?',
+        answer: 'Puedes inscribirte en nuestras oficinas, a través de esta web usando el formulario de contacto o enviando un correo a xadreznaron@hotmail.com. ¡Es fácil y rápido!'
+    },
+    {
+        question: '¿Cuánto cuesta?',
+        answer: 'La cuota es de 20 euros al mes. Un precio accesible para una actividad tan enriquecedora.'
+    },
+    {
+        question: '¿Qué días se imparten las clases?',
+        answer: 'Las clases se imparten dos días a la semana. Los Lunes de 19:00 a 20:00 y los Viernes de 19:15 a 20:15.'
     }
 ]
 
@@ -103,27 +113,28 @@ const carouselBenefits = [
 const photosData: PhotoData[] = [
     {
         url: '/ChessClass/oldClass/CarouselImage1.avif',
-        alt: 'Imagen 1'
+        alt: 'Tablero de ajedrez en pared.'
     },
     {
-        url: '/ChessClass/KidsClass/CarouselImage2.avif',
-        alt: 'Imagen 2'
+        url: '/ChessClass/oldClass/CarouselImage2.avif',
+        alt: 'Tablero y reloj analógico.'
     },
     {
-        url: '/ChessClass/KidsClass/CarouselImage3.avif',
-        alt: 'Imagen 3'
+        url: '/ChessClass/oldClass/CarouselImage3.avif',
+        alt: 'Gente em clase de ajedrez.'
     }
 ]
 
 const accordionData: BenefitsAccordionProps = {
     carouselBenefits: carouselBenefits,
-    initialQuestionsFormTopic: 'CLASES INFANTILES',
+    initialQuestionsFormTopic: 'CLASES ADULTOS',
     faqList: faqOldSchoolPairsQuestionAnswer,
-    photosData: photosData
+    photosData: photosData,
+    chessQuestionsFormCategory: 'CLASES ADULTOS'
 }
 
-const SchoolOld: React.FC = () => {
-    SetPageTitle('CXN Escuela adultos')
+const SchoolOld = (): JSX.Element => {
+    usePageTitle('CXN Escuela adultos')
     return (
         <MainContainerStyled>
             <HeaderPicture>

@@ -1,12 +1,21 @@
-import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '../resources/routes-constants'
 
-const NotFoundPage: React.FC = () => {
+/**
+ * NotFoundPage component to display a 404 error message.
+ *
+ * This component informs users that the requested page was not found
+ * and provides a link to redirect them back to the homepage.
+ *
+ * @returns {JSX.Element} The rendered 404 Not Found page.
+ */
+const NotFoundPage = (): JSX.Element => {
     const navigate = useNavigate()
 
     /**
-     * Call this function to redirect the user to the homepage.
+     * Redirects the user to the homepage.
+     *
+     * This function is called when the user clicks the "Homepage" link.
      */
     const redirectToHomePage = () => {
         navigate(ROUTES.HOMEPAGE_ROUTE)

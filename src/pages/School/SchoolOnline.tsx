@@ -1,4 +1,3 @@
-import React from 'react'
 import { HeaderPicture, MainContainerStyled, MainContentContainer, PageHeaderImage } from '../../components/Common/CommonStyles'
 import BenefitsAccordion, { BenefitsAccordionProps } from '../../components/SchoolClass/BenefitsAccordion'
 import {
@@ -12,15 +11,16 @@ import {
     ShortSummaryPicture,
     SummaryContentSection
 } from '../../components/SchoolClass/CommonStyles'
-import { SetPageTitle } from '../../utility/functions'
-import { PhotoData } from 'components/SchoolClass/ClassPhotoGalleryCarousel'
+import { PhotoData } from '../../components/SchoolClass/ClassPhotoGalleryCarousel'
+import usePageTitle from '../../components/Common/hooks/usePageTitle'
 
-const pageTitle = 'Escola adultos Círculo Xadrez Narón'
+const pageTitle = 'Escola online Círculo Xadrez Narón'
 
 const pageSubTitle = 'Compartir nuestra pasión por el ajedrez al mismo tiempo que aprendemos y crecemos como personas.'
 
-const summaryParagraph =
-    'Nos apasiona el ajedrez y estamos emocionados de compartir esta pasión con todos vosotros. Aquí no sólo aprendeás movimientos de piezas, descubrirás un universo de estrategia, amistad y diversión.'
+const summaryParagraph = 'La escuela online pone a su disposición un monitor con el cual organizar un itinerario para alcanzar unos objetivos de aprendizaje. '
+
+const secondParagraph = 'Desde los 10 años, 1 o 2 horas a la semana.'
 
 const headerImageSrc = '/ChessClass/SchoolHeaderImage.avif'
 
@@ -29,12 +29,12 @@ const summaryImageSrc = '/OnlineChessImageSmall.avif'
 const faqOldSchoolPairsQuestionAnswer = [
     { question: '¿Cuándo empiezan las clases?', answer: 'Las clases empiezan en Octubre y duran hasta Junio.' },
     {
-        question: '¿Necesito comprar algo para las clases o llevar algún material?',
-        answer: 'Todo el material necesario lo proporciona el club.'
+        question: '¿Necesito comprar algo para las clases?',
+        answer: 'Recomendamos portátil o tablet para realizar los ejercicios y participar en videollamada.'
     },
     {
         question: '¿Dónde puedo apuntarme, cuánto cuesta?',
-        answer: 'En el padroado de deportes o en nuestras oficinas. Mas info: (link de contacto) '
+        answer: 'A través de el formulario de contacto de esta web o en el correo indicado en la sección "El Club - contacto".'
     }
 ]
 
@@ -113,17 +113,18 @@ const photosData: PhotoData[] = [
         url: '/ChessClass/KidsClass/CarouselImage3.avif',
         alt: 'Imagen 3'
     }
-];
+]
 
 const accordionData: BenefitsAccordionProps = {
     carouselBenefits: carouselBenefits,
-    initialQuestionsFormTopic: 'CLASES INFANTILES',
+    initialQuestionsFormTopic: 'CLASES ONLINE',
     faqList: faqOldSchoolPairsQuestionAnswer,
-    photosData: photosData
+    photosData: photosData,
+    chessQuestionsFormCategory: 'CLASES ONLINE'
 }
 
-const SchoolOnline: React.FC = () => {
-    SetPageTitle('CXN Escuela online')
+const SchoolOnline = (): JSX.Element => {
+    usePageTitle('CXN Escuela online')
     return (
         <MainContainerStyled>
             <HeaderPicture>
@@ -137,7 +138,11 @@ const SchoolOnline: React.FC = () => {
                     <PageSubTittle>{pageSubTitle}</PageSubTittle>
                 </MainContentHeader>
                 <SummaryContentSection>
-                    <ShortSummaryParagraph>{summaryParagraph}</ShortSummaryParagraph>
+                    <ShortSummaryParagraph>
+                        <p>{summaryParagraph}</p>
+                        <p>{secondParagraph}</p>
+                    </ShortSummaryParagraph>
+
                     <ShortSummaryPicture>
                         <source srcSet={summaryImageSrc} type="image/avif" />
                         <ShortSummaryImage src={summaryImageSrc} alt="Amor caballuno" />

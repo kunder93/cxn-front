@@ -1,11 +1,10 @@
-import React from 'react'
 import { Accordion } from 'react-bootstrap'
 import { CustomAccordionStyled } from '../../components/Common/CommonStyles'
 import ClassBenefitsCarousel, { CarouselItemMessage } from './ClassBenefitsCarousel'
 import ClassPhotoGalleryCarousel, { PhotoData } from './ClassPhotoGalleryCarousel'
 import { CameraStyled, EnvelopeOpenHeartStyled, GraphUpArrowStyled, PatchQuestionStyled } from './CommonStyles'
 import FaqList, { PairQuestionAnswer } from './FaqList'
-import MoreInfoClassForm from '../Common/MoreInfoForm'
+import MoreInfoClassForm from '../Common/MoreInfoForm/MoreInfoForm'
 
 /**
  * Properties for the component BenefitsAccordion.
@@ -13,15 +12,23 @@ import MoreInfoClassForm from '../Common/MoreInfoForm'
  * @property {CarouselItemMesage[]} carouselBenefits - List of benefits for show into carousel.
  * @property {string} initialQuestionsFormTopic - Initial topic for questions form.
  * @property {PairQuestionAnswer[]} faqList - List of faq question and answers.
+ * @property {String} chessQuestionsFormCategory - Category for chess questions form.
  */
 export interface BenefitsAccordionProps {
     carouselBenefits: CarouselItemMessage[]
     initialQuestionsFormTopic: string
     faqList: PairQuestionAnswer[]
     photosData: PhotoData[]
+    chessQuestionsFormCategory: string
 }
 
-const BenefitsAccordion: React.FC<BenefitsAccordionProps> = ({ carouselBenefits, initialQuestionsFormTopic, faqList, photosData}) => {
+const BenefitsAccordion = ({
+    carouselBenefits,
+    initialQuestionsFormTopic,
+    faqList,
+    photosData,
+    chessQuestionsFormCategory
+}: BenefitsAccordionProps): JSX.Element => {
     const chessBenefitsHeaderMsg = 'Beneficios del ajedrez:'
     const contactHeaderMsg = 'Contacto'
     const faqHeaderMsg = 'Preguntas frecuentes:'
@@ -44,7 +51,7 @@ const BenefitsAccordion: React.FC<BenefitsAccordionProps> = ({ carouselBenefits,
                     <h2>{contactHeaderMsg}:</h2>
                 </Accordion.Header>
                 <Accordion.Body>
-                    <MoreInfoClassForm formTitle="Pide más info:" initialTopic={initialQuestionsFormTopic} />
+                    <MoreInfoClassForm formTitle="Solicita información:" initialTopic={initialQuestionsFormTopic} category={chessQuestionsFormCategory} />
                 </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey="2">

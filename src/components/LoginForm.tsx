@@ -1,130 +1,146 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import * as React from 'react'
-import axios from 'axios'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Formik, Form, Field } from 'formik'
+import { useState } from 'react'
+import axios, { AxiosError, AxiosResponse } from 'axios'
+import { Formik, Form, Field, FormikHelpers } from 'formik'
 import { LOGIN_URL } from '../resources/server_urls'
 import { useAppDispatch } from '../store/hooks'
 import { useNavigate } from 'react-router-dom'
 import { setJwt } from '../store/slices/user'
-import { useState } from 'react'
-import { Alert, Button, Col, Container, Row } from 'react-bootstrap'
+import { Button, Col, Spinner } from 'react-bootstrap'
 import { LogInValidationSchema } from '../pages/validation/FormValidationSchemas'
 import BootstrapForm from 'react-bootstrap/Form'
-import styled from 'styled-components'
-import { ExclamationTriangle } from 'react-bootstrap-icons'
+import { ButtonRow, ErrorAlert, ErrorMessage, ErrorTriangle, FormStyledContainer, StyledRow } from './SignUpSingInCommonStyles'
+import { ROUTES } from '../resources/routes-constants'
 
-const ErrorMessage = styled.div`
-    color: red;
-`
-
-const ErrorAlert = styled(Alert)`
-    color: red;
-    font-size: 1em;
-    background-color: white;
-    margin: 3px;
-    padding: 0.5em 1.5em;
-    border: 1px solid palevioletred;
-    border-radius: 10px;
-`
-
-const ErrorTriangle = styled(ExclamationTriangle)`
-    height: 10%;
-    width: 10%;
-`
-
+/**
+ * Interface representing the structure of login form values.
+ * @interface LoginFormValues
+ */
 export interface LoginFormValues {
     email: string
     password: string
 }
 
-export const LoginForm: React.FC<any> = () => {
+/**
+ * Interface representing the structure of the login response from the server.
+ * @interface LoginAxiosResponse
+ */
+interface LoginAxiosResponse {
+    jwt: string
+}
+
+/**
+ * LoginForm component allowing users to log in with their email and password.
+ *
+ * @returns {JSX.Element} The rendered LoginForm component.
+ */
+const LoginForm = (): JSX.Element => {
     const initialValues: LoginFormValues = { email: '', password: '' }
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const [alertMessage, setAlertMessage] = useState('')
-    const closeAlert = () => {
-        setAlertMessage('')
+
+    /**
+     * Closes the alert by resetting the alert message state.
+     */
+    const closeAlert = () => setAlertMessage('')
+
+    /**
+     * Handles the form submission.
+     * Makes a POST request to the login URL with the form values,
+     * dispatches the JWT token to the Redux store, and navigates to the profile page.
+     *
+     * @param {LoginFormValues} values - The values from the login form.
+     * @param {FormikHelpers<LoginFormValues>} actions - Formik helper functions.
+     */
+    const handleSubmit = async (values: LoginFormValues, actions: FormikHelpers<LoginFormValues>) => {
+        try {
+            const response: AxiosResponse<LoginAxiosResponse> = await axios.post(LOGIN_URL, values)
+            dispatch(setJwt(response.data.jwt))
+            actions.resetForm()
+            navigate(ROUTES.MYPROFILE_ROUTE)
+        } catch (error) {
+            const axiosError = error as AxiosError<{ content: string }>
+            if (axiosError.response) {
+                setAlertMessage(axiosError.response.data.content)
+            } else {
+                setAlertMessage('Error: algo inesperado. Recarga o inténtalo más tarde.')
+            }
+        } finally {
+            actions.setSubmitting(false)
+        }
     }
+
     return (
-        <Formik
-            initialValues={initialValues}
-            onSubmit={(values, actions) => {
-                const userData = { email: values.email, password: values.password }
-                axios
-                    .post(LOGIN_URL, userData)
-                    .then((response) => {
-                        dispatch(setJwt(response.data.jwt))
-                        navigate('/')
-                    })
-                    .catch((error) => {
-                        if (error.response.data) {
-                            // Request made and server responded
-                            setAlertMessage(error.response.data.content)
-                        } else if (error.request) {
-                            // The request was made but no response was received
-                            setAlertMessage('Error: no hay respuesta.')
-                        } else {
-                            // Something happened in setting up the request that triggered an Error
-                            setAlertMessage('Error: algo inesperado. Recarga o intentalo mas tarde.')
-                        }
-                    })
-                //console.log('submited Login')
-                actions.setSubmitting(false)
-            }}
-            validationSchema={LogInValidationSchema}
-            validateOnChange={true}
-        >
-            {({ errors, touched }) => (
-                <BootstrapForm as={Form}>
-                    <Container as={BootstrapForm.Group} >
-                        <Row>
+        <FormStyledContainer>
+            <h1>Entra en zona socios:</h1>
+            <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={LogInValidationSchema} validateOnChange>
+                {({ errors, touched, isSubmitting, isValid, dirty }) => (
+                    <Form>
+                        <StyledRow>
                             <Col>
-                                <BootstrapForm.Label htmlFor="email">Email:</BootstrapForm.Label>
-                                <Field as={BootstrapForm.Control}  id="email" name="email" type="text" placeholder="email" />
+                                <BootstrapForm.Label htmlFor="email">Correo electrónico:</BootstrapForm.Label>
+                                <Field
+                                    as={BootstrapForm.Control}
+                                    id="email"
+                                    name="email"
+                                    type="text"
+                                    placeholder="Email"
+                                    autoComplete="email"
+                                    isInvalid={!!errors.email && touched.email}
+                                />
+                                {errors.email && touched.email && (
+                                    <ErrorMessage>
+                                        <strong>{errors.email}</strong>
+                                    </ErrorMessage>
+                                )}
                             </Col>
-                        </Row>
-                        <Row>
-                            <Col>{errors.email && touched.email ? <ErrorMessage>{errors.email}</ErrorMessage> : ''}</Col>
-                        </Row>
-                        <Row>
+                        </StyledRow>
+                        <StyledRow>
                             <Col>
-                                <BootstrapForm.Label htmlFor="password">Password:</BootstrapForm.Label>
-                                <Field as={BootstrapForm.Control}  id="password" type="password" name="password" placeholder="password" />
+                                <BootstrapForm.Label htmlFor="password">Contraseña:</BootstrapForm.Label>
+                                <Field
+                                    as={BootstrapForm.Control}
+                                    id="password"
+                                    type="password"
+                                    name="password"
+                                    placeholder="Contraseña"
+                                    autoComplete="current-password"
+                                    isInvalid={!!errors.password && touched.password}
+                                />
+                                {errors.password && touched.password && (
+                                    <ErrorMessage>
+                                        <strong>{errors.password}</strong>
+                                    </ErrorMessage>
+                                )}
                             </Col>
-                        </Row>
-                        <Row>
-                            <Col>{errors.password && touched.password ? <ErrorMessage>{errors.password}</ErrorMessage> : ''}</Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Button type="submit" disabled={errors.email ?? errors.password ? true : false}>
-                                    Acceder
+                        </StyledRow>
+                        <ButtonRow>
+                            <Col xs="auto">
+                                <Button type="submit" variant="success" size="lg" disabled={!dirty || !isValid || isSubmitting}>
+                                    {isSubmitting ? (
+                                        <>
+                                            <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> Accediendo...
+                                        </>
+                                    ) : (
+                                        'Acceder'
+                                    )}
                                 </Button>
                             </Col>
-                        </Row>
-                    </Container>
-                    {
-                        <Container>
-                            {alertMessage ? (
-                                <>
-                                    <ErrorAlert key={'danger'} variant={'danger'}>
-                                        <ErrorTriangle></ErrorTriangle>
-                                        {alertMessage}
-                                        <Button variant="outline-danger" onClick={closeAlert}>
-                                            Cerrar
-                                        </Button>
+                        </ButtonRow>
+                        {alertMessage && (
+                            <StyledRow>
+                                <Col>
+                                    <ErrorAlert variant="danger" onClose={closeAlert} dismissible>
+                                        <ErrorTriangle /> {alertMessage}
                                     </ErrorAlert>
-                                </>
-                            ) : (
-                                ''
-                            )}
-                        </Container>
-                    }
-                </BootstrapForm>
-            )}
-        </Formik>
+                                </Col>
+                            </StyledRow>
+                        )}
+                    </Form>
+                )}
+            </Formik>
+        </FormStyledContainer>
     )
 }
+
+export default LoginForm

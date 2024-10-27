@@ -1,20 +1,41 @@
-import React from 'react'
 import { Card, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale/es'
 import { backGroundColor, backgroundImageUrl } from '../components/Common/CommonStyles'
-import { SetPageTitle } from '../utility/functions'
+import usePageTitle from '../components/Common/hooks/usePageTitle'
 
+/**
+ * Represents the data for an activity card.
+ *
+ * @interface CardData
+ * @property {Date} startDate - The starting date of the activity.
+ * @property {Date} endDate - The ending date of the activity.
+ * @property {string} title - The title of the activity.
+ * @property {string} description - A brief description of the activity.
+ * @property {'torneo federado' | 'torneo informal' | 'torneo online' | 'otro' | 'clases'} category - The category of the activity.
+ */
 interface CardData {
     startDate: Date
     endDate: Date
     title: string
     description: string
-    category: 'torneo federado' | 'torneo informal' | 'torneo online' | 'otro'
+    category: 'torneo federado' | 'torneo informal' | 'torneo online' | 'otro' | 'clases'
 }
 
-const ActivityCard: React.FC<CardData> = ({ startDate, endDate, title, description, category }) => {
+/**
+ * ActivityCard component displays individual activity details
+ * such as title, description, date range, and category.
+ *
+ * @param {Object} props - The properties of the ActivityCard component.
+ * @param {Date} props.startDate - The starting date of the activity.
+ * @param {Date} props.endDate - The ending date of the activity.
+ * @param {string} props.title - The title of the activity.
+ * @param {string} props.description - A brief description of the activity.
+ * @param {'torneo federado' | 'torneo informal' | 'torneo online' | 'otro' | 'clases'} props.category - The category of the activity.
+ * @returns {JSX.Element} The rendered ActivityCard component.
+ */
+const ActivityCard = ({ startDate, endDate, title, description, category }: CardData) => {
     return (
         <article>
             <Card style={{ width: '18rem' }}>
@@ -44,46 +65,18 @@ const ActivityCard: React.FC<CardData> = ({ startDate, endDate, title, descripti
 
 const cardsCarouselData: CardData[] = [
     {
-        startDate: new Date('2024-01-02T19:00:00'),
-        endDate: new Date('2024-06-28T19:00:00'),
-        title: 'Entrenamiento y charla',
-        description: 'Todos los viernes a partir de las 19:00 nos reunimos en el local del alto para jugar partidas, hablar y entrenar.',
-        category: 'otro'
+        startDate: new Date('2024-10-01T16:00:00'),
+        endDate: new Date('2025-06-30T19:00:00'),
+        title: 'Clases ',
+        description: 'Las clases para el curso 24-25 comienzan en Octubre y finalizan en junio.',
+        category: 'clases'
     },
     {
-        startDate: new Date('2024-02-22T14:00:00'),
-        endDate: new Date('2024-02-22T18:00:00'),
-        title: 'Torneo Relámpago de Ajedrez',
-        description: 'Competencia de ajedrez rápida para jugadores de todos los niveles.',
-        category: 'torneo informal'
-    },
-    {
-        startDate: new Date('2024-03-10T09:00:00'),
-        endDate: new Date('2024-03-10T17:00:00'),
-        title: 'Clase Magistral de Ajedrez',
-        description: 'Lección magistral de ajedrez a cargo del Gran Maestro Internacional.',
-        category: 'otro'
-    },
-    {
-        startDate: new Date('2024-03-15T18:00:00'),
-        endDate: new Date('2024-03-15T20:00:00'),
-        title: 'Simultáneas con un Maestro',
-        description: 'Desafía a un maestro de ajedrez jugando simultáneamente contra él.',
-        category: 'otro'
-    },
-    {
-        startDate: new Date('2024-03-20T10:00:00'),
-        endDate: new Date('2024-03-20T16:00:00'),
-        title: 'Torneo de Ajedrez Juvenil',
-        description: 'Competición de ajedrez para jóvenes promesas del deporte.',
+        startDate: new Date('2024-09-21T10:30:00'),
+        endDate: new Date('2024-09-21T20:00:00'),
+        title: 'IV Torneo promoción',
+        description: 'Campeonato perteneciente al circuito gallego.',
         category: 'torneo federado'
-    },
-    {
-        startDate: new Date('2024-03-25T11:00:00'),
-        endDate: new Date('2024-03-25T14:00:00'),
-        title: 'Torneo Amistoso de Ajedrez',
-        description: 'Torneo de ajedrez amistoso para la comunidad local.',
-        category: 'torneo informal'
     }
 ]
 
@@ -126,6 +119,7 @@ const StyledContainer = styled(Container)`
         }
     }
 `
+
 const pageTitleMsg = 'Próximas actividades a realizar:'
 
 const PageTitle = styled.h1`
@@ -137,8 +131,16 @@ const PageTitle = styled.h1`
     padding-bottom: 1em;
 `
 
-const ActivitiesPage: React.FC = () => {
-    SetPageTitle('CXN Actividades')
+/**
+ * ActivitiesPage component that displays a list of upcoming activities.
+ *
+ * This component fetches and renders multiple activity cards,
+ * along with a title for the page.
+ *
+ * @returns {JSX.Element} The rendered Activities page component.
+ */
+const ActivitiesPage = (): JSX.Element => {
+    usePageTitle('CXN Actividades')
     return (
         <MainContainer>
             <Row>

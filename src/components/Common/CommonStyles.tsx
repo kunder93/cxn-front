@@ -8,7 +8,7 @@ const mainPageFontColor = 'white'
 //Accordion colors
 const accordionSectionHeaderBackgroundColor = ' #75674efc'
 const accordionSectionHeaderBackgroundColorExpanded = '#695839'
-const accordionSectionHeaderFontAndIconColorExpanded = '#15ff00'
+const accordionSectionHeaderFontAndIconColorExpanded = '#ffffff'
 const accordionSectionBodyBackgroundColor = '#d8cdba'
 export const carouselBackgroundSlideColor = accordionSectionBodyBackgroundColor
 export const principalFontColor = 'black'
@@ -80,7 +80,13 @@ export const CustomAccordionStyled = styled(Accordion)`
  */
 export const HeaderPicture = styled.picture`
     grid-area: mainCarousel;
-    aspect-ratio: 9/2;
+    height: auto;
+    width: 100%;
+    aspect-ratio: 4/1;
+    /* Media query para dispositivos con un ancho máximo de 768px (dispositivos móviles) */
+    @media (max-width: 768px) {
+        height: 200px;
+    }
 `
 /**
  * Image used into header picture

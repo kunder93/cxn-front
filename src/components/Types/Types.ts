@@ -1,16 +1,18 @@
-export interface IUserData {
-    name: string
-    firstSurname: string
-    secondSurname: string
-    gende: string
-    birthDate: Date
-    email: string
-    userRoles: string
-    kindMember: string
+import { UserProfile } from "store/types/userTypes"
+
+
+export interface ITournamentParticipant{
+    fideId: number,
+    name: string,
+    club: string,
+    birthDate: Date,
+    category: string,
+    byes:string
 }
 
+
 export interface IUsersListData {
-    usersList: IUserData[]
+    usersList: UserProfile[]
 }
 
 export interface ISelfVehicle {

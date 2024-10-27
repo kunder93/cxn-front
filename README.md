@@ -45,4 +45,3 @@ Tecnologías Utilizadas
 ## Licencia
 
 Este proyecto está bajo la Licencia GNU General Public License  version 3  (GPLv3) - ver el archivo LICENSE.md para más detalles.
-

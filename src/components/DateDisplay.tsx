@@ -1,16 +1,29 @@
 import moment from 'moment'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-const DateDisplay: React.FC = () => {
+/**
+ * A React functional component that displays the current date and time,
+ * updating every second.
+ *
+ * @returns {JSX.Element} The rendered component showing the current date and time.
+ */
+const DateDisplay = (): JSX.Element => {
     const [date, setDate] = useState('')
 
     /**
-     * On component render sets the date state to current date and time
+     * Sets the date state to the current date and time on component mount.
+     * Updates the date every second.
+     * Cleans up the interval on component unmount.
+     *
+     * @function
+     * @returns {void}
      */
     useEffect(() => {
         const interval = setInterval(() => {
             setDate(moment().toDate().toString())
         }, 1000)
+
+        // Cleanup function to clear the interval when the component unmounts
         return () => clearInterval(interval)
     }, [])
 

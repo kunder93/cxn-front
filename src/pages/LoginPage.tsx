@@ -1,19 +1,14 @@
-import React from 'react'
-import { Col, Container, Row } from 'react-bootstrap'
-import { LoginForm } from '../components/LoginForm'
+import LoginForm from '../components/LoginForm'
+import { MainContainer } from '../components/SignUpSingInCommonStyles'
+import usePageTitle from '../components/Common/hooks/usePageTitle'
 
-const LoginPage: React.FC = () => {
+const LoginPage = (): JSX.Element => {
+    usePageTitle('CXN Entrar como socio')
+
     return (
-        <Container fluid="md">
-            <Row>
-                <Col></Col>
-                <Col>
-                    <h2>Acceso socios CXN:</h2>
-                    <LoginForm></LoginForm>
-                </Col>
-                <Col></Col>
-            </Row>
-        </Container>
+        <MainContainer fluid="md">
+            <LoginForm></LoginForm>
+        </MainContainer>
     )
 }
 export default LoginPage

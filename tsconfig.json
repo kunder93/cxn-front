@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "typeRoots": [],
     "lib": [
       "dom",
@@ -29,9 +29,9 @@
     "noImplicitReturns" : true, //Error si funcion no tiene retorno.
     "noImplicitAny" : true,
     "strictNullChecks" : true,
-    "baseUrl": "./", // Base URL para las rutas relativas de importación
+    "baseUrl": "src",
     "paths": {
-      "*": ["src/*"] // Mapeo de rutas de importación
+    "*": ["*"]
     },
     "jsx": "react-jsx"
   },

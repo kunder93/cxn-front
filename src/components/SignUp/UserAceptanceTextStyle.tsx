@@ -1,10 +1,6 @@
-import React from "react"
-import { Container } from "react-bootstrap"
+import { Container } from 'react-bootstrap'
 
-
-
-
-export const CesionDatosContainer: React.FC = () => {
+export const CesionDatosContainer = (): JSX.Element => {
     return (
         <Container>
             <p>
@@ -95,7 +91,7 @@ export const RelativoSociosTextContainer = () => {
             <p>LA CONDICIÓN DE SOCIO SE PIERDE SI:</p>
             <p>Uno mismo lo desea.</p>
             <p>
-                Por falta de pago de las cuotas socioales durante trese meses consecutivos, previo requerimiento de pago, y consecuente Resolucion del
+                Por falta de pago de las cuotas sociales durante trese meses consecutivos, previo requerimiento de pago, y consecuente Resolucion del
                 presidente.
             </p>
             <p>
@@ -153,8 +149,6 @@ export const CompromisoConfidencialidadContainer = () => {
         </Container>
     )
 }
-
-
 
 export const RelativoSociosModalTittle = () => {
     return <div>Estatuto, normas relativas a socios:</div>
