@@ -1,140 +1,47 @@
-<h1 align="center">New React App</h1>
+# CXN Web 
 
-<br />
+Aplicación web que visibiliza los servicios y características que ofrece CXN.
 
-This is a blank README file that you can customize at your needs.\
-Describe your project, how it works and how to contribute to it.
+## Requisitos
 
-<br />
+- Node.js
+- npm o yarn
 
-# 🚀 Available Scripts
+## Instalación
+ 
+1. Clona este repositorio: `git clone <https://github.com/kunder93/cxn-front>`
+2. Instala las dependencias: `npm install` o `yarn install`
 
-In the project directory, you can run:
+## Uso
 
-<br />
+Para ejecutar el proyecto localmente, utiliza el siguiente comando:
 
-## ⚡️ start
-
-```
+```bash
 npm start
 ```
+Esto iniciará la aplicación en modo de desarrollo.
+Abre http://localhost:3000 para verla en tu navegador.
 
-or
 
-```
-yarn start
-```
+##Contribuyendo
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Si deseas contribuir a este proyecto, sigue estos pasos:
 
-<br />
+    Haz un fork del repositorio
+    Crea una nueva rama (git checkout -b feature/nueva-caracteristica)
+    Realiza tus cambios y haz commits (git commit -am 'Agrega nueva característica')
+    Sube tus cambios (git push origin feature/nueva-caracteristica)
+    Abre un Pull Request
 
-## 🧪 test
+## Estructura del Proyecto
 
-```
-npm test
-```
+Descripción de la estructura de archivos y carpetas del proyecto.
+Tecnologías Utilizadas
 
-or
+    React
+    TypeScript
+    Otras tecnologías utilizadas...
 
-```
-yarn test
-```
+## Licencia
 
-Launches the test runner in the interactive watch mode.
-
-<br />
-
-## 🦾 build
-
-```
-npm build
-```
-
-or
-
-```
-yarn build
-```
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.
-
-<br />
-
-## 🧶 lint
-
-```
-npm lint
-```
-
-or
-
-```
-yarn lint
-```
-
-Creates a `.eslintcache` file in which ESLint cache is stored. Running this command can dramatically improve ESLint's running time by ensuring that only changed files are linted.
-
-<br />
-
-## 🎯 format
-
-```
-npm format
-```
-
-or
-
-```
-yarn format
-```
-
-Checks if your files are formatted. This command will output a human-friendly message and a list of unformatted files, if any.
-
-<br />
-
-# 🧬 Project structure
-
-This is the structure of the files in the project:
-
-```sh
-    │
-    ├── public                  # public files (favicon, .htaccess, manifest, ...)
-    ├── src                     # source files
-    │   ├── components
-    │   ├── pages
-    │   ├── resources           # images, constants and other static resources
-    │   ├── store               # Redux store
-    │   │   ├── actions         # store's actions
-    │   │   └── reducers        # store's reducers
-    │   ├── styles
-    │   ├── tests               # all test files
-    │   ├── types               # data interfaces
-    │   ├── utility             # utilities functions and custom components
-    │   ├── App.tsx
-    │   ├── index.tsx
-    │   ├── react-app-env.d.ts
-    │   ├── RootComponent.tsx   # React component with all the routes
-    │   ├── serviceWorker.ts
-    │   └── setupTests.ts
-    ├── .eslintrc.js
-    ├── .gitignore
-    ├── .prettierrc
-    ├── package.json
-    ├── README.md
-    └── tsconfig.json
-```
-
-# 📖 Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-#
-
-<p align="center">Bootstrapped with Create React App.</p>
+Este proyecto está bajo la Licencia GNU General Public License  version 3  (GPLv3) - ver el archivo LICENSE.md para más detalles.
