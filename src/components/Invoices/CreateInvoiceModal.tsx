@@ -1,23 +1,49 @@
 import Button from 'react-bootstrap/Button'
-import Modal from 'react-bootstrap/Modal'
+import Modal, { ModalProps } from 'react-bootstrap/Modal'
 import React from 'react'
-import InvoiceForm from './CreateInvoiceForm'
-import { ICreateInvoiceModal } from './InvoiceTypes'
-import { Container } from 'react-bootstrap'
+import { Container, Spinner } from 'react-bootstrap'
+import { useCreateInvoiceForm } from './hooks/useCreateInvoiceForm'
+import { IInvoice } from 'components/Types/Types'
+import CreateInvoiceForm from './CreateInvoiceForm'
 
-const CreateInvoiceModal: React.FC<ICreateInvoiceModal> = (props: ICreateInvoiceModal) => {
+interface ICreateInvoiceModal {
+    updateInvoicesList: (newInvoice: IInvoice) => void
+}
+
+const CreateInvoiceModal: React.FC<ICreateInvoiceModal & ModalProps> = (props) => {
+    const formik = useCreateInvoiceForm(props.updateInvoicesList)
+    const handleExit = () => {
+        formik.resetForm()
+    }
+
     return (
         <Container>
             {' '}
-            <Modal show={props.show} onHide={props.onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+            <Modal show={props.show} onHide={props.onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered onExit={handleExit}>
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">Crear factura:</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <InvoiceForm data={props.data} addInvoice={props.addInvoice}></InvoiceForm>
+                    <CreateInvoiceForm formik={formik}></CreateInvoiceForm>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={props.onHide}>Close</Button>
+                    <Button
+                        type="submit"
+                        variant="success"
+                        onClick={() => void formik.submitForm()}
+                        disabled={!formik.isValid || !formik.dirty || formik.isSubmitting}
+                    >
+                        {formik.isSubmitting ? (
+                            <>
+                                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> Añadiendo...
+                            </>
+                        ) : (
+                            <strong>Añadir nueva factura</strong>
+                        )}
+                    </Button>
+                    <Button variant="danger" onClick={props.onHide}>
+                        <strong>Cerrar</strong>
+                    </Button>
                 </Modal.Footer>
             </Modal>
         </Container>

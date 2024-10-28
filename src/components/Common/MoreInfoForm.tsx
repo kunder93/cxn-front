@@ -1,32 +1,36 @@
 import React from 'react'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import BootstrapForm from 'react-bootstrap/Form'
 import { Button, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
+import { CHESS_QUESTION_URL } from '../../resources/server_urls'
+import useNotification, { NotificationType } from './hooks/useNotification'
+import FloatingNotificationA from './FloatingNotificationA'
+
+const ErrorMessageStyled = styled(ErrorMessage)`
+    color: red;
+    font-weight: bold;
+`
+
+const FiledTittle = styled(BootstrapForm.Label)`
+    font-weight: 600;
+`
 
 const FormTitleStyled = styled.span`
-    font-size: 150%;
+    font-size: 190%;
     text-align: left;
     display: block;
     padding-bottom: 1em;
+    font-weight: bold;
 `
 
-/**
- * Validation schema for MoreInfoForm.
- */
 const validationSchema = Yup.object().shape({
     texto: Yup.string().max(200, 'El texto debe tener como máximo 200 caracteres').required('Se requiere un mensaje'),
     asunto: Yup.string().max(40, 'El asunto debe tener como máximo 40 caracteres').required('Se requiere un asunto.'),
     email: Yup.string().email('Debe ser un email valido.').max(40, 'El email es demasiado largo.').required('Se requiere un email.')
 })
-
-interface Props {
-    initialTopic: string // Definir initialTopic como opcional
-    formTitle: string
-    // onSubmit: (values: FormData) => Promise<void>; // prop for handling form submission
-}
 
 interface FormData {
     texto: string
@@ -34,72 +38,82 @@ interface FormData {
     email: string
 }
 
-const MoreInfoForm: React.FC<Props> = ({ initialTopic, formTitle /*, onSubmit*/ }) => {
+interface ChessQuestionValues {
+    email: string
+    category: string
+    topic: string
+    message: string
+}
+
+interface MoreInfoFormProps {
+    initialTopic: string
+    formTitle: string
+    category: string
+}
+
+const TextInputField: React.FC<{ id: string; name: string; label: string; placeholder?: string; type?: string }> = ({
+    id,
+    name,
+    label,
+    placeholder,
+    type = 'text'
+}) => (
+    <BootstrapForm.Group className="mb-3">
+        <FiledTittle htmlFor={id}>{label}:</FiledTittle>
+        <Field as={BootstrapForm.Control} type={type} id={id} name={name} placeholder={placeholder} />
+        <ErrorMessageStyled name={name} component="div" className="invalid-feedback" />
+    </BootstrapForm.Group>
+)
+
+const MoreInfoForm = ({ initialTopic, formTitle, category }: MoreInfoFormProps): JSX.Element => {
+    const { notification, showNotification, hideNotification } = useNotification()
     const initialValues: FormData = {
         texto: '',
         asunto: initialTopic,
         email: ''
     }
 
-    const handleSubmit = async (values: FormData) => {
-        await new Promise((resolve) => setTimeout(resolve, 5000)) // Simular una espera de 5 seg.
+    const handleSubmit = async (values: FormData, actions: FormikHelpers<FormData>) => {
+        const axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            }
+        }
         try {
-            await axios.post('https://FORMULARIO.CLASES', values)
-            console.log('Datos enviados:', values)
+            await axios.post<ChessQuestionValues>(
+                CHESS_QUESTION_URL,
+                {
+                    email: values.email,
+                    category: category,
+                    topic: values.asunto,
+                    message: values.texto
+                },
+                axiosConfig
+            )
+            actions.resetForm()
+            showNotification('Formulario enviado con éxito', NotificationType.Success)
+            await actions.validateForm()
         } catch (error) {
-            console.error('Error al enviar los datos:', error)
+            const axiosError = error as AxiosError
+            showNotification(axiosError.message, NotificationType.Error)
+        } finally {
+            actions.setSubmitting(false)
         }
     }
 
     return (
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit} validateOnMount={true}>
-            {({ setFieldTouched, touched, errors, isSubmitting, isValid }) => (
+        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit} validateOnMount={true} validateOnChange={true}>
+            {({ isSubmitting, isValid, dirty }) => (
                 <Form className="mt-4">
                     <FormTitleStyled>{formTitle}</FormTitleStyled>
-                    <BootstrapForm.Group className="mb-3">
-                        <BootstrapForm.Label htmlFor="asunto">Asunto:</BootstrapForm.Label>
-                        <Field
-                            as={BootstrapForm.Control}
-                            type="text"
-                            id="asunto"
-                            name="asunto"
-                            className={touched.asunto && errors.asunto ? 'is-invalid' : ''}
-                            onBlur={() => setFieldTouched('asunto', true)}
-                            placeholder={initialTopic}
-                        />
-                        <ErrorMessage name="asunto" component="div" className="invalid-feedback" />
-                    </BootstrapForm.Group>
-                    <BootstrapForm.Group className="mb-3">
-                        <BootstrapForm.Label htmlFor="email">Email:</BootstrapForm.Label>
-                        <Field
-                            as={BootstrapForm.Control}
-                            type="email"
-                            id="email"
-                            name="email"
-                            onBlur={() => setFieldTouched('email', true)}
-                            className={touched.email && errors.email ? 'is-invalid' : ''}
-                            placeholder="Ingrese su email para responderle."
-                        />
-                        <ErrorMessage name="email" component="div" className="invalid-feedback" />
-                    </BootstrapForm.Group>
-
-                    <BootstrapForm.Group className="mb-3">
-                        <BootstrapForm.Label htmlFor="texto">Mensaje:</BootstrapForm.Label>
-                        <Field
-                            as={BootstrapForm.Control}
-                            component="textarea"
-                            type="text"
-                            id="texto"
-                            name="texto"
-                            placeholder="Ingrese su mensaje"
-                            onBlur={() => setFieldTouched('texto', true)}
-                            className={touched.texto && errors.texto ? 'is-invalid form-control ' : 'form-control'}
-                        />
-                        <ErrorMessage name="texto" component="div" className="invalid-feedback" />
-                    </BootstrapForm.Group>
-                    <Button variant="success" type="submit" disabled={isSubmitting || !isValid}>
+                    <TextInputField id="asunto" name="asunto" label="Asunto" placeholder={initialTopic} />
+                    <TextInputField id="email" name="email" label="Email" placeholder="Ingrese su email para responderle." type="email" />
+                    <TextInputField id="texto" name="texto" label="Mensaje" placeholder="Ingrese su mensaje" />
+                    <Button variant="success" type="submit" disabled={isSubmitting || !isValid || !dirty}>
                         {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Enviar'}
                     </Button>
+                    <FloatingNotificationA notification={notification} hideNotification={hideNotification} />
                 </Form>
             )}
         </Formik>

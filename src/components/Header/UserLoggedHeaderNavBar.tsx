@@ -1,13 +1,28 @@
-import React, { useState } from 'react'
-import { Nav } from 'react-bootstrap'
-import { useAppDispatch } from '../../store/hooks'
+import { useState } from 'react'
+import { Dropdown, Nav } from 'react-bootstrap'
 import { PersonCircle } from 'react-bootstrap-icons'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { removeJwt } from '../../store/slices/user'
 import { ROUTES } from '../../resources/routes-constants'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import Image from 'react-bootstrap/Image'
+import { UserProfile } from 'store/types/userTypes'
 
-const UserProfileIconStyled = styled(PersonCircle)`
+const UserProfileImage = styled(Image)`
+    width: 50px;
+    height: 50px;
+    min-height: 50px;
+    min-width: 50px;
+    background-color: grey;
+    fill: #ffffff;
+    border-radius: 50%;
+    object-fit: cover;
+    &:hover {
+        box-shadow: 0 0 0 8px #343b41;
+    }
+`
+const UserProfileNotDefined = styled(PersonCircle)`
     width: 50px;
     height: 50px;
     min-height: 50px;
@@ -46,38 +61,70 @@ const FloatingWindow = styled.div`
     }
 `
 
-const UserLoggedHeaderNavBar: React.FC = () => {
+const StyledNav = styled(Nav)`
+    padding-right: 2em;
+
+    a {
+        font-size: 160%;
+    }
+    @media (max-width: 768px) {
+        gap: 0px;
+        border-top: 2px solid grey;
+        margin-top: 0.5em;
+        padding-top: 0.5em;
+        margin-right: 4em;
+    }
+`
+
+const ProfileImageContainer = styled.div`
+    padding-right: 0.5em;
+`
+
+const UserLoggedHeaderNavBar = (): JSX.Element => {
     const [imagePopOver, setImagePopOver] = useState(false)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
+    const profileImage = useAppSelector((state) => state.users.profileImage) // Fetch profile image separately
+    const userProfile: UserProfile = useAppSelector((state) => state.users.userProfile)
 
-    const handleImageMouseEnter = () => {
-        setImagePopOver(true)
-    }
-    const handleImageMouseLeave = () => {
-        setImagePopOver(false)
-    }
     const logoutHandler = () => {
         dispatch(removeJwt())
         navigate(ROUTES.HOMEPAGE_ROUTE)
     }
+    const isInitialProfileImage = profileImage?.url === '' && profileImage?.stored === false
 
     return (
-        <Nav className="ms-auto">
-            <Nav.Link as={Link} to={ROUTES.MYPROFILE_ROUTE}>
-                My perfil
-            </Nav.Link>
-            <Nav.Link as={Link} to={ROUTES.HOMEPAGE_ROUTE} onClick={logoutHandler}>
-                Salir
-            </Nav.Link>
-            <div>
-                <UserProfileIconStyled onMouseEnter={handleImageMouseEnter} onMouseLeave={handleImageMouseLeave}></UserProfileIconStyled>
-            </div>
+        <StyledNav className="ms-auto">
+            <ProfileImageContainer>
+                {profileImage && !isInitialProfileImage ? (
+                    <UserProfileImage
+                        src={profileImage.stored ? profileImage.file : profileImage.url}
+                        onMouseEnter={() => setImagePopOver(true)}
+                        onMouseLeave={() => setImagePopOver(false)}
+                    />
+                ) : (
+                    <UserProfileNotDefined />
+                )}
+            </ProfileImageContainer>
+            {/* Dropdown for the user's name and logout option */}
+            <Dropdown align="end">
+                <Dropdown.Toggle as="a" className="nav-link">
+                    {userProfile.name + ' ' + userProfile.firstSurname + ' ' + userProfile.secondSurname}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                    <Dropdown.Item as={Link} to={ROUTES.MYPROFILE_ROUTE}>
+                        Mi Perfil
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={logoutHandler}>Salir</Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
+
             <FloatingWindow hidden={!imagePopOver}>
                 {/* Content for the floating window */}
-                This is the floating window content.
+                En construcción, paciencia!!.
             </FloatingWindow>
-        </Nav>
+        </StyledNav>
     )
 }
 

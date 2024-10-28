@@ -1,22 +1,27 @@
-import React, { ReactElement } from 'react'
-import { Button, Modal, ModalProps } from 'react-bootstrap'
+import React from 'react'
+import { Button, Modal } from 'react-bootstrap'
 
-interface CardsButtonsModalProps extends ModalProps {
-    closemodal: () => void
-    modalcontentcomponent: ReactElement | null
+interface HomePageCardModalProps {
+    show: boolean
+    closeModal: () => void
+    modalContentComponent: React.ReactElement | null
+    ariaLabel: string
 }
 
-const HomePageCardsModal: React.FC<CardsButtonsModalProps> = (props) => {
+const HomePageCardModal: React.FC<HomePageCardModalProps> = ({ show, closeModal, modalContentComponent, ariaLabel }) => {
     return (
-        <Modal {...props} onHide={props.closemodal} size="lg" aria-labelledby="contained-modal-title-vcenter" centered aria-label="Modal de información de las tarjetas de inicio.">
-            <Modal.Body>{props.modalcontentcomponent}</Modal.Body>
+        <Modal show={show} onHide={closeModal} aria-label={ariaLabel}>
+            <Modal.Header closeButton>
+                <Modal.Title>INFORMACIÓN:</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>{modalContentComponent}</Modal.Body>
             <Modal.Footer>
-                <Button variant="danger" onClick={props.closemodal}>
-                    Cerrar ventana
+                <Button variant={'danger'} onClick={closeModal}>
+                    Cerrar
                 </Button>
             </Modal.Footer>
         </Modal>
     )
 }
 
-export default HomePageCardsModal
+export default HomePageCardModal

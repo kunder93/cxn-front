@@ -1,19 +1,34 @@
-import React from 'react'
+import usePageTitle from '../components/Common/hooks/usePageTitle'
 import { Container } from 'react-bootstrap'
 import styled from 'styled-components'
-import { SetPageTitle } from '../utility/functions'
 
+/** Constant for the CIF number */
 const CIF = 'G-15.227.556'
+
+/** Constant for the email address */
 const EMAIL = 'xadreznaron@hotmail.com'
+
+/** Constant for the address */
 const DIRECCION = 'Rua Manoel Antonio, 9 San Xosé Obrero 15570 Narón, A Coruña'
 
+/**
+ * Styled component for the main container.
+ * Adds padding at the top and bottom of the container.
+ */
 const MainContainer = styled(Container)`
     padding-top: 2em;
     padding-bottom: 2em;
 `
 
-const PrivacyPolicy: React.FC = () => {
-    SetPageTitle('CXN Política de privacidad')
+/**
+ * Privacy Policy component.
+ * Displays the privacy policy, terms of data protection, and contact information for Círculo Xadrez Naron (CXN).
+ *
+ * @component
+ * @returns {JSX.Element} A React component that renders the privacy policy page content.
+ */
+const PrivacyPolicy = (): JSX.Element => {
+    usePageTitle('CXN Política de privacidad')
     return (
         <MainContainer>
             <h1>POLÍTICA DE PRIVACIDAD Y PROTECCIÓN DE DATOS</h1>
@@ -22,10 +37,13 @@ const PrivacyPolicy: React.FC = () => {
                 recopila ningun tipo de dato de carácter personal ya que no necesita registro previo para su uso.
             </p>
             <p>
-                Los datos personales facilitados para alguno de los servicios en este sitio web serán tratados por CXN, titular del sitio. CXN
-                proporciona los siguientes datos: <br/> <strong>CIF:</strong> {CIF}
-                <br/><strong>Nº Registro Xunta Galicia:</strong> 925 <br/><strong>Correo electrónico:</strong> {EMAIL}
-                <br/><strong>Domicilio social:</strong> {DIRECCION}
+                Los datos personales facilitados para alguno de los servicios en este sitio web serán tratados por CXN, titular del sitio. CXN proporciona los
+                siguientes datos: <br /> <strong>CIF:</strong> {CIF}
+                <br />
+                <strong>Nº Registro Xunta Galicia:</strong> 925 <br />
+                <strong>Correo electrónico:</strong> {EMAIL}
+                <br />
+                <strong>Domicilio social:</strong> {DIRECCION}
             </p>
             <h2>POLÍTICA DE PRIVACIDAD</h2>
             <p>
@@ -56,9 +74,8 @@ const PrivacyPolicy: React.FC = () => {
             <h3>Derechos:</h3>
             <p>
                 El usuario tiene la posibilidad de ejercitar sus derechos de acceso, rectificación, cancelación y oposición mediante el envío de un correo
-                electrónico a la dirección <a href="mailto:xadreznaron@hotmail.com">xadreznaron@hotmail.com</a>{' '}
-   con el asunto "PROTECCIÓN DE DATOS". Podrá también como forma alternativa dirigirse por carta
-                al correo postal del domicilio social de CXN.
+                electrónico a la dirección <a href={`mailto:${EMAIL}`}>{EMAIL}</a> con el asunto "PROTECCIÓN DE DATOS". Podrá también como forma alternativa
+                dirigirse por carta al correo postal del domicilio social de CXN.
             </p>
 
             <h3>Conservación de los datos:</h3>
@@ -80,8 +97,8 @@ const PrivacyPolicy: React.FC = () => {
                 titular de los datos. CXN garantiza la seguridad y confidencialidad de los datos de carácter personal que le sean facilitados.
             </p>
             <p>
-                Este sitio web contiene enlaces a otros sitios web. CXN no se hace responsable de la privacidad y el tratamiento de datos que puedan hacer
-                estos sitios web. La presente política de privacidad se aplica única y exclusivamente a la información que recopilamos a través de nuestra web.
+                Este sitio web contiene enlaces a otros sitios web. CXN no se hace responsable de la privacidad y el tratamiento de datos que puedan hacer estos
+                sitios web. La presente política de privacidad se aplica única y exclusivamente a la información que recopilamos a través de nuestra web.
             </p>
         </MainContainer>
     )

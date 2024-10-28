@@ -1,13 +1,28 @@
-import React, { useState } from 'react'
+import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { NavDropdown } from 'react-bootstrap'
+import { NavDropdown, Dropdown } from 'react-bootstrap'
 import styled from 'styled-components'
+import useDropdown from './hooks/useDropdown'
 
 interface DropdownMenuProps {
     title: string
     route: string
-    menuItems: { text: string; href: string; accordionItemToOpen?: string }[]
+    menuItems: MenuItem[]
+    onNavItemClick: () => void
 }
+
+interface MenuItem {
+    text: string
+    href: string
+    accordionItemToOpen?: string
+}
+
+const MobileNavDropdown = styled(NavDropdown)`
+    font-size: 100%;
+    .dropdown-toggle::after {
+        font-size: 230%;
+    }
+`
 
 const StyledDropdownTitle = styled(NavDropdown.Header)`
     cursor: pointer;
@@ -15,63 +30,67 @@ const StyledDropdownTitle = styled(NavDropdown.Header)`
     font-size: 150% !important;
 `
 
-const CustomDropdownMenu: React.FC<DropdownMenuProps> = ({ title, route, menuItems }) => {
+const CustomDropdownMenu: React.FC<DropdownMenuProps> = ({ title, route, menuItems, onNavItemClick }) => {
     const navigate = useNavigate()
-    const [showDropdown, setShowDropdown] = useState(false)
-    const dropdownRef = React.useRef<HTMLDivElement>(null)
+    const { showDropdown, dropdownRef, handleMouseOver, handleMouseLeave, handleItemClick, toggleDropdown } = useDropdown(onNavItemClick)
 
-    const handleMouseOver = () => setShowDropdown(true)
-    const handleMouseLeave = () => setShowDropdown(false)
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
 
-    const handleFocus = () => setShowDropdown(true)
-
-    const handleItemClick = () => {
-        setShowDropdown(false)
+    const handleResize = () => {
+        setIsMobile(window.innerWidth <= 768)
     }
 
-    React.useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Tab' && !dropdownRef.current?.contains(document.activeElement)) {
-                setShowDropdown(false)
-            }
-        }
-        document.addEventListener('keydown', handleKeyDown)
+    useEffect(() => {
+        window.addEventListener('resize', handleResize)
         return () => {
-            document.removeEventListener('keydown', handleKeyDown)
+            window.removeEventListener('resize', handleResize)
         }
     }, [])
 
-    React.useEffect(() => {
-        const handleFocusChange = (event: FocusEvent) => {
-            if (!dropdownRef.current?.contains(event.target as Node)) {
-                setShowDropdown(false)
-            }
-        }
-        document.addEventListener('focusin', handleFocusChange)
-        return () => {
-            document.removeEventListener('focusin', handleFocusChange)
-        }
-    }, [])
+    const handleTitleClick = useCallback(() => {
+        onNavItemClick()
+        navigate(route)
+    }, [navigate, onNavItemClick, route])
 
-    return (
-        <div ref={dropdownRef} >
-            <NavDropdown
-                title={
-                    <StyledDropdownTitle aria-description="Desplegable con enlace" role="heading" aria-level={1} onClick={() => navigate(route)} tabIndex={0} onFocus={handleFocus}>
-                        {title}
-                    </StyledDropdownTitle>
-                }
-                show={showDropdown}
-                onMouseEnter={handleMouseOver}
-                onMouseLeave={handleMouseLeave}
-            >
-                {menuItems.map((item, index) => (
-                    <NavDropdown.Item key={index} as={Link} to={item.href} state={{ accordionItemToOpen: item.accordionItemToOpen }} onClick={handleItemClick}>
-                        {item.text}
-                    </NavDropdown.Item>
-                ))}
-            </NavDropdown>
-        </div>
+    const menuItemsComponents = useMemo(() => {
+        return menuItems.map((item, index) => (
+            <Dropdown.Item key={index} as={Link} to={item.href} state={{ accordionItemToOpen: item.accordionItemToOpen }} onClick={handleItemClick}>
+                {item.text}
+            </Dropdown.Item>
+        ))
+    }, [menuItems, handleItemClick])
+
+    return isMobile ? (
+        <MobileNavDropdown
+            ref={dropdownRef}
+            title={
+                <StyledDropdownTitle aria-label="Desplegable con enlace" role="heading" aria-level={1} onClick={handleTitleClick}>
+                    {' '}
+                    {title}{' '}
+                </StyledDropdownTitle>
+            }
+            // onMouseEnter={handleMouseOver}
+            //onMouseLeave={handleMouseLeave}
+            show={showDropdown}
+            onToggle={toggleDropdown}
+            onClick={handleMouseOver}
+        >
+            {menuItemsComponents}
+        </MobileNavDropdown>
+    ) : (
+        <NavDropdown
+            ref={dropdownRef}
+            title={
+                <StyledDropdownTitle aria-label="Desplegable con enlace" role="heading" aria-level={1} onClick={handleTitleClick} tabIndex={0}>
+                    {title}
+                </StyledDropdownTitle>
+            }
+            show={showDropdown}
+            onMouseEnter={handleMouseOver}
+            onMouseLeave={handleMouseLeave}
+        >
+            {menuItemsComponents}
+        </NavDropdown>
     )
 }
 

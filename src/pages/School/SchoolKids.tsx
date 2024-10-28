@@ -1,4 +1,3 @@
-import React from 'react'
 import { HeaderPicture, MainContainerStyled, MainContentContainer, PageHeaderImage } from '../../components/Common/CommonStyles'
 import BenefitsAccordion, { BenefitsAccordionProps } from '../../components/SchoolClass/BenefitsAccordion'
 import {
@@ -12,8 +11,10 @@ import {
     ShortSummaryPicture,
     SummaryContentSection
 } from '../../components/SchoolClass/CommonStyles'
-import { SetPageTitle } from '../../utility/functions'
 import { PhotoData } from 'components/SchoolClass/ClassPhotoGalleryCarousel'
+import { Button } from 'react-bootstrap'
+import { FiletypePdf } from 'react-bootstrap-icons'
+import usePageTitle from '../../components/Common/hooks/usePageTitle'
 
 const pageTitle = 'Escuela infantil Círculo Xadrez Narón'
 
@@ -109,14 +110,25 @@ const carouselBenefits = [
 ]
 
 const faqKidsSchoolPairsQuestionAnswer = [
-    { question: '¿Cuándo empiezan las clases?', answer: 'Las clases empiezan en Octubre y duran hasta Junio.' },
+    {
+        question: '¿Cuándo empiezan las clases?',
+        answer: 'Las clases empiezan en Octubre y duran hasta Junio.'
+    },
+    {
+        question: '¿Qué dias y cuántas horas?',
+        answer: 'Jueves y viernes, 1 hora cada día, de 16:00 a 19:00.'
+    },
+    {
+        question: '¿Dónde puedo apuntarme?',
+        answer: 'En el padroado de deportes en C.P.M A Gándara o en nuestras oficinas.'
+    },
+    {
+        question: '¿Cuánto cuesta?',
+        answer: 'El precio para la curso 2023/2024 fue de 13,05  € al mes.'
+    },
     {
         question: '¿Necesito comprar algo para las clases o llevar algún material?',
         answer: 'Todo el material necesario lo proporciona el club.'
-    },
-    {
-        question: '¿Dónde puedo apuntarme, cuánto cuesta?',
-        answer: 'En el padroado de deportes o en nuestras oficinas. Mas info: (link de contacto) '
     }
 ]
 
@@ -139,11 +151,20 @@ const accordionData: BenefitsAccordionProps = {
     carouselBenefits: carouselBenefits,
     initialQuestionsFormTopic: 'CLASES INFANTILES',
     faqList: faqKidsSchoolPairsQuestionAnswer,
-    photosData: photosData
+    photosData: photosData,
+    chessQuestionsFormCategory: 'CLASES NIÑOS'
 }
 
-const SchoolKids: React.FC = () => {
-    SetPageTitle('CXN Escuela infantil')
+function openPdfWindow() {
+    // URL del PDF
+    const pdfUrl = '/ChessClass/KidsClass/CartelClases2425.pdf'
+
+    // Abre una nueva ventana y carga el PDF
+    window.open(pdfUrl, '_blank')
+}
+
+const SchoolKids = (): JSX.Element => {
+    usePageTitle('CXN Escuela infantil')
     return (
         <MainContainerStyled>
             <HeaderPicture>
@@ -154,6 +175,12 @@ const SchoolKids: React.FC = () => {
                 <MainContentHeader>
                     <PageTitle>{pageTitle}</PageTitle>
                     <PageSubTittle>{pageSubTitle}</PageSubTittle>
+                    <div className="d-flex align-items-center justify-content-center">
+                        <Button style={{}} variant="success" onClick={openPdfWindow}>
+                            {' '}
+                            <FiletypePdf size={40}></FiletypePdf>¡ Cartel de las clases 24-25 !
+                        </Button>
+                    </div>
                 </MainContentHeader>
                 <SummaryContentSection>
                     <ShortSummaryParagraph>{summaryParagraph}</ShortSummaryParagraph>

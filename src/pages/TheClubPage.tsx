@@ -1,25 +1,40 @@
-import TheClubInfoAccordion from '../components/TheClub/TheClubInfoAccordion'
 import React from 'react'
-import { HeaderPicture, MainContainerStyled, MainContentContainer, PageHeaderImage } from '../components/Common/CommonStyles'
-
-import { SetPageTitle } from '../utility/functions'
-import HeaderInfoClubBar from '../components/TheClub/HeaderInfoClubBar'
 import { useLocation } from 'react-router'
+import TheClubInfoAccordion from '../components/TheClub/TheClubInfoAccordion'
+import { HeaderPicture, MainContainerStyled, MainContentContainer, PageHeaderImage } from '../components/Common/CommonStyles'
+import HeaderInfoClubBar from '../components/TheClub/HeaderInfoClubBar'
+import usePageTitle from '../components/Common/hooks/usePageTitle'
 
-const FotoTemporalPortadaClub = '/TheClubHeaderImage.avif'
+// Path to the club header image
+const FotoTemporalPortadaClub = '/TheClub/TheClubHeader.avif'
 
+// Interface for location state passed through the router
 interface LocationState {
+    /**
+     * The ID of the accordion item to be opened by default.
+     * @type {string}
+     */
     accordionItemToOpen: string
 }
 
+/**
+ * TheClubPage component displays the club's information.
+ * It uses the router's location state to determine which accordion item to open initially.
+ *
+ * @returns {JSX.Element} The rendered component.
+ */
 const TheClubPage: React.FC = () => {
-    SetPageTitle('CXN El club')
-    const location = useLocation()
-    //location.state is object not null and type of LocationState
-    const state: LocationState | undefined = typeof location.state === 'object' && location.state !== null ? (location.state as LocationState) : undefined
-    // Extraer el valor de 'accordionItemToOpen' del objeto state
-    const initialOpenElement = state ? state.accordionItemToOpen : '0'
-    // Ahora, state contiene los datos pasados desde el componente anterior
+    usePageTitle('CXN El club')
+
+    // Get the current location from the router
+    const location = useLocation() // No type argument here
+
+    // Type the state explicitly
+    const state = location.state as LocationState | undefined
+
+    // Use optional chaining to get the initial open element
+    const initialOpenElement = state?.accordionItemToOpen ?? '0'
+
     return (
         <MainContainerStyled>
             <HeaderPicture>
@@ -28,7 +43,7 @@ const TheClubPage: React.FC = () => {
             </HeaderPicture>
             <MainContentContainer>
                 <HeaderInfoClubBar />
-                <TheClubInfoAccordion initialOpenElement={initialOpenElement}></TheClubInfoAccordion>
+                <TheClubInfoAccordion initialOpenElement={initialOpenElement} />
             </MainContentContainer>
         </MainContainerStyled>
     )

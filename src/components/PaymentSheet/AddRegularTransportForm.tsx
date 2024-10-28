@@ -1,28 +1,54 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-import { Field, Form, Formik, FormikHelpers, useField, useFormikContext } from 'formik'
-import * as React from 'react'
-import 'react-app-polyfill/ie11'
+import React from 'react'
+import { ErrorMessage, Field, Form, Formik, FormikHelpers, useField, useFormikContext } from 'formik'
 import { INVOICES_URL, PAYMENT_SHEET_URL } from '../../resources/server_urls'
 import { useAxiosGetInvoices } from '../../utility/CustomAxios'
-import axios from 'axios'
-import { Button, Col, Container, FormSelect, Row } from 'react-bootstrap'
+import axios, { AxiosError } from 'axios'
+import { Button, Col, Container, FormSelect, Row, Spinner } from 'react-bootstrap'
 import BootstrapForm from 'react-bootstrap/Form'
 import { InvoicesSelectorProps, NewRegularTransportData, SelectorOption, TransportCategorySelectorProps } from './Types'
+import styled from 'styled-components'
+import * as Yup from 'yup'
+import FloatingNotificationA from '../../components/Common/FloatingNotificationA'
+import useNotification, { NotificationType } from '../../components/Common/hooks/useNotification'
 
+const StyledErrorMessage = styled(ErrorMessage)`
+    color: red;
+    font-weight: bold;
+`
+const FieldRow = styled(Row)`
+    padding-bottom: 1em;
+    align-items: center;
+    label {
+        font-weight: bold;
+    }
+`
+
+const FormRow = styled(Row)`
+    align-items: baseline;
+`
+
+const Label = styled(BootstrapForm.Label)`
+    font-weight: bold;
+`
+
+const SubmitButtonRow = styled(Row)`
+    align-content: end;
+`
+
+// TransportCategorySelector component
 const TransportCategorySelector: React.FC<TransportCategorySelectorProps> = ({ name, options }) => {
-    const [field, helpers] = useField(name)
-    console.log(helpers)
+    const [field] = useField(name)
     const { setFieldValue } = useFormikContext()
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedValue = event.target.value
-        setFieldValue(name, selectedValue)
+        setFieldValue(name, selectedValue).catch((error) => {
+            console.error(`Error setting field value for ${name}:`, error)
+        })
     }
+
     return (
-        <FormSelect name={name} value={field.value} onChange={handleChange}>
+        <FormSelect {...field} onChange={handleChange}>
             {options.map((option) => (
                 <option key={option.value} value={option.value}>
                     {option.label}
@@ -33,19 +59,23 @@ const TransportCategorySelector: React.FC<TransportCategorySelectorProps> = ({ n
 }
 
 const CustomSelector: React.FC<InvoicesSelectorProps> = ({ name, secondName, options }) => {
-    const [field1, helpers1] = useField(name)
-    console.log(helpers1)
-    const { setFieldValue } = useFormikContext()
+    const { values, setFieldValue } = useFormikContext<NewRegularTransportData>()
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedOption = options.find((option) => option.value === event.target.value)
-        setFieldValue(name, selectedOption?.value ?? '')
-        setFieldValue(secondName, selectedOption?.value2 ?? '')
+        const selectedOption = options.find((option) => `${option.value}-${option.value2}` === event.target.value)
+        if (selectedOption) {
+            void setFieldValue(name, selectedOption.value)
+            void setFieldValue(secondName, selectedOption.value2)
+        }
     }
+
+    // Combinar valores para mostrar en el selector
+    const combinedValue = `${values.invoiceSeries}-${values.invoiceNumber}`
+
     return (
-        <FormSelect name={name} value={field1.value} onChange={handleChange}>
+        <FormSelect onChange={handleChange} value={combinedValue}>
             {options.map((option) => (
-                <option key={option.value} value={option.value}>
+                <option key={`${option.value}-${option.value2}`} value={`${option.value}-${option.value2}`}>
                     {option.label}
                 </option>
             ))}
@@ -53,43 +83,59 @@ const CustomSelector: React.FC<InvoicesSelectorProps> = ({ name, secondName, opt
     )
 }
 
-const AddRegularTransportForm = (props: any) => {
-    const { data, error, loaded } = useAxiosGetInvoices(INVOICES_URL)
-    console.log(error)
-    console.log(loaded)
-    const invoicesList: SelectorOption[] = []
-    data.invoicesList.forEach((invoice) => {
-        invoicesList.push({ label: invoice.series + ' ' + invoice.number, value: invoice.series, value2: invoice.number } as SelectorOption)
-    })
+const validationSchema = Yup.object({
+    description: Yup.string()
+        .required('Es necesaria una descripción.')
+        .min(10, 'La descripción debe tener más caracteres.')
+        .max(100, 'No debe exceder los 100 caracteres.')
+})
+
+// AddRegularTransportForm component
+const AddRegularTransportForm: React.FC<{ paymentSheetId: number }> = ({ paymentSheetId }) => {
+    const { data: invoicesData, error, loaded } = useAxiosGetInvoices(INVOICES_URL)
+    const { notification, showNotification, hideNotification } = useNotification()
+
+    if (error) {
+        console.error('Error loading invoices:', error)
+    }
+
+    const invoicesList: SelectorOption[] =
+        invoicesData?.invoicesList.map((invoice) => ({
+            label: `${invoice.series} ${invoice.number}`,
+            value: invoice.series,
+            value2: invoice.number
+        })) ?? []
+
     return (
-        <div>
-            <Formik
-                initialValues={{
-                    category: '',
-                    description: '',
-                    invoiceNumber: 0,
-                    invoiceSeries: ''
-                }}
-                onSubmit={(values: NewRegularTransportData, { setSubmitting }: FormikHelpers<NewRegularTransportData>) => {
-                    console.log(props.data)
+        <Formik
+            validateOnMount
+            validationSchema={validationSchema}
+            initialValues={{
+                category: '',
+                description: '',
+                invoiceNumber: 0,
+                invoiceSeries: ''
+            }}
+            onSubmit={async (values: NewRegularTransportData, { setSubmitting }: FormikHelpers<NewRegularTransportData>) => {
+                try {
+                    await axios.post(`${PAYMENT_SHEET_URL}/${paymentSheetId}/addRegularTransport`, values)
+                    showNotification('El transporte regular se ha añadido correctamente', NotificationType.Success)
+                } catch (error) {
+                    const axiosError = error as AxiosError
+                    showNotification(axiosError.message, NotificationType.Error)
+                } finally {
                     setSubmitting(false)
-                    axios
-                        .post(PAYMENT_SHEET_URL + '/' + props.data + '/addRegularTransport', values)
-                        .then(function (response) {
-                            console.log(response)
-                        })
-                        .catch(function (error) {
-                            console.log(error)
-                        })
-                }}
-            >
+                }
+            }}
+        >
+            {({ isSubmitting, isValid, dirty }) => (
                 <BootstrapForm as={Form}>
                     <Container as={BootstrapForm.Group} fluid>
-                        <Row>
-                            <Col md="auto">
-                                <BootstrapForm.Label htmlFor="category">Seleccione un tipo de transporte:</BootstrapForm.Label>
+                        <FieldRow className="mb-3">
+                            <Col md={3}>
+                                <Label htmlFor="category">Seleccione un tipo de transporte:</Label>
                             </Col>
-                            <Col md="auto">
+                            <Col md={9}>
                                 <TransportCategorySelector
                                     name="category"
                                     options={[
@@ -101,37 +147,57 @@ const AddRegularTransportForm = (props: any) => {
                                     ]}
                                 />
                             </Col>
-                        </Row>
+                        </FieldRow>
 
-                        <Row>
-                            <Col md="auto">
-                                <BootstrapForm.Label htmlFor="description">Descripción:</BootstrapForm.Label>
+                        <FieldRow className="mb-3">
+                            <Col md={3}>
+                                <Label htmlFor="description">Descripción:</Label>
                             </Col>
-                            <Col md="auto">
-                                <Field as={BootstrapForm.Control} id="description" name="description" type="text" placeholder="Descripción del transporte." />
+                            <Col md={9}>
+                                <BootstrapForm.Control
+                                    as={Field}
+                                    id="description"
+                                    name="description"
+                                    type="text"
+                                    placeholder="Descripción del transporte."
+                                    component={'textarea'}
+                                    rows={4}
+                                />
+                                <StyledErrorMessage component={'p'} name={'description'}></StyledErrorMessage>
                             </Col>
-                        </Row>
+                        </FieldRow>
 
-                        <Row>
-                            <Col md="auto">
-                                <BootstrapForm.Label htmlFor="invoice">Seleccione la factura:</BootstrapForm.Label>
+                        <FormRow className="mb-3">
+                            <Col md={3}>
+                                <Label htmlFor="invoice">Seleccione la factura:</Label>
                             </Col>
                             <Col md="auto">
-                                <CustomSelector name="invoiceSeries" secondName="invoiceNumber" options={invoicesList} />
+                                {loaded ? (
+                                    <CustomSelector name="invoiceSeries" secondName="invoiceNumber" options={invoicesList} />
+                                ) : (
+                                    <Spinner animation="border" role="status">
+                                        <span className="visually-hidden">Loading...</span>
+                                    </Spinner>
+                                )}
                             </Col>
-                        </Row>
+                        </FormRow>
 
-                        <Row>
-                            <Col className="d-flex flex-row-reverse bd-highlight">
-                                <Button variant="primary" type="submit">
-                                    Submit
-                                </Button>
-                            </Col>
-                        </Row>
+                        <SubmitButtonRow>
+                            <Button variant="success" disabled={isSubmitting || !isValid || !dirty} type="submit">
+                                {isSubmitting ? (
+                                    <>
+                                        <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> Añadiendo...
+                                    </>
+                                ) : (
+                                    ' Añadir transporte regular'
+                                )}
+                            </Button>
+                        </SubmitButtonRow>
                     </Container>
+                    <FloatingNotificationA notification={notification} hideNotification={hideNotification} />
                 </BootstrapForm>
-            </Formik>
-        </div>
+            )}
+        </Formik>
     )
 }
 

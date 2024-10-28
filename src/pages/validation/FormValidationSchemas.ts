@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as Yup from 'yup'
 import { SignUpFormValues } from '../../components/SignUp/SignUpFormTypes'
@@ -45,7 +49,7 @@ export const SignUpFormValidationSchema: Yup.Schema<SignUpFormValues> = Yup.obje
     secondSurname: Yup.string()
         .required('Se requiere el segundo apellido.')
         .max(SECONDSURNAME_MAX_LENGTH, 'El segundo apellido puede contener máximo ' + SECONDSURNAME_MAX_LENGTH + ' caracteres'),
-    gender: Yup.string().oneOf(['male', 'female', 'other']).defined(),
+    gender: Yup.string().required('Se necesita seleccionar.').oneOf(['male', 'female', 'other']).defined('Se necesita seleccionar.'),
     birthDate: Yup.date()
         .required('Se necesita una fecha de nacimiento.')
         .max(new Date(), 'No debe exceder: ' + new Date().toString()),
@@ -57,8 +61,8 @@ export const SignUpFormValidationSchema: Yup.Schema<SignUpFormValues> = Yup.obje
     building: Yup.string().required('Casa o edificio requerido.'),
     street: Yup.string().required('Calle requerida.'),
     city: Yup.string().required('Se requiere una población.'),
-    countryNumericCode: Yup.number().required('Se requiere un código de país.'),
-    countrySubdivisionName: Yup.string().required('Se requiere'),
+    countryNumericCode: Yup.number().required('Se requiere un código de país.').min(0, 'Selecciona un país.'),
+    countrySubdivisionName: Yup.string().required('Se requiere').defined('Selecciona una provincia.'),
     //Fourth step fields
     membersTerms: Yup.boolean().required('Para registrarse hay que aceptar los términos.').isTrue('Para registrarse hay que aceptar los términos.'),
     privacyTerms: Yup.boolean().required('Se requiere aceptar los términos de privacidad.').isTrue('Para registrarse hay que aceptar los términos.'),
@@ -74,7 +78,7 @@ export const LogInValidationSchema = Yup.object().shape({
         .required('Se necesita un email!')
         .email('Email no válido')
         .min(6, 'Demasiado corto, minimo 6 caracteres!')
-        .max(20, 'Demasiado largo, maximo 20 caracteres!'),
+        .max(40, 'Demasiado largo, maximo 20 caracteres!'),
 
     password: Yup.string()
         .required('Se necesita una contraseña!')
@@ -89,13 +93,28 @@ const COMPANY_ADDRESS_MIN_LENGTH = 6
 
 export const CreateCompanyValidationSchema = Yup.object().shape({
     nif: Yup.string()
-        .test('valid-nif', 'NIF inválido', (value: any) => {
-            //  lógica de validación NIF personas jurídicas y entidades
-            // Validación básica NIF
+        .test('valid-nif', 'NIF o DNI inválido', (value: any) => {
+            // Validación básica NIF (personas jurídicas y entidades)
             const nifRegex = /^[A-HJ-NP-TV-Z]\d{7}[A-J0-9]$/i
-            return nifRegex.test(value as string)
+            const dniRegex = /^\d{8}[A-HJ-NP-TV-Z]$/i
+
+            if (!value) return false
+
+            if (nifRegex.test(value)) {
+                return true
+            }
+
+            if (dniRegex.test(value)) {
+                const letters = 'TRWAGMYFPDXBNJZSQVHLCKET'
+                const numbers = value.slice(0, 8)
+                const letter = value.slice(8).toUpperCase()
+
+                return letters[parseInt(numbers) % 23] === letter
+            }
+
+            return false
         })
-        .required('El NIF es obligatorio'),
+        .required('El NIF o DNI es necesario.'),
 
     name: Yup.string()
         .required('Se requiere un nombre.')

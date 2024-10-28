@@ -1,8 +1,7 @@
+import usePageTitle from '../../components/Common/hooks/usePageTitle'
 import { backGroundColor, backgroundImageUrl, mainContentContainerBackgroundColor } from '../../components/Common/CommonStyles'
-import React from 'react'
 import { Container, Table } from 'react-bootstrap'
 import styled from 'styled-components'
-import { SetPageTitle } from '../../utility/functions'
 
 const StyledTable = styled(Table)`
     td:first-child {
@@ -42,7 +41,8 @@ const ResourceLinkStyled = styled.a`
     }
 `
 
-const ChessResources: React.FC = () => {
+const ChessResources = (): JSX.Element => {
+    usePageTitle('CXN Recursos didácticos.')
     const resources: Resource[] = [
         {
             title: 'Xadrez para todos I',
@@ -102,15 +102,17 @@ const ChessResources: React.FC = () => {
     ]
 
     // Agrupar los recursos por categorías
-    const groupedResources: Record<string, Resource[]> = resources.reduce((acc, resource) => {
-        SetPageTitle('CXN-Recursos didacticos')
-        const { category } = resource
-        if (!acc[category]) {
-            acc[category] = []
-        }
-        acc[category].push(resource)
-        return acc
-    }, {} as Record<string, Resource[]>) // Se define un tipo para el objeto inicial
+    const groupedResources: Record<string, Resource[]> = resources.reduce(
+        (acc, resource) => {
+            const { category } = resource
+            if (!acc[category]) {
+                acc[category] = []
+            }
+            acc[category].push(resource)
+            return acc
+        },
+        {} as Record<string, Resource[]>
+    ) // Se define un tipo para el objeto inicial
 
     return (
         <MainContainer>

@@ -1,29 +1,50 @@
-import React, { useEffect, useState } from 'react'
 import MembersManagerTable from '../components/MembersManager/MembersManagerTable'
-import axios from 'axios'
-import { IUsersListData } from '../components/Types/Types'
+import { useAxiosGetAllUsersData } from '../utility/CustomAxios'
+import { Alert } from 'react-bootstrap'
+import styled from 'styled-components'
+import LoadingTableSpinnerContainer from '../components/Common/LoadingTableSpinnerContainer'
 
-const MembersManagerPage: React.FC = () => {
-    const [data, setData] = useState<IUsersListData>({ usersList: [] })
-    const [loaded, setLoaded] = useState(false)
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get<IUsersListData>('http://localhost:8080/api/user/getAll')
-                setData(response.data)
-                console.log('AXIOS DATA:')
-                console.log(response.data)
-                setLoaded(true)
-            } catch (error) {
-                console.error('Error fetching data:', error)
-                setLoaded(true)
-            }
-        }
+const Title = styled.h1`
+    text-align: left;
+    margin-top: 20px;
+    color: #333;
+`
 
-        void fetchData()
-    }, [])
+const ErrorMessage = styled(Alert)`
+    margin-top: 20px;
+`
 
-    return loaded ? <MembersManagerTable data={data.usersList}></MembersManagerTable> : <div></div>
+const NoQuestionsMessage = styled.p`
+    text-align: center;
+    margin-top: 20px;
+`
+
+/**
+ * MembersManagerPage component to manage club members.
+ *
+ * This page fetches and displays a list of users (club members)
+ * and shows a loading spinner or an error message based on the
+ * loading state and the result of the API call.
+ *
+ * @returns {JSX.Element} The rendered Members Manager page.
+ */
+const MembersManagerPage = (): JSX.Element => {
+    const { data, error, loaded } = useAxiosGetAllUsersData()
+
+    if (error) {
+        return <ErrorMessage variant="danger">Error: {error.message ?? 'Ocurrió un error al cargar las preguntas.'}</ErrorMessage>
+    }
+
+    if (!loaded) {
+        return <LoadingTableSpinnerContainer />
+    }
+
+    return (
+        <>
+            <Title>Gestión de socios del club:</Title>
+            {data?.usersList ? <MembersManagerTable usersData={data.usersList} /> : <NoQuestionsMessage>No hay usuarios que mostrar.</NoQuestionsMessage>}
+        </>
+    )
 }
 
 export default MembersManagerPage

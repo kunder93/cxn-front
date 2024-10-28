@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
 // This lets the app load faster on subsequent visits in production, and gives
 // it offline capabilities. However, it also means that developers (and users)
 // will only see deployed updates on subsequent visits to a page, after all the
@@ -57,11 +56,18 @@ function checkValidServiceWorker(swUrl: string, config?: Config) {
         .then((response) => {
             const contentType = response.headers.get('content-type')
             if (response.status === 404 || (contentType != null && contentType.indexOf('javascript') === -1)) {
-                navigator.serviceWorker.ready.then((registration) => {
-                    registration.unregister().then(() => {
-                        window.location.reload()
+                navigator.serviceWorker.ready
+                    .then((registration) => {
+                        registration
+                            .unregister()
+                            .then(() => {
+                                window.location.reload()
+                            })
+                            .catch((error) => {
+                                console.log(error)
+                            })
                     })
-                })
+                    .catch((error) => console.log(error))
             } else {
                 registerValidSW(swUrl, config)
             }
@@ -81,9 +87,13 @@ export const register = (config?: Config): void => {
             const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`
             if (isLocalhost) {
                 checkValidServiceWorker(swUrl, config)
-                navigator.serviceWorker.ready.then(() => {
-                    console.log('This web app is being served cache-first by a service ' + 'worker. To learn more, visit https://bit.ly/CRA-PWA')
-                })
+                navigator.serviceWorker.ready
+                    .then(() => {
+                        console.log('This web app is being served cache-first by a service ' + 'worker. To learn more, visit https://bit.ly/CRA-PWA')
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    })
             } else {
                 registerValidSW(swUrl, config)
             }
@@ -95,11 +105,10 @@ export const unregister = (): void => {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.ready
             .then((registration) => {
-                registration.unregister()
+                void registration.unregister()
             })
             .catch((error) => {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                console.error(error.message)
+                console.error(error)
             })
     }
 }
