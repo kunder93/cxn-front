@@ -111,9 +111,6 @@ const CollapsibleNavigationBar: React.FC = () => {
                         ]}
                         onNavItemClick={handleNavItemClick}
                     />
-                    <Nav.Link as={Link} title="Actividades" to={ROUTES.ACTIVITIES} onClick={handleNavItemClick}>
-                        Actividades
-                    </Nav.Link>
                     <CustomDropdownMenu
                         title="El Club"
                         route={ROUTES.THECLUB}
