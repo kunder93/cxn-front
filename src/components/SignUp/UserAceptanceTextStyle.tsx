@@ -67,14 +67,18 @@ export const RelativoSociosTextContainer = () => {
     return (
         <Container>
             {' '}
-            <p>Derechos:</p>
+            <p>
+                <strong>Derechos:</strong>
+            </p>
             <p>Contribuir a los fines específicos de la asociación.</p>
             <p>Exigir que la asociación se ajuste a lo dispuesto en la normativa autonómica deportiva.</p>
             <p>Separarse libremente de la Asociación.</p>
             <p>Conocer las actividades de la asociación y examinar su documentación, previa petición realizada al presidente.</p>
             <p>Exponer libremente tus opiniones en la Asociación.</p>
             <p>Ser elector y elegible para los órganos de representacion y gobierno de la Asociación, siempre que temga plena capacidad para obrar.</p>
-            <p>Obligaciones:</p>
+            <p>
+                <strong>Obligaciones:</strong>
+            </p>
             <p>Abonar las cuotas que exija la Asamblea General.</p>
             <p>Contribuir al sostenimiento y difusión de el deporte Ajedrez.</p>
             <p>Acatar cuantas disposiciones dicte la Asamblea General, la Junta Directiva o Presidente para el buen goblierno de la sociedad.</p>
@@ -91,8 +95,7 @@ export const RelativoSociosTextContainer = () => {
             <p>LA CONDICIÓN DE SOCIO SE PIERDE SI:</p>
             <p>Uno mismo lo desea.</p>
             <p>
-                Por falta de pago de las cuotas sociales durante trese meses consecutivos, previo requerimiento de pago, y consecuente Resolucion del
-                presidente.
+                Por falta de pago de las cuotas sociales durante tres meses consecutivos, previo requerimiento de pago, y consecuente resolución del presidente.
             </p>
             <p>
                 Por acuerdo del presidente en su caso, fundado en faltas de carácter grave, previa audiencia del interesado, que tendrá que ser ratificado en la

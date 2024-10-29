@@ -13,6 +13,28 @@ import useFormSubmit from './CustomHooks/useFormSubmit'
 import useFormSteps from './CustomHooks/useFormSteps'
 import { FormStyledContainer } from '../../components/SignUpSingInCommonStyles'
 import FormAlertMessage from './Common/FormAlertMessage'
+import { Accordion } from 'react-bootstrap'
+import styled from 'styled-components'
+
+const AccordionHeader = styled(Accordion.Header)`
+    padding: 0;
+    margin: 0;
+    button {
+        padding: 0.25em;
+        border-radius: 5px solid black;
+    }
+    h2 {
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+        font-size: 100%;
+        margin: 0;
+    }
+`
+const AccordionBody = styled(Accordion.Body)`
+    p {
+        font-size: 80%;
+    }
+`
 
 /**
  * Initial values for the sign-up form.
@@ -85,6 +107,19 @@ const SignUpForm = (): JSX.Element => {
     return (
         <FormStyledContainer>
             <h1>¡ Solicita ser socio !</h1>
+            <Accordion>
+                <Accordion.Item eventKey="0">
+                    <AccordionHeader>
+                        <h2>Términos y condiciones generales</h2>
+                    </AccordionHeader>
+                    <AccordionBody>
+                        <p>- Cuota de socio 2025: 40€/año si eres mayor de 18 años.</p>
+                        <p>- Cuota de socio menores de 18 años: 20€/año</p>
+                        <p>- Familiares menores de 18 años y dependientes economicamente de un socio mayor de 18 años: 0€.</p>
+                        <p>- Posibilidad de pago fraccionado mensual.</p>
+                    </AccordionBody>
+                </Accordion.Item>
+            </Accordion>
             <Formik
                 initialValues={initialValues}
                 onSubmit={handleSubmit}
