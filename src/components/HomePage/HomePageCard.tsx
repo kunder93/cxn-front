@@ -3,7 +3,6 @@ import { Button, Card } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 import HomePageCardModal from './HomePageCardModal'
-import HomePageCardImage from './HomePageCardImage'
 
 const CardFooter = styled(Card.Footer)`
     &&& {
@@ -40,13 +39,28 @@ const StyledCardText = styled(Card.Text)`
     font-family: 'Roboto', sans-serif;
 `
 
-const StyledCardTitle = styled(Card.Title)`
+const StyledCardBodyTitle = styled(Card.Title)`
     font-family: 'Protest Strike', sans-serif;
 `
 
+const StyledFooterButton = styled(Button)`
+    display: flex;
+    flex-grow: 1;
+    border-radius: 0;
+    text-shadow: '4px 4px 5px rgba(0, 0, 0, 0.5)';
+    background-color: #92801a;
+    border-color: #6d5f11;
+    transition: background-color 0.3s ease-in-out;
+    justify-content: center;
+`
+
+const CardHeaderImage = styled(Card.Img)`
+    border-radius: 0;
+`
+
 export enum ButtonOptions {
-    NAVIGATION = 'NAVIGATION', // Para acciones de navegación
-    MODAL = 'MODAL' // Para renderizar el modal
+    NAVIGATION = 'NAVIGATION', // navigation actions.
+    MODAL = 'MODAL' // Render modal.
 }
 
 export interface FormParams {
@@ -54,7 +68,7 @@ export interface FormParams {
     formTitle: string
 }
 
-export interface ButtonProps {
+export interface MyButtonProps {
     buttonText: string
     buttonAction: ButtonOptions
     component?: ReactElement
@@ -64,14 +78,9 @@ export interface ButtonProps {
 export interface HomePageCardProps {
     imageSrc: string
     imageAlt: string
-    sources: {
-        srcSet: string
-        media?: string
-        type?: string
-    }[]
     cardTitle: string
     cardText: string[]
-    buttonProps: ButtonProps[]
+    buttonProps: MyButtonProps[]
     modalAriaLabel: string
 }
 
@@ -80,11 +89,7 @@ const HomePageCard: React.FC<HomePageCardProps> = (props) => {
     const [showModal, setShowModal] = React.useState(false)
     const [modalContent, setModalContent] = React.useState<ReactElement | null>(null)
 
-    function closeModal() {
-        setShowModal(false)
-    }
-
-    function buttonClickHandler(buttonProps: ButtonProps): void {
+    function buttonClickHandler(buttonProps: MyButtonProps): void {
         switch (buttonProps.buttonAction) {
             case ButtonOptions.MODAL:
                 setShowModal(true)
@@ -99,46 +104,36 @@ const HomePageCard: React.FC<HomePageCardProps> = (props) => {
     }
 
     return (
-        <>
-            <article>
-                <StyledCard>
-                    <HomePageCardImage alt={props.imageAlt} src={props.imageSrc} sources={props.sources} />
-                    <StyledCardBody>
-                        <StyledCardTitle>{props.cardTitle}</StyledCardTitle>
-                        {props.cardText.map((text, index) => (
-                            <StyledCardText key={index}>{text}</StyledCardText>
-                        ))}
-                    </StyledCardBody>
-                    <CardFooter>
-                        {props.buttonProps.map((button, index) => (
-                            <Button
-                                key={index}
-                                onClick={() => buttonClickHandler(button)}
-                                style={{
-                                    flexGrow: 1,
-                                    borderRadius: 0,
-                                    textShadow: '4px 4px 5px rgba(0, 0, 0, 0.5)',
-                                    backgroundColor: '#857415',
-                                    borderColor: '#857415',
-                                    borderRight: index !== props.buttonProps.length - 1 ? '2px solid #926f32' : 'none',
-                                    transition: 'background-color 0.3s ease-in-out'
-                                }}
-                                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#af9919')}
-                                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#857415')}
-                            >
-                                {button.buttonText}
-                            </Button>
-                        ))}
-                    </CardFooter>
-                </StyledCard>
-            </article>
+        <article>
+            <StyledCard>
+                <CardHeaderImage variant="top" src={props.imageSrc} alt={props.imageAlt} loading="lazy" />
+                <StyledCardBody>
+                    <StyledCardBodyTitle>{props.cardTitle}</StyledCardBodyTitle>
+                    {props.cardText.map((text, index) => (
+                        <StyledCardText key={index}>{text}</StyledCardText>
+                    ))}
+                </StyledCardBody>
+                <CardFooter>
+                    {props.buttonProps.map((button, index) => (
+                        <StyledFooterButton
+                            key={index}
+                            onClick={() => buttonClickHandler(button)}
+                            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#af9919')}
+                            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#857415')}
+                        >
+                            {button.buttonText}
+                        </StyledFooterButton>
+                    ))}
+                </CardFooter>
+            </StyledCard>
+
             <HomePageCardModal
                 show={showModal}
-                closeModal={closeModal}
-                modalContentComponent={modalContent ?? null} // Renderizar contenido modal personalizado
+                closeModal={() => setShowModal(false)}
+                modalContentComponent={modalContent ?? null} // Content for render inner modal.
                 ariaLabel={props.modalAriaLabel}
             />
-        </>
+        </article>
     )
 }
 
