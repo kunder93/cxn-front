@@ -113,10 +113,15 @@ const SignUpForm = (): JSX.Element => {
                         <h2>Términos y condiciones generales</h2>
                     </AccordionHeader>
                     <AccordionBody>
-                        <p>- Cuota de socio 2025: 40€/año si eres mayor de 18 años.</p>
-                        <p>- Cuota de socio menores de 18 años: 20€/año</p>
-                        <p>- Familiares menores de 18 años y dependientes economicamente de un socio mayor de 18 años: 0€.</p>
-                        <p>- Posibilidad de pago fraccionado mensual.</p>
+                        <p>Cuota de socio 2025: 40€/año si eres mayor de 18 años.</p>
+                        <p>Cuota de socio menores de 18 años: 20€/año</p>
+                        <p>Familiares menores de 18 años y dependientes economicamente de un socio mayor de 18 años: 0€.</p>
+                        <p>Posibilidad de pago fraccionado mensual.</p>
+                        <p>
+                            La ficha federativa tiene un coste adicional de 15€ para los socios mayores de 14 años que así lo deseen. Esta sirve para jugar
+                            torneos oficiales cuyo resultado computa para el ranking ELO.
+                        </p>
+                        <p>La ficha federativa a menores de 14 años tiene un coste de 0€.</p>
                     </AccordionBody>
                 </Accordion.Item>
             </Accordion>
