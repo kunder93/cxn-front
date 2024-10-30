@@ -56,6 +56,7 @@ const StyledFooterButton = styled(Button)`
 
 const CardHeaderImage = styled(Card.Img)`
     border-radius: 0;
+    aspect-ratio: 16/9;
 `
 
 export enum ButtonOptions {

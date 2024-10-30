@@ -43,9 +43,7 @@ const benefitMessages: { [key in MembersBenefitOption]: React.ReactNode } = {
 const MembersBenefits: React.FC<MembersBenefitsProps> = ({ benefitOption }) => {
     return (
         <>
-            <h3>
-                <strong>Hacerte socio tiene muchas ventajas:</strong>
-            </h3>
+            <h3>Hacerte socio tiene muchas ventajas:</h3>
             <ListGroup variant="flush">{benefitMessages[benefitOption]}</ListGroup>
         </>
     )
