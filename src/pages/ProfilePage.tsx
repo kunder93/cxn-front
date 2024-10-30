@@ -19,6 +19,7 @@ import TorneoInscripcionManager from './TorneoInscripcionManager'
 import usePageTitle from '../components/Common/hooks/usePageTitle'
 import { useFetchProfileImage } from '../components/MyProfile/Hooks/ProfilesHooks'
 import { FederateManager } from './FederateManager'
+import ActivitiesManager from './ActivitiesManager'
 
 const MainPageContainer = styled.div`
     display: grid;
@@ -54,7 +55,8 @@ const sectionComponents: Record<ProfileSection, React.FC<{ changePage: (section:
     [ProfileSection.CompaniesManager]: CompaniesManagerPage,
     [ProfileSection.MessagesManager]: ChessQuestionsManager,
     [ProfileSection.TournamentParticipantManager]: TorneoInscripcionManager,
-    [ProfileSection.FederateManager]: FederateManager
+    [ProfileSection.FederateManager]: FederateManager,
+    [ProfileSection.ActivitiesManager]: ActivitiesManager
 }
 
 const ProfilePage = (): JSX.Element => {
