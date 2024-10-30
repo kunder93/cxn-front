@@ -1,5 +1,6 @@
 import React from 'react'
 import { ListGroup } from 'react-bootstrap'
+import FederateConditionsCard from './FederateConditionsCard'
 
 // enum for benefit options
 export enum MembersBenefitOption {
@@ -15,23 +16,15 @@ interface MembersBenefitsProps {
 
 // benefit messages
 const benefitMessages: { [key in MembersBenefitOption]: React.ReactNode } = {
-    [MembersBenefitOption.COMPETICION_FEDERADA]: (
-        <>
-            <ListGroup.Item>
-                <strong>Ficha federativa:</strong> Participa en las competiciones. ¡Obtén elo tanto nacional como internacional!
-            </ListGroup.Item>
-            <ListGroup.Item>
-                <strong>Competiciones por equipos:</strong> Participa como integrante del equipo CXN en la Liga o competiciones autonómicas por equipos.
-            </ListGroup.Item>
-        </>
-    ),
+    [MembersBenefitOption.COMPETICION_FEDERADA]: <FederateConditionsCard></FederateConditionsCard>,
     [MembersBenefitOption.MATERIAL_AJEDREZ]: (
         <>
             <ListGroup.Item>
                 <strong>Material de ajedrez:</strong> Obtén acceso a material de ajedrez de alta calidad, incluyendo tableros, piezas y relojes.
             </ListGroup.Item>
             <ListGroup.Item>
-                <strong>Libros y programas: </strong>Libros, revistas, programas de ajedrez, asesoramiento sobre su uso.</ListGroup.Item>
+                <strong>Libros y programas: </strong>Libros, revistas, programas de ajedrez, asesoramiento sobre su uso.
+            </ListGroup.Item>
         </>
     ),
     [MembersBenefitOption.TUTORIZACION]: (
@@ -50,12 +43,8 @@ const benefitMessages: { [key in MembersBenefitOption]: React.ReactNode } = {
 const MembersBenefits: React.FC<MembersBenefitsProps> = ({ benefitOption }) => {
     return (
         <>
-            <h3>
-                <strong>Hacerte socio tiene muchas ventajas:</strong>
-            </h3>
-            <ListGroup variant="flush">
-                {benefitMessages[benefitOption]}
-            </ListGroup>
+            <h3>Hacerte socio tiene muchas ventajas:</h3>
+            <ListGroup variant="flush">{benefitMessages[benefitOption]}</ListGroup>
         </>
     )
 }
