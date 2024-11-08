@@ -10,9 +10,8 @@ const SideBarContainer = styled.aside`
     font-family: 'Montserrat', sans-serif;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    max-width: 350px;
     font-size: 16px;
-
+    height: 100vh;
     @media (max-width: 768px) {
         display: none;
     }

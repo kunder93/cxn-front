@@ -63,3 +63,5 @@ export const UPDATE_DNI_URL = BASE_URL + 'api/user/federate/updateDni'
 export const CONFIR_CANCEL_FEDERATE_URL = BASE_URL + 'api/user/federate'
 
 export const FEDERATE_CHANGE_AUTORENEW_URL = BASE_URL + 'api/user/federate/changeAutoRenew'
+
+export const ACTIVITIES_URL = BASE_URL + 'api/activities'

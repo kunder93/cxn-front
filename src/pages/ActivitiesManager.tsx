@@ -1,3 +1,4 @@
+import ActivitiesCarousel from 'components/Activities/ActivitiesCarousel'
 import AddActivityModalForm from 'components/Activities/AddActivityModalForm'
 import { useState } from 'react'
 import { PiPlusSquareFill } from 'react-icons/pi'
@@ -17,10 +18,11 @@ const AddActivityIcon = styled(PiPlusSquareFill)`
 const ActivitiesManager = () => {
     const [showModal, setShowModal] = useState(false)
     return (
-        <div>
+        <div id="activities-manager">
             {' '}
-            <AddActivityIcon onClick={() => setShowModal(true)} /> <div>ActivitiesManager</div>
+            <AddActivityIcon onClick={() => setShowModal(true)} />
             <AddActivityModalForm show={showModal} onHide={() => setShowModal(false)}></AddActivityModalForm>
+            <ActivitiesCarousel></ActivitiesCarousel>
         </div>
     )
 }
