@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Modal, ModalProps, Button } from 'react-bootstrap'
 import styled from 'styled-components'
-import { ActivityCategory, IActivityForm } from './Types'
+import { ActivityCategory, IActivityForm, IActivityWithImageUrl } from './Types'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import Dropzone from 'react-dropzone'
 import { AddActivityValidationSchema } from './FormValidations'
@@ -67,7 +67,11 @@ const DateWrapper = styled.div`
     justify-content: space-between;
 `
 
-const AddActivityModalForm: React.FC<ModalProps> = (props: ModalProps) => {
+interface AddActivityModalFormProps extends ModalProps {
+    addActivity: (activity: IActivityWithImageUrl) => void
+}
+
+const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddActivityModalFormProps) => {
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const { showNotification } = useNotificationContext()
 
@@ -121,6 +125,14 @@ const AddActivityModalForm: React.FC<ModalProps> = (props: ModalProps) => {
                             showNotification('Actividad creada', NotificationType.Success)
                             resetForm()
                             setPreviewUrl(null)
+                            props.addActivity({
+                                title: values.title,
+                                description: values.description,
+                                startDate: values.startDate,
+                                endDate: values.endDate,
+                                category: values.category,
+                                imageUrl: previewUrl ? previewUrl : 'default-image.jpg'
+                            })
                         })
                         .catch((error) => {
                             const err = error as AxiosError

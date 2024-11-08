@@ -1,9 +1,7 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState } from 'react'
 import ActivityCard from './ActivityCard'
 import { IActivityWithImageUrl } from './Types'
-import axios from 'axios'
-import { ACTIVITIES_URL } from 'resources/server_urls'
-import { useAppSelector } from 'store/hooks'
+
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import 'swiper/css/pagination'
@@ -28,75 +26,40 @@ const SwiperSlideStyled = styled(SwiperSlide)`
     padding-top: 1.5em;
 `
 
-const LoadingMessage = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.2em;
-    color: #555;
-`
+interface ActivitiesCarouselProps {
+    activitiesList: IActivityWithImageUrl[]
+}
 
-const ActivitiesCarousel: React.FC = () => {
+const ActivitiesCarousel: React.FC<ActivitiesCarouselProps> = ({ activitiesList }) => {
     const [activities, setActivities] = useState<IActivityWithImageUrl[]>([])
-    const [isLoading, setIsLoading] = useState(true)
-    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
-
-    const fetchActivities = useCallback(async (): Promise<IActivityWithImageUrl[]> => {
-        const response = await axios.get(ACTIVITIES_URL, {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${userJwt}`
-            }
-        })
-
-        return response.data.map((activity: any) => ({
-            title: activity.title,
-            description: activity.description,
-            startDate: activity.startDate ? new Date(activity.startDate).toISOString() : null,
-            endDate: activity.endDate ? new Date(activity.endDate).toISOString() : null,
-            category: activity.category,
-            imageUrl: activity.image ? `data:image/jpeg;base64,${activity.image}` : 'default-image.jpg'
-        }))
-    }, [userJwt])
 
     useEffect(() => {
-        const loadActivities = async () => {
-            setIsLoading(true)
-            const activitiesData = await fetchActivities()
-            setActivities(activitiesData)
-            setIsLoading(false)
-        }
-        void loadActivities()
-    }, [fetchActivities])
+        setActivities(activitiesList)
+    }, [activitiesList])
 
     return (
         <Wrapper id="activities-carousel">
-            {isLoading ? (
-                <LoadingMessage>Loading activities...</LoadingMessage>
-            ) : (
-                <Swiper
-                    slidesPerView={1}
-                    spaceBetween={0}
-                    pagination={{ clickable: true }}
-                    navigation
-                    modules={[Pagination, Navigation]}
-                    breakpoints={{
-                        1120: { slidesPerView: 1 },
-                        1600: { slidesPerView: 2 },
-                        1650: { slidesPerView: 3 }
-                    }}
-                    className="mySwiper"
-                >
-                    {activities.map((activity, index) => (
-                        <SwiperSlideStyled key={index}>
-                            <ActivityCard activity={activity} />
-                        </SwiperSlideStyled>
-                    ))}
-                </Swiper>
-            )}
+            <Swiper
+                slidesPerView={1}
+                spaceBetween={0}
+                pagination={{ clickable: true }}
+                navigation
+                modules={[Pagination, Navigation]}
+                breakpoints={{
+                    1120: { slidesPerView: 1 },
+                    1600: { slidesPerView: 2 },
+                    1650: { slidesPerView: 3 }
+                }}
+                className="mySwiper"
+            >
+                {activities.map((activity, index) => (
+                    <SwiperSlideStyled key={index}>
+                        <ActivityCard activity={activity} />
+                    </SwiperSlideStyled>
+                ))}
+            </Swiper>
         </Wrapper>
     )
 }
 
-// Wrap with React.memo when exporting, not while declaring the component
-export default React.memo(ActivitiesCarousel)
+export default ActivitiesCarousel

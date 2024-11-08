@@ -52,9 +52,15 @@ const StyledCard = styled(Card)`
         color: #555;
         overflow: hidden;
         text-overflow: ellipsis;
-        height: 140px;
+        height: 110px;
     }
 `
+const DateWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+`
+const formatDate = (date: Date) =>
+    `${date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' })} ${date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false })}`
 
 interface ActivityCardProps {
     activity: IActivityWithImageUrl
@@ -110,6 +116,10 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ activity }) => {
             <Card.Body>
                 <Card.Title>{activity.title}</Card.Title>
                 <Card.Text>{activity.description}</Card.Text>
+                <DateWrapper>
+                    <span>Desde: {activity.startDate ? formatDate(new Date(activity.startDate)) : 'N/A'}</span>
+                    <span>Hasta: {activity.endDate ? formatDate(new Date(activity.endDate)) : 'N/A'}</span>
+                </DateWrapper>
             </Card.Body>
         </StyledCard>
     )
