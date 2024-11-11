@@ -37,7 +37,8 @@ const sections: ProfileMenuSection[] = [
         title: 'Gestión de administración',
         buttons: [
             { section: ProfileSection.MessagesManager, text: 'Mensajes recibidos', buttonIndex: 5 },
-            { section: ProfileSection.TournamentParticipantManager, text: 'Inscritos torneo', buttonIndex: 6 }
+            { section: ProfileSection.TournamentParticipantManager, text: 'Inscritos torneo', buttonIndex: 6 },
+            { section: ProfileSection.ActivitiesManager, text: 'Gestión actividades', buttonIndex: 7 }
         ]
     }
 ]

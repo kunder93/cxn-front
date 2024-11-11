@@ -19,23 +19,29 @@ import TorneoInscripcionManager from './TorneoInscripcionManager'
 import usePageTitle from '../components/Common/hooks/usePageTitle'
 import { useFetchProfileImage } from '../components/MyProfile/Hooks/ProfilesHooks'
 import { FederateManager } from './FederateManager'
+import ActivitiesManager from './ActivitiesManager'
 
 const MainPageContainer = styled.div`
+    width: 100%;
+    height: auto;
+    min-height: 100%;
     display: grid;
-    grid-template-columns: 1fr 3fr;
-    gap: 1rem;
+    grid-template-columns: 20% 80%; /* Define las columnas para sidebar y contenido */
 
     @media (max-width: 768px) {
         grid-template-columns: 1fr;
     }
 `
 
+const SidebarWrapper = styled.div`
+    height: 100%;
+`
+
 const ProfileContent = styled.div`
-    margin-top: 2rem;
-    margin-right: 5rem;
+    height: 100%;
+    padding: 2rem;
 
     @media (max-width: 768px) {
-        margin-top: 0;
         padding-bottom: 4rem;
         margin: 0;
     }
@@ -54,7 +60,8 @@ const sectionComponents: Record<ProfileSection, React.FC<{ changePage: (section:
     [ProfileSection.CompaniesManager]: CompaniesManagerPage,
     [ProfileSection.MessagesManager]: ChessQuestionsManager,
     [ProfileSection.TournamentParticipantManager]: TorneoInscripcionManager,
-    [ProfileSection.FederateManager]: FederateManager
+    [ProfileSection.FederateManager]: FederateManager,
+    [ProfileSection.ActivitiesManager]: ActivitiesManager
 }
 
 const ProfilePage = (): JSX.Element => {
@@ -77,16 +84,18 @@ const ProfilePage = (): JSX.Element => {
     }
     const CurrentPageComponent = sectionComponents[profilePage]
     return (
-        <MainPageContainer>
+        <MainPageContainer id="main-page-container">
             {userProfile && (
                 <>
                     {!isMobile ? (
-                        <Sidebar
-                            roles={userProfile.userRoles}
-                            setProfilePage={changePage}
-                            currentSection={sidebarSection}
-                            setSidebarSection={setSidebarSection}
-                        />
+                        <SidebarWrapper>
+                            <Sidebar
+                                roles={userProfile.userRoles}
+                                setProfilePage={changePage}
+                                currentSection={sidebarSection}
+                                setSidebarSection={setSidebarSection}
+                            />
+                        </SidebarWrapper>
                     ) : (
                         <UserProfileNavbar
                             roles={userProfile.userRoles}
@@ -97,7 +106,9 @@ const ProfilePage = (): JSX.Element => {
                     )}
                 </>
             )}
-            <ProfileContent>{error ? <p>{error}</p> : CurrentPageComponent ? <CurrentPageComponent changePage={changePage} /> : null}</ProfileContent>
+            <ProfileContent id="selected-content-wrapper">
+                {error ? <p>{error}</p> : CurrentPageComponent ? <CurrentPageComponent changePage={changePage} /> : null}
+            </ProfileContent>
         </MainPageContainer>
     )
 }
