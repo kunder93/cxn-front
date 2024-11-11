@@ -13,13 +13,15 @@ import { NotificationType } from 'components/Common/hooks/useNotification'
 import 'react-datepicker/dist/react-datepicker.css'
 import DatePicker, { registerLocale } from 'react-datepicker'
 import { es } from 'date-fns/locale'
+import { Form as BootstrapForm } from 'react-bootstrap'
 
 registerLocale('es', es)
 
 const ErrorContainer = styled.div`
     min-height: 20px;
-    color: red;
+    color: #c70000;
     font-size: 0.875rem;
+    font-weight: bold;
 `
 
 const CreateActivityModal = styled(Modal)`
@@ -87,7 +89,13 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
     }
 
     return (
-        <CreateActivityModal show={props.show} onHide={props.onHide} centered>
+        <CreateActivityModal
+            show={props.show}
+            onHide={props.onHide}
+            centered
+            aria-labelledby="modalTitle" // Accessible name for the dialog
+            aria-modal="true"
+        >
             <Formik
                 validateOnMount
                 validateOnChange
@@ -157,15 +165,23 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                     return (
                         <Form>
                             <Modal.Header>
-                                <label htmlFor="title">Título:</label>
-                                <Field name="title" type="text" className="form-control" placeholder="Título de la actividad." />
+                                <Modal.Title id="modalTitle">Crear Actividad</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <BootstrapForm.Label htmlFor="title">Título:</BootstrapForm.Label>
+                                <Field
+                                    name="title"
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Título de la actividad."
+                                    aria-label="Título de la actividad"
+                                    aria-describedby="titleError"
+                                />
                                 <ErrorContainer>
                                     <ErrorMessage name="title" component="div" />
                                 </ErrorContainer>
-                            </Modal.Header>
-                            <Modal.Body>
                                 <div>
-                                    <label>Imagen:</label>
+                                    <BootstrapForm.Label>Imagen:</BootstrapForm.Label>
                                     <DropzoneContainer>
                                         <Dropzone
                                             onDrop={(acceptedFiles) => {
@@ -181,8 +197,8 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                             }}
                                         >
                                             {({ getRootProps, getInputProps }) => (
-                                                <div {...getRootProps()}>
-                                                    <input {...getInputProps()} />
+                                                <div {...getRootProps()} aria-label="Zona de carga de imagen de actividad">
+                                                    <input {...getInputProps()} aria-label="Cargar imagen de actividad" />
                                                     {previewUrl ? (
                                                         <img src={previewUrl} alt="Vista previa de la imagen" />
                                                     ) : (
@@ -198,12 +214,14 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                 </div>
 
                                 <div className="mb-3">
-                                    <label htmlFor="description">Descripción:</label>
+                                    <BootstrapForm.Label htmlFor="description">Descripción:</BootstrapForm.Label>
                                     <Field
                                         name="description"
                                         as="textarea"
                                         className="form-control"
                                         placeholder="Descripción detallada de la actividad. Qué se va a hacer."
+                                        aria-label="Descripción de la actividad"
+                                        aria-describedby="descriptionError"
                                     />
                                     <ErrorContainer>
                                         <ErrorMessage name="description" component="div" />
@@ -212,7 +230,7 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
 
                                 <DateWrapper>
                                     <div className="mb-3">
-                                        <label htmlFor="startDate">Fecha de inicio:</label>
+                                        <BootstrapForm.Label htmlFor="startDate">Fecha de inicio:</BootstrapForm.Label>
                                         <DatePicker
                                             selected={values.startDate}
                                             onChange={(date) =>
@@ -229,13 +247,15 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                             timeFormat="HH:mm"
                                             timeIntervals={15}
                                             minDate={new Date()}
+                                            aria-label="Fecha de inicio"
+                                            aria-describedby="startDateError"
                                         />
                                         <ErrorContainer>
                                             <ErrorMessage name="startDate" component="div" />
                                         </ErrorContainer>
                                     </div>
                                     <div className="mb-3">
-                                        <label htmlFor="endDate">Fecha de fin:</label>
+                                        <BootstrapForm.Label htmlFor="endDate">Fecha de fin:</BootstrapForm.Label>
                                         <DatePicker
                                             selected={values.endDate}
                                             onChange={(date) =>
@@ -251,6 +271,8 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                             timeFormat="HH:mm"
                                             timeIntervals={15}
                                             minDate={new Date()}
+                                            aria-label="Fecha de fin"
+                                            aria-describedby="endDateError"
                                         />
                                         <ErrorContainer>
                                             <ErrorMessage name="endDate" component="div" />
@@ -259,8 +281,8 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                 </DateWrapper>
 
                                 <div className="mb-3">
-                                    <label htmlFor="state">Categoría:</label>
-                                    <Field name="category" as="select" className="form-control">
+                                    <BootstrapForm.Label htmlFor="state">Categoría:</BootstrapForm.Label>
+                                    <Field name="category" as="select" className="form-control" aria-label="Categoría de la actividad">
                                         {Object.values(ActivityCategory).map((category, index) => (
                                             <option value={category} key={index}>
                                                 {category}
