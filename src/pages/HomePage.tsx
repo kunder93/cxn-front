@@ -265,7 +265,7 @@ const MemberActivitiesArticle3 = styled(MemberActivitiesArticle)`
 `
 
 const HomePage = (): JSX.Element => {
-    usePageTitle('CXN Principal')
+    usePageTitle('Xadrez Narón')
     return (
         <MainContainerStyled>
             <HeaderImageSection>

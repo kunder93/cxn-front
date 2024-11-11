@@ -35,10 +35,9 @@ const StyledContainer = styled(Container)``
  * @returns {JSX.Element} The rendered Activities page component.
  */
 const ActivitiesPage = (): JSX.Element => {
-    const { activities, error } = useFetchActivities() // Use the custom hook
+    const { activities, error } = useFetchActivities()
 
     usePageTitle('CXN Actividades')
-
     return (
         <MainContainer>
             <StyledContainer>
