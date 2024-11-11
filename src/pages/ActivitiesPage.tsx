@@ -3,10 +3,7 @@ import styled from 'styled-components'
 import { backGroundColor, backgroundImageUrl } from '../components/Common/CommonStyles'
 import usePageTitle from '../components/Common/hooks/usePageTitle'
 import ActivitiesCarousel from 'components/Activities/ActivitiesCarousel'
-import { useCallback, useEffect, useState } from 'react'
-import { IActivityWithImageUrl } from 'components/Activities/Types'
-import { ACTIVITIES_URL } from 'resources/server_urls'
-import axios from 'axios'
+import { useFetchActivities } from 'components/Activities/Hooks'
 
 const MainContainer = styled.div`
     background-color: ${backGroundColor};
@@ -38,39 +35,15 @@ const StyledContainer = styled(Container)``
  * @returns {JSX.Element} The rendered Activities page component.
  */
 const ActivitiesPage = (): JSX.Element => {
-    const [activities, setActivities] = useState<IActivityWithImageUrl[]>([])
-    const fetchActivities = useCallback(async () => {
-        try {
-            const response = await axios.get(ACTIVITIES_URL, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-
-            const activitiesData: IActivityWithImageUrl[] = response.data.map((activity: any) => ({
-                title: activity.title,
-                description: activity.description,
-                startDate: activity.startDate ? new Date(activity.startDate).toISOString() : null,
-                endDate: activity.endDate ? new Date(activity.endDate).toISOString() : null,
-                category: activity.category,
-                imageUrl: activity.image ? `data:image/jpeg;base64,${activity.image}` : 'default-image.jpg'
-            }))
-
-            setActivities(activitiesData) // Set the fetched activities directly
-        } catch (error) {
-            console.error('Failed to fetch activities:', error)
-        }
-    }, [])
-
-    useEffect(() => {
-        void fetchActivities()
-    }, [fetchActivities])
+    const { activities, error } = useFetchActivities() // Use the custom hook
 
     usePageTitle('CXN Actividades')
+
     return (
         <MainContainer>
             <StyledContainer>
                 <PageTitle>{pageTitleMsg}</PageTitle>
+                {error && <p>{error}</p>}
                 <ActivitiesCarousel activitiesList={activities} />
             </StyledContainer>
         </MainContainer>

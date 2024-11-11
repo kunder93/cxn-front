@@ -1,11 +1,11 @@
-import axios from 'axios'
+// ActivitiesManager.tsx
+import { useState } from 'react'
 import ActivitiesCarousel from 'components/Activities/ActivitiesCarousel'
 import AddActivityModalForm from 'components/Activities/AddActivityModalForm'
 import { IActivityWithImageUrl } from 'components/Activities/Types'
-import { useCallback, useEffect, useState } from 'react'
 import { PiPlusSquareFill } from 'react-icons/pi'
-import { ACTIVITIES_URL } from 'resources/server_urls'
 import styled from 'styled-components'
+import { useFetchActivities } from 'components/Activities/Hooks'
 
 const AddActivityIcon = styled(PiPlusSquareFill)`
     fill: blue;
@@ -19,46 +19,20 @@ const AddActivityIcon = styled(PiPlusSquareFill)`
 `
 
 const ActivitiesManager = () => {
-    const [activities, setActivities] = useState<IActivityWithImageUrl[]>([])
+    const { activities, error, addLocalActivity } = useFetchActivities()
     const [showModal, setShowModal] = useState(false)
 
-    // Function to add a new activity
-    const addActivity = (activity: IActivityWithImageUrl) => {
-        setActivities((prevActivities) => [...prevActivities, activity])
+    // Function to handle adding a new activity
+    const handleAddActivity = (newActivity: IActivityWithImageUrl) => {
+        addLocalActivity(newActivity) // Add activity locally without fetching
+        setShowModal(false) // Close modal after adding activity
     }
-
-    // Function to fetch activities from the API
-    const fetchActivities = useCallback(async () => {
-        try {
-            const response = await axios.get(ACTIVITIES_URL, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-
-            const activitiesData: IActivityWithImageUrl[] = response.data.map((activity: any) => ({
-                title: activity.title,
-                description: activity.description,
-                startDate: activity.startDate ? new Date(activity.startDate).toISOString() : null,
-                endDate: activity.endDate ? new Date(activity.endDate).toISOString() : null,
-                category: activity.category,
-                imageUrl: activity.image ? `data:image/jpeg;base64,${activity.image}` : 'default-image.jpg'
-            }))
-
-            setActivities(activitiesData) // Set the fetched activities directly
-        } catch (error) {
-            console.error('Failed to fetch activities:', error)
-        }
-    }, [])
-
-    useEffect(() => {
-        void fetchActivities()
-    }, [fetchActivities])
 
     return (
         <div id="activities-manager">
             <AddActivityIcon onClick={() => setShowModal(true)} />
-            <AddActivityModalForm show={showModal} onHide={() => setShowModal(false)} addActivity={addActivity} />
+            <AddActivityModalForm show={showModal} onHide={() => setShowModal(false)} addActivity={handleAddActivity} />
+            {error && <p>{error}</p>}
             <ActivitiesCarousel activitiesList={activities} />
         </div>
     )
