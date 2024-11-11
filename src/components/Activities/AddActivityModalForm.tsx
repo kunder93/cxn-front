@@ -170,6 +170,7 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                             <Modal.Body>
                                 <BootstrapForm.Label htmlFor="title">Título:</BootstrapForm.Label>
                                 <Field
+                                    id="title" // Added id attribute
                                     name="title"
                                     type="text"
                                     className="form-control"
@@ -181,7 +182,7 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                     <ErrorMessage name="title" component="div" />
                                 </ErrorContainer>
                                 <div>
-                                    <BootstrapForm.Label>Imagen:</BootstrapForm.Label>
+                                    <BootstrapForm.Label htmlFor="imageFile">Imagen:</BootstrapForm.Label>
                                     <DropzoneContainer>
                                         <Dropzone
                                             onDrop={(acceptedFiles) => {
@@ -198,11 +199,11 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                         >
                                             {({ getRootProps, getInputProps }) => (
                                                 <div {...getRootProps()} aria-label="Zona de carga de imagen de actividad">
-                                                    <input {...getInputProps()} aria-label="Cargar imagen de actividad" />
+                                                    <input {...getInputProps()} id="imageFile" aria-label="Cargar imagen de actividad" />
                                                     {previewUrl ? (
                                                         <img src={previewUrl} alt="Vista previa de la imagen" />
                                                     ) : (
-                                                        <p>Arrastra aqui la imagen de la actividad o haz click para añadir una.</p>
+                                                        <p>Arrastra aquí la imagen de la actividad o haz clic para añadir una.</p>
                                                     )}
                                                 </div>
                                             )}
@@ -216,6 +217,7 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                 <div className="mb-3">
                                     <BootstrapForm.Label htmlFor="description">Descripción:</BootstrapForm.Label>
                                     <Field
+                                        id="description" // Added id attribute
                                         name="description"
                                         as="textarea"
                                         className="form-control"
@@ -232,6 +234,7 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                     <div className="mb-3">
                                         <BootstrapForm.Label htmlFor="startDate">Fecha de inicio:</BootstrapForm.Label>
                                         <DatePicker
+                                            id="startDate" // Added id attribute
                                             selected={values.startDate}
                                             onChange={(date) =>
                                                 void setFieldValue('startDate', date).then(() =>
@@ -254,9 +257,11 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                             <ErrorMessage name="startDate" component="div" />
                                         </ErrorContainer>
                                     </div>
+
                                     <div className="mb-3">
                                         <BootstrapForm.Label htmlFor="endDate">Fecha de fin:</BootstrapForm.Label>
                                         <DatePicker
+                                            id="endDate" // Added id attribute
                                             selected={values.endDate}
                                             onChange={(date) =>
                                                 void setFieldValue('endDate', date).then(() =>
@@ -281,8 +286,14 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                 </DateWrapper>
 
                                 <div className="mb-3">
-                                    <BootstrapForm.Label htmlFor="state">Categoría:</BootstrapForm.Label>
-                                    <Field name="category" as="select" className="form-control" aria-label="Categoría de la actividad">
+                                    <BootstrapForm.Label htmlFor="category">Categoría:</BootstrapForm.Label>
+                                    <Field
+                                        id="category" // Added id attribute
+                                        name="category"
+                                        as="select"
+                                        className="form-control"
+                                        aria-label="Categoría de la actividad"
+                                    >
                                         {Object.values(ActivityCategory).map((category, index) => (
                                             <option value={category} key={index}>
                                                 {category}
