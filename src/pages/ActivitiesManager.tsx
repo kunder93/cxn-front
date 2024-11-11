@@ -5,7 +5,6 @@ import { IActivityWithImageUrl } from 'components/Activities/Types'
 import { useCallback, useEffect, useState } from 'react'
 import { PiPlusSquareFill } from 'react-icons/pi'
 import { ACTIVITIES_URL } from 'resources/server_urls'
-import { useAppSelector } from 'store/hooks'
 import styled from 'styled-components'
 
 const AddActivityIcon = styled(PiPlusSquareFill)`
@@ -22,7 +21,6 @@ const AddActivityIcon = styled(PiPlusSquareFill)`
 const ActivitiesManager = () => {
     const [activities, setActivities] = useState<IActivityWithImageUrl[]>([])
     const [showModal, setShowModal] = useState(false)
-    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
 
     // Function to add a new activity
     const addActivity = (activity: IActivityWithImageUrl) => {
@@ -34,8 +32,7 @@ const ActivitiesManager = () => {
         try {
             const response = await axios.get(ACTIVITIES_URL, {
                 headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${userJwt}`
+                    'Content-Type': 'application/json'
                 }
             })
 
@@ -52,7 +49,7 @@ const ActivitiesManager = () => {
         } catch (error) {
             console.error('Failed to fetch activities:', error)
         }
-    }, [userJwt])
+    }, [])
 
     useEffect(() => {
         void fetchActivities()
