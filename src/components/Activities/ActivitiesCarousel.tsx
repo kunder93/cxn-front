@@ -26,6 +26,18 @@ const SwiperSlideStyled = styled(SwiperSlide)`
     padding-top: 1.5em;
 `
 
+const NoActivitiesBox = styled.div`
+    background-color: aliceblue;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0.05, 0.05, 0, 0.2);
+    padding-bottom: 1em;
+    padding-top: 1em;
+    margin-top: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
+
 interface ActivitiesCarouselProps {
     activitiesList: IActivityWithImageUrl[]
 }
@@ -37,7 +49,11 @@ const ActivitiesCarousel: React.FC<ActivitiesCarouselProps> = ({ activitiesList 
         setActivities(activitiesList)
     }, [activitiesList])
 
-    return (
+    return activities.length === 0 ? (
+        <NoActivitiesBox>
+            <h2>No hay actividades disponibles</h2>
+        </NoActivitiesBox>
+    ) : (
         <Wrapper id="activities-carousel">
             <Swiper
                 slidesPerView={1}
