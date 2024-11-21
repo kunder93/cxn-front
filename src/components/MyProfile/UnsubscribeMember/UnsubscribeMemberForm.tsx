@@ -103,10 +103,16 @@ const UnsubscribeMemberForm = ({ formikRef, userEmail }: UnsubscribeMemberFormPr
                         <Row>
                             <Col>
                                 <FormGroup>
-                                    <FormLabel>
+                                    <FormLabel htmlFor="currentPassword">
                                         <strong>Contraseña actual:</strong>
                                     </FormLabel>
-                                    <Field as={StyledFormControl} type="password" name="currentPassword" autoComplete="current-password" />
+                                    <Field
+                                        as={StyledFormControl}
+                                        type="password"
+                                        name="currentPassword"
+                                        id="currentPassword" // Add an id here
+                                        autoComplete="current-password"
+                                    />
                                     <StyledErrorMessage name="currentPassword" component="div" />
                                 </FormGroup>
                             </Col>
@@ -114,10 +120,16 @@ const UnsubscribeMemberForm = ({ formikRef, userEmail }: UnsubscribeMemberFormPr
                         <Row>
                             <Col>
                                 <FormGroup>
-                                    <FormLabel>
+                                    <FormLabel htmlFor="confirmCurrentPassword">
                                         <strong>Repite la contraseña actual:</strong>
                                     </FormLabel>
-                                    <Field as={StyledFormControl} type="password" name="confirmCurrentPassword" autoComplete="current-password" />
+                                    <Field
+                                        as={StyledFormControl}
+                                        type="password"
+                                        name="confirmCurrentPassword"
+                                        id="confirmCurrentPassword" // Add an id here
+                                        autoComplete="current-password"
+                                    />
                                     <StyledErrorMessage name="confirmCurrentPassword" component="div" />
                                 </FormGroup>
                             </Col>
