@@ -2,17 +2,14 @@ import React from 'react'
 import { Formik, Form, Field, ErrorMessage, FormikProps } from 'formik'
 import styled from 'styled-components'
 import { Container, Row, Col, Form as BootstrapForm, FormGroup, FormLabel, FormControl } from 'react-bootstrap'
-import UnsubscribeMemberResultAlert from './UnsubscribeMemberResultAlert'
-
-export interface UnsubscribeMemberFormValues {
-    currentPassword: string
-    confirmCurrentPassword: string
-}
-
-export interface UnsubscribeMemberFormProps {
-    formikRef: React.RefObject<FormikProps<UnsubscribeMemberFormValues>>
-    userEmail: string
-}
+import axios, { AxiosError } from 'axios'
+import { useAppDispatch, useAppSelector } from 'store/hooks'
+import { UNSUBSCRIBE_URL } from 'resources/server_urls'
+import { useNotificationContext } from 'components/Common/NotificationContext'
+import { NotificationType } from 'components/Common/hooks/useNotification'
+import { useNavigate } from 'react-router'
+import { removeJwt } from 'store/slices/user'
+import { ROUTES } from 'resources/routes-constants'
 
 const StyledErrorMessage = styled(ErrorMessage)`
     color: red;
@@ -28,14 +25,58 @@ const StyledFormContainer = styled(Container)`
 `
 
 const StyledFormControl = styled(FormControl)`
-    width: 100%; /* Asegura que el FormControl ocupe el 100% del ancho */
+    width: 100%;
 `
 
-const UnsubscribeMemberForm = ({ formikRef, userEmail }: UnsubscribeMemberFormProps): JSX.Element => {
-    const [visibleAlert, setVisibleAlert] = React.useState(false)
+export interface UnsubscribeMemberFormValues {
+    currentPassword: string
+    confirmCurrentPassword: string
+}
 
-    const handleSubmit = () => {
-        setVisibleAlert(true)
+export interface UnsubscribeMemberFormProps {
+    formikRef: React.RefObject<FormikProps<UnsubscribeMemberFormValues>>
+    userEmail: string
+}
+
+const UnsubscribeMemberForm = ({ formikRef, userEmail }: UnsubscribeMemberFormProps): JSX.Element => {
+    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
+    const { showNotification } = useNotificationContext()
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
+
+    const logoutHandler = () => {
+        dispatch(removeJwt())
+        navigate(ROUTES.HOMEPAGE_ROUTE)
+    }
+
+    const handleSubmit = (
+        resetForm: () => void, // Accept resetForm as a parameter
+        setSubmitting: (isSubmitting: boolean) => void // To manage the form's submission state
+    ) => {
+        axios
+            .patch(
+                UNSUBSCRIBE_URL,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${userJwt}` // Include the JWT in the Authorization header
+                    }
+                }
+            )
+            .then(() => {
+                // Handle successful response (optional)
+                showNotification('Se ha dado de baja correctamente. ', NotificationType.Success)
+                resetForm()
+                logoutHandler()
+            })
+            .catch((err) => {
+                const error = err as AxiosError
+                // Handle errors
+                showNotification('Error: ' + error.message, NotificationType.Error)
+            })
+            .finally(() => {
+                setSubmitting(false) // Ensure the submission state is reset
+            })
     }
 
     return (
@@ -52,9 +93,11 @@ const UnsubscribeMemberForm = ({ formikRef, userEmail }: UnsubscribeMemberFormPr
                     }
                     return errors
                 }}
-                onSubmit={handleSubmit}
+                onSubmit={(_, { resetForm, setSubmitting }) => {
+                    handleSubmit(resetForm, setSubmitting) // Pass resetForm and setSubmitting to handleSubmit
+                }}
             >
-                {({ values }) => (
+                {() => (
                     <BootstrapForm as={Form}>
                         <Field type="hidden" name="email" value={userEmail} readOnly autoComplete="username" />
                         <Row>
@@ -79,13 +122,6 @@ const UnsubscribeMemberForm = ({ formikRef, userEmail }: UnsubscribeMemberFormPr
                                 </FormGroup>
                             </Col>
                         </Row>
-                        {visibleAlert && (
-                            <UnsubscribeMemberResultAlert
-                                visibleParam={visibleAlert}
-                                closeFunction={setVisibleAlert}
-                                formData={{ email: userEmail, password: values.currentPassword }}
-                            />
-                        )}
                     </BootstrapForm>
                 )}
             </Formik>
