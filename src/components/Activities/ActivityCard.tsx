@@ -78,7 +78,6 @@ const imageSrcSelector = (activity: IActivityWithImageUrl) => {
             case ActivityCategory.INFORMAL:
                 return 'genericImageSourceForInformal'
             case ActivityCategory.OTRO:
-                return 'genericImageSourceForOtro'
             default:
                 return 'genericImageSourceForOtro'
         }
@@ -98,9 +97,8 @@ const getBadgeVariant = (category: ActivityCategory) => {
         case ActivityCategory.INFORMAL:
             return 'info' // Teal for informal activities
         case ActivityCategory.OTRO:
-            return 'secondary' // Gray for other
         default:
-            return 'secondary' // Default gray
+            return 'secondary' // Default gray for other or unknown
     }
 }
 

@@ -1,6 +1,42 @@
-node_modules
-Dockerfile
-.git
-.gitignore
-.dockerignore
+# Ignorar archivos y carpetas del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Ignorar dependencias locales que no sean necesarias para la construcción
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Ignorar archivos y carpetas de configuración de entornos locales
 .env
+.env.local
+.env.*.local
+
+# Ignorar archivos de construcción y distribución previos
+build/
+dist/
+coverage/
+*.tgz
+*.zip
+
+# Archivos generados por IDEs y editores
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Certificados locales si no estás copiando directamente a la imagen
+certificates/
+
+# Archivos de pruebas y documentación
+test/
+tests/
+docs/
+
+# Archivos generados por Nginx o el servidor
+*.pem
+*.key
+
+# Archivos temporales y de caché
+.cache/
+tmp/

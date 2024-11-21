@@ -28,8 +28,6 @@ export const CHANGE_MEMBER_EMAIL_URL = BASE_URL + 'api/user/changeEmail'
 
 export const CHANGE_MEMBER_PASSWORD_URL = BASE_URL + 'api/user/changePassword'
 
-export const UNSUBSCRIBE_MEMBER_URL = BASE_URL + 'api/user/unsubscribe'
-
 export const CHESS_QUESTION_URL = BASE_URL + 'api/chessQuestion'
 
 export const CHESS_QUESTION_CHANGE_SEEN_STATE = CHESS_QUESTION_URL + '/changeChessQuestionHasSeen'
@@ -65,3 +63,5 @@ export const CONFIR_CANCEL_FEDERATE_URL = BASE_URL + 'api/user/federate'
 export const FEDERATE_CHANGE_AUTORENEW_URL = BASE_URL + 'api/user/federate/changeAutoRenew'
 
 export const ACTIVITIES_URL = BASE_URL + 'api/activities'
+
+export const UNSUBSCRIBE_URL = BASE_URL + 'api/auth/unsubscribe'
