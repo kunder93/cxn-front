@@ -1,13 +1,13 @@
 import React from 'react'
-import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik'
+import { Formik, Form, Field, ErrorMessage, FormikHelpers, FieldProps } from 'formik'
 import * as Yup from 'yup'
 import axios, { AxiosError } from 'axios'
 import BootstrapForm from 'react-bootstrap/Form'
 import { Button, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
 import { CHESS_QUESTION_URL } from '../../resources/server_urls'
-import useNotification, { NotificationType } from './hooks/useNotification'
-import FloatingNotificationA from './FloatingNotificationA'
+import { NotificationType } from './hooks/useNotification'
+import { useNotificationContext } from './NotificationContext'
 
 const ErrorMessageStyled = styled(ErrorMessage)`
     color: red;
@@ -19,11 +19,63 @@ const FiledTittle = styled(BootstrapForm.Label)`
 `
 
 const FormTitleStyled = styled.span`
-    font-size: 190%;
+    font-size: 1.9em;
     text-align: left;
     display: block;
     padding-bottom: 1em;
-    font-weight: bold;
+
+    @media (max-width: 576px) {
+        font-size: 1.5em; /* Smaller font size on mobile */
+    }
+`
+
+const FormWrapper = styled.section`
+    max-width: 600px;
+    margin: auto;
+    padding: 1em;
+    form {
+        padding-top: 0;
+        margin-top: 0 !important;
+    }
+
+    @media (max-width: 576px) {
+        padding: 0.5em;
+        max-width: 100%;
+        form {
+            padding: 0;
+        }
+    }
+`
+
+const TextInputField: React.FC<{ id: string; name: string; label: string; placeholder?: string; type?: string }> = ({
+    id,
+    name,
+    label,
+    placeholder,
+    type = 'text'
+}) => (
+    <BootstrapForm.Group className="mb-3">
+        <FiledTittle htmlFor={id}>{label}:</FiledTittle>
+        <Field name={name}>
+            {({ field, meta }: FieldProps) => (
+                <>
+                    <BootstrapForm.Control {...field} type={type} id={id} placeholder={placeholder} isInvalid={meta.touched && !!meta.error} />
+                    {meta.touched && meta.error && (
+                        <ErrorMessageStyled name={name}>{(msg) => <div className="invalid-feedback">{msg}</div>}</ErrorMessageStyled>
+                    )}
+                </>
+            )}
+        </Field>
+    </BootstrapForm.Group>
+)
+
+const StyledButton = styled(Button)`
+    width: 100%;
+    margin-top: 1em;
+
+    @media (min-width: 576px) {
+        width: auto;
+    }
 `
 
 const validationSchema = Yup.object().shape({
@@ -51,22 +103,9 @@ interface MoreInfoFormProps {
     category: string
 }
 
-const TextInputField: React.FC<{ id: string; name: string; label: string; placeholder?: string; type?: string }> = ({
-    id,
-    name,
-    label,
-    placeholder,
-    type = 'text'
-}) => (
-    <BootstrapForm.Group className="mb-3">
-        <FiledTittle htmlFor={id}>{label}:</FiledTittle>
-        <Field as={BootstrapForm.Control} type={type} id={id} name={name} placeholder={placeholder} />
-        <ErrorMessageStyled name={name} component="div" className="invalid-feedback" />
-    </BootstrapForm.Group>
-)
-
 const MoreInfoForm = ({ initialTopic, formTitle, category }: MoreInfoFormProps): JSX.Element => {
-    const { notification, showNotification, hideNotification } = useNotification()
+    const { showNotification } = useNotificationContext()
+
     const initialValues: FormData = {
         texto: '',
         asunto: initialTopic,
@@ -103,20 +142,21 @@ const MoreInfoForm = ({ initialTopic, formTitle, category }: MoreInfoFormProps):
     }
 
     return (
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit} validateOnMount={true} validateOnChange={true}>
-            {({ isSubmitting, isValid, dirty }) => (
-                <Form className="mt-4">
-                    <FormTitleStyled>{formTitle}</FormTitleStyled>
-                    <TextInputField id="asunto" name="asunto" label="Asunto" placeholder={initialTopic} />
-                    <TextInputField id="email" name="email" label="Email" placeholder="Ingrese su email para responderle." type="email" />
-                    <TextInputField id="texto" name="texto" label="Mensaje" placeholder="Ingrese su mensaje" />
-                    <Button variant="success" type="submit" disabled={isSubmitting || !isValid || !dirty}>
-                        {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Enviar'}
-                    </Button>
-                    <FloatingNotificationA notification={notification} hideNotification={hideNotification} />
-                </Form>
-            )}
-        </Formik>
+        <FormWrapper>
+            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit} validateOnMount validateOnChange validateOnBlur>
+                {({ isSubmitting, isValid, dirty }) => (
+                    <Form className="mt-4">
+                        <FormTitleStyled>{formTitle}</FormTitleStyled>
+                        <TextInputField id="asunto" name="asunto" label="Asunto" placeholder={initialTopic} />
+                        <TextInputField id="email" name="email" label="Email" placeholder="Ingrese su email para responderle." type="email" />
+                        <TextInputField id="texto" name="texto" label="Mensaje" placeholder="Ingrese su mensaje" />
+                        <StyledButton variant="success" type="submit" disabled={isSubmitting || !isValid || !dirty}>
+                            {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Enviar'}
+                        </StyledButton>
+                    </Form>
+                )}
+            </Formik>
+        </FormWrapper>
     )
 }
 

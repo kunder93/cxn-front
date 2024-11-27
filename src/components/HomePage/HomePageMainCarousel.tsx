@@ -7,12 +7,10 @@ const carouselImageSrc1 = '/Principal/HomePageHeader.avif'
 const PictureContainer = styled.div`
     width: 100%;
     overflow: hidden; /* Evita que el contenido adicional desborde */
-
 `
 
 const MainPicture = styled.picture`
     width: 100%;
-    
 `
 
 const StyledImage = styled(Image)`
@@ -25,7 +23,7 @@ const StyledImage = styled(Image)`
     }
 `
 
-const HomePageMainCarousel: React.FC = () => {
+const HomePageHeaderImage: React.FC = () => {
     return (
         <PictureContainer>
             <MainPicture>
@@ -38,4 +36,4 @@ const HomePageMainCarousel: React.FC = () => {
     )
 }
 
-export default HomePageMainCarousel
+export default HomePageHeaderImage

@@ -33,7 +33,7 @@ const NoFederateInfo = ({ setFederateState }: NoFederateInfoProps): JSX.Element 
         <section>
             <p>
                 Fedérate para poder competir en torneos oficiales Gallegos, Nacionales e Internacionales.{' '}
-                <strong>Si no tienes pensado jugar, no te federes, por favor.</strong>
+                <strong>El coste de federarse es de 15€ para los mayores de 14 años.</strong>
             </p>
             <p>
                 <strong>Condiciones:</strong> Al federarte, tenemos que compartir información personal tuya con las federaciones tanto la gallega{' '}

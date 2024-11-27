@@ -63,7 +63,7 @@ const LoginForm = (): JSX.Element => {
             if (axiosError.response) {
                 setAlertMessage(axiosError.response.data.content)
             } else {
-                setAlertMessage('Error: algo inesperado. Recarga o inténtalo más tarde.')
+                setAlertMessage('Error: Recarga o inténtalo más tarde.')
             }
         } finally {
             actions.setSubmitting(false)

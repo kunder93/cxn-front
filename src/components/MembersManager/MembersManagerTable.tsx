@@ -8,6 +8,8 @@ import ChangeMemberRolesModal from './ChangeMemberRole/ChangeMemberRolesModal'
 import { KindMember, UserProfile, UserRole } from 'store/types/userTypes'
 import styled from 'styled-components'
 import { renderKindMember, renderUserRoles } from '../../utility/userUtilities'
+import { BsFillTrash3Fill } from 'react-icons/bs'
+import DeleteMemberModal from './ChangeMemberRole/DeleteMemberModal'
 
 const TableFilterContainer = styled.div`
     display: flex;
@@ -40,7 +42,8 @@ const ActionButtons: React.FC<{
     onInfoClick: (row: Row<UserProfile>) => void
     onEditKindClick: (row: Row<UserProfile>) => void
     onEditRoleClick: (row: Row<UserProfile>) => void
-}> = ({ row, onInfoClick, onEditKindClick, onEditRoleClick }) => (
+    onDeleteButtonClickHandler: (row: Row<UserProfile>) => void
+}> = ({ row, onInfoClick, onEditKindClick, onEditRoleClick, onDeleteButtonClickHandler }) => (
     <ActionButtonsContainer>
         <Button variant="info" onClick={() => onInfoClick(row)}>
             <InfoCircle aria-label="Datos completos" title="Información" />
@@ -50,6 +53,9 @@ const ActionButtons: React.FC<{
         </Button>
         <Button variant="info" onClick={() => onEditRoleClick(row)}>
             <Gear aria-label="Modificar rol del socio" title="Editar roles" />
+        </Button>
+        <Button variant="danger" onClick={() => onDeleteButtonClickHandler(row)}>
+            <BsFillTrash3Fill />
         </Button>
     </ActionButtonsContainer>
 )
@@ -63,6 +69,7 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
     const [memberInfoModal, setMemberInfoModal] = useState(false)
     const [changeKindMemberModal, setChangeKindMemberModal] = useState(false)
     const [changeMemberRoleModal, setChangeMemberRoleModal] = useState(false)
+    const [deleteMemberModal, setDeleteMemberModal] = useState(false)
     const [selectedRow, setSelectedRow] = useState<UserProfile | undefined>()
     const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null)
 
@@ -91,6 +98,11 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
         },
         [selectedRowIndex]
     )
+
+    const deleteRow = useCallback((email: string) => {
+        setData((prevData) => prevData.filter((user) => user.email !== email))
+        setDeleteMemberModal(false) // Close the modal after deletion
+    }, [])
 
     const columns: Column<UserProfile>[] = useMemo(
         () => [
@@ -129,6 +141,15 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
         [data]
     )
 
+    const DeleteMemberButtonClickHandler = useCallback(
+        (row: Row<UserProfile>) => {
+            setSelectedRow(data[row.index])
+            setSelectedRowIndex(row.index)
+            setDeleteMemberModal(true)
+        },
+        [data]
+    )
+
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, preGlobalFilteredRows, setGlobalFilter, state } = useTable<UserProfile>(
         { columns, data },
         useGlobalFilter,
@@ -146,6 +167,7 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
                             onInfoClick={InfoButtonClickHandler}
                             onEditKindClick={EditKindMemberButtonClickHandler}
                             onEditRoleClick={EditMemberRoleButtonClickHandler}
+                            onDeleteButtonClickHandler={DeleteMemberButtonClickHandler}
                         />
                     )
                 }
@@ -225,6 +247,18 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
                         memberName={selectedRow?.name ?? ''}
                         memberRoles={selectedRow?.userRoles ?? []}
                         aria-label="Modal de cambio de roles de socio"
+                    />
+                    <DeleteMemberModal
+                        show={deleteMemberModal}
+                        updateMemberRoles={updateMemberRoles}
+                        onHide={() => setDeleteMemberModal(false)}
+                        memberFirstSurname={selectedRow?.firstSurname ?? ''}
+                        memberSecondSurname={selectedRow?.secondSurname ?? ''}
+                        memberEmail={selectedRow?.email ?? ''}
+                        memberName={selectedRow?.name ?? ''}
+                        memberRoles={selectedRow?.userRoles ?? []}
+                        aria-label="Modal para borrar definitivamente un socio."
+                        onDeleteSuccess={deleteRow}
                     />
                 </>
             )}
