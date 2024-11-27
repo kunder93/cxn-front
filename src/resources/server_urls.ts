@@ -65,3 +65,5 @@ export const FEDERATE_CHANGE_AUTORENEW_URL = BASE_URL + 'api/user/federate/chang
 export const ACTIVITIES_URL = BASE_URL + 'api/activities'
 
 export const UNSUBSCRIBE_URL = BASE_URL + 'api/auth/unsubscribe'
+
+export const DELETE_USER_URL = BASE_URL + 'api/user'
