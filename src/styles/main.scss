@@ -1,0 +1,26 @@
+@use './_variables' as vars;
+@use './_mixins';
+@use '~bootstrap/scss/bootstrap';
+
+* {
+  box-sizing: border-box;
+  outline: none;
+}
+
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  color: vars.$main-text-color;
+  background-color: vars.$main-background-color;
+  font-size: vars.$main-text-size;
+  font-family: 'Montserrat', sans-serif !important;
+  padding-bottom: 4rem; // Adjust this value if necessary for the Navbar height
+}
+
+code {
+  // Add styles for code elements here if needed
+}

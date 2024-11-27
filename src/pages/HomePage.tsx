@@ -1,10 +1,10 @@
 import styled from 'styled-components'
 import { MainContainerStyled, mainContentContainerBackgroundColor } from '../components/Common/CommonStyles'
 import HomePageCard, { ButtonOptions, HomePageCardProps } from '../components/HomePage/HomePageCard'
-import HomePageMainCarousel from '../components/HomePage/HomePageMainCarousel'
 import MoreInfoForm from '../components/Common/MoreInfoForm'
 import MembersBenefits, { MembersBenefitOption } from '../components/HomePage/MembersBenefits'
 import usePageTitle from '../components/Common/hooks/usePageTitle'
+import HomePageHeaderImage from '../components/HomePage/HomePageMainCarousel'
 
 const pageMainTitle = 'Circulo Xadrez Narón te da la bienvenida !'
 const freeActivitiesTitle = 'Prueba nuestras actividades de forma gratuita sin ser soci@:'
@@ -14,14 +14,13 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
     {
         imageSrc: '/Principal/NinosTorneo_optimizada.avif',
         imageAlt: 'Imagen clases niños',
-        sources: [],
         cardTitle: 'Clases para niños',
         cardText: ['Disponibles en varios horarios y lugares.', ' Desde 5 hasta 18 años.'],
         buttonProps: [
             {
-                buttonText: 'Pide hasta 1 mes de prueba',
+                buttonText: 'Solicita 1 mes de prueba',
                 buttonAction: ButtonOptions.MODAL,
-                component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'CLASES PARA NIÑOS'} category={'CLASES NIÑOS'} />
+                component: <MoreInfoForm initialTopic={'PRUEBA CLASES NIÑOS'} formTitle={'PRUEBA CLASES NIÑOS'} category={'CLASES NIÑOS'} />
             }
         ],
         modalAriaLabel: 'Clases niños'
@@ -29,7 +28,6 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
     {
         imageSrc: '/Principal/TorneoTablerosPiezasColocadas_optimizada.avif',
         imageAlt: 'Imagen torneo niños',
-        sources: [],
         cardTitle: 'Torneos informales',
         cardText: ['Torneos para cualquiera !', 'Sólo apuntarse y jugar.'],
         buttonProps: [
@@ -51,12 +49,11 @@ const freeAticivitiesCardsData: HomePageCardProps[] = [
     {
         imageSrc: '/Principal/MayoresClaseOptimizada.avif',
         imageAlt: 'Imagen clase adultos',
-        sources: [],
         cardTitle: 'Clases para adultos',
         cardText: ['Desde los 18 años.', ' Disponibles en varios horarios y lugares.'],
         buttonProps: [
             {
-                buttonText: 'Pide hasta 1 mes de prueba',
+                buttonText: 'Solicita 1 mes de prueba',
                 buttonAction: ButtonOptions.MODAL,
                 component: <MoreInfoForm initialTopic={'PRUEBA CLASES PARA NIÑOS'} formTitle={'CLASES PARA ADULTOS'} category={'CLASES ADULTOS'}></MoreInfoForm>
             }
@@ -69,7 +66,6 @@ const memberActivitiesCardsData: HomePageCardProps[] = [
     {
         imageSrc: '/Principal/PremiosGallegoVeteranos_optimizada.avif',
         imageAlt: 'Recibiendo premios campoeonato gallego.',
-        sources: [],
         cardTitle: 'Torneos y competición federada',
         cardText: ['Participa en torneos y competición oficial.', 'Enfréntate a los mejores, supera tus límites.'],
         buttonProps: [
@@ -84,7 +80,6 @@ const memberActivitiesCardsData: HomePageCardProps[] = [
     {
         imageSrc: '/Principal/LibrosAjedrez_optimizada.avif',
         imageAlt: 'Estantería con libros de ajedrez.',
-        sources: [],
         cardTitle: 'Material de ajedrez',
         cardText: ['Acceso a multitud de libros, revistas, programas, piezas, relojes, etc', 'Pide lo que creas que falte, nosotros lo conseguimos.'],
         buttonProps: [
@@ -99,7 +94,6 @@ const memberActivitiesCardsData: HomePageCardProps[] = [
     {
         imageSrc: '/Principal/ClaseAdultos.avif',
         imageAlt: '4 Personas analizando posición ajedrez.',
-        sources: [],
         cardTitle: 'Tutorización y seguimiento',
         cardText: [
             'Profesionales capacitados para ayudarte en tu progreso y mostrarte los puntos mejorables y las tecnicas necesarias para alcanzar tus metas.'
@@ -117,11 +111,11 @@ const memberActivitiesCardsData: HomePageCardProps[] = [
 const [activity1, activity2, activity3] = freeAticivitiesCardsData
 const [memberActivity1, memberActivity2, memberActivity3] = memberActivitiesCardsData
 
-const StyledMainCarouselSection = styled.section`
+const HeaderImageSection = styled.section`
     grid-area: mainCarousel;
 `
 
-const MainContentStyledSection = styled.section`
+const MainSection = styled.section`
     grid-area: main-container-section;
     display: grid;
     grid-template-columns: auto;
@@ -136,7 +130,7 @@ const MainContentStyledSection = styled.section`
     color: black;
 `
 
-const MainContentHeader = styled.header`
+const MainSectionHeader = styled.header`
     grid-area: section-header;
 `
 const PageContentTitle = styled.h1`
@@ -271,16 +265,16 @@ const MemberActivitiesArticle3 = styled(MemberActivitiesArticle)`
 `
 
 const HomePage = (): JSX.Element => {
-    usePageTitle('CXN Principal')
+    usePageTitle('Xadrez Narón')
     return (
         <MainContainerStyled>
-            <StyledMainCarouselSection>
-                <HomePageMainCarousel />
-            </StyledMainCarouselSection>
-            <MainContentStyledSection>
-                <MainContentHeader>
+            <HeaderImageSection>
+                <HomePageHeaderImage />
+            </HeaderImageSection>
+            <MainSection>
+                <MainSectionHeader>
                     <PageContentTitle>{pageMainTitle}</PageContentTitle>
-                </MainContentHeader>
+                </MainSectionHeader>
                 <ClubFreeActivitiesSection>
                     <FreeActivitiesHeader>
                         <FreeActivitiesTittle>{freeActivitiesTitle}</FreeActivitiesTittle>
@@ -309,7 +303,7 @@ const HomePage = (): JSX.Element => {
                         <HomePageCard {...memberActivity3}></HomePageCard>
                     </MemberActivitiesArticle3>
                 </ClubMembersActivitiesSection>
-            </MainContentStyledSection>
+            </MainSection>
         </MainContainerStyled>
     )
 }

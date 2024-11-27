@@ -2,7 +2,6 @@ import axios, { AxiosRequestConfig, Method, AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
 import {
     CHESS_QUESTION_URL,
-    UNSUBSCRIBE_MEMBER_URL,
     CHANGE_MEMBER_PASSWORD_URL,
     CHANGE_MEMBER_EMAIL_URL,
     CHANGE_MEMBER_ROLES_URL,
@@ -18,7 +17,6 @@ import { ChangeKindMemberValues } from '../components/MembersManager/ChangeKindM
 import { ChangeMemberRolesValues } from '../components/MembersManager/ChangeMemberRole/ChangeMemberRolesForm'
 import { ChangeEmailAxiosValues } from '../components/MyProfile/ChangeEmail/ChangeUserEmailResultAlert'
 import { ChangePasswordAxiosValues } from '../components/MyProfile/ChangePassword/ChangeUserPasswordResultAlert'
-import { UnsubscribeMemberAxiosValues } from '../components/MyProfile/UnsubscribeMember/UnsubscribeMemberResultAlert'
 import { IBook, ICountryData, IInvoice, IPaymentSheet, ISubCountryData, ITournamentParticipant, IUsersListData } from '../components/Types/Types'
 import { UserProfile } from '../store/types/userTypes'
 import { useAppSelector } from './../store/hooks'
@@ -112,10 +110,6 @@ export const useAxiosGetCompanies = (url: string) => {
 
 export const useAxiosGetChessQuestions = () => {
     return useAxios<IChessQuestionsList>(CHESS_QUESTION_URL)
-}
-
-export const useAxiosUnsubscribeMember = (payload: UnsubscribeMemberAxiosValues) => {
-    return useAxios<UserProfile, UnsubscribeMemberAxiosValues>(UNSUBSCRIBE_MEMBER_URL, 'DELETE', payload)
 }
 
 export const useAxiosChangeUserPassword = (payload: ChangePasswordAxiosValues) => {

@@ -7,7 +7,7 @@ import { CompanyTableProps, ICompany } from './Types'
 import axios from 'axios'
 import styled from 'styled-components'
 import { FloatingNotificationContainer } from '../../components/Common/FloatingNotificationA'
-import { useAppSelector } from '../../store/hooks'  // Asumiendo que tienes este hook para acceder al estado de la aplicación
+import { useAppSelector } from '../../store/hooks' // Asumiendo que tienes este hook para acceder al estado de la aplicación
 
 const TableFilterContainer = styled.div`
     display: flex;
@@ -66,7 +66,7 @@ const FloatingNotification: React.FC<FloatingNotificationProps> = ({ message, va
 const CompanyTable: React.FC<CompanyTableProps> = ({ data: initialData }) => {
     const [data, setData] = useState<ICompany[]>(useMemo(() => initialData, [initialData]))
     const [notification, setNotification] = useState<{ message: string; variant: string } | null>(null)
-    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)  // Obtener JWT del estado
+    const userJwt = useAppSelector<string | null>((state) => state.users.jwt) // Obtener JWT del estado
 
     useEffect(() => {
         setData(initialData)
@@ -93,7 +93,7 @@ const CompanyTable: React.FC<CompanyTableProps> = ({ data: initialData }) => {
                 // Agregar token JWT a la cabecera de la solicitud
                 await axios.delete(`${COMPANIES_URL}/${companyToDelete.nif}`, {
                     headers: {
-                        'Authorization': `Bearer ${userJwt}`,  // Token JWT
+                        Authorization: `Bearer ${userJwt}`, // Token JWT
                         'Content-Type': 'application/json'
                     }
                 })
@@ -104,11 +104,11 @@ const CompanyTable: React.FC<CompanyTableProps> = ({ data: initialData }) => {
                 if (axios.isAxiosError(error) && error.response?.data) {
                     setNotification({ message: 'Error: no hay respuesta del servidor.', variant: 'danger' })
                 } else {
-                    setNotification({ message: 'Error: algo inesperado. Recarga o inténtalo más tarde.', variant: 'danger' })
+                    setNotification({ message: 'Error: Recarga o inténtalo más tarde.', variant: 'danger' })
                 }
             }
         },
-        [data, userJwt]  // userJwt incluido en las dependencias
+        [data, userJwt] // userJwt incluido en las dependencias
     )
 
     const handleDeleteButtonClickWrapper = (rowIndex: number) => {
@@ -144,9 +144,9 @@ const CompanyTable: React.FC<CompanyTableProps> = ({ data: initialData }) => {
             ])
         }
     )
-    
+
     const globalFilterStatus = state.globalFilter as string | number | readonly string[] | undefined
-    
+
     return (
         <>
             <TableFilterContainer>
