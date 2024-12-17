@@ -10,7 +10,8 @@ import {
     GET_ALL_COUNTRIES_URL,
     GET_ALL_USERS_URL,
     GET_ALL_TOURNAMENT_PARTICIPANTS,
-    GET_ALL_USERS_PAYMENTS_URL
+    GET_ALL_USERS_PAYMENTS_URL,
+    GET_USER_PAYMENTS_URL
 } from '../resources/server_urls'
 import { ICompany } from '../components/Companies/Types'
 import { LoginFormValues } from '../components/LoginForm'
@@ -22,6 +23,7 @@ import {
     IBook,
     ICountryData,
     IInvoice,
+    IPaymentDetails,
     IPaymentSheet,
     ISubCountryData,
     ITournamentParticipant,
@@ -172,4 +174,8 @@ export const useAxiosGetInvoices = (url: string) => {
 
 export const useAxiosGetAllMembersPaymentsData = () => {
     return useAxios<IUsersListPaymentsData>(GET_ALL_USERS_PAYMENTS_URL)
+}
+
+export const useAxiosGetUserPayments = (userDni: string) => {
+    return useAxios<IPaymentDetails[]>(GET_USER_PAYMENTS_URL + userDni)
 }

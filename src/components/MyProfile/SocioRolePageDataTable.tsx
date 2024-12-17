@@ -11,6 +11,7 @@ import Image from 'react-bootstrap/Image'
 import PersonalImageButtonChanger from './PersonalImageButtonChanger'
 import { useAppSelector } from '../../store/hooks'
 import { PersonBoundingBox } from 'react-bootstrap-icons'
+import PaymentsManagerModal from './Payments/PaymentsManagerModal'
 
 const StyledContainer = styled(Container)`
     display: flex;
@@ -179,6 +180,9 @@ const SocioRolePageDataTable = (): JSX.Element => {
                         <Button onClick={() => openModal('unsubscribe')} variant="danger">
                             Darse de baja
                         </Button>
+                        <Button onClick={() => openModal('payments')} variant="info">
+                            Sección de pagos
+                        </Button>
                     </ButtonRow>
                 </ProfileActionButtonsContainer>
             </RightColumn>
@@ -204,6 +208,14 @@ const SocioRolePageDataTable = (): JSX.Element => {
                 show={modalType === 'unsubscribe'}
                 onHide={closeModal}
                 useremail={userProfile.email}
+                name={userProfile.name}
+                firstsurname={userProfile.firstSurname}
+                secondsurname={userProfile.secondSurname}
+            />
+            <PaymentsManagerModal
+                show={modalType === 'payments'}
+                onHide={closeModal}
+                userdni={userProfile.dni}
                 name={userProfile.name}
                 firstsurname={userProfile.firstSurname}
                 secondsurname={userProfile.secondSurname}
