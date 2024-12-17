@@ -67,3 +67,5 @@ export const ACTIVITIES_URL = BASE_URL + 'api/activities'
 export const UNSUBSCRIBE_URL = BASE_URL + 'api/auth/unsubscribe'
 
 export const DELETE_USER_URL = BASE_URL + 'api/user'
+
+export const GET_ALL_USERS_PAYMENTS_URL = BASE_URL + 'api/payments/getAll'

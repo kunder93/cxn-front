@@ -9,7 +9,8 @@ import {
     GET_SUBCOUNTRIES_URL,
     GET_ALL_COUNTRIES_URL,
     GET_ALL_USERS_URL,
-    GET_ALL_TOURNAMENT_PARTICIPANTS
+    GET_ALL_TOURNAMENT_PARTICIPANTS,
+    GET_ALL_USERS_PAYMENTS_URL
 } from '../resources/server_urls'
 import { ICompany } from '../components/Companies/Types'
 import { LoginFormValues } from '../components/LoginForm'
@@ -17,7 +18,16 @@ import { ChangeKindMemberValues } from '../components/MembersManager/ChangeKindM
 import { ChangeMemberRolesValues } from '../components/MembersManager/ChangeMemberRole/ChangeMemberRolesForm'
 import { ChangeEmailAxiosValues } from '../components/MyProfile/ChangeEmail/ChangeUserEmailResultAlert'
 import { ChangePasswordAxiosValues } from '../components/MyProfile/ChangePassword/ChangeUserPasswordResultAlert'
-import { IBook, ICountryData, IInvoice, IPaymentSheet, ISubCountryData, ITournamentParticipant, IUsersListData } from '../components/Types/Types'
+import {
+    IBook,
+    ICountryData,
+    IInvoice,
+    IPaymentSheet,
+    ISubCountryData,
+    ITournamentParticipant,
+    IUsersListData,
+    IUsersListPaymentsData
+} from '../components/Types/Types'
 import { UserProfile } from '../store/types/userTypes'
 import { useAppSelector } from './../store/hooks'
 
@@ -158,4 +168,8 @@ export const useAxiosGetBooks = (url: string) => {
 
 export const useAxiosGetInvoices = (url: string) => {
     return useAxios<InvoicesAxiosResponse>(url)
+}
+
+export const useAxiosGetAllMembersPaymentsData = () => {
+    return useAxios<IUsersListPaymentsData>(GET_ALL_USERS_PAYMENTS_URL)
 }

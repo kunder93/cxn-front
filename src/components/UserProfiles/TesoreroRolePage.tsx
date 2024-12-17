@@ -32,6 +32,11 @@ const sections: ProfileMenuSection[] = [
                 text: 'Ver listado socios',
                 section: ProfileSection.MembersManager,
                 buttonIndex: 0
+            },
+            {
+                text: 'Gestionar pagos socios',
+                section: ProfileSection.MembersPaymentsManager,
+                buttonIndex: 1
             }
         ]
     },
