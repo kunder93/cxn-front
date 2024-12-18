@@ -164,7 +164,13 @@ const SocioRolePageDataTable = (): JSX.Element => {
                     {isInitialProfileImage ? (
                         <PersonBoundingBox size={150} /> // Custom size for icon
                     ) : (
-                        <ProfileImage src={profileImage.stored ? profileImage.file : profileImage.url} alt="Imagen de perfil" rounded />
+                        <ProfileImage
+                            src={
+                                profileImage.stored ? profileImage.file : profileImage.url ? profileImage.url : 'User/ProfileImagesExample/NoProfileImage.avif'
+                            }
+                            alt="Imagen de perfil"
+                            rounded
+                        />
                     )}
                 </ProfileImageContainer>
 
