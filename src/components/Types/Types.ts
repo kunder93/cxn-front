@@ -135,22 +135,27 @@ export interface MyFormProps {
 // Enum for payment categories (matches PaymentsCategory in Java)
 export enum PaymentsCategory {
     FEDERATE_PAYMENT = 'FEDERATE_PAYMENT',
-    TOURNAMENT_PAYMENT = 'TOURNAMENT_PAYMENT'
-    // Add other categories as needed
+    MEMBERSHIP_PAYMENT = 'MEMBERSHIP_PAYMENT',
+    OTHER_PAYMENT = 'OTHER_PAYMENT'
 }
 
 // Enum for payment states (matches PaymentsState in Java)
 export enum PaymentsState {
     UNPAID = 'UNPAID',
     PAID = 'PAID',
-    PENDING = 'PENDING'
+    CANCELLED = 'CANCELLED'
     // Add other states as needed
 }
 
 // Interface for a single payment detail (matches PaymentDetails in Java)
 export interface IPaymentDetails {
-    amount: number // Matches BigDecimal in Java
+    id: string
+    title: string
+    description: string
     category: PaymentsCategory
+    amount: number
+    createdAt: string
+    paidAt: null | string
     state: PaymentsState
 }
 
