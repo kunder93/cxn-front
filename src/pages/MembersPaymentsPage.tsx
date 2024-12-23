@@ -20,12 +20,6 @@ const NoDataMessage = styled.p`
 
 export const MembersPaymentsPage = () => {
     const { data, error, loaded } = useAxiosGetAllMembersPaymentsData()
-    console.log('data:')
-    console.log(data)
-    console.log('error:')
-    console.log(error)
-    console.log('loaded:')
-    console.log(loaded)
 
     if (error) {
         return <ErrorMessage variant="danger">Error: {error.message ?? 'Ocurrió un error al cargar las preguntas.'}</ErrorMessage>
@@ -37,7 +31,7 @@ export const MembersPaymentsPage = () => {
     return (
         <>
             <Title>Gestión de pagos de los socios:</Title>
-            {data?.usersList ? <MembersPaymentsManagerTable data={data} /> : <NoDataMessage>No hay usuarios que mostrar.</NoDataMessage>}
+            {data ? <MembersPaymentsManagerTable data={data} /> : <NoDataMessage>No hay usuarios que mostrar.</NoDataMessage>}
         </>
     )
 }

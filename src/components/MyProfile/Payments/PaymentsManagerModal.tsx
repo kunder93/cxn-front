@@ -6,6 +6,7 @@ import { Button, Modal, ModalProps } from 'react-bootstrap'
 import { useTable, Column } from 'react-table'
 import styled from 'styled-components'
 import { useAxiosGetUserPayments } from 'utility/CustomAxios'
+import { formatCurrency, translatePaymentCategory, translatePaymentState } from 'utility/paymentsUtilities'
 
 const Title = styled.h1`
     font-size: 100%;
@@ -28,41 +29,6 @@ interface PaymentsManagerModalProps extends ModalProps {
 
 const PaymentsManagerModal = (props: PaymentsManagerModalProps): JSX.Element => {
     const { data, error, loaded } = useAxiosGetUserPayments(props.userdni)
-
-    const translatePaymentCategory = (category: PaymentsCategory): string => {
-        switch (category) {
-            case PaymentsCategory.FEDERATE_PAYMENT:
-                return 'Ficha federativa'
-            case PaymentsCategory.MEMBERSHIP_PAYMENT:
-                return 'Socio'
-            case PaymentsCategory.OTHER_PAYMENT:
-                return 'Otro'
-            default:
-                return 'Desconocido'
-        }
-    }
-
-    const translatePaymentState = (state: PaymentsState): string => {
-        switch (state) {
-            case PaymentsState.UNPAID:
-                return 'Pendiente'
-            case PaymentsState.PAID:
-                return 'Pagado'
-            case PaymentsState.CANCELLED:
-                return 'Cancelado'
-            default:
-                return 'Desconocido'
-        }
-    }
-    const formatCurrency = (amount: number): string =>
-        new Intl.NumberFormat('es-ES', {
-            style: 'currency',
-            currency: 'EUR',
-            minimumFractionDigits: 2
-        })
-            .format(amount)
-            .replace('€', '')
-            .trim()
 
     // Define las columnas para react-table
     const columns: Column<IPaymentDetails>[] = useMemo(
@@ -119,22 +85,37 @@ const PaymentsManagerModal = (props: PaymentsManagerModalProps): JSX.Element => 
                     ) : data && data.length > 0 ? (
                         <table {...getTableProps()} className="table table-striped">
                             <thead>
-                                {headerGroups.map((headerGroup) => (
-                                    <tr {...headerGroup.getHeaderGroupProps()}>
-                                        {headerGroup.headers.map((column) => (
-                                            <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                                        ))}
-                                    </tr>
-                                ))}
+                                {headerGroups.map((headerGroup) => {
+                                    const { key, ...restHeaderGroupProps } = headerGroup.getHeaderGroupProps()
+                                    return (
+                                        <tr key={key} {...restHeaderGroupProps}>
+                                            {headerGroup.headers.map((column) => {
+                                                const { key, ...restHeaderProps } = column.getHeaderProps()
+                                                return (
+                                                    <th key={key} {...restHeaderProps}>
+                                                        {column.render('Header')}
+                                                    </th>
+                                                )
+                                            })}
+                                        </tr>
+                                    )
+                                })}
                             </thead>
+
                             <tbody {...getTableBodyProps()}>
                                 {rows.map((row) => {
                                     prepareRow(row)
+                                    const { key, ...restRowProps } = row.getRowProps()
                                     return (
-                                        <tr {...row.getRowProps()}>
-                                            {row.cells.map((cell) => (
-                                                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                            ))}
+                                        <tr key={key} {...restRowProps}>
+                                            {row.cells.map((cell) => {
+                                                const { key, ...restCellProps } = cell.getCellProps()
+                                                return (
+                                                    <td key={key} {...restCellProps}>
+                                                        {cell.render('Cell')}
+                                                    </td>
+                                                )
+                                            })}
                                         </tr>
                                     )
                                 })}

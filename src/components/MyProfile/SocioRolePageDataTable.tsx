@@ -197,7 +197,7 @@ const SocioRolePageDataTable = (): JSX.Element => {
             <ChangeEmailModal
                 show={modalType === 'email'}
                 onHide={closeModal}
-                userEmail={userProfile.email}
+                useremail={userProfile.email}
                 name={userProfile.name}
                 firstsurname={userProfile.firstSurname}
                 secondsurname={userProfile.secondSurname}
@@ -205,10 +205,10 @@ const SocioRolePageDataTable = (): JSX.Element => {
             <ChangePasswordModal
                 show={modalType === 'password'}
                 onHide={closeModal}
-                userEmail={userProfile.email}
+                useremail={userProfile.email}
                 name={userProfile.name}
-                firstSurname={userProfile.firstSurname}
-                secondSurname={userProfile.secondSurname}
+                firstsurname={userProfile.firstSurname}
+                secondsurname={userProfile.secondSurname}
             />
             <UnsubscribeMemberModal
                 show={modalType === 'unsubscribe'}

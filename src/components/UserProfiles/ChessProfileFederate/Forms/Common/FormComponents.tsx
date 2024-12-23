@@ -37,8 +37,6 @@ interface FileInputProps {
 }
 
 export const FileInput = ({ label, inputRef, onChange, isInvalid, errorMessage }: FileInputProps) => {
-    console.log('LOS ERRORS SON : ' + errorMessage)
-    console.log('ES INVALID: ' + isInvalid)
     return (
         <Form.Group>
             <StyledLabel>{label}</StyledLabel>

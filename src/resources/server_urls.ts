@@ -71,3 +71,11 @@ export const DELETE_USER_URL = BASE_URL + 'api/user'
 export const GET_ALL_USERS_PAYMENTS_URL = BASE_URL + 'api/payments/getAll'
 
 export const GET_USER_PAYMENTS_URL = BASE_URL + 'api/payments/user/'
+
+export const CANCEL_PAYMENT_URL = BASE_URL + 'api/payments' //  /{paymentId}/cancel     @PatchMapping
+
+export const MAKE_PYAMENT_URL = BASE_URL + 'api/payments' //   /{paymentId}/pay       @PatchMapping
+
+export const CREATE_PAYMENT_URL = BASE_URL + 'api/payments' //   @PostMapping
+
+export const PAYMENT_URL = BASE_URL + 'api/payments' //   @PostMapping
