@@ -56,6 +56,27 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
         })
     }, [])
 
+    const updatePaymentState = useCallback((userDni: string, paymentId: string, newState: PaymentsState) => {
+        setManagedTableData((prevData) => {
+            const updatedData = { ...prevData }
+
+            // Check if the user exists
+            if (updatedData[userDni]) {
+                const paymentIndex = updatedData[userDni].findIndex((payment) => payment.id === paymentId)
+
+                // If the payment exists, update its state
+                if (paymentIndex !== -1) {
+                    updatedData[userDni][paymentIndex] = {
+                        ...updatedData[userDni][paymentIndex],
+                        state: newState
+                    }
+                }
+            }
+
+            return updatedData
+        })
+    }, [])
+
     const openConfirmModal = useCallback((row: Row<(typeof tableData)[number]>) => {
         setSelectedPayment({
             id: row.original.id,
@@ -237,8 +258,13 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
                 </button>
             </AddUserPayment>
             <CreateUserPaymentModal show={showCreatePaymentModal} onHide={handleCloseCreatePaymentModal} addPaymentTableFunc={addPaymentRow} />
-            <ConfirmPaymentModal show={modalShow} onHide={handleCloseModal} paymentinfo={selectedPayment} />
-            <CancelPaymentModal show={cancelModalShow} onHide={handleCloseCancelModal} paymentinfo={selectedPayment} />
+            <ConfirmPaymentModal show={modalShow} onHide={handleCloseModal} paymentinfo={selectedPayment} updatePaymentStateFunc={updatePaymentState} />
+            <CancelPaymentModal
+                show={cancelModalShow}
+                onHide={handleCloseCancelModal}
+                paymentinfo={selectedPayment}
+                updatePaymentStateFunc={updatePaymentState}
+            />
         </>
     )
 }

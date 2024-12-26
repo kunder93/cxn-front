@@ -9,12 +9,14 @@ import { useAppSelector } from 'store/hooks'
 import { formatCurrency } from 'utility/paymentsUtilities'
 import { CloseButton, ConfirmButton, StyledModalBody, StyledModalFooter, StyledModalHeader } from './CommonStyles'
 import { PaymentInfo } from './Types'
+import { PaymentsState, ReceivedCreatedPayment } from 'components/Types/Types'
 
 interface CancelPaymentModalProps extends ModalProps {
     paymentinfo: PaymentInfo | null
+    updatePaymentStateFunc: (userDni: string, paymentId: string, newState: PaymentsState) => void
 }
 
-export const CancelPaymentModal: React.FC<CancelPaymentModalProps> = ({ show, onHide, paymentinfo }) => {
+export const CancelPaymentModal: React.FC<CancelPaymentModalProps> = ({ show, onHide, paymentinfo, updatePaymentStateFunc }) => {
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const { showNotification } = useNotificationContext()
     const handleCancelPayment = async (paymentId: string | null) => {
@@ -24,8 +26,13 @@ export const CancelPaymentModal: React.FC<CancelPaymentModalProps> = ({ show, on
         }
 
         try {
-            await axios.patch(`${PAYMENT_URL}/${paymentId}/cancel`, {}, { headers: { Authorization: `Bearer ${userJwt}` } })
+            const response = await axios.patch<ReceivedCreatedPayment>(
+                `${PAYMENT_URL}/${paymentId}/cancel`,
+                {},
+                { headers: { Authorization: `Bearer ${userJwt}` } }
+            )
             showNotification('Pago cancelado con éxito.', NotificationType.Success)
+            updatePaymentStateFunc(response.data.userDni, response.data.id, response.data.state) // Actualiza el estado del pago
             if (onHide) onHide() // Close the modal after success
         } catch (error) {
             const axiosError = error as AxiosError
