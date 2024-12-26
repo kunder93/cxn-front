@@ -11,7 +11,8 @@ import {
     GET_ALL_USERS_URL,
     GET_ALL_TOURNAMENT_PARTICIPANTS,
     GET_ALL_USERS_PAYMENTS_URL,
-    GET_USER_PAYMENTS_URL
+    GET_USER_PAYMENTS_URL,
+    GET_USER_PROFILE_URL
 } from '../resources/server_urls'
 import { ICompany } from '../components/Companies/Types'
 import { LoginFormValues } from '../components/LoginForm'
@@ -178,4 +179,8 @@ export const useAxiosGetAllMembersPaymentsData = () => {
 
 export const useAxiosGetUserPayments = (userDni: string) => {
     return useAxios<IPaymentDetails[]>(GET_USER_PAYMENTS_URL + userDni)
+}
+
+export const useAxiosGetUserData = (userDni: string) => {
+    return useAxios<UserProfile>(`${GET_USER_PROFILE_URL}?dni=${userDni}`)
 }

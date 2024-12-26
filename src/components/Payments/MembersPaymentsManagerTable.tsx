@@ -10,7 +10,20 @@ import { ConfirmPaymentModal } from './ConfirmPaymentModal'
 import { MdCancel } from 'react-icons/md'
 import { CancelPaymentModal } from './CancelPaymentModal'
 import { PaymentInfo } from './Types'
+import styled from 'styled-components'
+import { PiPlusSquareFill } from 'react-icons/pi'
+import CreateUserPaymentModal from './CreateUserPaymentModal'
+import { UserDataInfoPopover } from './UserDataInfoPopover'
 
+const AddUserPayment = styled.div``
+const AddPaymentIcon = styled(PiPlusSquareFill)`
+    fill: blue;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    &:hover {
+        transform: scale(1.2);
+    }
+`
 interface PaymentTableProps {
     data: IUsersListPaymentsData
 }
@@ -19,7 +32,7 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
     const [selectedPayment, setSelectedPayment] = useState<PaymentInfo | null>(null)
     const [modalShow, setModalShow] = useState(false)
     const [cancelModalShow, setCancelModalShow] = useState(false)
-
+    const [showCreatePaymentModal, setShowCreatePaymentModal] = useState(false)
     // Memoize the modal handlers to avoid unnecessary re-creations
     const handleCloseModal = useCallback(() => setModalShow(false), [])
     const handleCloseCancelModal = useCallback(() => setCancelModalShow(false), [])
@@ -45,6 +58,8 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
         })
         setCancelModalShow(true)
     }, [])
+
+    const handleCloseCreatePaymentModal = useCallback(() => setShowCreatePaymentModal(false), [])
 
     const generateRowColor = useCallback((state: PaymentsState) => {
         switch (state) {
@@ -83,7 +98,17 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
     // Define columns and cells
     const columns: Column<(typeof tableData)[number]>[] = useMemo(
         () => [
-            { Header: 'DNI', accessor: 'dni' },
+            {
+                Header: 'DNI',
+                accessor: 'dni',
+                Cell: ({ value }: { value: string; row: Row<(typeof tableData)[number]> }) => (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span>{value}</span>
+
+                        <UserDataInfoPopover userDni={value} />
+                    </div>
+                )
+            },
             { Header: 'Título', accessor: 'title' },
             { Header: 'Descripción', accessor: 'description' },
             {
@@ -142,7 +167,7 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
                 )
             }
         ],
-        [handleCancelPayment, openConfirmModal]
+        []
     )
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
@@ -182,6 +207,17 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
                     })}
                 </tbody>
             </Table>
+            <AddUserPayment>
+                <button
+                    onClick={() => setShowCreatePaymentModal(true)}
+                    title="Añadir pago a socio"
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', margin: 0, padding: 0 }}
+                    aria-label="Añadir pago a socio"
+                >
+                    <AddPaymentIcon size={60} />
+                </button>
+            </AddUserPayment>
+            <CreateUserPaymentModal show={showCreatePaymentModal} onHide={handleCloseCreatePaymentModal} />
             <ConfirmPaymentModal show={modalShow} onHide={handleCloseModal} paymentinfo={selectedPayment} />
             <CancelPaymentModal show={cancelModalShow} onHide={handleCloseCancelModal} paymentinfo={selectedPayment} />
         </>
