@@ -201,7 +201,7 @@ const AddUserPaymentForm: React.FC<AddUserPaymentFormProps> = ({ closemodal }) =
                     </Row>
 
                     <ButtonsWrapper>
-                        <Button type="submit" variant="primary">
+                        <Button type="submit" variant="primary" disabled={loading || !formik.isValid || !formik.dirty}>
                             Añadir Pago
                         </Button>
                         <Button variant="danger" onClick={() => closemodal()}>
