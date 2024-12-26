@@ -159,4 +159,8 @@ export interface IPaymentDetails {
     state: PaymentsState
 }
 
+export interface ReceivedCreatedPayment extends IPaymentDetails {
+    userDni: string
+}
+
 export interface IUsersListPaymentsData extends Record<string, IPaymentDetails[]> {}

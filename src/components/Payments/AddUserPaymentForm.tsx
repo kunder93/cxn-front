@@ -4,7 +4,7 @@ import axios, { AxiosError } from 'axios'
 import * as Yup from 'yup'
 import { Form, Button, Spinner, Alert, Col, Row } from 'react-bootstrap'
 import { UserData } from 'store/types/userTypes'
-import { IUsersListData, PaymentsCategory } from 'components/Types/Types'
+import { IPaymentDetails, IUsersListData, PaymentsCategory, ReceivedCreatedPayment } from 'components/Types/Types'
 import { useAppSelector } from 'store/hooks'
 import { GET_ALL_USERS_URL, MAKE_PYAMENT_URL } from 'resources/server_urls'
 import { translatePaymentCategory } from 'utility/paymentsUtilities'
@@ -43,9 +43,10 @@ export interface IFormValues {
 
 interface AddUserPaymentFormProps {
     closemodal: () => void
+    addPaymentTableFunc: (userDni: string, payment: IPaymentDetails) => void
 }
 
-const AddUserPaymentForm: React.FC<AddUserPaymentFormProps> = ({ closemodal }) => {
+const AddUserPaymentForm: React.FC<AddUserPaymentFormProps> = ({ closemodal, addPaymentTableFunc }) => {
     const [users, setUsers] = useState<UserData[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -85,11 +86,18 @@ const AddUserPaymentForm: React.FC<AddUserPaymentFormProps> = ({ closemodal }) =
         setError(null)
 
         try {
-            await axios.post(MAKE_PYAMENT_URL, values, {
+            // Sending the payment request
+            const response = await axios.post<ReceivedCreatedPayment>(MAKE_PYAMENT_URL, values, {
                 headers: {
                     Authorization: `Bearer ${userJwt}`
                 }
             })
+
+            // Successfully created payment, now update the table
+            const createdPayment: ReceivedCreatedPayment = response.data
+            addPaymentTableFunc(values.userDni, createdPayment)
+
+            // Show success notification
             showNotification('Pago añadido correctamente', NotificationType.Success)
             resetForm()
         } catch (err) {

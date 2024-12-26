@@ -1,4 +1,4 @@
-import { IUsersListPaymentsData, PaymentsCategory, PaymentsState } from 'components/Types/Types'
+import { IPaymentDetails, IUsersListPaymentsData, PaymentsCategory, PaymentsState } from 'components/Types/Types'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import React, { useState, useCallback, useMemo } from 'react'
@@ -36,6 +36,25 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
     // Memoize the modal handlers to avoid unnecessary re-creations
     const handleCloseModal = useCallback(() => setModalShow(false), [])
     const handleCloseCancelModal = useCallback(() => setCancelModalShow(false), [])
+    const [managedTableData, setManagedTableData] = useState<IUsersListPaymentsData>(data)
+
+    // Función para añadir una nueva fila de pago
+    const addPaymentRow = useCallback((userDni: string, payment: IPaymentDetails) => {
+        // Verificar si el DNI ya tiene pagos registrados, si no, crear un nuevo array
+        setManagedTableData((prevData) => {
+            const updatedData = { ...prevData }
+
+            // Si ya existen pagos para ese DNI, añadir el nuevo pago
+            if (updatedData[userDni]) {
+                updatedData[userDni].push(payment)
+            } else {
+                // Si no existen pagos, crear un array con el nuevo pago
+                updatedData[userDni] = [payment]
+            }
+
+            return updatedData
+        })
+    }, [])
 
     const openConfirmModal = useCallback((row: Row<(typeof tableData)[number]>) => {
         setSelectedPayment({
@@ -76,7 +95,7 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
 
     // Memoize the table data transformation logic to avoid unnecessary recalculations
     const tableData = useMemo(() => {
-        return Object.entries(data).flatMap(([dni, payments]) =>
+        return Object.entries(managedTableData).flatMap(([dni, payments]) =>
             payments.length > 0
                 ? payments.map((payment) => ({ dni, ...payment }))
                 : [
@@ -93,7 +112,7 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
                       }
                   ]
         )
-    }, [data])
+    }, [managedTableData])
 
     // Define columns and cells
     const columns: Column<(typeof tableData)[number]>[] = useMemo(
@@ -217,7 +236,7 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
                     <AddPaymentIcon size={60} />
                 </button>
             </AddUserPayment>
-            <CreateUserPaymentModal show={showCreatePaymentModal} onHide={handleCloseCreatePaymentModal} />
+            <CreateUserPaymentModal show={showCreatePaymentModal} onHide={handleCloseCreatePaymentModal} addPaymentTableFunc={addPaymentRow} />
             <ConfirmPaymentModal show={modalShow} onHide={handleCloseModal} paymentinfo={selectedPayment} />
             <CancelPaymentModal show={cancelModalShow} onHide={handleCloseCancelModal} paymentinfo={selectedPayment} />
         </>
