@@ -14,7 +14,6 @@ import {
     GET_USER_PAYMENTS_URL,
     GET_USER_PROFILE_URL
 } from '../resources/server_urls'
-import { ICompany } from '../components/Companies/Types'
 import { LoginFormValues } from '../components/LoginForm'
 import { ChangeKindMemberValues } from '../components/MembersManager/ChangeKindMember/ChangeKindMemberForm'
 import { ChangeMemberRolesValues } from '../components/MembersManager/ChangeMemberRole/ChangeMemberRolesForm'
@@ -23,9 +22,7 @@ import { ChangePasswordAxiosValues } from '../components/MyProfile/ChangePasswor
 import {
     IBook,
     ICountryData,
-    IInvoice,
     IPaymentDetails,
-    IPaymentSheet,
     ISubCountryData,
     ITournamentParticipant,
     IUsersListData,
@@ -93,10 +90,6 @@ export interface IChessQuestionsList {
     chessQuestionList: IChessQuestion[]
 }
 
-interface PaymentSheetsAxiosResponse {
-    paymentSheetsList: IPaymentSheet[]
-}
-
 export interface SubCountriesListAxiosResponse {
     subCountryList: ISubCountryData[]
 }
@@ -107,18 +100,6 @@ export interface BooksAxiosResponse {
 
 export interface CountriesListAxiosResponse {
     countryList: ICountryData[]
-}
-
-export interface InvoicesAxiosResponse {
-    invoicesList: IInvoice[]
-}
-
-export interface CompaniesAxiosResponse {
-    companiesList: ICompany[]
-}
-
-export const useAxiosGetCompanies = (url: string) => {
-    return useAxios<CompaniesAxiosResponse>(url)
 }
 
 export const useAxiosGetChessQuestions = () => {
@@ -161,16 +142,8 @@ export const useAxiosGetAllTournamentParticipants = () => {
     return useAxios<ITournamentParticipant[]>(GET_ALL_TOURNAMENT_PARTICIPANTS)
 }
 
-export const useAxiosGetPaymentSheets = (url: string) => {
-    return useAxios<PaymentSheetsAxiosResponse>(url)
-}
-
 export const useAxiosGetBooks = (url: string) => {
     return useAxios<BooksAxiosResponse>(url)
-}
-
-export const useAxiosGetInvoices = (url: string) => {
-    return useAxios<InvoicesAxiosResponse>(url)
 }
 
 export const useAxiosGetAllMembersPaymentsData = () => {
