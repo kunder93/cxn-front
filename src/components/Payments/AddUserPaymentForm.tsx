@@ -20,7 +20,7 @@ const ButtonsWrapper = styled.div`
 
 const validationSchema = Yup.object({
     userDni: Yup.string().required('Seleccione un usuario'),
-    title: Yup.string().required('El título es obligatorio'),
+    title: Yup.string().required('El título es obligatorio').max(50, 'El título no puede superar los 50 caracteres'),
     description: Yup.string()
         .required('La descripción es obligatoria')
         .min(10, 'La descripción debe tener al menos 10 caracteres')
@@ -29,7 +29,7 @@ const validationSchema = Yup.object({
     amount: Yup.number()
         .typeError('El monto debe ser un número válido')
         .positive('El monto debe ser mayor a 0')
-        .max(500, 'El monto no puede superar los 500.00 €')
+        .max(100, 'El monto no puede superar los 100.00 €')
         .required('El monto es obligatorio')
 })
 

@@ -150,11 +150,17 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
                 )
             },
             { Header: 'Título', accessor: 'title' },
-            { Header: 'Descripción', accessor: 'description' },
+            {
+                Header: 'Descripción',
+                accessor: 'description',
+                Cell: ({ value }: { value: string }) => (
+                    <div style={{ maxWidth: '100px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{value}</div>
+                )
+            },
             {
                 Header: 'Cantidad (€)',
                 accessor: 'amount',
-                Cell: ({ value }: { value: number }) => formatCurrency(value)
+                Cell: ({ value }: { value: number }) => (value === 0 ? 'N/A' : formatCurrency(value))
             },
             {
                 Header: 'Categoría',
@@ -217,6 +223,16 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
 
     return (
         <>
+            <AddUserPayment>
+                <button
+                    onClick={() => setShowCreatePaymentModal(true)}
+                    title="Añadir pago a socio"
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', margin: 0, padding: 0 }}
+                    aria-label="Añadir pago a socio"
+                >
+                    <AddPaymentIcon size={60} />
+                </button>
+            </AddUserPayment>
             <Table striped bordered hover size="sm" {...getTableProps()}>
                 <thead>
                     {headerGroups.map((headerGroup, headerIndex) => (
@@ -247,16 +263,7 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
                     })}
                 </tbody>
             </Table>
-            <AddUserPayment>
-                <button
-                    onClick={() => setShowCreatePaymentModal(true)}
-                    title="Añadir pago a socio"
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', margin: 0, padding: 0 }}
-                    aria-label="Añadir pago a socio"
-                >
-                    <AddPaymentIcon size={60} />
-                </button>
-            </AddUserPayment>
+
             <CreateUserPaymentModal show={showCreatePaymentModal} onHide={handleCloseCreatePaymentModal} addPaymentTableFunc={addPaymentRow} />
             <ConfirmPaymentModal show={modalShow} onHide={handleCloseModal} paymentinfo={selectedPayment} updatePaymentStateFunc={updatePaymentState} />
             <CancelPaymentModal
