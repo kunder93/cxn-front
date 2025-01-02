@@ -13,54 +13,6 @@ export interface IUsersListData {
     usersList: UserProfile[]
 }
 
-export interface ISelfVehicle {
-    places: string
-    distance: number
-    kmPrice: number
-}
-
-export interface IFoodHousing {
-    amountDays: number
-    dayPrice: number
-    overnight: boolean
-}
-
-export interface IRegularTransport {
-    category: string
-    description: string
-    invoice: IInvoice
-}
-
-export interface IRegularTransportList {
-    regularTransportList: IRegularTransport[]
-}
-
-export interface IPaymentSheet {
-    paymentSheetIdentifier: number
-    userName: string
-    userFirstSurname: string
-    userSecondSurname: string
-    userDNI: string
-    postalCode: string
-    apartmentNumber: string
-    building: string
-    street: string
-    city: string
-    countryName: string
-    countrySubdivisionName: string
-    reason: string
-    place: string
-    startDate: Date
-    endDate: Date
-    selfVehicle: ISelfVehicle
-    regularTransportList: IRegularTransportList
-    foodHousing: IFoodHousing
-}
-
-export interface IPaymentSheetList {
-    paymentSheetList: IPaymentSheet[]
-}
-
 export interface ICountriesList {
     countryList: ICountryData[]
 }
@@ -80,16 +32,6 @@ export interface ISubCountryData {
 }
 export interface ISubCountriesList {
     subCountryList: ISubCountryData[]
-}
-
-export interface IInvoice {
-    number: number
-    series: string
-    expeditionDate: Date
-    advancePaymentDate: Date
-    taxExempt: boolean
-    sellerNif: string
-    buyerNif: string
 }
 
 export interface IBook {
