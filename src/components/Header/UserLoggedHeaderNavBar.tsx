@@ -89,7 +89,7 @@ const UserLoggedHeaderNavBar = (): JSX.Element => {
 
     const logoutHandler = () => {
         dispatch(removeJwt())
-        navigate(ROUTES.HOMEPAGE_ROUTE)
+        void navigate(ROUTES.HOMEPAGE_ROUTE)
     }
     const isInitialProfileImage = profileImage?.url === '' && profileImage?.stored === false
 
@@ -98,7 +98,7 @@ const UserLoggedHeaderNavBar = (): JSX.Element => {
             <ProfileImageContainer>
                 {profileImage && !isInitialProfileImage ? (
                     <UserProfileImage
-                        src={profileImage.stored ? profileImage.file : profileImage.url}
+                        src={profileImage.stored ? profileImage.file : profileImage.url ? profileImage.url : 'User/ProfileImagesExample/NoProfileImage.avif'}
                         onMouseEnter={() => setImagePopOver(true)}
                         onMouseLeave={() => setImagePopOver(false)}
                     />

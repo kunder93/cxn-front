@@ -69,7 +69,8 @@ export enum ProfileSection {
     MessagesManager = 'MessagesManager',
     TournamentParticipantManager = 'TournamentParticipantManager',
     FederateManager = 'FederateManager',
-    ActivitiesManager = 'ActivitiesManager'
+    ActivitiesManager = 'ActivitiesManager',
+    MembersPaymentsManager = 'MembersPaymentsManager'
 }
 
 interface SidebarProps {

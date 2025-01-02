@@ -99,7 +99,11 @@ export const FederateManager = (): JSX.Element => {
                     return (
                         <tr {...row.getRowProps()} key={row.id}>
                             {row.cells.map((cell) => (
-                                <td {...cell.getCellProps()} key={cell.column.id} style={{ border: '1px solid gray', padding: '8px', textAlign: 'center' }}>
+                                <td
+                                    {...cell.getCellProps()}
+                                    key={`${row.id}-${cell.column.id}`}
+                                    style={{ border: '1px solid gray', padding: '8px', textAlign: 'center' }}
+                                >
                                     {cell.render('Cell')}
                                 </td>
                             ))}

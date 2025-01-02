@@ -1,15 +1,13 @@
-import { UserProfile } from "store/types/userTypes"
+import { UserProfile } from 'store/types/userTypes'
 
-
-export interface ITournamentParticipant{
-    fideId: number,
-    name: string,
-    club: string,
-    birthDate: Date,
-    category: string,
-    byes:string
+export interface ITournamentParticipant {
+    fideId: number
+    name: string
+    club: string
+    birthDate: Date
+    category: string
+    byes: string
 }
-
 
 export interface IUsersListData {
     usersList: UserProfile[]
@@ -133,3 +131,36 @@ export interface MyFormProps {
 
     message: string // if this passed all the way through you might do this or make a union type
 }
+
+// Enum for payment categories (matches PaymentsCategory in Java)
+export enum PaymentsCategory {
+    FEDERATE_PAYMENT = 'FEDERATE_PAYMENT',
+    MEMBERSHIP_PAYMENT = 'MEMBERSHIP_PAYMENT',
+    OTHER_PAYMENT = 'OTHER_PAYMENT'
+}
+
+// Enum for payment states (matches PaymentsState in Java)
+export enum PaymentsState {
+    UNPAID = 'UNPAID',
+    PAID = 'PAID',
+    CANCELLED = 'CANCELLED'
+    // Add other states as needed
+}
+
+// Interface for a single payment detail (matches PaymentDetails in Java)
+export interface IPaymentDetails {
+    id: string
+    title: string
+    description: string
+    category: PaymentsCategory
+    amount: number
+    createdAt: string
+    paidAt: null | string
+    state: PaymentsState
+}
+
+export interface ReceivedCreatedPayment extends IPaymentDetails {
+    userDni: string
+}
+
+export interface IUsersListPaymentsData extends Record<string, IPaymentDetails[]> {}

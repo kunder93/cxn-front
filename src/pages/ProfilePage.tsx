@@ -20,6 +20,7 @@ import usePageTitle from '../components/Common/hooks/usePageTitle'
 import { useFetchProfileImage } from '../components/MyProfile/Hooks/ProfilesHooks'
 import { FederateManager } from './FederateManager'
 import ActivitiesManager from './ActivitiesManager'
+import { MembersPaymentsPage } from './MembersPaymentsPage'
 
 const MainPageContainer = styled.div`
     width: 100%;
@@ -61,7 +62,8 @@ const sectionComponents: Record<ProfileSection, React.FC<{ changePage: (section:
     [ProfileSection.MessagesManager]: ChessQuestionsManager,
     [ProfileSection.TournamentParticipantManager]: TorneoInscripcionManager,
     [ProfileSection.FederateManager]: FederateManager,
-    [ProfileSection.ActivitiesManager]: ActivitiesManager
+    [ProfileSection.ActivitiesManager]: ActivitiesManager,
+    [ProfileSection.MembersPaymentsManager]: MembersPaymentsPage
 }
 
 const ProfilePage = (): JSX.Element => {
