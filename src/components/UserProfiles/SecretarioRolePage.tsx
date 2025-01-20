@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { People, CashCoin, Gear } from 'react-bootstrap-icons'
+import { People, Gear } from 'react-bootstrap-icons'
 import { PageContainer, Title, StyledAccordion, StyledAccordionItem, StyledAccordionHeader, StyledAccordionBody } from './CommonStyles'
 import { ProfileSection } from './SideBar'
 import NavigationButton from './CommonComponents/NavigationButton'
@@ -23,28 +23,6 @@ const sections: ProfileMenuSection[] = [
                 text: 'Ver listado socios',
                 section: ProfileSection.MembersManager,
                 buttonIndex: 1
-            }
-        ]
-    },
-    {
-        key: '1',
-        icon: <CashCoin size="3rem" />,
-        title: 'Gestión de contabilidad financiera',
-        buttons: [
-            {
-                text: 'Gestión de Facturas',
-                section: ProfileSection.InvoicesManager,
-                buttonIndex: 2
-            },
-            {
-                text: 'Gestión de hojas de pago',
-                section: ProfileSection.PaymentSheetsManager,
-                buttonIndex: 3
-            },
-            {
-                text: 'Gestión de empresas (para facturas)',
-                section: ProfileSection.CompaniesManager,
-                buttonIndex: 4
             }
         ]
     },

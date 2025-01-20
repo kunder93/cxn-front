@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import ChangeEmailForm from './ChangeEmailForm'
 
 interface ChangeEmailModalProps extends ModalProps {
-    userEmail: string
+    useremail: string
     name: string
     firstsurname: string
     secondsurname: string
@@ -54,7 +54,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = (props) => {
                 </Modal.Title>
             </Modal.Header>
             <ModalBody>
-                <ChangeEmailForm initialEmail={props.userEmail} buttonDisabledHandler={handleButtonDisabled} />
+                <ChangeEmailForm initialEmail={props.useremail} buttonDisabledHandler={handleButtonDisabled} />
             </ModalBody>
             <ModalFooter>
                 <Button variant="success" type="submit" form="emailChangeForm" disabled={buttonDisabled}>

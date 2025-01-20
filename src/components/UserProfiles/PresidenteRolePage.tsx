@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { People, CashCoin, Gear } from 'react-bootstrap-icons'
+import { People, Gear } from 'react-bootstrap-icons'
 import { ProfileSection } from './SideBar'
 import NavigationButton from './CommonComponents/NavigationButton'
 import { ProfileMenuSection, RolePageProps } from './types'
@@ -23,16 +23,6 @@ const sections: ProfileMenuSection[] = [
     },
     {
         key: '1',
-        icon: <CashCoin size="3rem" />,
-        title: 'Gestión de contabilidad financiera',
-        buttons: [
-            { section: ProfileSection.InvoicesManager, text: 'Ver lista de facturas', buttonIndex: 2 },
-            { section: ProfileSection.PaymentSheetsManager, text: 'Ver lista hojas de liquidación', buttonIndex: 3 },
-            { section: ProfileSection.CompaniesManager, text: 'Ver listado compañias (facturas)', buttonIndex: 4 }
-        ]
-    },
-    {
-        key: '2',
         icon: <Gear size="3rem" />,
         title: 'Gestión de administración',
         buttons: [

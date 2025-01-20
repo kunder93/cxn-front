@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useRef, useState } from 'react'
 import { Formik, Form, FormikTouched, FormikErrors } from 'formik'
-import { Form as BootstrapForm } from 'react-bootstrap'
+import { Form as BootstrapForm, Spinner } from 'react-bootstrap'
 import { Button } from 'react-bootstrap'
 import axios, { AxiosError } from 'axios'
 import { useAppSelector } from '../../store/hooks'
@@ -69,8 +69,10 @@ const ProfileImageUploadForm: React.FC = () => {
     const { showNotification } = useNotificationContext()
     const dispatch = useDispatch()
     const profileImageInputRef = useRef<HTMLInputElement | null>(null)
+    const [loading, setLoading] = useState(false)
 
     const handleSubmit = (values: ProfileImageFormValues) => {
+        setLoading(true)
         const formData = new FormData()
         if (values.profileImage) {
             formData.append('profileImage', values.profileImage) // Only append if it's not null
@@ -95,6 +97,9 @@ const ProfileImageUploadForm: React.FC = () => {
                 } else {
                     showNotification('Ocurrió un error inesperado.', NotificationType.Error)
                 }
+            })
+            .finally(() => {
+                setLoading(false)
             })
     }
 
@@ -155,8 +160,14 @@ const ProfileImageUploadForm: React.FC = () => {
                         )}
                     </StyledPreviewRow>
 
-                    <SubmitButton variant="success" type="submit" disabled={!isValid || !dirty}>
-                        Cambiar
+                    <SubmitButton variant="success" type="submit" disabled={loading || !isValid || !dirty}>
+                        {loading ? (
+                            <>
+                                <Spinner animation="border" size="sm" /> Cambiando...
+                            </>
+                        ) : (
+                            'Cambiar'
+                        )}
                     </SubmitButton>
                 </BootstrapForm>
             )}

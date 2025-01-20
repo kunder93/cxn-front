@@ -86,56 +86,6 @@ export const LogInValidationSchema = Yup.object().shape({
         .max(20, 'Demasiado largo, maximo 20 caracteres!')
 })
 
-const COMPANY_NAME_MIN_LENGTH = 6
-const COMPANY_NAME_MAX_LENGTH = 40
-const COMPANY_ADDRESS_MAX_LENGTH = 60
-const COMPANY_ADDRESS_MIN_LENGTH = 6
-
-export const CreateCompanyValidationSchema = Yup.object().shape({
-    nif: Yup.string()
-        .test('valid-nif', 'NIF o DNI inválido', (value: any) => {
-            // Validación básica NIF (personas jurídicas y entidades)
-            const nifRegex = /^[A-HJ-NP-TV-Z]\d{7}[A-J0-9]$/i
-            const dniRegex = /^\d{8}[A-HJ-NP-TV-Z]$/i
-
-            if (!value) return false
-
-            if (nifRegex.test(value)) {
-                return true
-            }
-
-            if (dniRegex.test(value)) {
-                const letters = 'TRWAGMYFPDXBNJZSQVHLCKET'
-                const numbers = value.slice(0, 8)
-                const letter = value.slice(8).toUpperCase()
-
-                return letters[parseInt(numbers) % 23] === letter
-            }
-
-            return false
-        })
-        .required('El NIF o DNI es necesario.'),
-
-    name: Yup.string()
-        .required('Se requiere un nombre.')
-        .min(COMPANY_NAME_MIN_LENGTH, 'Demasiado corto, mínimo ' + COMPANY_NAME_MIN_LENGTH + ' caracteres.')
-        .max(COMPANY_NAME_MAX_LENGTH, 'Demasiado largo, máximo ' + COMPANY_NAME_MAX_LENGTH + ' caracteres.'),
-    address: Yup.string()
-        .required('Se necesita una dirección!')
-        .min(COMPANY_ADDRESS_MIN_LENGTH, 'Demasiado corto, minimo ' + COMPANY_ADDRESS_MIN_LENGTH + ' caracteres.')
-        .max(COMPANY_ADDRESS_MAX_LENGTH, 'Demasiado largo, máximo ' + COMPANY_ADDRESS_MAX_LENGTH + ' caracteres.')
-})
-
-export const CreateInvoiceValidationSchema = Yup.object().shape({
-    number: Yup.number().required('Se requiere número de factura.'),
-    series: Yup.string().required('Se requiere serie de factura.'),
-    expeditionDate: Yup.date().required('Se requiere fecha de expedición.'),
-    advancePaymentDate: Yup.date(),
-    taxExempt: Yup.boolean(),
-    sellerNif: Yup.string().required('Se requiere Vendedor.'),
-    buyerNif: Yup.string().required('Se requiere Comprador.')
-})
-
 export const CreateBookValidationSchema = Yup.object().shape({
     isbn: Yup.number().required('Se requiere numero isbn.'),
     title: Yup.string().required('Se requiere un titulo.'),

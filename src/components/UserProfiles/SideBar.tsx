@@ -63,13 +63,11 @@ export enum ProfileSection {
     Tesorero = 'Tesorero',
     Secretario = 'Secretario',
     MembersManager = 'MembersManager',
-    InvoicesManager = 'InvoicesManager',
-    PaymentSheetsManager = 'PaymentSheetsManager',
-    CompaniesManager = 'CompaniesManager',
     MessagesManager = 'MessagesManager',
     TournamentParticipantManager = 'TournamentParticipantManager',
     FederateManager = 'FederateManager',
-    ActivitiesManager = 'ActivitiesManager'
+    ActivitiesManager = 'ActivitiesManager',
+    MembersPaymentsManager = 'MembersPaymentsManager'
 }
 
 interface SidebarProps {

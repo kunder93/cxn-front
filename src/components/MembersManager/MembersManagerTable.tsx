@@ -10,6 +10,8 @@ import styled from 'styled-components'
 import { renderKindMember, renderUserRoles } from '../../utility/userUtilities'
 import { BsFillTrash3Fill } from 'react-icons/bs'
 import DeleteMemberModal from './ChangeMemberRole/DeleteMemberModal'
+import { IoIosWarning } from 'react-icons/io'
+import WarningAceptUserModal from './WarningAceptUserModal'
 
 const TableFilterContainer = styled.div`
     display: flex;
@@ -18,6 +20,10 @@ const TableFilterContainer = styled.div`
     padding-bottom: 0.5em;
 `
 
+const RoleCell = styled.div`
+    display: flex;
+    align-items: center;
+`
 const AmountRegistersBox = styled.div`
     padding-left: 4em;
 `
@@ -26,15 +32,16 @@ const FilterInputLabel = styled.label`
     padding-right: 1em;
 `
 
-const RoleCell = styled.div`
-    max-width: 100px;
-    text-overflow: ellipsis;
-`
-
 const ActionButtonsContainer = styled.div`
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
+`
+
+const WarningCandidateIcon = styled(IoIosWarning)`
+    color: orange;
+    min-width: 14px;
+    min-height: 14px;
 `
 
 const ActionButtons: React.FC<{
@@ -73,6 +80,20 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
     const [selectedRow, setSelectedRow] = useState<UserProfile | undefined>()
     const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null)
 
+    const [warningModalVisible, setWarningModalVisible] = useState(false)
+    const [warningRowData, setWarningRowData] = useState<UserProfile | null>(null)
+
+    console.log('EL VALOR DE WARNING MODAL ES:')
+    console.log(warningModalVisible)
+
+    const openWarningModal = useCallback((row: Row<UserProfile>) => {
+        setSelectedRow(data[row.index])
+        setSelectedRowIndex(row.index)
+
+        setWarningRowData(data[row.index])
+        setWarningModalVisible(true)
+    }, [])
+
     const updateKindMember = useCallback(
         (newKindMember: KindMember) => {
             if (selectedRowIndex !== null) {
@@ -109,7 +130,27 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
             { Header: 'D.N.I.', accessor: 'dni' },
             { Header: 'Nombre', accessor: 'name' },
             { Header: 'Apellidos', accessor: (d) => `${d.firstSurname} ${d.secondSurname}` },
-            { Header: 'Rol del socio', accessor: (d) => <RoleCell>{renderUserRoles(d.userRoles)}</RoleCell> },
+            {
+                Header: 'Rol del socio',
+                accessor: 'userRoles',
+                Cell: (
+                    { row }: { row: Row<UserProfile> } // Use the Cell renderer to access the row
+                ) => (
+                    <RoleCell>
+                        <div> {renderUserRoles(row.original.userRoles)}</div>
+                        {row.original.userRoles.length === 1 && row.original.userRoles[0] === UserRole.SOCIO_CANDIDATO && (
+                            <Button
+                                variant="link"
+                                onClick={() => openWarningModal(row)} // Pass the entire row to the modal
+                                style={{ padding: 0, border: 'none', background: 'none' }}
+                                aria-label="Candidato a socio"
+                            >
+                                <WarningCandidateIcon size={24} title="Candidato a socio" />
+                            </Button>
+                        )}
+                    </RoleCell>
+                )
+            },
             { Header: 'Estado', accessor: (d) => renderKindMember(d.kindMember) }
         ],
         []
@@ -261,6 +302,14 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
                         onDeleteSuccess={deleteRow}
                     />
                 </>
+            )}
+            {warningModalVisible && (
+                <WarningAceptUserModal
+                    updateMemberRoles={updateMemberRoles}
+                    show={warningModalVisible}
+                    onHide={() => setWarningModalVisible(false)}
+                    rowData={warningRowData}
+                />
             )}
         </>
     )

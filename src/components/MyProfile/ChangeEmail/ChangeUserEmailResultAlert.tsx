@@ -27,7 +27,7 @@ const ChangeUserEmailResultAlert: React.FC<IChangeKindMemberSubmitResultAlert> =
     const logoutHandler = useCallback(() => {
         dispatch(removeJwt())
         dispatch(removeUserProfile())
-        navigate(ROUTES.LOGIN_ROUTE)
+        void navigate(ROUTES.LOGIN_ROUTE)
     }, [dispatch, navigate])
 
     useEffect(() => {

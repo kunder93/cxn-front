@@ -6,12 +6,9 @@ import PresidenteRolePage from '../components/UserProfiles/PresidenteRolePage'
 import TesoreroRolePage from '../components/UserProfiles/TesoreroRolePage'
 import SecretarioRolePage from '../components/UserProfiles/SecretarioRolePage'
 import MembersManagerPage from './MembersManagerPage'
-import InvoicesManagerPage from './InvoicesManagerPage'
-import CompaniesManagerPage from './CompaniesManagerPage'
 import ChessQuestionsManager from './ChessQuestionsManager'
 import Sidebar, { ProfileSection } from '../components/UserProfiles/SideBar'
 import ChessProfile from '../components/UserProfiles/ChessProfile'
-import PaymentSheetManagerPage from './PaymentSheetManagerPage'
 import useScrollTop from '../components/Common/hooks/useScrollTop'
 import useUserProfile from '../components/UsersServices/hooks/useUserProfile'
 import UserProfileNavbar from '../components/UserProfiles/UserProfileNavBar'
@@ -20,6 +17,7 @@ import usePageTitle from '../components/Common/hooks/usePageTitle'
 import { useFetchProfileImage } from '../components/MyProfile/Hooks/ProfilesHooks'
 import { FederateManager } from './FederateManager'
 import ActivitiesManager from './ActivitiesManager'
+import { MembersPaymentsPage } from './MembersPaymentsPage'
 
 const MainPageContainer = styled.div`
     width: 100%;
@@ -55,13 +53,11 @@ const sectionComponents: Record<ProfileSection, React.FC<{ changePage: (section:
     [ProfileSection.Tesorero]: TesoreroRolePage,
     [ProfileSection.Secretario]: SecretarioRolePage,
     [ProfileSection.MembersManager]: MembersManagerPage,
-    [ProfileSection.InvoicesManager]: InvoicesManagerPage,
-    [ProfileSection.PaymentSheetsManager]: PaymentSheetManagerPage,
-    [ProfileSection.CompaniesManager]: CompaniesManagerPage,
     [ProfileSection.MessagesManager]: ChessQuestionsManager,
     [ProfileSection.TournamentParticipantManager]: TorneoInscripcionManager,
     [ProfileSection.FederateManager]: FederateManager,
-    [ProfileSection.ActivitiesManager]: ActivitiesManager
+    [ProfileSection.ActivitiesManager]: ActivitiesManager,
+    [ProfileSection.MembersPaymentsManager]: MembersPaymentsPage
 }
 
 const ProfilePage = (): JSX.Element => {

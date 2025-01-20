@@ -3,13 +3,13 @@ import { KindMember, UserRole } from '../store/types/userTypes'
 export function renderKindMember(value: KindMember): string {
     switch (value) {
         case KindMember.SOCIO_ASPIRANTE:
-            return 'SOCIO ASPIRANTE'
+            return 'ASPIRANTE'
         case KindMember.SOCIO_FAMILIAR:
-            return 'SOCIO FAMILIAR'
+            return 'FAMILIAR'
         case KindMember.SOCIO_HONORARIO:
-            return 'SOCIO HONORARIO'
+            return 'HONORARIO'
         case KindMember.SOCIO_NUMERO:
-            return 'SOCIO NUMERARIO'
+            return 'NUMERARIO'
         default:
             return 'NO CONOCIDO'
     }
@@ -30,7 +30,7 @@ export function renderUserRoles(value: UserRole[]): string {
                 case UserRole.SOCIO:
                     return 'SOCIO'
                 case UserRole.SOCIO_CANDIDATO:
-                        return 'CANDIDATO'
+                    return 'CANDIDATO'
                 default:
                     return 'NO CONOCIDO'
             }
