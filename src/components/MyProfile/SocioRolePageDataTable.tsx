@@ -11,6 +11,7 @@ import Image from 'react-bootstrap/Image'
 import PersonalImageButtonChanger from './PersonalImageButtonChanger'
 import { useAppSelector } from '../../store/hooks'
 import { PersonBoundingBox } from 'react-bootstrap-icons'
+import PaymentsManagerModal from './Payments/PaymentsManagerModal'
 
 const StyledContainer = styled(Container)`
     display: flex;
@@ -163,7 +164,13 @@ const SocioRolePageDataTable = (): JSX.Element => {
                     {isInitialProfileImage ? (
                         <PersonBoundingBox size={150} /> // Custom size for icon
                     ) : (
-                        <ProfileImage src={profileImage.stored ? profileImage.file : profileImage.url} alt="Imagen de perfil" rounded />
+                        <ProfileImage
+                            src={
+                                profileImage.stored ? profileImage.file : profileImage.url ? profileImage.url : 'User/ProfileImagesExample/NoProfileImage.avif'
+                            }
+                            alt="Imagen de perfil"
+                            rounded
+                        />
                     )}
                 </ProfileImageContainer>
 
@@ -179,6 +186,9 @@ const SocioRolePageDataTable = (): JSX.Element => {
                         <Button onClick={() => openModal('unsubscribe')} variant="danger">
                             Darse de baja
                         </Button>
+                        <Button onClick={() => openModal('payments')} variant="info">
+                            Sección de pagos
+                        </Button>
                     </ButtonRow>
                 </ProfileActionButtonsContainer>
             </RightColumn>
@@ -187,7 +197,7 @@ const SocioRolePageDataTable = (): JSX.Element => {
             <ChangeEmailModal
                 show={modalType === 'email'}
                 onHide={closeModal}
-                userEmail={userProfile.email}
+                useremail={userProfile.email}
                 name={userProfile.name}
                 firstsurname={userProfile.firstSurname}
                 secondsurname={userProfile.secondSurname}
@@ -195,15 +205,23 @@ const SocioRolePageDataTable = (): JSX.Element => {
             <ChangePasswordModal
                 show={modalType === 'password'}
                 onHide={closeModal}
-                userEmail={userProfile.email}
+                useremail={userProfile.email}
                 name={userProfile.name}
-                firstSurname={userProfile.firstSurname}
-                secondSurname={userProfile.secondSurname}
+                firstsurname={userProfile.firstSurname}
+                secondsurname={userProfile.secondSurname}
             />
             <UnsubscribeMemberModal
                 show={modalType === 'unsubscribe'}
                 onHide={closeModal}
                 useremail={userProfile.email}
+                name={userProfile.name}
+                firstsurname={userProfile.firstSurname}
+                secondsurname={userProfile.secondSurname}
+            />
+            <PaymentsManagerModal
+                show={modalType === 'payments'}
+                onHide={closeModal}
+                userdni={userProfile.dni}
                 name={userProfile.name}
                 firstsurname={userProfile.firstSurname}
                 secondsurname={userProfile.secondSurname}

@@ -118,7 +118,7 @@ const ChessProfileLichess: React.FC = () => {
         <>
             <Heading>Lichess:</Heading>
             <Accordion>
-                <Accordion.Item eventKey="0">
+                <Accordion.Item eventKey="0" key={0}>
                     <Accordion.Header>
                         <strong>
                             <Logo src="/Lichess/LichessLogo.png" alt="Lichess Logo" />
@@ -154,7 +154,7 @@ const ChessProfileLichess: React.FC = () => {
                         )}
                     </FirstStyledAccordionBody>
                 </Accordion.Item>
-                <Accordion.Item eventKey="1">
+                <Accordion.Item eventKey="1" key={1}>
                     <Accordion.Header>
                         <strong>
                             <Trophy size={40} /> ELO Xadrez Narón Lichess

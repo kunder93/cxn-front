@@ -37,12 +37,12 @@ interface FileInputProps {
 }
 
 export const FileInput = ({ label, inputRef, onChange, isInvalid, errorMessage }: FileInputProps) => {
-    console.log('LOS ERRORS SON : ' + errorMessage)
-    console.log('ES INVALID: ' + isInvalid)
+    const inputId = `file-input-${label.replace(/\s+/g, '-').toLowerCase()}`
     return (
         <Form.Group>
-            <StyledLabel>{label}</StyledLabel>
+            <StyledLabel htmlFor={inputId}>{label}</StyledLabel>
             <Form.Control
+                id={inputId}
                 type="file"
                 accept="image/png, image/jpeg, image/jpg, image/avif, image/webp"
                 ref={inputRef}

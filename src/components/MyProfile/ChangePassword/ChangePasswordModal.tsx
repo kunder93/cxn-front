@@ -6,10 +6,10 @@ import { FormikProps } from 'formik'
 import PasswordChangeForm, { ChangePasswordFormValues } from './PasswordChangeForm'
 
 interface ChangePasswordModalProps extends ModalProps {
-    userEmail: string
+    useremail: string
     name: string
-    firstSurname: string
-    secondSurname: string
+    firstsurname: string
+    secondsurname: string
 }
 // Styled components
 const ModalBody = styled(Modal.Body)`
@@ -53,11 +53,11 @@ const ChangePasswordModal = (props: ChangePasswordModalProps): JSX.Element => {
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <StyledModalHeader closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    <h2>Cambiar contraseña de: {`${props.name} ${props.firstSurname} ${props.secondSurname}`}</h2>
+                    <h2>Cambiar contraseña de: {`${props.name} ${props.firstsurname} ${props.secondsurname}`}</h2>
                 </Modal.Title>
             </StyledModalHeader>
             <ModalBody>
-                <PasswordChangeForm formikRef={formRef} userEmail={props.userEmail}></PasswordChangeForm>
+                <PasswordChangeForm formikRef={formRef} userEmail={props.useremail}></PasswordChangeForm>
             </ModalBody>
             <ModalFooter>
                 <Button variant="success" onClick={handleSubmit}>

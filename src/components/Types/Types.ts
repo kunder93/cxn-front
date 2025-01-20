@@ -1,66 +1,16 @@
-import { UserProfile } from "store/types/userTypes"
+import { UserProfile } from 'store/types/userTypes'
 
-
-export interface ITournamentParticipant{
-    fideId: number,
-    name: string,
-    club: string,
-    birthDate: Date,
-    category: string,
-    byes:string
+export interface ITournamentParticipant {
+    fideId: number
+    name: string
+    club: string
+    birthDate: Date
+    category: string
+    byes: string
 }
-
 
 export interface IUsersListData {
     usersList: UserProfile[]
-}
-
-export interface ISelfVehicle {
-    places: string
-    distance: number
-    kmPrice: number
-}
-
-export interface IFoodHousing {
-    amountDays: number
-    dayPrice: number
-    overnight: boolean
-}
-
-export interface IRegularTransport {
-    category: string
-    description: string
-    invoice: IInvoice
-}
-
-export interface IRegularTransportList {
-    regularTransportList: IRegularTransport[]
-}
-
-export interface IPaymentSheet {
-    paymentSheetIdentifier: number
-    userName: string
-    userFirstSurname: string
-    userSecondSurname: string
-    userDNI: string
-    postalCode: string
-    apartmentNumber: string
-    building: string
-    street: string
-    city: string
-    countryName: string
-    countrySubdivisionName: string
-    reason: string
-    place: string
-    startDate: Date
-    endDate: Date
-    selfVehicle: ISelfVehicle
-    regularTransportList: IRegularTransportList
-    foodHousing: IFoodHousing
-}
-
-export interface IPaymentSheetList {
-    paymentSheetList: IPaymentSheet[]
 }
 
 export interface ICountriesList {
@@ -82,16 +32,6 @@ export interface ISubCountryData {
 }
 export interface ISubCountriesList {
     subCountryList: ISubCountryData[]
-}
-
-export interface IInvoice {
-    number: number
-    series: string
-    expeditionDate: Date
-    advancePaymentDate: Date
-    taxExempt: boolean
-    sellerNif: string
-    buyerNif: string
 }
 
 export interface IBook {
@@ -133,3 +73,36 @@ export interface MyFormProps {
 
     message: string // if this passed all the way through you might do this or make a union type
 }
+
+// Enum for payment categories (matches PaymentsCategory in Java)
+export enum PaymentsCategory {
+    FEDERATE_PAYMENT = 'FEDERATE_PAYMENT',
+    MEMBERSHIP_PAYMENT = 'MEMBERSHIP_PAYMENT',
+    OTHER_PAYMENT = 'OTHER_PAYMENT'
+}
+
+// Enum for payment states (matches PaymentsState in Java)
+export enum PaymentsState {
+    UNPAID = 'UNPAID',
+    PAID = 'PAID',
+    CANCELLED = 'CANCELLED'
+    // Add other states as needed
+}
+
+// Interface for a single payment detail (matches PaymentDetails in Java)
+export interface IPaymentDetails {
+    id: string
+    title: string
+    description: string
+    category: PaymentsCategory
+    amount: number
+    createdAt: string
+    paidAt: null | string
+    state: PaymentsState
+}
+
+export interface ReceivedCreatedPayment extends IPaymentDetails {
+    userDni: string
+}
+
+export interface IUsersListPaymentsData extends Record<string, IPaymentDetails[]> {}

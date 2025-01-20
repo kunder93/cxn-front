@@ -15,7 +15,7 @@ const initialState: UserState = {
         secondSurname: '',
         gender: '',
         email: '',
-        birthDate: new Date(),
+        birthDate: new Date().toISOString(),
         userRoles: [] as UserRole[], // Inicializamos como un array vacío de roles
         kindMember: KindMember.SOCIO_NUMERO, // Valor predeterminado para kindMember
         userAddress: {

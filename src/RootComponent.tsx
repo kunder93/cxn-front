@@ -6,9 +6,7 @@ import NotFoundPage from './pages/NotFoundPage'
 import { ROUTES } from './resources/routes-constants'
 import './styles/main.scss'
 import ProfilePage from './pages/ProfilePage'
-import CompaniesManagerPage from './pages/CompaniesManagerPage'
-import InvoicesManagerPage from './pages/InvoicesManagerPage'
-import PaymentSheetManagerPage from './pages/PaymentSheetManagerPage'
+
 import SchoolPage from './pages/School/SchoolPage'
 import TheClubPage from './pages/TheClubPage'
 import MembersManagerTable from './pages/MembersManagerPage'
@@ -17,7 +15,7 @@ import SchoolOld from './pages/School/SchoolOld'
 import SchoolOnline from './pages/School/SchoolOnline'
 import SchoolResources from './pages/School/SchoolResources'
 import LibraryManagerPage from './pages/LibraryManagerPage'
-import PaymentSheetPDFGeneratorWrapper from './components/PaymentSheet/PaymentSheetPdfGeneratorWrapper'
+
 import ActivitiesPage from './pages/ActivitiesPage'
 import ScrollTopWrapper from './components/Common/ScrollTopWrapper'
 import PrivacyPolicy from './pages/PrivacyPolicy'
@@ -35,10 +33,6 @@ const RootComponent = (): JSX.Element => {
                 <Route path={ROUTES.LOGIN_ROUTE} element={<LoginPage />} />
                 <Route path={ROUTES.SIGNUP_ROUTE} element={<SignUpPage />} />
                 <Route path={ROUTES.MYPROFILE_ROUTE} element={<ProfilePage />} />
-                <Route path={ROUTES.COMPANIES_MANAGER_ROUTE} element={<CompaniesManagerPage />} />
-                <Route path={ROUTES.INVOICES_MANAGER_ROUTE} element={<InvoicesManagerPage />} />
-                <Route path={ROUTES.PAYMENT_SHEET_MANAGER_ROUTE} element={<PaymentSheetManagerPage />} />
-                <Route path={ROUTES.PDF_DOCUMENT} element={<PaymentSheetPDFGeneratorWrapper />} />
                 <Route path={ROUTES.SCHOOL_CHILDS} element={<SchoolKids />} />
                 <Route path={ROUTES.SCHOOL_OLDS} element={<SchoolOld />} />
                 <Route path={ROUTES.SCHOOL_ONLINE} element={<SchoolOnline />} />
