@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Modal } from 'react-bootstrap'
+import { Button, Modal, Spinner } from 'react-bootstrap'
 import Image from 'react-bootstrap/Image'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { setProfileImage } from '../../store/slices/user'
@@ -18,6 +18,9 @@ const ImageStyled = styled(Image)<{ selected: boolean }>`
     padding: 0.33em;
     border: ${({ selected }) => (selected ? '3px solid #28a745' : '2px solid transparent')};
     border-radius: 8px;
+    width: 100px;
+    height: 100px;
+    aspect-ratio: 1/1;
     transition:
         transform 0.2s ease,
         border 0.2s ease;
@@ -49,7 +52,6 @@ const ModalHeaderStyled = styled(Modal.Header)`
 
 const ModalBodyStyled = styled(Modal.Body)`
     background-color: #f8f9fa;
-    padding: 2rem;
 
     // Adjust padding for mobile devices
     @media (max-width: 768px) {
@@ -65,6 +67,7 @@ const ModalBodyStyled = styled(Modal.Body)`
         overflow-y: auto; // Enable scrolling on mobile
     }
 `
+const ImagesContainer = styled.div``
 
 const ModalFooterStyled = styled(Modal.Footer)`
     display: flex;
@@ -100,6 +103,7 @@ const PersonalImageButtonChanger = (): JSX.Element => {
     const [selectedImage, setSelectedImage] = React.useState<string | null>(null) // Track selected image
     const { showNotification } = useNotificationContext()
     const dispatch = useAppDispatch()
+    const [loading, setLoading] = React.useState(false) // State for loading
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
 
     const handleChangeProfileImage = () => {
@@ -113,6 +117,7 @@ const PersonalImageButtonChanger = (): JSX.Element => {
 
     const handleChangeProfileImagePersist = () => {
         if (selectedImage) {
+            setLoading(true) // Set loading to true when starting the update process
             axios
                 .patch<UserProfileImage>(
                     UPDATE_PROFILE_IMAGE_URL,
@@ -128,8 +133,10 @@ const PersonalImageButtonChanger = (): JSX.Element => {
                     const updatedUserProfileImage: UserProfileImage = response.data
                     showNotification('Imagen de perfil actualizada', NotificationType.Success)
                     dispatch(setProfileImage(updatedUserProfileImage))
+                    setLoading(false) // Set loading to false after successful update
                 })
                 .catch((error) => {
+                    setLoading(false) // Set loading to false after error
                     if (error instanceof AxiosError) {
                         showNotification('Error al actualizar la imagen de perfil: ' + error.message, NotificationType.Error)
                     } else {
@@ -147,23 +154,23 @@ const PersonalImageButtonChanger = (): JSX.Element => {
             <Modal aria-labelledby="contained-modal-title-vcenter" centered show={changeProfileImage} onHide={handleChangeProfileImage}>
                 <ModalHeaderStyled closeButton>Selecciona una de las imágenes:</ModalHeaderStyled>
                 <ModalBodyStyled>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                    <ImagesContainer>
                         {imageUrlList.map((url, index) => (
-                            <ImageStyled
-                                key={index}
-                                src={url}
-                                thumbnail
-                                selected={selectedImage === url}
-                                onClick={() => handleImageSelect(url)}
-                                style={{ width: '100px', height: '100px' }}
-                            />
+                            <ImageStyled key={index} src={url} thumbnail selected={selectedImage === url} onClick={() => handleImageSelect(url)} />
                         ))}
-                    </div>
+                    </ImagesContainer>
                 </ModalBodyStyled>
                 <ModalFooterStyled>
                     <UploadProfileImageButton />
-                    <StyledButton variant="success" onClick={handleChangeProfileImagePersist} disabled={!selectedImage}>
-                        Cambiar
+                    <StyledButton variant="success" onClick={handleChangeProfileImagePersist} disabled={!selectedImage || loading}>
+                        {loading ? (
+                            <>
+                                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                                &nbsp;Cambiando...
+                            </>
+                        ) : (
+                            'Cambiar'
+                        )}
                     </StyledButton>
                     <Button variant="danger" onClick={handleChangeProfileImage}>
                         Cerrar

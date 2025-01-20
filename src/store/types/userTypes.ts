@@ -21,7 +21,7 @@ export interface UserData {
     firstSurname: string
     secondSurname: string
     gender: string
-    birthDate: Date
+    birthDate: string
     kindMember: KindMember
     userRoles: UserRole[]
 }
