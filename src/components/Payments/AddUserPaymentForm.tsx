@@ -18,6 +18,17 @@ const ButtonsWrapper = styled.div`
     margin-top: 20px;
 `
 
+const StyledSubmitButton = styled(Button)`
+    display: flex;
+    align-items: center;
+`
+
+const SpinnerTextWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 8px;
+`
+
 const validationSchema = Yup.object({
     userDni: Yup.string().required('Seleccione un usuario'),
     title: Yup.string().required('El título es obligatorio').max(50, 'El título no puede superar los 50 caracteres'),
@@ -49,13 +60,15 @@ interface AddUserPaymentFormProps {
 const AddUserPaymentForm: React.FC<AddUserPaymentFormProps> = ({ closemodal, addPaymentTableFunc }) => {
     const [users, setUsers] = useState<UserData[]>([])
     const [loading, setLoading] = useState(false)
+    const [loadedUsers, setLoadedUsers] = useState(false)
+    const [loadUsersError, setLoadUsersError] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const { showNotification } = useNotificationContext()
 
     useEffect(() => {
         const fetchUsers = async () => {
-            setLoading(true)
+            setLoadedUsers(false)
             try {
                 const response = await axios.get<IUsersListData>(GET_ALL_USERS_URL, {
                     headers: {
@@ -63,10 +76,10 @@ const AddUserPaymentForm: React.FC<AddUserPaymentFormProps> = ({ closemodal, add
                     }
                 })
                 setUsers(response.data.usersList)
+                setLoadedUsers(true)
             } catch (err) {
                 setError('Error al cargar los usuarios.')
-            } finally {
-                setLoading(false)
+                setLoadUsersError(true)
             }
         }
 
@@ -119,9 +132,8 @@ const AddUserPaymentForm: React.FC<AddUserPaymentFormProps> = ({ closemodal, add
 
     return (
         <div className="container mt-4">
-            {loading && <Spinner animation="border" role="status" />}
             {error && <Alert variant="danger">{error}</Alert>}
-            {!loading && !error && (
+            {!error && (
                 <Form onSubmit={formik.handleSubmit}>
                     <Row>
                         <Form.Group as={Col} md="6" className="mb-3" controlId="userDni">
@@ -132,13 +144,27 @@ const AddUserPaymentForm: React.FC<AddUserPaymentFormProps> = ({ closemodal, add
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                                 isInvalid={formik.touched.userDni && !!formik.errors.userDni}
+                                disabled={!loadedUsers || loadUsersError} // Deshabilitar si no están cargados o hay error
                             >
-                                <option value="">Seleccionar usuario</option>
-                                {users.map((user) => (
-                                    <option key={user.dni} value={user.dni}>
-                                        {`${user.name} ${user.firstSurname} ${user.secondSurname}`}
+                                {/* Mostrar mensaje dinámico basado en el estado */}
+                                {!loadedUsers ? (
+                                    <option value="" disabled>
+                                        Cargando usuarios...
                                     </option>
-                                ))}
+                                ) : loadUsersError ? (
+                                    <option value="" disabled>
+                                        Error al cargar usuarios
+                                    </option>
+                                ) : (
+                                    <option value="">Seleccionar usuario</option>
+                                )}
+                                {/* Listar los usuarios si están cargados */}
+                                {loadedUsers &&
+                                    users.map((user) => (
+                                        <option key={user.dni} value={user.dni}>
+                                            {`${user.name} ${user.firstSurname} ${user.secondSurname}`}
+                                        </option>
+                                    ))}
                             </Form.Select>
                             <Form.Control.Feedback type="invalid">{formik.errors.userDni}</Form.Control.Feedback>
                         </Form.Group>
@@ -209,10 +235,17 @@ const AddUserPaymentForm: React.FC<AddUserPaymentFormProps> = ({ closemodal, add
                     </Row>
 
                     <ButtonsWrapper>
-                        <Button type="submit" variant="primary" disabled={loading || !formik.isValid || !formik.dirty}>
-                            Añadir Pago
-                        </Button>
-                        <Button variant="danger" onClick={() => closemodal()}>
+                        <StyledSubmitButton type="submit" variant="primary" disabled={loading || !formik.isValid || !formik.dirty}>
+                            {loading ? (
+                                <SpinnerTextWrapper>
+                                    <Spinner animation="border" role="status" />
+                                    Añadiendo...
+                                </SpinnerTextWrapper>
+                            ) : (
+                                'Añadir Pago'
+                            )}
+                        </StyledSubmitButton>
+                        <Button variant="danger" onClick={closemodal}>
                             Salir
                         </Button>
                     </ButtonsWrapper>

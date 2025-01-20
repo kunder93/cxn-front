@@ -73,3 +73,5 @@ export const MAKE_PYAMENT_URL = BASE_URL + 'api/payments' //   /{paymentId}/pay 
 export const CREATE_PAYMENT_URL = BASE_URL + 'api/payments' //   @PostMapping
 
 export const PAYMENT_URL = BASE_URL + 'api/payments' //   @PostMapping
+
+export const ACEPT_USER_URL = BASE_URL + 'api/user/acceptAsMember'
