@@ -3,6 +3,19 @@ import { FormControl, Table, Form, Button } from 'react-bootstrap'
 import { CellProps, Column, useSortBy, useTable } from 'react-table'
 import styled from 'styled-components'
 import MagazinesDetailsModal from './MagazinesDetailsModal'
+import { FaRegPlusSquare } from 'react-icons/fa'
+import AddMagazineModal from './AddMagazineModal'
+
+const AddMagazineIcon = styled(FaRegPlusSquare)`
+    fill: blue;
+    cursor: pointer;
+    font-size: 4rem;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: scale(1.2);
+    }
+`
 
 export interface Author {
     name: string
@@ -118,12 +131,17 @@ const MagazinesViewer: React.FC = () => {
     })
     const [showModal, setShowModal] = useState(false)
     const [selectedMagazine, setSelectedMagazine] = useState<Magazine | null>(null)
+    const [addMagazineModal, setAddMagazineModal] = useState(false)
 
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFilters((prev) => ({
             ...prev,
             [e.target.name]: e.target.checked
         }))
+    }
+
+    const openAddMagazineModal = () => {
+        setAddMagazineModal(true)
     }
 
     const handleShowModal = (magazine: Magazine) => {
@@ -239,6 +257,8 @@ const MagazinesViewer: React.FC = () => {
                 </tbody>
             </Table>
             {selectedMagazine && <MagazinesDetailsModal showModal={showModal} handleCloseModal={handleCloseModal} selectedMagazine={selectedMagazine} />}
+            <AddMagazineIcon size={44} onClick={openAddMagazineModal} />
+            {addMagazineModal && <AddMagazineModal showModal={addMagazineModal} handleCloseModal={() => setAddMagazineModal(false)} />}
         </div>
     )
 }

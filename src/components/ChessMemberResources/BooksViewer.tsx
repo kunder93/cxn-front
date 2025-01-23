@@ -3,6 +3,19 @@ import { Button, Form, FormControl, Table } from 'react-bootstrap'
 import { CellProps, Column, useSortBy, useTable } from 'react-table'
 import styled from 'styled-components'
 import BookDetailsModal from './BookDetaisModal'
+import { FaRegPlusSquare } from 'react-icons/fa'
+import AddBookModal from './AddBookModal'
+
+const AddBookIcon = styled(FaRegPlusSquare)`
+    fill: blue;
+    cursor: pointer;
+    font-size: 4rem;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: scale(1.2);
+    }
+`
 
 const SearchOptionsWrapper = styled.div`
     display: flex;
@@ -68,7 +81,7 @@ const BooksViewer = () => {
     })
     const [showModal, setShowModal] = useState(false)
     const [selectedBook, setSelectedBook] = useState<Book | null>(null)
-
+    const [addBookModal, setAddBookModal] = useState(false)
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFilters((prev) => ({
             ...prev,
@@ -84,6 +97,10 @@ const BooksViewer = () => {
     const handleCloseModal = () => {
         setShowModal(false)
         setSelectedBook(null)
+    }
+
+    const openAddBookModal = () => {
+        setAddBookModal(true)
     }
 
     const filteredBooks = useMemo(() => {
@@ -185,6 +202,8 @@ const BooksViewer = () => {
                 </tbody>
             </Table>
             {selectedBook && <BookDetailsModal showModal={showModal} handleCloseModal={handleCloseModal} selectedBook={selectedBook} />}
+            <AddBookIcon size={44} onClick={openAddBookModal} />
+            {addBookModal && <AddBookModal showModal={addBookModal} handleCloseModal={() => setAddBookModal(false)} />}
         </div>
     )
 }
