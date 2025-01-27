@@ -8,6 +8,7 @@ import AddBookModal from './AddBookModal'
 import axios from 'axios'
 import { RESOURCES_BOOK_URL } from 'resources/server_urls'
 import { useAppSelector } from 'store/hooks'
+import LoadingTableSpinnerContainer from 'components/Common/LoadingTableSpinnerContainer'
 
 const AddBookIcon = styled(FaRegPlusSquare)`
     fill: blue;
@@ -44,10 +45,19 @@ export interface Book {
 const BooksViewer = () => {
     const [books, setBooks] = useState<Book[]>([])
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
+    const [loading, setLoading] = useState(false)
+
     useEffect(() => {
         const fetchBooks = async () => {
-            const response = await axios.get<Book[]>(RESOURCES_BOOK_URL, { headers: { Authorization: `Bearer ${userJwt}` } })
-            setBooks(response.data)
+            setLoading(true)
+            try {
+                const response = await axios.get<Book[]>(RESOURCES_BOOK_URL, { headers: { Authorization: `Bearer ${userJwt}` } })
+                setBooks(response.data)
+            } catch (error) {
+                console.error('Error fetching books:', error)
+            } finally {
+                setLoading(false)
+            }
         }
         void fetchBooks()
     }, [userJwt])
@@ -66,6 +76,11 @@ const BooksViewer = () => {
             ...prev,
             [e.target.name]: e.target.checked
         }))
+    }
+
+    // Function to add a new book to the table
+    const addBook = (newBook: Book) => {
+        setBooks((prevBooks) => [...prevBooks, newBook])
     }
 
     const handleShowModal = (book: Book) => {
@@ -90,7 +105,7 @@ const BooksViewer = () => {
                 (filters.language && book.language.toLowerCase().includes(searchQuery.toLowerCase()))
             return matchesSearch
         })
-    }, [searchQuery, filters])
+    }, [books, searchQuery, filters])
 
     const columns: Column<Book>[] = useMemo(
         () => [
@@ -132,57 +147,63 @@ const BooksViewer = () => {
 
     return (
         <div>
-            {/* Sección de Checkboxes */}
-            <Form.Group>
-                <SearchOptionsWrapper>
-                    <Form.Check type="checkbox" label="Buscar por Título" name="title" checked={filters.title} onChange={handleCheckboxChange} />
-                    <Form.Check
-                        type="checkbox"
-                        label="Buscar por Descripción"
-                        name="description"
-                        checked={filters.description}
-                        onChange={handleCheckboxChange}
-                    />
-                    <Form.Check type="checkbox" label="Buscar por Idioma" name="language" checked={filters.language} onChange={handleCheckboxChange} />
-                </SearchOptionsWrapper>
-            </Form.Group>
-            {/* Barra de Búsqueda */}
-            <FormControl type="text" placeholder="Buscar..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="mb-3" />
-            {/* Tabla */}
-            <Table {...getTableProps()} striped bordered hover>
-                <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column) => (
-                                <th
-                                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                                    style={{
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    {column.render('Header')}
-                                    <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
-                                </th>
+            {loading ? (
+                <LoadingTableSpinnerContainer></LoadingTableSpinnerContainer>
+            ) : (
+                <div>
+                    {/* Sección de Checkboxes */}
+                    <Form.Group>
+                        <SearchOptionsWrapper>
+                            <Form.Check type="checkbox" label="Buscar por Título" name="title" checked={filters.title} onChange={handleCheckboxChange} />
+                            <Form.Check
+                                type="checkbox"
+                                label="Buscar por Descripción"
+                                name="description"
+                                checked={filters.description}
+                                onChange={handleCheckboxChange}
+                            />
+                            <Form.Check type="checkbox" label="Buscar por Idioma" name="language" checked={filters.language} onChange={handleCheckboxChange} />
+                        </SearchOptionsWrapper>
+                    </Form.Group>
+                    {/* Barra de Búsqueda */}
+                    <FormControl type="text" placeholder="Buscar..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="mb-3" />
+                    {/* Tabla */}
+                    <Table {...getTableProps()} striped bordered hover>
+                        <thead>
+                            {headerGroups.map((headerGroup) => (
+                                <tr {...headerGroup.getHeaderGroupProps()}>
+                                    {headerGroup.headers.map((column) => (
+                                        <th
+                                            {...column.getHeaderProps(column.getSortByToggleProps())}
+                                            style={{
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            {column.render('Header')}
+                                            <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
+                                        </th>
+                                    ))}
+                                </tr>
                             ))}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody {...getTableBodyProps()}>
-                    {rows.map((row) => {
-                        prepareRow(row)
-                        return (
-                            <tr {...row.getRowProps()}>
-                                {row.cells.map((cell) => {
-                                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                })}
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </Table>
-            {selectedBook && <BookDetailsModal showModal={showModal} handleCloseModal={handleCloseModal} selectedBook={selectedBook} />}
-            <AddBookIcon size={44} onClick={openAddBookModal} />
-            {addBookModal && <AddBookModal showModal={addBookModal} handleCloseModal={() => setAddBookModal(false)} />}
+                        </thead>
+                        <tbody {...getTableBodyProps()}>
+                            {rows.map((row) => {
+                                prepareRow(row)
+                                return (
+                                    <tr {...row.getRowProps()}>
+                                        {row.cells.map((cell) => {
+                                            return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                        })}
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </Table>
+                    {selectedBook && <BookDetailsModal showModal={showModal} handleCloseModal={handleCloseModal} selectedBook={selectedBook} />}
+                    <AddBookIcon size={44} onClick={openAddBookModal} />
+                    {addBookModal && <AddBookModal addBookFunction={addBook} showModal={addBookModal} handleCloseModal={() => setAddBookModal(false)} />}
+                </div>
+            )}
         </div>
     )
 }

@@ -1,20 +1,22 @@
 import React from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import AddBookForm from './AddBookForm'
+import { Book } from './BooksViewer'
 
 interface AddBookModalProps {
     showModal: boolean
     handleCloseModal: () => void
+    addBookFunction: (newBook: Book) => void
 }
 
-const AddBookModal: React.FC<AddBookModalProps> = ({ showModal, handleCloseModal }) => {
+const AddBookModal: React.FC<AddBookModalProps> = ({ showModal, handleCloseModal, addBookFunction }) => {
     return (
         <Modal show={showModal} onHide={handleCloseModal}>
             <Modal.Header closeButton>
                 <Modal.Title>Agregar Libro</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <AddBookForm></AddBookForm>
+                <AddBookForm addBookFunction={addBookFunction}></AddBookForm>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="danger" onClick={handleCloseModal}>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Author } from './BooksViewer'
+import { Author, Book } from './BooksViewer'
 import { Field, FieldArray, Form, Formik, FormikState } from 'formik'
 import DatePicker, { registerLocale } from 'react-datepicker'
 import styled from 'styled-components'
@@ -41,9 +41,9 @@ const DropzoneContainer = styled.div`
         background-color: #f0f8ff;
     }
     img {
-        max-width: 100%;
-        max-height: 150px;
-        margin-top: 1rem;
+        width: 200px; /* Fijar ancho del marco */
+        height: 300px; /* Fijar alto del marco */
+        object-fit: cover; /* Para que la imagen se ajuste al contenedor */
     }
 `
 
@@ -67,7 +67,11 @@ interface IFormBook {
     imageFile: File | null
 }
 
-const AddBookForm: React.FC = () => {
+interface AddBookFormProps {
+    addBookFunction: (newBook: Book) => void
+}
+
+const AddBookForm: React.FC<AddBookFormProps> = ({ addBookFunction }) => {
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const { showNotification } = useNotificationContext()
 
@@ -92,7 +96,6 @@ const AddBookForm: React.FC = () => {
             ? `${String(values.publishDate.getDate()).padStart(2, '0')}/${String(values.publishDate.getMonth() + 1).padStart(2, '0')}/${values.publishDate.getFullYear()}`
             : ''
 
-        // Prepare the activity data to match AddActivityRequestData
         const bookData = {
             isbn: values.isbn,
             title: values.title,
@@ -103,7 +106,6 @@ const AddBookForm: React.FC = () => {
             authors: values.authors
         }
 
-        // Add activity data as a JSON Blob to the FormData
         const jsonBlob = new Blob([JSON.stringify(bookData)], { type: 'application/json' })
         formData.append('data', jsonBlob)
 
@@ -120,7 +122,8 @@ const AddBookForm: React.FC = () => {
                 }
             })
             .then((/*response*/) => {
-                showNotification('Actividad creada', NotificationType.Success)
+                showNotification('Libro añadido.', NotificationType.Success)
+                addBookFunction(bookData)
                 resetForm()
                 setPreviewUrl(null)
                 //ADD BOOK
@@ -194,7 +197,7 @@ const AddBookForm: React.FC = () => {
                                 as="textarea"
                                 className="form-control"
                                 placeholder="Descripción detallada del libro. Qué se va a hacer."
-                                aria-label="Descripción de la actividad"
+                                aria-label="Descripción del libro."
                                 aria-describedby="descriptionError"
                             />
                             <ErrorContainer>
@@ -352,7 +355,7 @@ const AddBookForm: React.FC = () => {
                         )}
 
                         <Button type="submit" variant="success" disabled={!isValid || !dirty}>
-                            Añadir actividad
+                            Añadir libro
                         </Button>
                     </Form>
                 )
