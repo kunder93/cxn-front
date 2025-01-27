@@ -12,6 +12,7 @@ import LoadingTableSpinnerContainer from 'components/Common/LoadingTableSpinnerC
 import RemoveBookModal from './RemoveBookModal'
 import { useNotificationContext } from 'components/Common/NotificationContext'
 import { NotificationType } from 'components/Common/hooks/useNotification'
+import { UserProfile, UserRole } from 'store/types/userTypes'
 
 const OptionButton = styled(Button)`
     width: 100%;
@@ -54,6 +55,12 @@ const BooksViewer = () => {
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const [loading, setLoading] = useState(false)
     const { showNotification } = useNotificationContext()
+    const userProfile: UserProfile = useAppSelector((state) => state.users.userProfile)
+
+    const shouldShow =
+        userProfile.userRoles.includes(UserRole.ADMIN) ||
+        userProfile.userRoles.includes(UserRole.PRESIDENTE) ||
+        userProfile.userRoles.includes(UserRole.SECRETARIO)
 
     useEffect(() => {
         const fetchBooks = async () => {
@@ -166,14 +173,16 @@ const BooksViewer = () => {
                         <OptionButton variant="info" style={{ width: '100%' }} onClick={() => handleShowModal(row.original)}>
                             Ver más
                         </OptionButton>
-                        <OptionButton variant="danger" style={{ width: '100%' }} onClick={() => handleRemoveBookModal(row.original)}>
-                            Borrar
-                        </OptionButton>
+                        {shouldShow && (
+                            <OptionButton variant="danger" style={{ width: '100%' }} onClick={() => handleRemoveBookModal(row.original)}>
+                                Borrar
+                            </OptionButton>
+                        )}
                     </>
                 )
             }
         ],
-        []
+        [shouldShow]
     )
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
@@ -239,7 +248,8 @@ const BooksViewer = () => {
                         </tbody>
                     </Table>
                     {selectedBook && <BookDetailsModal showModal={showModal} handleCloseModal={handleCloseModal} selectedBook={selectedBook} />}
-                    <AddBookIcon size={44} onClick={openAddBookModal} />
+
+                    {shouldShow && <AddBookIcon size={44} onClick={openAddBookModal} />}
                     {addBookModal && <AddBookModal addBookFunction={addBook} showModal={addBookModal} handleCloseModal={() => setAddBookModal(false)} />}
                     {selectedBook && (
                         <RemoveBookModal
