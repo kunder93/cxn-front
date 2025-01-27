@@ -9,6 +9,13 @@ import axios from 'axios'
 import { RESOURCES_BOOK_URL } from 'resources/server_urls'
 import { useAppSelector } from 'store/hooks'
 import LoadingTableSpinnerContainer from 'components/Common/LoadingTableSpinnerContainer'
+import RemoveBookModal from './RemoveBookModal'
+import { useNotificationContext } from 'components/Common/NotificationContext'
+import { NotificationType } from 'components/Common/hooks/useNotification'
+
+const OptionButton = styled(Button)`
+    width: 100%;
+`
 
 const AddBookIcon = styled(FaRegPlusSquare)`
     fill: blue;
@@ -46,6 +53,7 @@ const BooksViewer = () => {
     const [books, setBooks] = useState<Book[]>([])
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const [loading, setLoading] = useState(false)
+    const { showNotification } = useNotificationContext()
 
     useEffect(() => {
         const fetchBooks = async () => {
@@ -69,6 +77,7 @@ const BooksViewer = () => {
         language: true
     })
     const [showModal, setShowModal] = useState(false)
+    const [showRemoveBookModal, setShowRemoveBookModal] = useState(false)
     const [selectedBook, setSelectedBook] = useState<Book | null>(null)
     const [addBookModal, setAddBookModal] = useState(false)
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,9 +92,34 @@ const BooksViewer = () => {
         setBooks((prevBooks) => [...prevBooks, newBook])
     }
 
+    const handleRemoveBook = async (book: Book): Promise<void> => {
+        try {
+            // Make the API call to remove the book (you may need to adjust this to your actual endpoint)
+            await axios.delete(`${RESOURCES_BOOK_URL}/${book.isbn}`, {
+                headers: { Authorization: `Bearer ${userJwt}` }
+            })
+
+            // Remove the book from the state
+            setBooks((prevBooks) => prevBooks.filter((b) => b.isbn !== book.isbn))
+            showNotification('Libro eliminado exitosamente', NotificationType.Success)
+        } catch (error) {
+            console.error('Error removing book:', error)
+        }
+    }
+
     const handleShowModal = (book: Book) => {
         setSelectedBook(book)
         setShowModal(true)
+    }
+
+    const handleRemoveBookModal = (book: Book) => {
+        setSelectedBook(book)
+        setShowRemoveBookModal(true)
+    }
+
+    const handleCloseRemoveBookModal = () => {
+        setShowRemoveBookModal(false)
+        setSelectedBook(null)
     }
 
     const handleCloseModal = () => {
@@ -128,9 +162,14 @@ const BooksViewer = () => {
             {
                 Header: 'Detalles',
                 Cell: ({ row }: CellProps<Book>) => (
-                    <Button variant="info" onClick={() => handleShowModal(row.original)}>
-                        Ver Detalles
-                    </Button>
+                    <>
+                        <OptionButton variant="info" style={{ width: '100%' }} onClick={() => handleShowModal(row.original)}>
+                            Ver más
+                        </OptionButton>
+                        <OptionButton variant="danger" style={{ width: '100%' }} onClick={() => handleRemoveBookModal(row.original)}>
+                            Borrar
+                        </OptionButton>
+                    </>
                 )
             }
         ],
@@ -202,6 +241,14 @@ const BooksViewer = () => {
                     {selectedBook && <BookDetailsModal showModal={showModal} handleCloseModal={handleCloseModal} selectedBook={selectedBook} />}
                     <AddBookIcon size={44} onClick={openAddBookModal} />
                     {addBookModal && <AddBookModal addBookFunction={addBook} showModal={addBookModal} handleCloseModal={() => setAddBookModal(false)} />}
+                    {selectedBook && (
+                        <RemoveBookModal
+                            showModal={showRemoveBookModal}
+                            handleCloseModal={handleCloseRemoveBookModal}
+                            selectedBook={selectedBook}
+                            removeBookFunction={handleRemoveBook}
+                        />
+                    )}
                 </div>
             )}
         </div>
