@@ -40,7 +40,7 @@ const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ showModal, handleCl
                                 <ul>
                                     {selectedBook.authors.map((author, index) => (
                                         <li key={index}>
-                                            {author.name} {author.lastName}
+                                            {author.firstName} {author.lastName}
                                         </li>
                                     ))}
                                 </ul>

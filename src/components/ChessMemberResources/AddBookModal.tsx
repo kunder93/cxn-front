@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Modal } from 'react-bootstrap'
-import { AddBookForm } from './AddBookForm'
+import AddBookForm from './AddBookForm'
 
 interface AddBookModalProps {
     showModal: boolean

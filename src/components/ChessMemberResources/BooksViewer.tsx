@@ -23,12 +23,13 @@ const SearchOptionsWrapper = styled.div`
     flex-wrap: nowrap;
 `
 
-interface Author {
-    name: string
+export interface Author {
+    firstName: string
     lastName: string
 }
 
 export interface Book {
+    isbn: string
     title: string
     description: string
     genre: string
@@ -40,6 +41,7 @@ export interface Book {
 
 const books: Book[] = [
     {
+        isbn: 'dasdasdasd432',
         title: 'First slide',
         description: 'This is the first book.',
         genre: 'Fantasy',
@@ -47,11 +49,12 @@ const books: Book[] = [
         publishDate: '2025-01-01',
         coverSrc: 'https://marketplace.canva.com/EAFI171fL0M/1/0/1003w/canva-portada-de-libro-de-novela-ilustrado-color-azul-aqua-PQeWaiiK0aA.jpg',
         authors: [
-            { name: 'John', lastName: 'Doe' },
-            { name: 'Jane', lastName: 'Smith' }
+            { firstName: 'John', lastName: 'Doe' },
+            { firstName: 'Jane', lastName: 'Smith' }
         ]
     },
     {
+        isbn: 'dasda4sdasd12',
         title: 'Second slide',
         description: 'This is the second book.',
         genre: 'Romance',
@@ -59,16 +62,17 @@ const books: Book[] = [
         language: 'English',
         coverSrc:
             'https://marketplace.canva.com/EAFEL6G6JSU/1/0/1003w/canva-portada-de-libro-pdf-electr%C3%B3nico-digital-silueta-persona-rosa-azul-oS2hyQNbxmM.jpg',
-        authors: [{ name: 'Alice', lastName: 'Johnson' }]
+        authors: [{ firstName: 'Alice', lastName: 'Johnson' }]
     },
     {
+        isbn: 'dasdasdasd222',
         title: 'Third slide',
         description: 'This is the third book.',
         genre: 'Thriller',
         publishDate: '2025-01-01',
         language: 'English',
         coverSrc: 'https://edit.org/photos/img/blog/wdn-editar-portadas-de-libros-gratis.jpg-840.jpg',
-        authors: [{ name: 'Robert', lastName: 'Brown' }]
+        authors: [{ firstName: 'Robert', lastName: 'Brown' }]
     }
 ]
 
