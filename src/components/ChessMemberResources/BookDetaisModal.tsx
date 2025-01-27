@@ -1,5 +1,9 @@
 import { Button, Modal } from 'react-bootstrap'
 import { Book } from './BooksViewer'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import { RESOURCES_BOOK_URL } from 'resources/server_urls'
+import { useAppSelector } from 'store/hooks'
 
 interface BookDetailsModalProps {
     showModal: boolean
@@ -8,6 +12,31 @@ interface BookDetailsModalProps {
 }
 
 const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ showModal, handleCloseModal, selectedBook }) => {
+    const [image, setImage] = useState<string | null>(null)
+    const jwtToken = useAppSelector<string | null>((state) => state.users.jwt)
+
+    useEffect(() => {
+        if (selectedBook?.isbn) {
+            axios
+                .get(`${RESOURCES_BOOK_URL}/${selectedBook.isbn}/coverImage`, {
+                    headers: {
+                        Authorization: `Bearer ${jwtToken}`
+                    },
+                    responseType: 'blob'
+                })
+                .then((response) => {
+                    const reader = new FileReader()
+                    reader.readAsDataURL(response.data)
+                    reader.onload = () => {
+                        setImage(reader.result as string)
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error loading book cover image:', error)
+                })
+        }
+    }, [jwtToken, selectedBook])
+
     return (
         <Modal show={showModal} onHide={handleCloseModal}>
             <Modal.Header closeButton>
@@ -47,7 +76,7 @@ const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ showModal, handleCl
                             </div>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                            <img src={selectedBook.coverSrc} alt="Portada" style={{ width: '200px', height: '300px', border: '3px solid black' }} />
+                            <img src={image ? image : ''} alt="Portada" style={{ width: '200px', height: '300px', border: '3px solid black' }} />
                         </div>
                     </>
                 )}

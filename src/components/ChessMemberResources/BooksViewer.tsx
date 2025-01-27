@@ -1,10 +1,13 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Button, Form, FormControl, Table } from 'react-bootstrap'
 import { CellProps, Column, useSortBy, useTable } from 'react-table'
 import styled from 'styled-components'
 import BookDetailsModal from './BookDetaisModal'
 import { FaRegPlusSquare } from 'react-icons/fa'
 import AddBookModal from './AddBookModal'
+import axios from 'axios'
+import { RESOURCES_BOOK_URL } from 'resources/server_urls'
+import { useAppSelector } from 'store/hooks'
 
 const AddBookIcon = styled(FaRegPlusSquare)`
     fill: blue;
@@ -35,48 +38,20 @@ export interface Book {
     genre: string
     publishDate: string
     language: string
-    coverSrc: string
     authors: Author[]
 }
 
-const books: Book[] = [
-    {
-        isbn: 'dasdasdasd432',
-        title: 'First slide',
-        description: 'This is the first book.',
-        genre: 'Fantasy',
-        language: 'English',
-        publishDate: '2025-01-01',
-        coverSrc: 'https://marketplace.canva.com/EAFI171fL0M/1/0/1003w/canva-portada-de-libro-de-novela-ilustrado-color-azul-aqua-PQeWaiiK0aA.jpg',
-        authors: [
-            { firstName: 'John', lastName: 'Doe' },
-            { firstName: 'Jane', lastName: 'Smith' }
-        ]
-    },
-    {
-        isbn: 'dasda4sdasd12',
-        title: 'Second slide',
-        description: 'This is the second book.',
-        genre: 'Romance',
-        publishDate: '2025-01-01',
-        language: 'English',
-        coverSrc:
-            'https://marketplace.canva.com/EAFEL6G6JSU/1/0/1003w/canva-portada-de-libro-pdf-electr%C3%B3nico-digital-silueta-persona-rosa-azul-oS2hyQNbxmM.jpg',
-        authors: [{ firstName: 'Alice', lastName: 'Johnson' }]
-    },
-    {
-        isbn: 'dasdasdasd222',
-        title: 'Third slide',
-        description: 'This is the third book.',
-        genre: 'Thriller',
-        publishDate: '2025-01-01',
-        language: 'English',
-        coverSrc: 'https://edit.org/photos/img/blog/wdn-editar-portadas-de-libros-gratis.jpg-840.jpg',
-        authors: [{ firstName: 'Robert', lastName: 'Brown' }]
-    }
-]
-
 const BooksViewer = () => {
+    const [books, setBooks] = useState<Book[]>([])
+    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
+    useEffect(() => {
+        const fetchBooks = async () => {
+            const response = await axios.get<Book[]>(RESOURCES_BOOK_URL, { headers: { Authorization: `Bearer ${userJwt}` } })
+            setBooks(response.data)
+        }
+        void fetchBooks()
+    }, [userJwt])
+
     const [searchQuery, setSearchQuery] = useState('')
     const [filters, setFilters] = useState({
         title: true,
