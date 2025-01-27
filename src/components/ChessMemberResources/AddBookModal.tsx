@@ -17,7 +17,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ showModal, handleCloseModal
                 <AddBookForm></AddBookForm>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={handleCloseModal}>
+                <Button variant="danger" onClick={handleCloseModal}>
                     Cerrar
                 </Button>
             </Modal.Footer>

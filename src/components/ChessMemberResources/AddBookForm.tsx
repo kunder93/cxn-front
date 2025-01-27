@@ -55,7 +55,6 @@ const DateWrapper = styled.div`
 `
 
 interface IFormBook {
-    image: Uint8Array | null // `image` field as a byte array (or `null` if no image)
     previewUrl: string | null
     isbn: string
     title: string
@@ -83,7 +82,6 @@ const AddBookForm: React.FC = () => {
         publishDate: null,
         authors: [],
         coverSrc: '',
-        image: null,
         previewUrl: null,
         imageFile: null
     }
@@ -154,7 +152,7 @@ const AddBookForm: React.FC = () => {
             validationSchema={AddBookValidationSchema}
             onSubmit={(values, { resetForm }) => handleSubmit(values, resetForm)}
         >
-            {({ setFieldValue, values, validateField, setFieldTouched, isValid, dirty }) => {
+            {({ setFieldValue, values, validateField, setFieldTouched, isValid, dirty, errors }) => {
                 return (
                     <Form>
                         <div className="mb-3">
@@ -269,6 +267,7 @@ const AddBookForm: React.FC = () => {
                                             Añadir Autor
                                         </Button>
                                     </AuthorsHeaderWrapper>
+                                    {errors.authors && <ErrorContainer>{Array.isArray(errors.authors) ? '' : errors.authors}</ErrorContainer>}
                                     {values.authors.map((_, index) => (
                                         <div
                                             key={index}
@@ -321,8 +320,10 @@ const AddBookForm: React.FC = () => {
                                 <Dropzone
                                     onDrop={(acceptedFiles) => {
                                         const file = acceptedFiles[0]
-                                        void setFieldValue('imageFile', file)
-                                        setPreviewUrl(file ? URL.createObjectURL(file) : null)
+                                        if (file instanceof File) {
+                                            void setFieldValue('imageFile', file)
+                                            setPreviewUrl(URL.createObjectURL(file)) // Generar URL de la imagen
+                                        }
                                     }}
                                     accept={{
                                         'image/png': ['.png'],
@@ -343,12 +344,14 @@ const AddBookForm: React.FC = () => {
                                     )}
                                 </Dropzone>
                             </DropzoneContainer>
-                            <ErrorContainer>
-                                <ErrorMessage name="imageFile" component="div" />
-                            </ErrorContainer>
                         </div>
+                        {errors.imageFile && (
+                            <ErrorContainer style={{ marginBottom: '1rem' }}>
+                                <p>{errors.imageFile}</p>
+                            </ErrorContainer>
+                        )}
 
-                        <Button type="submit" variant="primary" disabled={!isValid || !dirty}>
+                        <Button type="submit" variant="success" disabled={!isValid || !dirty}>
                             Añadir actividad
                         </Button>
                     </Form>
