@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { FormControl, Table, Form, Button } from 'react-bootstrap'
 import { CellProps, Column, useSortBy, useTable } from 'react-table'
 import styled from 'styled-components'
@@ -12,6 +12,8 @@ import { NotificationType } from 'components/Common/hooks/useNotification'
 import { useNotificationContext } from 'components/Common/NotificationContext'
 import { RESOURCES_MAGAZINE_URL } from 'resources/server_urls'
 import RemoveMagazineModal from './RemoveMagazineModal'
+import LoadingTableSpinnerContainer from 'components/Common/LoadingTableSpinnerContainer'
+import { Author } from './BooksViewer'
 
 const OptionButton = styled(Button)`
     width: 100%;
@@ -27,11 +29,6 @@ const AddMagazineIcon = styled(FaRegPlusSquare)`
         transform: scale(1.2);
     }
 `
-
-export interface Author {
-    name: string
-    lastName: string
-}
 
 export interface Magazine {
     issn: string
@@ -65,11 +62,27 @@ const MagazinesViewer: React.FC = () => {
     const [showRemoveMagazineModal, setShowRemoveMagazineModal] = useState(false)
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const userProfile: UserProfile = useAppSelector((state) => state.users.userProfile)
+    const [loading, setLoading] = useState(false)
     const { showNotification } = useNotificationContext()
     const shouldShow =
         userProfile.userRoles.includes(UserRole.ADMIN) ||
         userProfile.userRoles.includes(UserRole.PRESIDENTE) ||
         userProfile.userRoles.includes(UserRole.SECRETARIO)
+
+    useEffect(() => {
+        const fetchMagazines = async () => {
+            setLoading(true)
+            try {
+                const response = await axios.get<Magazine[]>(RESOURCES_MAGAZINE_URL, { headers: { Authorization: `Bearer ${userJwt}` } })
+                setMagazines(response.data)
+            } catch (error) {
+                console.error('Error fetching books:', error)
+            } finally {
+                setLoading(false)
+            }
+        }
+        void fetchMagazines()
+    }, [userJwt])
 
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFilters((prev) => ({
@@ -130,7 +143,7 @@ const MagazinesViewer: React.FC = () => {
                 (filters.language && magazine.language.toLowerCase().includes(searchQuery.toLowerCase()))
             return matchesSearch
         })
-    }, [searchQuery, filters])
+    }, [magazines, filters.title, filters.description, filters.language, searchQuery])
 
     const columns: Column<Magazine>[] = useMemo(
         () => [
@@ -166,7 +179,7 @@ const MagazinesViewer: React.FC = () => {
                 )
             }
         ],
-        []
+        [shouldShow]
     )
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
@@ -179,66 +192,74 @@ const MagazinesViewer: React.FC = () => {
 
     return (
         <div>
-            {/* Sección de Checkboxes */}
-            <Form.Group>
-                <SearchOptionsWrapper>
-                    <Form.Check type="checkbox" label="Buscar por Título" name="title" checked={filters.title} onChange={handleCheckboxChange} />
-                    <Form.Check
-                        type="checkbox"
-                        label="Buscar por Descripción"
-                        name="description"
-                        checked={filters.description}
-                        onChange={handleCheckboxChange}
-                    />
-                    <Form.Check type="checkbox" label="Buscar por Idioma" name="language" checked={filters.language} onChange={handleCheckboxChange} />
-                </SearchOptionsWrapper>
-            </Form.Group>
-            {/* Barra de Búsqueda */}
-            <FormControl type="text" placeholder="Buscar..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="mb-3" />
-            {/* Tabla */}
-            <Table {...getTableProps()} striped bordered hover>
-                <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column) => (
-                                <th
-                                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                                    style={{
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    {column.render('Header')}
-                                    <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
-                                </th>
+            {loading ? (
+                <LoadingTableSpinnerContainer></LoadingTableSpinnerContainer>
+            ) : (
+                <div>
+                    {/* Sección de Checkboxes */}
+                    <Form.Group>
+                        <SearchOptionsWrapper>
+                            <Form.Check type="checkbox" label="Buscar por Título" name="title" checked={filters.title} onChange={handleCheckboxChange} />
+                            <Form.Check
+                                type="checkbox"
+                                label="Buscar por Descripción"
+                                name="description"
+                                checked={filters.description}
+                                onChange={handleCheckboxChange}
+                            />
+                            <Form.Check type="checkbox" label="Buscar por Idioma" name="language" checked={filters.language} onChange={handleCheckboxChange} />
+                        </SearchOptionsWrapper>
+                    </Form.Group>
+                    {/* Barra de Búsqueda */}
+                    <FormControl type="text" placeholder="Buscar..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="mb-3" />
+                    {/* Tabla */}
+                    <Table {...getTableProps()} striped bordered hover>
+                        <thead>
+                            {headerGroups.map((headerGroup) => (
+                                <tr {...headerGroup.getHeaderGroupProps()}>
+                                    {headerGroup.headers.map((column) => (
+                                        <th
+                                            {...column.getHeaderProps(column.getSortByToggleProps())}
+                                            style={{
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            {column.render('Header')}
+                                            <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
+                                        </th>
+                                    ))}
+                                </tr>
                             ))}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody {...getTableBodyProps()}>
-                    {rows.map((row) => {
-                        prepareRow(row)
-                        return (
-                            <tr {...row.getRowProps()}>
-                                {row.cells.map((cell) => {
-                                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                })}
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </Table>
-            {selectedMagazine && <MagazinesDetailsModal showModal={showModal} handleCloseModal={handleCloseModal} selectedMagazine={selectedMagazine} />}
-            {shouldShow && <AddMagazineIcon size={44} onClick={openAddMagazineModal} />}
-            {addMagazineModal && (
-                <AddMagazineModal addMagazineFunction={addMagazine} showModal={addMagazineModal} handleCloseModal={() => setAddMagazineModal(false)} />
-            )}
-            {selectedMagazine && (
-                <RemoveMagazineModal
-                    showModal={showRemoveMagazineModal}
-                    handleCloseModal={handleCloseRemoveMagazineModal}
-                    selectedMagazine={selectedMagazine}
-                    removeMagazineFunction={handleRemoveMagazine}
-                />
+                        </thead>
+                        <tbody {...getTableBodyProps()}>
+                            {rows.map((row) => {
+                                prepareRow(row)
+                                return (
+                                    <tr {...row.getRowProps()}>
+                                        {row.cells.map((cell) => {
+                                            return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                        })}
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </Table>
+                    {selectedMagazine && (
+                        <MagazinesDetailsModal showModal={showModal} handleCloseModal={handleCloseModal} selectedMagazine={selectedMagazine} />
+                    )}
+                    {shouldShow && <AddMagazineIcon size={44} onClick={openAddMagazineModal} />}
+                    {addMagazineModal && (
+                        <AddMagazineModal addMagazineFunction={addMagazine} showModal={addMagazineModal} handleCloseModal={() => setAddMagazineModal(false)} />
+                    )}
+                    {selectedMagazine && (
+                        <RemoveMagazineModal
+                            showModal={showRemoveMagazineModal}
+                            handleCloseModal={handleCloseRemoveMagazineModal}
+                            selectedMagazine={selectedMagazine}
+                            removeMagazineFunction={handleRemoveMagazine}
+                        />
+                    )}
+                </div>
             )}
         </div>
     )

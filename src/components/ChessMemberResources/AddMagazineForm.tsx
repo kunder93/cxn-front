@@ -11,6 +11,7 @@ import { useAppSelector } from 'store/hooks'
 import { useNotificationContext } from 'components/Common/NotificationContext'
 import { NotificationType } from 'components/Common/hooks/useNotification'
 import { Magazine } from './MagazinesViewer'
+import { Author } from './BooksViewer'
 
 const DateWrapper = styled.div`
     display: flex;
@@ -48,11 +49,6 @@ const ErrorContainer = styled.div`
     font-size: 0.875rem;
     font-weight: bold;
 `
-
-interface Author {
-    name: string
-    lastName: string
-}
 
 interface IFormMagazine {
     issn: string
