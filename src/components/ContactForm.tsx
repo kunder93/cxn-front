@@ -100,13 +100,11 @@ const ContactForm = (): JSX.Element => {
             .post(CHESS_QUESTION_URL, axiosData)
             .then(function () {
                 showNotification('Se ha enviado correctamente', NotificationType.Success)
+                actions.resetForm()
             })
             .catch(function (error: AxiosError) {
                 showNotification(error.message, NotificationType.Error)
             })
-
-        actions.resetForm()
-        actions.setSubmitting(false)
     }
 
     return (
@@ -136,7 +134,13 @@ const ContactForm = (): JSX.Element => {
                             <ErrorMessageStyled name="messageContent" component="div" />
                         </BootstrapForm.Group>
                         <Button variant="success" type="submit" disabled={isSubmitting || !isValid || !dirty}>
-                            {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Enviar'}
+                            {isSubmitting ? (
+                                <>
+                                    <Spinner animation="border" size="sm" /> Enviando...
+                                </>
+                            ) : (
+                                'Enviar'
+                            )}
                         </Button>
                         <FloatingNotificationA notification={notification} hideNotification={hideNotification} />
                     </Form>

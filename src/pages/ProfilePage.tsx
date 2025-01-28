@@ -18,6 +18,7 @@ import { useFetchProfileImage } from '../components/MyProfile/Hooks/ProfilesHook
 import { FederateManager } from './FederateManager'
 import ActivitiesManager from './ActivitiesManager'
 import { MembersPaymentsPage } from './MembersPaymentsPage'
+import { MembersResourcesPage } from './MembersResourcesPages'
 
 const MainPageContainer = styled.div`
     width: 100%;
@@ -57,7 +58,8 @@ const sectionComponents: Record<ProfileSection, React.FC<{ changePage: (section:
     [ProfileSection.TournamentParticipantManager]: TorneoInscripcionManager,
     [ProfileSection.FederateManager]: FederateManager,
     [ProfileSection.ActivitiesManager]: ActivitiesManager,
-    [ProfileSection.MembersPaymentsManager]: MembersPaymentsPage
+    [ProfileSection.MembersPaymentsManager]: MembersPaymentsPage,
+    [ProfileSection.MembersResources]: MembersResourcesPage
 }
 
 const ProfilePage = (): JSX.Element => {
