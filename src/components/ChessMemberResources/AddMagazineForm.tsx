@@ -131,6 +131,7 @@ export const AddMagazineForm: React.FC<AddMagazineFormProps> = ({ addMagazineFun
 
     return (
         <Formik<IFormMagazine>
+            validateOnBlur
             validateOnMount
             validateOnChange
             validationSchema={AddMagazineValidationSchema}

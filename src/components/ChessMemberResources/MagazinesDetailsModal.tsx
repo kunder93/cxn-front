@@ -12,7 +12,7 @@ interface MagazineDetailsModalProps {
 
 const MagazineDetailsModal: React.FC<MagazineDetailsModalProps> = ({ showModal, handleCloseModal, selectedMagazine }) => {
     const jwtToken = useAppSelector<string | null>((state) => state.users.jwt)
-    const { image, isLoading, error } = useMagazineImageLoader(selectedMagazine?.issn, jwtToken)
+    const { image, isLoading, error } = useMagazineImageLoader(selectedMagazine.issn, jwtToken)
 
     return (
         <Modal show={showModal} onHide={handleCloseModal}>

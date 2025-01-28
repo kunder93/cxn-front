@@ -13,10 +13,7 @@ interface BookDetailsModalProps {
 const BookDetailsModal: React.FC<BookDetailsModalProps> = ({ showModal, handleCloseModal, selectedBook }) => {
     const jwtToken = useAppSelector<string | null>((state) => state.users.jwt)
 
-    // custom hook for image fetching
-    const { image, isLoading, error } = useBookCover(selectedBook?.isbn || null, jwtToken)
-
-    if (!selectedBook) return null // Early return if book data is missing
+    const { image, isLoading, error } = useBookCover(selectedBook.isbn, jwtToken)
 
     return (
         <Modal show={showModal} onHide={handleCloseModal}>

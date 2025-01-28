@@ -4,7 +4,7 @@ import DatePicker, { registerLocale } from 'react-datepicker'
 import styled from 'styled-components'
 
 import Dropzone from 'react-dropzone'
-import { Form as BootstrapForm, Button } from 'react-bootstrap'
+import { Form as BootstrapForm, Button, Spinner } from 'react-bootstrap'
 import { ErrorMessage } from 'formik'
 import { es } from 'date-fns/locale'
 import { AddBookValidationSchema } from './AddBookValidationSchema'
@@ -77,7 +77,11 @@ const AddBookForm: React.FC<AddBookFormProps> = ({ addBookFunction }) => {
         imageFile: null
     }
 
-    const handleSubmit = (values: IFormBook, resetForm: (nextState?: Partial<FormikState<IFormBook>> | undefined) => void) => {
+    const handleSubmit = (
+        values: IFormBook,
+        setSubmitting: (isSubmitting: boolean) => void,
+        resetForm: (nextState?: Partial<FormikState<IFormBook>> | undefined) => void
+    ) => {
         const formData = new FormData()
         const formattedPublishDate = values.publishDate
             ? `${String(values.publishDate.getDate()).padStart(2, '0')}/${String(values.publishDate.getMonth() + 1).padStart(2, '0')}/${values.publishDate.getFullYear()}`
@@ -116,6 +120,7 @@ const AddBookForm: React.FC<AddBookFormProps> = ({ addBookFunction }) => {
                 //ADD BOOK
             })
             .catch((error) => {
+                setSubmitting(false)
                 const err = error as AxiosError
                 // Use optional chaining to safely access the error response data
                 const errorMessages = err.response?.data
@@ -136,13 +141,14 @@ const AddBookForm: React.FC<AddBookFormProps> = ({ addBookFunction }) => {
 
     return (
         <Formik
+            validateOnBlur
             validateOnMount
             validateOnChange
             initialValues={initialValues}
             validationSchema={AddBookValidationSchema}
-            onSubmit={(values, { resetForm }) => handleSubmit(values, resetForm)}
+            onSubmit={(values, { resetForm, setSubmitting }) => handleSubmit(values, setSubmitting, resetForm)}
         >
-            {({ setFieldValue, values, validateField, setFieldTouched, isValid, dirty, errors }) => {
+            {({ setFieldValue, values, validateField, setFieldTouched, isValid, dirty, errors, isSubmitting }) => {
                 return (
                     <Form>
                         <div className="mb-3">
@@ -341,8 +347,14 @@ const AddBookForm: React.FC<AddBookFormProps> = ({ addBookFunction }) => {
                             </ErrorContainer>
                         )}
 
-                        <Button type="submit" variant="success" disabled={!isValid || !dirty}>
-                            Añadir libro
+                        <Button type="submit" variant="success" disabled={!isValid || !dirty || isSubmitting}>
+                            {isSubmitting ? (
+                                <>
+                                    <Spinner animation="border" size="sm" /> Enviando...
+                                </>
+                            ) : (
+                                'Añadir libro'
+                            )}
                         </Button>
                     </Form>
                 )

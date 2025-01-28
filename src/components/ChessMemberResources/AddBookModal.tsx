@@ -13,7 +13,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ showModal, handleCloseModal
     return (
         <Modal show={showModal} onHide={handleCloseModal}>
             <Modal.Header closeButton>
-                <Modal.Title>Agregar Libro</Modal.Title>
+                <Modal.Title>Agregar libro</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <AddBookForm addBookFunction={addBookFunction}></AddBookForm>
