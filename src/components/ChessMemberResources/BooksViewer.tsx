@@ -248,7 +248,6 @@ const BooksViewer = () => {
                         </tbody>
                     </Table>
                     {selectedBook && <BookDetailsModal showModal={showModal} handleCloseModal={handleCloseModal} selectedBook={selectedBook} />}
-
                     {shouldShow && <AddBookIcon size={44} onClick={openAddBookModal} />}
                     {addBookModal && <AddBookModal addBookFunction={addBook} showModal={addBookModal} handleCloseModal={() => setAddBookModal(false)} />}
                     {selectedBook && (

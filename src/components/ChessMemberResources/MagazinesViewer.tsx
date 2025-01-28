@@ -5,6 +5,17 @@ import styled from 'styled-components'
 import MagazinesDetailsModal from './MagazinesDetailsModal'
 import { FaRegPlusSquare } from 'react-icons/fa'
 import AddMagazineModal from './AddMagazineModal'
+import { useAppSelector } from 'store/hooks'
+import { UserProfile, UserRole } from 'store/types/userTypes'
+import axios from 'axios'
+import { NotificationType } from 'components/Common/hooks/useNotification'
+import { useNotificationContext } from 'components/Common/NotificationContext'
+import { RESOURCES_MAGAZINE_URL } from 'resources/server_urls'
+import RemoveMagazineModal from './RemoveMagazineModal'
+
+const OptionButton = styled(Button)`
+    width: 100%;
+`
 
 const AddMagazineIcon = styled(FaRegPlusSquare)`
     fill: blue;
@@ -23,16 +34,14 @@ export interface Author {
 }
 
 export interface Magazine {
+    issn: string
     title: string
     publisher: string
-    issueNumber: number
+    editionNumber: number
     publishDate: string
     description: string
-    genre: string
-    coverImageUrl: string
-    pageCount: number
+    pagesAmount: number
     authors: Author[]
-    isbn: string
     language: string
 }
 
@@ -42,87 +51,8 @@ const SearchOptionsWrapper = styled.div`
     flex-wrap: nowrap;
 `
 
-const magazines: Magazine[] = [
-    {
-        title: 'Tech Today',
-        publisher: 'Tech Media Co.',
-        issueNumber: 101,
-        publishDate: '2025-01-01',
-        description: 'Latest trends and news in the tech world.',
-        genre: 'Technology',
-        coverImageUrl: 'https://www.mockofun.com/wp-content/uploads/2020/12/time-magazine-cover-template-4.jpg',
-        pageCount: 120,
-        authors: [
-            { name: 'John Doe', lastName: 'Smith' },
-            { name: 'Jane Smith', lastName: 'Jones' }
-        ],
-        isbn: '978-1234567890',
-        language: 'English'
-    },
-    {
-        title: 'Health & Wellness',
-        publisher: 'Health Magazines Ltd.',
-        issueNumber: 55,
-        publishDate: '2025-02-01',
-        description: 'Your go-to source for health tips and wellness advice.',
-        genre: 'Health',
-        coverImageUrl: 'https://static01.nyt.com/images/2016/02/04/fashion/04NOTED3/04NOTED3-superJumbo.jpg?quality=75&auto=webp',
-        pageCount: 85,
-        authors: [{ name: 'Alice Johnson', lastName: 'Williams' }],
-        isbn: '978-0987654321',
-        language: 'English'
-    },
-    {
-        title: 'The Gourmet Chef',
-        publisher: 'Foodies Inc.',
-        issueNumber: 33,
-        publishDate: '2025-03-01',
-        description: 'Explore delicious recipes and cooking tips for every occasion.',
-        genre: 'Food',
-        coverImageUrl: 'https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/e8976c89481967.5df660bcc54bc.jpg',
-        pageCount: 110,
-        authors: [
-            { name: 'Robert Brown', lastName: 'Davis' },
-            { name: 'Sarah Lee', lastName: 'Miller' }
-        ],
-        isbn: '978-1112223333',
-        language: 'English'
-    },
-    {
-        title: 'Global News',
-        publisher: 'Global Media Group',
-        issueNumber: 200,
-        publishDate: '2025-04-01',
-        description: 'A comprehensive roundup of global news and events.',
-        genre: 'News',
-        coverImageUrl: 'https://celebmafia.com/wp-content/uploads/2015/11/jennifer-lawrence-vogue-magazine-december-2015-cover_1.jpg',
-        pageCount: 150,
-        authors: [
-            { name: 'James White', lastName: 'Taylor' },
-            { name: 'Emily Clark', lastName: 'Roberts' }
-        ],
-        isbn: '978-3334445555',
-        language: 'English'
-    },
-    {
-        title: 'Sports Weekly',
-        publisher: 'Sports Media LLC',
-        issueNumber: 78,
-        publishDate: '2025-05-01',
-        description: 'The latest news, interviews, and highlights from the sports world.',
-        genre: 'Sports',
-        coverImageUrl: 'https://s3.envato.com/files/120051258/preview/4.jpg',
-        pageCount: 100,
-        authors: [
-            { name: 'Chris Martin', lastName: 'Harris' },
-            { name: 'Laura Garcia', lastName: 'Rodriguez' }
-        ],
-        isbn: '978-4445556666',
-        language: 'English'
-    }
-]
-
 const MagazinesViewer: React.FC = () => {
+    const [magazines, setMagazines] = useState<Magazine[]>([])
     const [searchQuery, setSearchQuery] = useState('')
     const [filters, setFilters] = useState({
         title: true,
@@ -132,12 +62,50 @@ const MagazinesViewer: React.FC = () => {
     const [showModal, setShowModal] = useState(false)
     const [selectedMagazine, setSelectedMagazine] = useState<Magazine | null>(null)
     const [addMagazineModal, setAddMagazineModal] = useState(false)
+    const [showRemoveMagazineModal, setShowRemoveMagazineModal] = useState(false)
+    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
+    const userProfile: UserProfile = useAppSelector((state) => state.users.userProfile)
+    const { showNotification } = useNotificationContext()
+    const shouldShow =
+        userProfile.userRoles.includes(UserRole.ADMIN) ||
+        userProfile.userRoles.includes(UserRole.PRESIDENTE) ||
+        userProfile.userRoles.includes(UserRole.SECRETARIO)
 
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFilters((prev) => ({
             ...prev,
             [e.target.name]: e.target.checked
         }))
+    }
+
+    const handleRemoveMagazine = async (magazine: Magazine): Promise<void> => {
+        try {
+            // Make the API call to remove the magazine
+            await axios.delete(`${RESOURCES_MAGAZINE_URL}/${magazine.issn}`, {
+                headers: { Authorization: `Bearer ${userJwt}` }
+            })
+
+            // Remove the magazine from the state
+            setMagazines((prevMagazines) => prevMagazines.filter((b) => b.issn !== magazine.issn))
+            showNotification('Revista eliminado exitosamente', NotificationType.Success)
+        } catch (error) {
+            console.error('Error removing book:', error)
+        }
+    }
+
+    // Function to add a new magazine to the table
+    const addMagazine = (newMagazine: Magazine) => {
+        setMagazines((prevMagazines) => [...prevMagazines, newMagazine])
+    }
+
+    const handleCloseRemoveMagazineModal = () => {
+        setShowRemoveMagazineModal(false)
+        setSelectedMagazine(null)
+    }
+
+    const handleRemoveMagazineModal = (book: Magazine) => {
+        setSelectedMagazine(book)
+        setShowRemoveMagazineModal(true)
     }
 
     const openAddMagazineModal = () => {
@@ -175,23 +143,26 @@ const MagazinesViewer: React.FC = () => {
                 accessor: 'publishDate'
             },
             {
-                Header: 'Descripción',
-                accessor: 'description'
-            },
-            {
                 Header: 'Idioma',
                 accessor: 'language'
             },
             {
                 Header: 'Número de Páginas',
-                accessor: 'pageCount'
+                accessor: 'pagesAmount'
             },
             {
                 Header: 'Detalles',
                 Cell: ({ row }: CellProps<Magazine>) => (
-                    <Button variant="info" onClick={() => handleShowModal(row.original)}>
-                        Ver Detalles
-                    </Button>
+                    <>
+                        <OptionButton variant="info" onClick={() => handleShowModal(row.original)}>
+                            Ver Detalles
+                        </OptionButton>
+                        {shouldShow && (
+                            <OptionButton variant="danger" style={{ width: '100%' }} onClick={() => handleRemoveMagazineModal(row.original)}>
+                                Borrar
+                            </OptionButton>
+                        )}
+                    </>
                 )
             }
         ],
@@ -257,8 +228,18 @@ const MagazinesViewer: React.FC = () => {
                 </tbody>
             </Table>
             {selectedMagazine && <MagazinesDetailsModal showModal={showModal} handleCloseModal={handleCloseModal} selectedMagazine={selectedMagazine} />}
-            <AddMagazineIcon size={44} onClick={openAddMagazineModal} />
-            {addMagazineModal && <AddMagazineModal showModal={addMagazineModal} handleCloseModal={() => setAddMagazineModal(false)} />}
+            {shouldShow && <AddMagazineIcon size={44} onClick={openAddMagazineModal} />}
+            {addMagazineModal && (
+                <AddMagazineModal addMagazineFunction={addMagazine} showModal={addMagazineModal} handleCloseModal={() => setAddMagazineModal(false)} />
+            )}
+            {selectedMagazine && (
+                <RemoveMagazineModal
+                    showModal={showRemoveMagazineModal}
+                    handleCloseModal={handleCloseRemoveMagazineModal}
+                    selectedMagazine={selectedMagazine}
+                    removeMagazineFunction={handleRemoveMagazine}
+                />
+            )}
         </div>
     )
 }

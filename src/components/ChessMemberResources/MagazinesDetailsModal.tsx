@@ -22,7 +22,7 @@ const MagazinesDetailsModal: React.FC<MagazinesDetailsModalProps> = ({ showModal
                                     <strong>Editorial:</strong> {selectedMagazine.publisher}
                                 </p>
                                 <p>
-                                    <strong>Número de Edición:</strong> {selectedMagazine.issueNumber}
+                                    <strong>Número de Edición:</strong> {selectedMagazine.editionNumber}
                                 </p>
                                 <p>
                                     <strong>Fecha de Publicación:</strong> {selectedMagazine.publishDate}
@@ -33,16 +33,13 @@ const MagazinesDetailsModal: React.FC<MagazinesDetailsModalProps> = ({ showModal
                             </div>
                             <div style={{ width: '50%' }}>
                                 <p>
-                                    <strong>Género:</strong> {selectedMagazine.genre}
-                                </p>
-                                <p>
-                                    <strong>Número de Páginas:</strong> {selectedMagazine.pageCount}
+                                    <strong>Número de Páginas:</strong> {selectedMagazine.pagesAmount}
                                 </p>
                                 <p>
                                     <strong>Idioma:</strong> {selectedMagazine.language}
                                 </p>
                                 <p>
-                                    <strong>ISBN:</strong> {selectedMagazine.isbn}
+                                    <strong>ISBN:</strong> {selectedMagazine.issn}
                                 </p>
                                 <h5>Autores:</h5>
                                 <ul>
@@ -55,7 +52,7 @@ const MagazinesDetailsModal: React.FC<MagazinesDetailsModalProps> = ({ showModal
                             </div>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                            <img src={selectedMagazine.coverImageUrl} alt="Portada" style={{ width: '200px', height: '300px', border: '3px solid black' }} />
+                            <img src={''} alt="Portada" style={{ width: '200px', height: '300px', border: '3px solid black' }} />
                         </div>
                     </>
                 )}
