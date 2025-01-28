@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Button, Form, FormControl, Table } from 'react-bootstrap'
 import { CellProps, Column, useSortBy, useTable } from 'react-table'
 import styled from 'styled-components'
-import BookDetailsModal from './BookDetaisModal'
+
 import { FaRegPlusSquare } from 'react-icons/fa'
 import AddBookModal from './AddBookModal'
 import axios from 'axios'
@@ -13,6 +13,8 @@ import RemoveBookModal from './RemoveBookModal'
 import { useNotificationContext } from 'components/Common/NotificationContext'
 import { NotificationType } from 'components/Common/hooks/useNotification'
 import { UserProfile, UserRole } from 'store/types/userTypes'
+import { Book } from './Types'
+import BookDetailsModal from './BookDetailsModal'
 
 const OptionButton = styled(Button)`
     width: 100%;
@@ -34,21 +36,6 @@ const SearchOptionsWrapper = styled.div`
     gap: 10px;
     flex-wrap: nowrap;
 `
-
-export interface Author {
-    firstName: string
-    lastName: string
-}
-
-export interface Book {
-    isbn: string
-    title: string
-    description: string
-    genre: string
-    publishDate: string
-    language: string
-    authors: Author[]
-}
 
 const BooksViewer = () => {
     const [books, setBooks] = useState<Book[]>([])

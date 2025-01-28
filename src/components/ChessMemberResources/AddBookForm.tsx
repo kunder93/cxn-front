@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Author, Book } from './BooksViewer'
 import { Field, FieldArray, Form, Formik, FormikState } from 'formik'
 import DatePicker, { registerLocale } from 'react-datepicker'
 import styled from 'styled-components'
@@ -14,6 +13,7 @@ import { useNotificationContext } from 'components/Common/NotificationContext'
 import axios, { AxiosError } from 'axios'
 import { RESOURCES_BOOK_URL } from 'resources/server_urls'
 import { NotificationType } from 'components/Common/hooks/useNotification'
+import { Book, IFormBook } from './Types'
 
 registerLocale('es', es)
 
@@ -53,19 +53,6 @@ const DateWrapper = styled.div`
     flex-direction: row;
     align-items: baseline;
 `
-
-interface IFormBook {
-    previewUrl: string | null
-    isbn: string
-    title: string
-    description: string
-    genre: string
-    publishDate: Date | null
-    language: string
-    coverSrc: string
-    authors: Author[]
-    imageFile: File | null
-}
 
 interface AddBookFormProps {
     addBookFunction: (newBook: Book) => void

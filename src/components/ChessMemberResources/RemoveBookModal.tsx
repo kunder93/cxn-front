@@ -1,5 +1,5 @@
 import { Button, Modal } from 'react-bootstrap'
-import { Book } from './BooksViewer'
+import { Book } from './Types'
 
 interface RemoveBookModalProps {
     showModal: boolean

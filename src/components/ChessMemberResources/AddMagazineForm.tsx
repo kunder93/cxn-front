@@ -10,8 +10,7 @@ import { RESOURCES_MAGAZINE_URL } from 'resources/server_urls'
 import { useAppSelector } from 'store/hooks'
 import { useNotificationContext } from 'components/Common/NotificationContext'
 import { NotificationType } from 'components/Common/hooks/useNotification'
-import { Magazine } from './MagazinesViewer'
-import { Author } from './BooksViewer'
+import { IFormMagazine, Magazine } from './Types'
 
 const DateWrapper = styled.div`
     display: flex;
@@ -49,20 +48,6 @@ const ErrorContainer = styled.div`
     font-size: 0.875rem;
     font-weight: bold;
 `
-
-interface IFormMagazine {
-    issn: string
-    title: string
-    publisher: string
-    editionNumber: number
-    publishDate: Date | null
-    description: string
-    coverImageUrl: string
-    imageFile: File | null
-    pagesAmount: number
-    authors: Author[]
-    language: string
-}
 
 interface AddMagazineFormProps {
     addMagazineFunction: (newMagazine: Magazine) => void

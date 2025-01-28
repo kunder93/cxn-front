@@ -1,5 +1,5 @@
 import { Button, Modal } from 'react-bootstrap'
-import { Magazine } from './MagazinesViewer'
+import { Magazine } from './Types'
 
 interface RemoveMagazineModalProps {
     showModal: boolean

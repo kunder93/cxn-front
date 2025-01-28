@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import { AddMagazineForm } from './AddMagazineForm'
-import { Magazine } from './MagazinesViewer'
+import { Magazine } from './Types'
 
 interface AddMagazineModalProps {
     showModal: boolean

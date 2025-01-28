@@ -13,7 +13,7 @@ import { useNotificationContext } from 'components/Common/NotificationContext'
 import { RESOURCES_MAGAZINE_URL } from 'resources/server_urls'
 import RemoveMagazineModal from './RemoveMagazineModal'
 import LoadingTableSpinnerContainer from 'components/Common/LoadingTableSpinnerContainer'
-import { Author } from './BooksViewer'
+import { Magazine } from './Types'
 
 const OptionButton = styled(Button)`
     width: 100%;
@@ -29,18 +29,6 @@ const AddMagazineIcon = styled(FaRegPlusSquare)`
         transform: scale(1.2);
     }
 `
-
-export interface Magazine {
-    issn: string
-    title: string
-    publisher: string
-    editionNumber: number
-    publishDate: string
-    description: string
-    pagesAmount: number
-    authors: Author[]
-    language: string
-}
 
 const SearchOptionsWrapper = styled.div`
     display: flex;
