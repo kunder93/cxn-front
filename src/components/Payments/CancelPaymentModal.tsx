@@ -1,15 +1,14 @@
-import axios, { AxiosError } from 'axios'
+import { AxiosError } from 'axios'
 import { NotificationType } from 'components/Common/hooks/useNotification'
 import { useNotificationContext } from 'components/Common/NotificationContext'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { Modal, ModalProps } from 'react-bootstrap'
-import { PAYMENT_URL } from 'resources/server_urls'
-import { useAppSelector } from 'store/hooks'
+import { Modal, ModalProps, Spinner } from 'react-bootstrap'
 import { formatCurrency } from 'utility/paymentsUtilities'
 import { CloseButton, ConfirmButton, StyledModalBody, StyledModalFooter, StyledModalHeader } from './CommonStyles'
 import { PaymentInfo } from './Types'
-import { PaymentsState, ReceivedCreatedPayment } from 'components/Types/Types'
+import { PaymentsState } from 'components/Types/Types'
+import { useCancelPayment } from './Hooks'
 
 interface CancelPaymentModalProps extends ModalProps {
     paymentinfo: PaymentInfo | null
@@ -17,35 +16,25 @@ interface CancelPaymentModalProps extends ModalProps {
 }
 
 export const CancelPaymentModal: React.FC<CancelPaymentModalProps> = ({ show, onHide, paymentinfo, updatePaymentStateFunc }) => {
-    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
+    // Remove this line: const userJwt = useAppSelector(...) - now handled in hook
     const { showNotification } = useNotificationContext()
+    const { cancelPayment, isLoading, error } = useCancelPayment()
+
     const handleCancelPayment = async (paymentId: string | null) => {
         if (!paymentId) {
             showNotification('El ID del pago es requerido para confirmar el pago.', NotificationType.Error)
             return
         }
-
         try {
-            const response = await axios.patch<ReceivedCreatedPayment>(
-                `${PAYMENT_URL}/${paymentId}/cancel`,
-                {},
-                { headers: { Authorization: `Bearer ${userJwt}` } }
-            )
+            const responseData = await cancelPayment(paymentId)
             showNotification('Pago cancelado con éxito.', NotificationType.Success)
-            updatePaymentStateFunc(response.data.userDni, response.data.id, response.data.state) // Actualiza el estado del pago
-            if (onHide) onHide() // Close the modal after success
-        } catch (error) {
-            const axiosError = error as AxiosError
-            if (axiosError.response?.data) {
-                const responseData = axiosError.response.data as { message?: string }
-                if (responseData.message) {
-                    showNotification(responseData.message, NotificationType.Error)
-                } else {
-                    showNotification('Error inesperado, intentalo más tarde.', NotificationType.Error)
-                }
-            } else {
-                showNotification('Error inesperado, intentalo más tarde.', NotificationType.Error)
-            }
+            updatePaymentStateFunc(responseData.userDni, responseData.id, responseData.state)
+            onHide?.()
+        } catch (err) {
+            const axiosError = error ?? (err as AxiosError)
+            const defaultMsg = 'Error inesperado, intentalo más tarde.'
+            const message = (axiosError.response?.data as { message?: string })?.message ?? defaultMsg
+            showNotification(message, NotificationType.Error)
         }
     }
 
@@ -72,8 +61,18 @@ export const CancelPaymentModal: React.FC<CancelPaymentModalProps> = ({ show, on
                 )}
             </StyledModalBody>
             <StyledModalFooter>
-                <ConfirmButton onClick={() => void handleCancelPayment(paymentinfo?.id ?? null)}>Confirmar Cancelación</ConfirmButton>
-                <CloseButton onClick={onHide}>Cerrar</CloseButton>
+                <ConfirmButton variant="success" onClick={() => void handleCancelPayment(paymentinfo?.id ?? null)} disabled={isLoading}>
+                    {isLoading ? (
+                        <>
+                            <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> Cancelando...
+                        </>
+                    ) : (
+                        'Confirmar Cancelación'
+                    )}
+                </ConfirmButton>
+                <CloseButton onClick={onHide} disabled={isLoading}>
+                    Cerrar
+                </CloseButton>
             </StyledModalFooter>
         </Modal>
     )
