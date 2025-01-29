@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Modal, ModalProps, Button, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
-import { ActivityCategory, IActivityForm, IActivityWithImageUrl } from './Types'
+import { ActivityCategory, IActivity, IActivityForm } from './Types'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import Dropzone from 'react-dropzone'
 import { AddActivityValidationSchema } from './FormValidations'
@@ -85,7 +85,7 @@ const DateWrapper = styled.div`
 `
 
 interface AddActivityModalFormProps extends ModalProps {
-    addActivity: (activity: IActivityWithImageUrl) => void
+    addActivity: (activity: IActivity) => void
 }
 
 const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddActivityModalFormProps) => {
@@ -153,8 +153,7 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                 description: values.description,
                                 startDate: values.startDate,
                                 endDate: values.endDate,
-                                category: values.category,
-                                imageUrl: previewUrl ? previewUrl : 'default-image.jpg'
+                                category: values.category
                             })
                         })
                         .catch((error) => {
