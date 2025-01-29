@@ -27,6 +27,3 @@ export interface IActivityDto {
     category: string | null
     image: Uint8Array | null // `image` field as a byte array (or `null` if no image)
 }
-export interface IActivityWithImageUrl extends IActivity {
-    imageUrl: string // URL for the activity image
-}

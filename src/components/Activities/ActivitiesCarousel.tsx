@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react'
 import ActivityCard from './ActivityCard'
-import { IActivityWithImageUrl } from './Types'
-
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 import { Pagination, Navigation } from 'swiper/modules'
 import styled from 'styled-components'
+import { useFetchActivities } from './Hooks'
+import LoadingTableSpinnerContainer from 'components/Common/LoadingTableSpinnerContainer'
 
 const Wrapper = styled.div`
     background-color: #f9f9f9;
@@ -38,22 +37,30 @@ const NoActivitiesBox = styled.div`
     align-items: center;
 `
 
-interface ActivitiesCarouselProps {
-    activitiesList: IActivityWithImageUrl[]
-}
+const ActivitiesCarousel = (): JSX.Element => {
+    const { activities, error, loading } = useFetchActivities()
 
-const ActivitiesCarousel: React.FC<ActivitiesCarouselProps> = ({ activitiesList }) => {
-    const [activities, setActivities] = useState<IActivityWithImageUrl[]>([])
+    if (loading) {
+        return <LoadingTableSpinnerContainer />
+    }
 
-    useEffect(() => {
-        setActivities(activitiesList)
-    }, [activitiesList])
+    if (error) {
+        return (
+            <NoActivitiesBox>
+                <h2>Error loading activities</h2>
+            </NoActivitiesBox>
+        )
+    }
 
-    return activities.length === 0 ? (
-        <NoActivitiesBox>
-            <h2>No hay actividades disponibles</h2>
-        </NoActivitiesBox>
-    ) : (
+    if (!activities || activities.length === 0) {
+        return (
+            <NoActivitiesBox>
+                <h2>No hay actividades disponibles</h2>
+            </NoActivitiesBox>
+        )
+    }
+
+    return (
         <Wrapper id="activities-carousel">
             <Swiper
                 slidesPerView={1}
@@ -68,8 +75,8 @@ const ActivitiesCarousel: React.FC<ActivitiesCarouselProps> = ({ activitiesList 
                 }}
                 className="mySwiper"
             >
-                {activities.map((activity, index) => (
-                    <SwiperSlideStyled key={index}>
+                {activities.map((activity) => (
+                    <SwiperSlideStyled key={activity.title}>
                         <ActivityCard activity={activity} />
                     </SwiperSlideStyled>
                 ))}

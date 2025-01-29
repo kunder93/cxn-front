@@ -1,7 +1,8 @@
 import React from 'react'
-import { Card, Badge } from 'react-bootstrap'
+import { Card, Badge, Spinner, Alert } from 'react-bootstrap'
 import styled from 'styled-components'
-import { ActivityCategory, IActivityWithImageUrl } from './Types'
+import { ActivityCategory, IActivity } from './Types'
+import { useActivityImage } from './Hooks'
 
 const StyledCard = styled(Card)`
     border-radius: 8px;
@@ -13,16 +14,27 @@ const StyledCard = styled(Card)`
     width: 320px;
     height: 380px;
     cursor: pointer;
+    position: relative;
 
     &:hover {
         transform: translateY(-5px);
         box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
     }
 
+    .img-wrapper {
+        position: relative;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
+    }
+
     img {
         aspect-ratio: 16 / 9;
         object-fit: cover;
         max-height: 200px;
+        width: 100%;
     }
 
     .category-badge {
@@ -59,55 +71,47 @@ const DateWrapper = styled.div`
     display: flex;
     flex-direction: column;
 `
+
 const formatDate = (date: Date) =>
     `${date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' })} ${date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false })}`
 
 interface ActivityCardProps {
-    activity: IActivityWithImageUrl
-}
-
-const imageSrcSelector = (activity: IActivityWithImageUrl) => {
-    if (!activity.imageUrl) {
-        switch (activity.category) {
-            case ActivityCategory.TORNEO:
-                return 'genericImageSourceForTorneo'
-            case ActivityCategory.ENTRENAMIENTO:
-                return 'genericImageSourceForEntrenamiento'
-            case ActivityCategory.CLASES:
-                return 'genericImageSourceForClases'
-            case ActivityCategory.INFORMAL:
-                return 'genericImageSourceForInformal'
-            case ActivityCategory.OTRO:
-            default:
-                return 'genericImageSourceForOtro'
-        }
-    } else {
-        return activity.imageUrl
-    }
+    activity: IActivity
 }
 
 const getBadgeVariant = (category: ActivityCategory) => {
     switch (category) {
         case ActivityCategory.TORNEO:
-            return 'primary' // Blue for tournaments
+            return 'primary'
         case ActivityCategory.ENTRENAMIENTO:
-            return 'success' // Green for training
+            return 'success'
         case ActivityCategory.CLASES:
-            return 'warning' // Yellow for classes
+            return 'warning'
         case ActivityCategory.INFORMAL:
-            return 'info' // Teal for informal activities
+            return 'info'
         case ActivityCategory.OTRO:
+            return 'secondary'
         default:
-            return 'secondary' // Default gray for other or unknown
+            return 'secondary'
     }
 }
 
 const ActivityCard: React.FC<ActivityCardProps> = ({ activity }) => {
+    const { loading, image, error } = useActivityImage(activity)
+
     return (
         <StyledCard>
             <div className="img-wrapper">
-                <Card.Img variant="top" src={imageSrcSelector(activity)} alt="Activity Image" />
-                <Badge className="category-badge" bg={getBadgeVariant(activity.category ? activity.category : ActivityCategory.OTRO)}>
+                {loading ? (
+                    <Spinner animation="border" variant="primary" />
+                ) : error ? (
+                    <Alert variant="warning" className="m-0 p-2">
+                        Imagen no disponible
+                    </Alert>
+                ) : (
+                    <Card.Img variant="top" src={image} alt="Activity Image" />
+                )}
+                <Badge className="category-badge" bg={getBadgeVariant(activity.category ?? ActivityCategory.OTRO)}>
                     {activity.category}
                 </Badge>
             </div>
