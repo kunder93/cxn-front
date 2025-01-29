@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, ModalProps, Button } from 'react-bootstrap'
+import { Modal, ModalProps, Button, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
 import { ActivityCategory, IActivityForm, IActivityWithImageUrl } from './Types'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
@@ -16,6 +16,21 @@ import { es } from 'date-fns/locale'
 import { Form as BootstrapForm } from 'react-bootstrap'
 
 registerLocale('es', es)
+
+const AddActivityButton = styled(Button)`
+    min-height: 50px;
+    min-width: 130px;
+`
+const CancelButton = styled(Button)`
+    min-height: 50px;
+    min-width: 130px;
+`
+
+const AddActivityButtonContent = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+`
 
 const ErrorContainer = styled.div`
     min-height: 20px;
@@ -161,7 +176,7 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                         })
                 }}
             >
-                {({ setFieldValue, values, validateField, setFieldTouched, isValid, dirty }) => {
+                {({ setFieldValue, values, validateField, setFieldTouched, isValid, dirty, isSubmitting }) => {
                     return (
                         <Form>
                             <Modal.Header>
@@ -306,12 +321,19 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                 </div>
                             </Modal.Body>
                             <Modal.Footer>
-                                <Button variant="secondary" onClick={props.onHide}>
+                                <CancelButton variant="danger" onClick={props.onHide}>
                                     Cancelar
-                                </Button>
-                                <Button type="submit" variant="primary" disabled={!isValid || !dirty}>
-                                    Añadir actividad
-                                </Button>
+                                </CancelButton>
+                                <AddActivityButton type="submit" variant="primary" disabled={!isValid || !dirty || isSubmitting}>
+                                    {isSubmitting ? (
+                                        <AddActivityButtonContent>
+                                            <Spinner size="sm" />
+                                            Añadiendo...
+                                        </AddActivityButtonContent>
+                                    ) : (
+                                        'Añadir actividad'
+                                    )}
+                                </AddActivityButton>
                             </Modal.Footer>
                         </Form>
                     )
