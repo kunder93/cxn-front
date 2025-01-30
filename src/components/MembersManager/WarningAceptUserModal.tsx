@@ -89,7 +89,7 @@ const WarningAceptUserModal: React.FC<WarningAceptUserModalProps> = ({ show, onH
                                         <Button type="submit" variant="success" disabled={isSubmitting}>
                                             {isSubmitting ? (
                                                 <SpinnerTextWrapper>
-                                                    <Spinner></Spinner>Cargando...
+                                                    <Spinner size="sm"></Spinner>Cargando...
                                                 </SpinnerTextWrapper>
                                             ) : (
                                                 <>Aceptar petición</>

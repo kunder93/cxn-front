@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { useTable, Column } from 'react-table'
 import useFederateStateUsersData, { FederateStateExtendedResponse } from '../components/UserProfiles/ChessProfileFederate/Hooks/usersFederateStateData'
 import { FederateState } from '../components/UserProfiles/ChessProfileFederate/Hooks/getFederateState'
-import { Button, Table } from 'react-bootstrap'
-import axios from 'axios'
-import { useAppSelector } from '../store/hooks'
-import { CONFIR_CANCEL_FEDERATE_URL } from '../resources/server_urls'
+import { Button, Spinner, Table } from 'react-bootstrap'
+import { useFederateActions } from 'components/UserProfiles/ChessProfileFederate/Hooks/useFederateActions'
 
-const federateStateTranslations: Record<FederateState, string> = {
+const federateStateTranslation: Record<FederateState, string> = {
     [FederateState.FEDERATE]: 'Federado',
     [FederateState.NO_FEDERATE]: 'No federado',
     [FederateState.IN_PROGRESS]: 'En proceso'
@@ -15,8 +13,7 @@ const federateStateTranslations: Record<FederateState, string> = {
 
 export const FederateManager = (): JSX.Element => {
     const { data, loading, error } = useFederateStateUsersData()
-    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
-
+    const { confirmCancelFederate, isLoading: isActionLoading } = useFederateActions()
     const [federateStateMembersList, setFederateStateMembersList] = useState<FederateStateExtendedResponse[]>([])
 
     useEffect(() => {
@@ -25,25 +22,18 @@ export const FederateManager = (): JSX.Element => {
         }
     }, [data])
 
-    const confirmCancelFederate = async (userDni: string) => {
-        try {
-            const response = await axios.patch<FederateStateExtendedResponse>(
-                CONFIR_CANCEL_FEDERATE_URL,
-                { userDni },
-                {
-                    headers: {
-                        Authorization: `Bearer ${userJwt}`,
-                        'Content-Type': 'application/json'
-                    }
-                }
-            )
-
-            const updatedMember = { ...response.data, userDni }
-            setFederateStateMembersList((prevList) => prevList.map((member) => (member.dni === userDni ? updatedMember : member)))
-        } catch (error) {
-            console.error('Error confirming federate:', error)
-        }
-    }
+    // Wrap handleConfirmCancel with useCallback
+    const handleConfirmCancel = React.useCallback(
+        async (userDni: string) => {
+            try {
+                const updatedMember = await confirmCancelFederate(userDni)
+                setFederateStateMembersList((prevList) => prevList.map((member) => (member.dni === userDni ? { ...updatedMember, dni: userDni } : member)))
+            } catch (error) {
+                console.error('Error updating federate state:', error)
+            }
+        },
+        [confirmCancelFederate]
+    ) // Add dependencies here
 
     const columns: Column<FederateStateExtendedResponse>[] = React.useMemo(
         () => [
@@ -53,15 +43,39 @@ export const FederateManager = (): JSX.Element => {
                 accessor: 'state',
                 Cell: ({ value, row }) => (
                     <span>
-                        {federateStateTranslations[value as FederateState]}
+                        {federateStateTranslation[value as FederateState]}
                         {value === FederateState.IN_PROGRESS && (
-                            <Button variant="success" onClick={() => void confirmCancelFederate(row.original.dni)} style={{ marginLeft: '10px' }}>
-                                Confirmar
+                            <Button
+                                variant="success"
+                                onClick={() => void handleConfirmCancel(row.original.dni)}
+                                disabled={isActionLoading}
+                                style={{ marginLeft: '10px' }}
+                            >
+                                {isActionLoading ? (
+                                    <>
+                                        <Spinner size="sm" />
+                                        Confirmando...
+                                    </>
+                                ) : (
+                                    'Confirmar'
+                                )}
                             </Button>
                         )}
                         {value === FederateState.FEDERATE && (
-                            <Button variant="danger" onClick={() => void confirmCancelFederate(row.original.dni)} style={{ marginLeft: '10px' }}>
-                                Desfederar
+                            <Button
+                                variant="danger"
+                                onClick={() => void handleConfirmCancel(row.original.dni)}
+                                disabled={isActionLoading}
+                                style={{ marginLeft: '10px' }}
+                            >
+                                {isActionLoading ? (
+                                    <>
+                                        <Spinner size="sm" />
+                                        Desfederando...
+                                    </>
+                                ) : (
+                                    'Desfederar'
+                                )}
                             </Button>
                         )}
                     </span>
@@ -70,7 +84,7 @@ export const FederateManager = (): JSX.Element => {
             { Header: 'Renovación automática', accessor: 'autoRenew', Cell: ({ value }) => (value ? 'SI' : 'NO') },
             { Header: 'DNI: Última actualización', accessor: 'dniLastUpdate' }
         ],
-        []
+        [isActionLoading] // Now properly memoized
     )
 
     const tableInstance = useTable({ columns, data: federateStateMembersList })
