@@ -92,6 +92,7 @@ interface UserDataInfoPopoverProps {
 /** Componente memoizado */
 export const UserDataInfoPopover = memo(({ userDni }: UserDataInfoPopoverProps) => {
     const [isOpen, setIsOpen] = useState(false)
+    const [prevUserDni, setPrevUserDni] = useState(userDni)
     const { refs, floatingStyles, context } = useFloating({
         open: isOpen,
         onOpenChange: setIsOpen,
@@ -99,6 +100,11 @@ export const UserDataInfoPopover = memo(({ userDni }: UserDataInfoPopoverProps) 
         placement: 'right',
         whileElementsMounted: autoUpdate
     })
+
+    if (userDni !== prevUserDni) {
+        setIsOpen(false)
+        setPrevUserDni(userDni)
+    }
 
     // Interacciones con Floating UI
     const click = useClick(context)
@@ -123,7 +129,14 @@ export const UserDataInfoPopover = memo(({ userDni }: UserDataInfoPopoverProps) 
 
             {isOpen && (
                 <FloatingFocusManager context={context} modal={false}>
-                    <StyledHelpMessageContainer ref={refs.setFloating} style={floatingStyles} aria-labelledby={headingId} {...getFloatingProps()}>
+                    <StyledHelpMessageContainer
+                        ref={refs.setFloating}
+                        style={floatingStyles}
+                        aria-labelledby={headingId}
+                        {...getFloatingProps()}
+                        key={userDni} // Add key to force re-render
+                    >
+                        {' '}
                         {/* Sección del encabezado */}
                         <ContainerHeader>
                             {loaded ? (
@@ -141,7 +154,6 @@ export const UserDataInfoPopover = memo(({ userDni }: UserDataInfoPopoverProps) 
                                 </LoadingTooltipViewWrapper>
                             )}
                         </ContainerHeader>
-
                         {/* Sección del cuerpo */}
                         <ContainerBody>
                             {loaded ? (
