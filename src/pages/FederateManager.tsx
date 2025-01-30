@@ -1,14 +1,37 @@
-import React, { useState, useEffect } from 'react'
-import { useTable, Column } from 'react-table'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import { useTable, Column, Row } from 'react-table'
 import useFederateStateUsersData, { FederateStateExtendedResponse } from '../components/UserProfiles/ChessProfileFederate/Hooks/usersFederateStateData'
 import { FederateState } from '../components/UserProfiles/ChessProfileFederate/Hooks/getFederateState'
 import { Button, Spinner, Table } from 'react-bootstrap'
 import { useFederateActions } from 'components/UserProfiles/ChessProfileFederate/Hooks/useFederateActions'
+import { UserDataInfoPopover } from 'components/Payments/UserDataInfoPopover'
 
 const federateStateTranslation: Record<FederateState, string> = {
     [FederateState.FEDERATE]: 'Federado',
     [FederateState.NO_FEDERATE]: 'No federado',
     [FederateState.IN_PROGRESS]: 'En proceso'
+}
+
+const FederateStateCell: React.FC<{ state: FederateState; dni: string; isLoading: boolean; onAction: () => void }> = ({ state, isLoading, onAction }) => {
+    return (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span>{federateStateTranslation[state]}</span>
+            {(state === FederateState.IN_PROGRESS || state === FederateState.FEDERATE) && (
+                <Button variant={state === FederateState.FEDERATE ? 'danger' : 'success'} onClick={onAction} disabled={isLoading}>
+                    {isLoading ? (
+                        <>
+                            <Spinner size="sm" />
+                            {state === FederateState.FEDERATE ? ' Desfederando...' : ' Confirmando...'}
+                        </>
+                    ) : state === FederateState.FEDERATE ? (
+                        'Desfederar'
+                    ) : (
+                        'Confirmar'
+                    )}
+                </Button>
+            )}
+        </div>
+    )
 }
 
 export const FederateManager = (): JSX.Element => {
@@ -17,13 +40,12 @@ export const FederateManager = (): JSX.Element => {
     const [federateStateMembersList, setFederateStateMembersList] = useState<FederateStateExtendedResponse[]>([])
 
     useEffect(() => {
-        if (data) {
-            setFederateStateMembersList(data.federateStateMembersList || [])
+        if (data?.federateStateMembersList) {
+            setFederateStateMembersList(data.federateStateMembersList)
         }
     }, [data])
 
-    // Wrap handleConfirmCancel with useCallback
-    const handleConfirmCancel = React.useCallback(
+    const handleConfirmCancel = useCallback(
         async (userDni: string) => {
             try {
                 const updatedMember = await confirmCancelFederate(userDni)
@@ -33,69 +55,47 @@ export const FederateManager = (): JSX.Element => {
             }
         },
         [confirmCancelFederate]
-    ) // Add dependencies here
+    )
 
-    const columns: Column<FederateStateExtendedResponse>[] = React.useMemo(
+    const columns: Column<FederateStateExtendedResponse>[] = useMemo(
         () => [
-            { Header: 'DNI', accessor: 'dni' },
+            {
+                Header: 'DNI',
+                accessor: 'dni',
+                Cell: ({ row }: { row: Row<FederateStateExtendedResponse> }) => (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span>{row.original.dni}</span>
+                        <UserDataInfoPopover userDni={row.original.dni} />
+                    </div>
+                )
+            },
             {
                 Header: 'Estado federativo',
                 accessor: 'state',
-                Cell: ({ value, row }) => (
-                    <span>
-                        {federateStateTranslation[value as FederateState]}
-                        {value === FederateState.IN_PROGRESS && (
-                            <Button
-                                variant="success"
-                                onClick={() => void handleConfirmCancel(row.original.dni)}
-                                disabled={isActionLoading}
-                                style={{ marginLeft: '10px' }}
-                            >
-                                {isActionLoading ? (
-                                    <>
-                                        <Spinner size="sm" />
-                                        Confirmando...
-                                    </>
-                                ) : (
-                                    'Confirmar'
-                                )}
-                            </Button>
-                        )}
-                        {value === FederateState.FEDERATE && (
-                            <Button
-                                variant="danger"
-                                onClick={() => void handleConfirmCancel(row.original.dni)}
-                                disabled={isActionLoading}
-                                style={{ marginLeft: '10px' }}
-                            >
-                                {isActionLoading ? (
-                                    <>
-                                        <Spinner size="sm" />
-                                        Desfederando...
-                                    </>
-                                ) : (
-                                    'Desfederar'
-                                )}
-                            </Button>
-                        )}
-                    </span>
+                Cell: ({ value, row }: { value: FederateState; row: Row<FederateStateExtendedResponse> }) => (
+                    <FederateStateCell
+                        state={value}
+                        dni={row.original.dni}
+                        isLoading={isActionLoading}
+                        onAction={() => void handleConfirmCancel(row.original.dni)}
+                    />
                 )
             },
             { Header: 'Renovación automática', accessor: 'autoRenew', Cell: ({ value }) => (value ? 'SI' : 'NO') },
             { Header: 'DNI: Última actualización', accessor: 'dniLastUpdate' }
         ],
-        [isActionLoading] // Now properly memoized
+        [isActionLoading] // WIth handleConfirmCancel as dependency, loop rendering occurs
     )
 
     const tableInstance = useTable({ columns, data: federateStateMembersList })
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance
 
-    if (loading) return <div>Loading...</div>
+    if (loading) return <Spinner animation="border" role="status" />
     if (error) return <div>Error: {error}</div>
     if (federateStateMembersList.length === 0) return <div>No federate state data available.</div>
 
     return (
-        <Table striped bordered hover variant="dark" {...getTableProps()}>
+        <Table striped bordered hover variant="dark" {...getTableProps()} style={{ marginTop: '40px' }}>
             <thead>
                 {headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
@@ -113,11 +113,7 @@ export const FederateManager = (): JSX.Element => {
                     return (
                         <tr {...row.getRowProps()} key={row.id}>
                             {row.cells.map((cell) => (
-                                <td
-                                    {...cell.getCellProps()}
-                                    key={`${row.id}-${cell.column.id}`}
-                                    style={{ border: '1px solid gray', padding: '8px', textAlign: 'center' }}
-                                >
+                                <td {...cell.getCellProps()} key={`${row.id}-${cell.column.id}`} style={{ padding: '8px', textAlign: 'center' }}>
                                     {cell.render('Cell')}
                                 </td>
                             ))}
