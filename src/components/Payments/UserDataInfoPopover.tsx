@@ -138,7 +138,7 @@ export const UserDataInfoPopover = memo(({ userDni }: UserDataInfoPopoverProps) 
                     >
                         {' '}
                         {/* Sección del encabezado */}
-                        <ContainerHeader>
+                        <ContainerHeader style={{ color: 'black' }}>
                             {loaded ? (
                                 error ? (
                                     <h3>Error al cargar</h3>
@@ -155,7 +155,7 @@ export const UserDataInfoPopover = memo(({ userDni }: UserDataInfoPopoverProps) 
                             )}
                         </ContainerHeader>
                         {/* Sección del cuerpo */}
-                        <ContainerBody>
+                        <ContainerBody style={{ color: 'black' }}>
                             {loaded ? (
                                 error ? (
                                     <p>{error.message}</p>
