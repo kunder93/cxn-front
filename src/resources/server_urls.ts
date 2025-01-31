@@ -79,3 +79,5 @@ export const ACEPT_USER_URL = BASE_URL + 'api/user/acceptAsMember'
 export const RESOURCES_BOOK_URL = BASE_URL + 'api/resources/book'
 
 export const RESOURCES_MAGAZINE_URL = BASE_URL + 'api/resources/magazine'
+
+export const GET_USER_DNI_URL = BASE_URL + 'api/user/federate'

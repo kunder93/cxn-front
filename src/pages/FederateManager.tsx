@@ -5,6 +5,8 @@ import { FederateState } from '../components/UserProfiles/ChessProfileFederate/H
 import { Button, Spinner, Table } from 'react-bootstrap'
 import { useFederateActions } from 'components/UserProfiles/ChessProfileFederate/Hooks/useFederateActions'
 import { UserDataInfoPopover } from 'components/Payments/UserDataInfoPopover'
+import { FaEye } from 'react-icons/fa'
+import { UserDniViewModal } from 'components/UserProfiles/ChessProfileFederate/UserDniViewModal'
 
 const federateStateTranslation: Record<FederateState, string> = {
     [FederateState.FEDERATE]: 'Federado',
@@ -38,6 +40,18 @@ export const FederateManager = (): JSX.Element => {
     const { data, loading, error } = useFederateStateUsersData()
     const { confirmCancelFederate, isLoading: isActionLoading } = useFederateActions()
     const [federateStateMembersList, setFederateStateMembersList] = useState<FederateStateExtendedResponse[]>([])
+    const [dniModal, setDniModal] = useState(false)
+    const [selectedDni, setSelectedDni] = useState<string | null>(null)
+
+    const handleOpenDniModal = (userDni: string): void => {
+        setSelectedDni(userDni)
+        setDniModal(true)
+    }
+
+    const handleCloseDniModal = (): void => {
+        setSelectedDni(null)
+        setDniModal(false)
+    }
 
     useEffect(() => {
         if (data?.federateStateMembersList) {
@@ -82,7 +96,16 @@ export const FederateManager = (): JSX.Element => {
                 )
             },
             { Header: 'Renovación automática', accessor: 'autoRenew', Cell: ({ value }) => (value ? 'SI' : 'NO') },
-            { Header: 'DNI: Última actualización', accessor: 'dniLastUpdate' }
+            {
+                Header: 'DNI: Última actualización',
+                accessor: 'dniLastUpdate',
+                Cell: ({ row }: { row: Row<FederateStateExtendedResponse> }) => (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span>{row.original.dniLastUpdate}</span>
+                        <FaEye onClick={() => handleOpenDniModal(row.original.dni)} />
+                    </div>
+                )
+            }
         ],
         [isActionLoading] // WIth handleConfirmCancel as dependency, loop rendering occurs
     )
@@ -95,33 +118,36 @@ export const FederateManager = (): JSX.Element => {
     if (federateStateMembersList.length === 0) return <div>No federate state data available.</div>
 
     return (
-        <Table striped bordered hover variant="dark" {...getTableProps()} style={{ marginTop: '40px' }}>
-            <thead>
-                {headerGroups.map((headerGroup) => (
-                    <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
-                        {headerGroup.headers.map((column) => (
-                            <th {...column.getHeaderProps()} key={column.id}>
-                                {column.render('Header')}
-                            </th>
-                        ))}
-                    </tr>
-                ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-                {rows.map((row) => {
-                    prepareRow(row)
-                    return (
-                        <tr {...row.getRowProps()} key={row.id}>
-                            {row.cells.map((cell) => (
-                                <td {...cell.getCellProps()} key={`${row.id}-${cell.column.id}`} style={{ padding: '8px', textAlign: 'center' }}>
-                                    {cell.render('Cell')}
-                                </td>
+        <>
+            <Table striped bordered hover variant="dark" {...getTableProps()} style={{ marginTop: '40px' }}>
+                <thead>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+                            {headerGroup.headers.map((column) => (
+                                <th {...column.getHeaderProps()} key={column.id}>
+                                    {column.render('Header')}
+                                </th>
                             ))}
                         </tr>
-                    )
-                })}
-            </tbody>
-        </Table>
+                    ))}
+                </thead>
+                <tbody {...getTableBodyProps()}>
+                    {rows.map((row) => {
+                        prepareRow(row)
+                        return (
+                            <tr {...row.getRowProps()} key={row.id}>
+                                {row.cells.map((cell) => (
+                                    <td {...cell.getCellProps()} key={`${row.id}-${cell.column.id}`} style={{ padding: '8px', textAlign: 'center' }}>
+                                        {cell.render('Cell')}
+                                    </td>
+                                ))}
+                            </tr>
+                        )
+                    })}
+                </tbody>
+            </Table>
+            {selectedDni && <UserDniViewModal show={dniModal} onHide={handleCloseDniModal} userDni={selectedDni}></UserDniViewModal>}
+        </>
     )
 }
 
