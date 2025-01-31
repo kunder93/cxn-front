@@ -83,9 +83,6 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
     const [warningModalVisible, setWarningModalVisible] = useState(false)
     const [warningRowData, setWarningRowData] = useState<UserProfile | null>(null)
 
-    console.log('EL VALOR DE WARNING MODAL ES:')
-    console.log(warningModalVisible)
-
     const openWarningModal = useCallback((row: Row<UserProfile>) => {
         setSelectedRow(data[row.index])
         setSelectedRowIndex(row.index)

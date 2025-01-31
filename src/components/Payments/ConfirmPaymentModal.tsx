@@ -1,15 +1,14 @@
-import axios, { AxiosError } from 'axios'
+import { AxiosError } from 'axios'
 import { NotificationType } from 'components/Common/hooks/useNotification'
 import { useNotificationContext } from 'components/Common/NotificationContext'
-import { format } from 'date-fns'
-import { es } from 'date-fns/locale'
-import { Modal, ModalProps } from 'react-bootstrap'
-import { PAYMENT_URL } from 'resources/server_urls'
-import { useAppSelector } from 'store/hooks'
-import { formatCurrency } from 'utility/paymentsUtilities'
+import { Modal, ModalProps, Spinner } from 'react-bootstrap'
 import { CloseButton, ConfirmButton, StyledModalBody, StyledModalFooter, StyledModalHeader } from './CommonStyles'
 import { PaymentInfo } from './Types'
-import { PaymentsState, ReceivedCreatedPayment } from 'components/Types/Types'
+import { PaymentsState } from 'components/Types/Types'
+import { useConfirmPayment } from './Hooks'
+import { formatCurrency } from 'utility/paymentsUtilities'
+import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
 
 interface ConfirmPaymentModalProps extends ModalProps {
     paymentinfo: PaymentInfo | null
@@ -17,42 +16,30 @@ interface ConfirmPaymentModalProps extends ModalProps {
 }
 
 export const ConfirmPaymentModal: React.FC<ConfirmPaymentModalProps> = ({ show, onHide, paymentinfo, updatePaymentStateFunc }) => {
-    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const { showNotification } = useNotificationContext()
-    const handleConfirmPayment = async (paymentId: string | null) => {
+    const { confirmPayment, isLoading, error } = useConfirmPayment()
+
+    const handleConfirm = async (paymentId: string | null) => {
         if (!paymentId) {
-            showNotification('El ID del pago es requerido para confirmar el pago.', NotificationType.Error)
+            showNotification('El ID del pago es necesario.', NotificationType.Error)
             return
         }
-
         try {
-            const response = await axios.patch<ReceivedCreatedPayment>(
-                `${PAYMENT_URL}/${paymentId}/pay`,
-                {},
-                { headers: { Authorization: `Bearer ${userJwt}` } }
-            )
-            showNotification('Pago confirmado con éxito.', NotificationType.Success)
-            updatePaymentStateFunc(response.data.userDni, response.data.id, response.data.state)
-            if (onHide) onHide() // Close the modal after success
-        } catch (error) {
-            const axiosError = error as AxiosError
-            if (axiosError.response?.data) {
-                const responseData = axiosError.response.data as { message?: string }
-                if (responseData.message) {
-                    showNotification(responseData.message, NotificationType.Error)
-                } else {
-                    showNotification('Error inesperado, intentalo más tarde.', NotificationType.Error)
-                }
-            } else {
-                showNotification('Error inesperado, intentalo más tarde.', NotificationType.Error)
-            }
+            const response = await confirmPayment(paymentId)
+            showNotification('Pago confirmado exitosamente.', NotificationType.Success)
+            updatePaymentStateFunc(response.userDni, response.id, response.state)
+            onHide?.()
+        } catch (err) {
+            const axiosError = error ?? (err as AxiosError)
+            const message = (axiosError.response?.data as { message?: string })?.message ?? 'Error inesperado.'
+            showNotification(message, NotificationType.Error)
         }
     }
 
     return (
         <Modal show={show} onHide={onHide} centered>
             <StyledModalHeader closeButton>
-                <Modal.Title>Confirmar pago</Modal.Title>
+                <Modal.Title>Confirm Payment</Modal.Title>
             </StyledModalHeader>
             <StyledModalBody>
                 {paymentinfo ? (
@@ -72,8 +59,18 @@ export const ConfirmPaymentModal: React.FC<ConfirmPaymentModalProps> = ({ show, 
                 )}
             </StyledModalBody>
             <StyledModalFooter>
-                <ConfirmButton onClick={() => void handleConfirmPayment(paymentinfo?.id ?? null)}>Confirmar</ConfirmButton>
-                <CloseButton onClick={onHide}>Cerrar</CloseButton>
+                <ConfirmButton variant="success" onClick={() => void handleConfirm(paymentinfo?.id ?? null)} disabled={isLoading}>
+                    {isLoading ? (
+                        <>
+                            <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> Confirmando...
+                        </>
+                    ) : (
+                        'Confirmar pago'
+                    )}
+                </ConfirmButton>
+                <CloseButton variant="danger" onClick={onHide} disabled={isLoading}>
+                    Close
+                </CloseButton>
             </StyledModalFooter>
         </Modal>
     )
