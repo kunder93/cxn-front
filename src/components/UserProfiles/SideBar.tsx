@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { BsPerson, BsPeople, BsCalendar, BsClipboardData } from 'react-icons/bs'
 import { FaChessKnight } from 'react-icons/fa'
 import { UserRole } from '../../store/types/userTypes'
+import { SlBookOpen } from 'react-icons/sl'
 
 const SideBarContainer = styled.aside`
     background-color: #f8f9fa;
@@ -67,7 +68,8 @@ export enum ProfileSection {
     TournamentParticipantManager = 'TournamentParticipantManager',
     FederateManager = 'FederateManager',
     ActivitiesManager = 'ActivitiesManager',
-    MembersPaymentsManager = 'MembersPaymentsManager'
+    MembersPaymentsManager = 'MembersPaymentsManager',
+    MembersResources = 'MembersResources'
 }
 
 interface SidebarProps {
@@ -97,7 +99,8 @@ const Sidebar: React.FC<SidebarProps> = ({ roles, setProfilePage, currentSection
         { section: ProfileSection.Tesorero, icon: <BsClipboardData />, label: 'Tesorero', roles: [UserRole.TESORERO] },
         { section: ProfileSection.Secretario, icon: <BsCalendar />, label: 'Secretario', roles: [UserRole.SECRETARIO] },
         { section: ProfileSection.ChessData, icon: <FaChessKnight />, label: 'Datos de Ajedrez', roles: [UserRole.SOCIO] },
-        { section: ProfileSection.MemberCandidate, icon: <BsPeople />, label: 'Bienvenida candidatos', roles: [UserRole.SOCIO_CANDIDATO, UserRole.ADMIN] }
+        { section: ProfileSection.MemberCandidate, icon: <BsPeople />, label: 'Bienvenida candidatos', roles: [UserRole.SOCIO_CANDIDATO, UserRole.ADMIN] },
+        { section: ProfileSection.MembersResources, icon: <SlBookOpen />, label: 'Recursos para socios', roles: [UserRole.SOCIO, UserRole.ADMIN] }
     ]
 
     return (

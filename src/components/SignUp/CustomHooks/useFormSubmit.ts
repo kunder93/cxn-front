@@ -4,9 +4,12 @@ import { FormikHelpers } from 'formik'
 import { ROUTES } from '../../../resources/routes-constants'
 import { SIGN_UP_URL } from '../../../resources/server_urls'
 import axios, { AxiosError } from 'axios'
+import { useNotificationContext } from 'components/Common/NotificationContext'
+import { NotificationType } from 'components/Common/hooks/useNotification'
 
-const useFormSubmit = (setAlertMessage: React.Dispatch<React.SetStateAction<string>>) => {
+const useFormSubmit = () => {
     const navigate = useNavigate()
+    const { showNotification } = useNotificationContext()
 
     const handleSubmit = async (values: SignUpFormValues, actions: FormikHelpers<SignUpFormValues>) => {
         const userData: UserFormData = {
@@ -28,23 +31,29 @@ const useFormSubmit = (setAlertMessage: React.Dispatch<React.SetStateAction<stri
         }
 
         try {
-            await axios.post<UserFormData>(SIGN_UP_URL, userData)
-            navigate(ROUTES.HOMEPAGE_ROUTE)
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                const axiosError = error as AxiosError<AxiosErrorResponseData>
-                const errorMessage =
-                    axiosError.response?.data?.content ??
-                    (axiosError.request ? 'Error: no hay respuesta.' : 'Error: algo inesperado. Recarga o intentalo más tarde.')
-                setAlertMessage(errorMessage)
-            } else {
-                setAlertMessage('Error: algo inesperado. Recarga o intentalo más tarde.')
+            const response = await axios.post<UserFormData>(SIGN_UP_URL, userData)
+            // Ensure successful response before proceeding
+            if (response.status >= 200 && response.status < 300) {
+                // Navigate first to avoid UI flickering
+                void navigate(ROUTES.HOMEPAGE_ROUTE)
+                // Show notification after navigation
+                showNotification('¡Registro exitoso!', NotificationType.Success)
             }
+        } catch (error) {
+            let errorMessage = 'Error: algo inesperado. Recarga o intentalo más tarde.'
+
+            if (axios.isAxiosError(error)) {
+                // Type the error response explicitly
+                const axiosError = error as AxiosError<AxiosErrorResponseData>
+                // Type-safe access with optional chaining and type guard
+                const serverError = typeof axiosError.response?.data?.content === 'string' ? axiosError.response.data.content : undefined
+                errorMessage = serverError ?? (axiosError.request ? 'Error: no hay respuesta del servidor.' : 'Error: algo inesperado')
+            }
+            showNotification(errorMessage, NotificationType.Error)
         } finally {
             actions.setSubmitting(false)
         }
     }
-
     return handleSubmit
 }
 

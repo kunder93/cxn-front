@@ -1,6 +1,3 @@
-// src/components/SignUpForm.tsx
-
-import { useState, useCallback } from 'react'
 import { Formik, Form, FormikProps } from 'formik'
 import { SignUpFormValidationSchema } from '../../pages/validation/FormValidationSchemas'
 import SignUpFormFirstStep from './FormSteps/SignUpFormFirstStep'
@@ -12,7 +9,6 @@ import { FormSteps, SignUpFormValues } from './SignUpFormTypes'
 import useFormSubmit from './CustomHooks/useFormSubmit'
 import useFormSteps from './CustomHooks/useFormSteps'
 import { FormStyledContainer } from '../../components/SignUpSingInCommonStyles'
-import FormAlertMessage from './Common/FormAlertMessage'
 import { Accordion } from 'react-bootstrap'
 import styled from 'styled-components'
 
@@ -70,17 +66,8 @@ const initialValues: SignUpFormValues = {
  * @returns {JSX.Element} The rendered sign-up form component.
  */
 const SignUpForm = (): JSX.Element => {
-    const [alertMessage, setAlertMessage] = useState<string>('')
     const { step, nextStep, previousStep } = useFormSteps(FormSteps.FirstStep)
-    const handleSubmit = useFormSubmit(setAlertMessage)
-
-    /**
-     * Closes the alert message.
-     *
-     * @function
-     * @returns {void}
-     */
-    const closeAlert = useCallback(() => setAlertMessage(''), [])
+    const handleSubmit = useFormSubmit()
 
     /**
      * Renders the appropriate step component based on the current step.
@@ -137,7 +124,6 @@ const SignUpForm = (): JSX.Element => {
                     <Form>
                         <FormStepBar step={step} />
                         {renderStepComponent(formikProps)}
-                        {alertMessage && <FormAlertMessage message={alertMessage} onClose={closeAlert} />}
                     </Form>
                 )}
             </Formik>

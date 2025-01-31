@@ -141,11 +141,11 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
             {
                 Header: 'DNI',
                 accessor: 'dni',
-                Cell: ({ value }: { value: string; row: Row<(typeof tableData)[number]> }) => (
+                Cell: ({ value, row }: { value: string; row: Row<(typeof tableData)[number]> }) => (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span>{value}</span>
 
-                        <UserDataInfoPopover userDni={value} />
+                        <UserDataInfoPopover userDni={row.original.dni} />
                     </div>
                 )
             },

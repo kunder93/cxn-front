@@ -155,5 +155,37 @@ export const useAxiosGetUserPayments = (userDni: string) => {
 }
 
 export const useAxiosGetUserData = (userDni: string) => {
-    return useAxios<UserProfile>(`${GET_USER_PROFILE_URL}?dni=${userDni}`)
+    const [data, setData] = useState<UserProfile | null>(null)
+    const [loaded, setLoaded] = useState(false)
+    const [error, setError] = useState<Error | null>(null)
+    const userJwt = useAppSelector<string>((state) => state.users.jwt)
+    useEffect(() => {
+        let isMounted = true
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`${GET_USER_PROFILE_URL}/${userDni}`, {
+                    headers: { Authorization: 'Bearer ' + userJwt }
+                })
+                if (isMounted) {
+                    setData(response.data)
+                    setLoaded(true)
+                }
+            } catch (err) {
+                if (isMounted) {
+                    setError(err as Error)
+                    setLoaded(true)
+                }
+            }
+        }
+
+        setLoaded(false)
+        setError(null)
+        void fetchData()
+
+        return () => {
+            isMounted = false
+        }
+    }, [userDni, userJwt]) // Ensure userDni is in dependency array
+
+    return { data, loaded, error }
 }
