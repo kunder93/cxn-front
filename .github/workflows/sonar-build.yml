@@ -21,17 +21,13 @@ jobs:
             - name: Build Docker image
               run: |
                   docker build -t react-frontend-app .
-            - name: Create sonar-project.properties
-              run: |
-                  echo "sonar.projectKey=cxn-front-develop" > sonar-project.properties
-
             # Debug SonarQube secrets (DO NOT expose them in public logs)
             - name: Debug SonarQube Environment Variables
               run: |
                   echo "SONAR_HOST_URL=${{ secrets.SONAR_HOST_URL }}"
                   echo "SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}" | sed 's/./& /g'
 
-            # Run SonarQube analysis inside the Docker containerr
+            # Run SonarQube analysis inside the Docker container
             - name: SonarQube Scan
               run: |
                   docker run --rm \
@@ -40,4 +36,4 @@ jobs:
                       -e SONAR_TOKEN="${{ secrets.SONAR_TOKEN }}" \
                       -e SONAR_HOST_URL="${{ secrets.SONAR_HOST_URL }}" \
                       sonarsource/sonar-scanner-cli:latest \
-                      sonar-scanner -Dsonar.projectKey=my-react-app -Dsonar.sources=src -Dsonar.exclusions=src/tests/** -Dsonar.tests=src/tests -Dsonar.javascript.lcov.reportPaths=coverage/lcov-report/index.html
+                      sonar-scanner -X -Dsonar.projectKey=cxn-front-develop -Dsonar.sources=src -Dsonar.exclusions=src/tests/** -Dsonar.tests=src/tests -Dsonar.javascript.lcov.reportPaths=coverage/lcov-report/index.html
