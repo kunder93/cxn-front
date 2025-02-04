@@ -31,13 +31,15 @@ jobs:
 
             # Run SonarQube analysis inside the Docker container
             - name: SonarQube Scan
-              run: |
-                  docker run --rm \
+            run: |
+                docker run --rm \
                     -v $(pwd):/app \
+                    -w /app \  # Set the working directory
                     -e SONAR_TOKEN=${{ secrets.SONAR_TOKEN }} \
                     -e SONAR_HOST_URL=${{ secrets.SONAR_HOST_URL }} \
                     sonarsource/sonar-scanner-cli:latest \
                     sonar-scanner -Dsonar.projectKey=my-react-app -Dsonar.sources=src -Dsonar.tests=src -Dsonar.javascript.lcov.reportPaths=coverage/lcov-report/index.html
+
 
             # (Optional) Run additional steps like tests, deployments, etc.
             # - name: Deploy to server
