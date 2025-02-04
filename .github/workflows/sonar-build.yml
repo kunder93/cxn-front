@@ -31,7 +31,7 @@ jobs:
                   echo "SONAR_HOST_URL=${{ secrets.SONAR_HOST_URL }}"
                   echo "SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}" | sed 's/./& /g'
 
-            # Run SonarQube analysis inside the Docker containerr
+            # Run SonarQube analysis inside the Docker container
             - name: SonarQube Scan
               run: |
                   docker run --rm \
