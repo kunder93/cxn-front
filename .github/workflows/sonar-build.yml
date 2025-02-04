@@ -1,0 +1,43 @@
+name: Build and Analyze with SonarQube
+
+on:
+    push:
+        branches:
+            - develop
+
+jobs:
+    build:
+        name: Build and SonarQube Analysis
+        runs-on: ubuntu-latest
+
+        steps:
+            # Checkout the repository
+            - name: Checkout code
+              uses: actions/checkout@v2
+              with:
+                  fetch-depth: 0 # Ensure full history for SonarQube analysis
+
+            # Build the Docker image
+            - name: Build Docker image
+              run: |
+                  docker build -t react-frontend-app .
+            - name: Create sonar-project.properties
+              run: |
+                  echo "sonar.projectKey=cxn-front-develop" > sonar-project.properties
+
+            # Debug SonarQube secrets (DO NOT expose them in public logs)
+            - name: Debug SonarQube Environment Variables
+              run: |
+                  echo "SONAR_HOST_URL=${{ secrets.SONAR_HOST_URL }}"
+                  echo "SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}" | sed 's/./& /g'
+
+            # Run SonarQube analysis inside the Docker containerr
+            - name: SonarQube Scan
+              run: |
+                  docker run --rm \
+                      -v ${{ github.workspace }}:/app \
+                      -w /app \
+                      -e SONAR_TOKEN="${{ secrets.SONAR_TOKEN }}" \
+                      -e SONAR_HOST_URL="${{ secrets.SONAR_HOST_URL }}" \
+                      sonarsource/sonar-scanner-cli:latest \
+                      sonar-scanner -Dsonar.projectKey=my-react-app -Dsonar.sources=src -Dsonar.exclusions=src/tests/** -Dsonar.tests=src/tests -Dsonar.javascript.lcov.reportPaths=coverage/lcov-report/index.html
