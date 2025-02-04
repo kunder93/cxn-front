@@ -24,22 +24,25 @@ jobs:
               with:
                   fetch-depth: 0 # Ensure full history for SonarQube analysis
 
-            # Set up Docker Build and analyze with SonarQube
+            # Build the Docker image
             - name: Build Docker image
               run: |
                   docker build -t react-frontend-app .
+
+            # Debug SonarQube secrets (DO NOT expose them in public logs)
+            - name: Debug SonarQube Environment Variables
+              run: |
+                  echo "SONAR_HOST_URL=${{ secrets.SONAR_HOST_URL }}"
+                  echo "SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}" | sed 's/./& /g'
+              if: ${{ secrets.SONAR_TOKEN == '' || secrets.SONAR_HOST_URL == '' }}
 
             # Run SonarQube analysis inside the Docker container
             - name: SonarQube Scan
               run: |
                   docker run --rm \
-                      -v $(pwd):/app \
-                      -w /app \  # Set the working directory
-                      -e SONAR_TOKEN=${{ secrets.SONAR_TOKEN }} \
-                      -e SONAR_HOST_URL=${{ secrets.SONAR_HOST_URL }} \
+                      -v ${{ github.workspace }}:/app \
+                      -w /app \
+                      -e SONAR_TOKEN="${{ secrets.SONAR_TOKEN }}" \
+                      -e SONAR_HOST_URL="${{ secrets.SONAR_HOST_URL }}" \
                       sonarsource/sonar-scanner-cli:latest \
                       sonar-scanner -Dsonar.projectKey=my-react-app -Dsonar.sources=src -Dsonar.tests=src -Dsonar.javascript.lcov.reportPaths=coverage/lcov-report/index.html
-
-            # (Optional) Run additional steps like tests, deployments, etc.
-            # - name: Deploy to server
-            #   run: ...
