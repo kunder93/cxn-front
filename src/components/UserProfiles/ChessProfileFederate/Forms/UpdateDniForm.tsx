@@ -2,7 +2,7 @@
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { Formik, Form, FormikState, FormikErrors, FormikTouched } from 'formik'
 import axios, { AxiosError } from 'axios'
-import { Form as BootstrapForm } from 'react-bootstrap'
+import { Form as BootstrapForm, Spinner } from 'react-bootstrap'
 import { dniValidationSchema } from './DniFilesValidation'
 import { ButtonsWrapper, ResetButton, SubmitButton } from './Common/styles'
 import { DniPreviewRow, FileInput } from './Common/FormComponents'
@@ -105,7 +105,7 @@ const UpdateDniForm = ({ setFederateState, closeModal }: UpdateDniRequestFormPro
         <>
             <span> Máximo 10MB y 2000x2000 píxeles.</span>
             <Formik initialValues={initialValues} validationSchema={dniValidationSchema} onSubmit={handleSubmit}>
-                {({ setFieldValue, resetForm, errors, touched, setTouched, validateForm }) => {
+                {({ setFieldValue, resetForm, errors, touched, setTouched, validateForm, dirty, isSubmitting, isValid }) => {
                     return (
                         <BootstrapForm as={Form}>
                             <FileInput
@@ -149,8 +149,14 @@ const UpdateDniForm = ({ setFederateState, closeModal }: UpdateDniRequestFormPro
                                 backDniErrors={errors.backDni}
                             />
                             <ButtonsWrapper>
-                                <SubmitButton variant="primary" type="submit">
-                                    Actualizar DNI
+                                <SubmitButton variant="primary" type="submit" disabled={isSubmitting || !isValid || !dirty}>
+                                    {isSubmitting ? (
+                                        <>
+                                            <Spinner animation="border" size="sm" /> Actualizando...
+                                        </>
+                                    ) : (
+                                        'Actualizar DNI'
+                                    )}
                                 </SubmitButton>
                                 <ResetButton variant="secondary" onClick={() => resetFormAndImages(resetForm)}>
                                     Restablecer formulario
