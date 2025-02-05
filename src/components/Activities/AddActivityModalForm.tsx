@@ -113,9 +113,10 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
             <Formik
                 validateOnMount
                 validateOnChange
+                validateOnBlur
                 initialValues={initialValues}
                 validationSchema={AddActivityValidationSchema}
-                onSubmit={(values, { resetForm }) => {
+                onSubmit={(values, { resetForm, setSubmitting }) => {
                     const formData = new FormData()
 
                     // Prepare the activity data to match AddActivityRequestData
@@ -172,6 +173,7 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                 showNotification(error.message, NotificationType.Error)
                             }
                         })
+                        .finally(() => setSubmitting(false))
                 }}
             >
                 {({ setFieldValue, values, validateField, setFieldTouched, isValid, dirty, isSubmitting }) => {
@@ -194,14 +196,31 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                 <ErrorContainer>
                                     <ErrorMessage name="title" component="div" />
                                 </ErrorContainer>
-                                <div>
+                                <BootstrapForm.Group>
                                     <BootstrapForm.Label htmlFor="imageFile">Imagen:</BootstrapForm.Label>
                                     <DropzoneContainer>
                                         <Dropzone
-                                            onDrop={(acceptedFiles) => {
+                                            onDrop={async (acceptedFiles) => {
                                                 const file = acceptedFiles[0]
-                                                void setFieldValue('imageFile', file)
-                                                setPreviewUrl(file ? URL.createObjectURL(file) : null)
+                                                try {
+                                                    // Limpiar valores anteriores
+                                                    setPreviewUrl(null) // <- Añade esta línea
+                                                    await setFieldValue('imageFile', null)
+
+                                                    // Establecer nuevo valor
+                                                    await setFieldValue('imageFile', file)
+
+                                                    // Mostrar preview inmediatamente
+                                                    if (file) {
+                                                        setPreviewUrl(URL.createObjectURL(file))
+                                                    }
+
+                                                    // Validar después de actualizar
+                                                    await validateField('imageFile')
+                                                } catch (error) {
+                                                    console.error('Error handling file drop:', error)
+                                                }
+                                                setFieldTouched('imageFile', true)
                                             }}
                                             accept={{
                                                 'image/png': ['.png'],
@@ -211,21 +230,27 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                             }}
                                         >
                                             {({ getRootProps, getInputProps }) => (
-                                                <div {...getRootProps()} aria-label="Zona de carga de imagen de actividad">
-                                                    <input {...getInputProps()} id="imageFile" aria-label="Cargar imagen de actividad" />
-                                                    {previewUrl ? (
-                                                        <img src={previewUrl} alt="Vista previa de la imagen" />
-                                                    ) : (
-                                                        <p>Arrastra aquí la imagen de la actividad o haz clic para añadir una.</p>
-                                                    )}
-                                                </div>
+                                                <>
+                                                    <Field name="imageFile" style={{ display: 'none' }}></Field>
+
+                                                    <div {...getRootProps()} aria-label="Zona de carga de imagen de actividad">
+                                                        <input {...getInputProps()} id="imageFile" aria-label="Cargar imagen de actividad" />
+                                                        {previewUrl ? (
+                                                            <img src={previewUrl} alt="Vista previa de la imagen" />
+                                                        ) : (
+                                                            <p>Arrastra aquí la imagen de la actividad o haz clic para añadir una.</p>
+                                                        )}
+                                                    </div>
+                                                </>
                                             )}
                                         </Dropzone>
                                     </DropzoneContainer>
+
+                                    {/* Add explicit error display */}
                                     <ErrorContainer>
                                         <ErrorMessage name="imageFile" component="div" />
                                     </ErrorContainer>
-                                </div>
+                                </BootstrapForm.Group>
 
                                 <div className="mb-3">
                                     <BootstrapForm.Label htmlFor="description">Descripción:</BootstrapForm.Label>
@@ -249,12 +274,26 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                         <DatePicker
                                             id="startDate" // Added id attribute
                                             selected={values.startDate}
-                                            onChange={(date) =>
-                                                void setFieldValue('startDate', date).then(() =>
-                                                    validateField('startDate').then(() => setFieldTouched('startDate', true))
-                                                )
-                                            }
-                                            onSelect={() => void validateField('startDate')}
+                                            onChange={(date) => {
+                                                void (async () => {
+                                                    try {
+                                                        await setFieldValue('startDate', date)
+                                                        await validateField('startDate')
+                                                        await setFieldTouched('startDate', true)
+                                                    } catch (error) {
+                                                        console.error('Error updating startDate:', error)
+                                                    }
+                                                })()
+                                            }}
+                                            onSelect={() => {
+                                                void (async () => {
+                                                    try {
+                                                        await validateField('startDate')
+                                                    } catch (error) {
+                                                        console.error('Error validating field:', error)
+                                                    }
+                                                })()
+                                            }}
                                             showTimeSelect
                                             dateFormat="Pp"
                                             className="form-control"
@@ -276,11 +315,17 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                         <DatePicker
                                             id="endDate" // Added id attribute
                                             selected={values.endDate}
-                                            onChange={(date) =>
-                                                void setFieldValue('endDate', date).then(() =>
-                                                    validateField('endDate').then(() => setFieldTouched('endDate', true))
-                                                )
-                                            }
+                                            onChange={(date) => {
+                                                void (async () => {
+                                                    try {
+                                                        await setFieldValue('endDate', date)
+                                                        await validateField('endDate')
+                                                        await setFieldTouched('endDate', true)
+                                                    } catch (error) {
+                                                        console.error('Error updating endDate:', error)
+                                                    }
+                                                })()
+                                            }}
                                             showTimeSelect
                                             dateFormat="Pp"
                                             className="form-control"
@@ -307,8 +352,8 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                         className="form-control"
                                         aria-label="Categoría de la actividad"
                                     >
-                                        {Object.values(ActivityCategory).map((category, index) => (
-                                            <option value={category} key={index}>
+                                        {Object.values(ActivityCategory).map((category) => (
+                                            <option value={category} key={category}>
                                                 {category}
                                             </option>
                                         ))}
