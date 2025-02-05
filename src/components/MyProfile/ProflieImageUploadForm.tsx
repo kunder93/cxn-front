@@ -19,7 +19,7 @@ import Image from 'react-bootstrap/Image'
 export const SubmitButton = styled(Button)`
     @media (max-width: 768px) {
         width: 100%; /* Botones ocupan el 100% del ancho en móviles */
-        margin-bottom: 10px;
+        font-size: 1.4em;
     }
 `
 
