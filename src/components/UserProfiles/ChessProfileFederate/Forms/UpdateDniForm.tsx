@@ -104,7 +104,14 @@ const UpdateDniForm = ({ setFederateState, closeModal }: UpdateDniRequestFormPro
     return (
         <>
             <span> Máximo 10MB y 2000x2000 píxeles.</span>
-            <Formik initialValues={initialValues} validationSchema={dniValidationSchema} onSubmit={handleSubmit}>
+            <Formik
+                initialValues={initialValues}
+                validationSchema={dniValidationSchema}
+                onSubmit={handleSubmit}
+                validateOnChange
+                validateOnMount
+                validateOnBlur
+            >
                 {({ setFieldValue, resetForm, errors, touched, setTouched, validateForm, dirty, isSubmitting, isValid }) => {
                     return (
                         <BootstrapForm as={Form}>
@@ -115,7 +122,7 @@ const UpdateDniForm = ({ setFederateState, closeModal }: UpdateDniRequestFormPro
                                     handleFileChange(
                                         event,
                                         setFieldValue as (field: string, value: File | null) => Promise<void>,
-                                        () => setTouched,
+                                        setTouched, // Pasa `setTouched` directamente
                                         validateForm,
                                         'frontDni',
                                         setFrontDniPreview
@@ -132,7 +139,7 @@ const UpdateDniForm = ({ setFederateState, closeModal }: UpdateDniRequestFormPro
                                     handleFileChange(
                                         event,
                                         setFieldValue as (field: string, value: File | null) => Promise<void>,
-                                        () => setTouched,
+                                        setTouched, // Pasa `setTouched` directamente
                                         validateForm,
                                         'backDni',
                                         setBackDniPreview
