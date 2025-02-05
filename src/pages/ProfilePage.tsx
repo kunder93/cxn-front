@@ -43,6 +43,7 @@ const ProfileContent = styled.div`
     @media (max-width: 768px) {
         padding-bottom: 4rem;
         margin: 0;
+        padding: 0rem;
     }
 `
 
