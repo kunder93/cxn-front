@@ -45,10 +45,12 @@ export const SubmitButton = styled(Button)`
     @media (max-width: 768px) {
         width: 100%; /* Botones ocupan el 100% del ancho en móviles */
         margin-bottom: 10px;
+        font-size: 1.4em;
     }
 `
 export const ResetButton = styled(Button)`
     @media (max-width: 768px) {
         width: 100%; /* Botones ocupan el 100% del ancho en móviles */
+        font-size: 1.4em;
     }
 `

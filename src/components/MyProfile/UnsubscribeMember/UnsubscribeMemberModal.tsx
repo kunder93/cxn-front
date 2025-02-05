@@ -57,6 +57,7 @@ const ModalFooter = styled(Modal.Footer)`
 
         button {
             width: 100%; /* Botones de ancho completo en móvil */
+            font-size: 1.4em;
         }
     }
 `

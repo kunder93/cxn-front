@@ -7,11 +7,15 @@ import styled from 'styled-components'
 const StyledRow = styled.div`
     display: flex;
     justify-content: space-between;
-    padding: 10px 0;
+    padding: 5px 0;
     border-bottom: 1px solid #444;
     font-size: 16px;
     &:last-child {
         border-bottom: none;
+    }
+    @media (max-width: 768px) {
+        padding-left: 0px;
+        padding-right: 0px;
     }
 `
 
@@ -23,6 +27,9 @@ const StyledColLabel = styled.div`
     font-weight: bold;
     color: #bbb;
     padding-left: 3em;
+    @media (max-width: 768px) {
+        padding-left: 0px;
+    }
 `
 
 /**
@@ -33,6 +40,9 @@ const StyledColValue = styled.div`
     text-align: right;
     color: #fff;
     padding-right: 3em;
+    @media (max-width: 768px) {
+        padding-right: 0px;
+    }
 `
 
 /**

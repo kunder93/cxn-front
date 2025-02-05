@@ -63,6 +63,7 @@ const SectionRow = styled.div`
         flex-wrap: wrap;
         button {
             width: 100%;
+            font-size: 1.4em;
         }
     }
 `
