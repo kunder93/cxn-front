@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, ModalProps, Button, Spinner } from 'react-bootstrap'
+import { Modal, ModalProps, Button, Spinner, Form as BootstrapForm } from 'react-bootstrap'
 import styled from 'styled-components'
 import { ActivityCategory, IActivity, IActivityForm } from './Types'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
@@ -13,7 +13,6 @@ import { NotificationType } from 'components/Common/hooks/useNotification'
 import 'react-datepicker/dist/react-datepicker.css'
 import DatePicker, { registerLocale } from 'react-datepicker'
 import { es } from 'date-fns/locale'
-import { Form as BootstrapForm } from 'react-bootstrap'
 
 registerLocale('es', es)
 

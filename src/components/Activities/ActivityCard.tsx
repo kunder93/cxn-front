@@ -102,15 +102,14 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ activity }) => {
     return (
         <StyledCard>
             <div className="img-wrapper">
-                {loading ? (
-                    <Spinner animation="border" variant="primary" />
-                ) : error ? (
+                {loading && <Spinner animation="border" variant="primary" />}
+                {error && (
                     <Alert variant="warning" className="m-0 p-2">
                         Imagen no disponible
                     </Alert>
-                ) : (
-                    <Card.Img variant="top" src={image} alt="Activity Image" />
                 )}
+                <Card.Img variant="top" src={image} alt="Activity Image" />
+
                 <Badge className="category-badge" bg={getBadgeVariant(activity.category ?? ActivityCategory.OTRO)}>
                     {activity.category}
                 </Badge>

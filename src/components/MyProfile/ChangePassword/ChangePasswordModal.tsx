@@ -28,6 +28,7 @@ const ModalFooter = styled(Modal.Footer)`
         button {
             width: 100%;
             margin-bottom: 0.5em;
+            font-size: 1.4em;
         }
     }
 `

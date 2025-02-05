@@ -44,6 +44,13 @@ const ModalFooterStyled = styled(Modal.Footer)`
     }
 `
 
+const StyledCloseButton = styled(Button)`
+    @media (max-width: 768px) {
+        width: 100%;
+        font-size: 1.4em;
+    }
+`
+
 const StyledButton = styled(Button)`
     background-color: #007bff;
     border: none;
@@ -56,6 +63,7 @@ const StyledButton = styled(Button)`
     // Make button full-width on mobile
     @media (max-width: 768px) {
         width: 100%;
+        font-size: 1.4em;
     }
 `
 const ModalStyled = styled(Modal)`
@@ -87,9 +95,9 @@ const UploadProfileImageButton = (): JSX.Element => {
                     <ImageUploadForm />
                 </ModalBodyStyled>
                 <ModalFooterStyled>
-                    <Button variant="danger" onClick={() => setActiveModal(false)}>
+                    <StyledCloseButton variant="danger" onClick={() => setActiveModal(false)}>
                         Cerrar
-                    </Button>
+                    </StyledCloseButton>
                 </ModalFooterStyled>
             </ModalStyled>
         </>

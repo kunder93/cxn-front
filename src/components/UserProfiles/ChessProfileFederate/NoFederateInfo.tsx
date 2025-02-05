@@ -13,11 +13,13 @@ const StyledModalHeader = styled(Modal.Header)`
 const CloseModalButton = styled(Button)`
     @media (max-width: 768px) {
         width: 100%; /* Full width buttons on mobile */
+        font-size: 1.4em;
     }
 `
 const FederateRequestButton = styled(Button)`
     @media (max-width: 768px) {
         width: 100%; /* Full width buttons on mobile */
+        font-size: 1.4em;
     }
 `
 
