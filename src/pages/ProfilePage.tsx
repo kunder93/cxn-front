@@ -82,6 +82,17 @@ const ProfilePage = (): JSX.Element => {
         setProfilePage(newSection)
     }
     const CurrentPageComponent = sectionComponents[profilePage]
+
+    const renderProfileContent = () => {
+        if (error) {
+            return <p>{error}</p>
+        }
+        if (CurrentPageComponent) {
+            return <CurrentPageComponent changePage={changePage} />
+        }
+        return null
+    }
+
     return (
         <MainPageContainer id="main-page-container">
             {userProfile && (
@@ -105,9 +116,7 @@ const ProfilePage = (): JSX.Element => {
                     )}
                 </>
             )}
-            <ProfileContent id="selected-content-wrapper">
-                {error ? <p>{error}</p> : CurrentPageComponent ? <CurrentPageComponent changePage={changePage} /> : null}
-            </ProfileContent>
+            <ProfileContent id="selected-content-wrapper">{renderProfileContent()}</ProfileContent>
         </MainPageContainer>
     )
 }

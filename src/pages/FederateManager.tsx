@@ -156,11 +156,10 @@ export const FederateManager = (): JSX.Element => {
 
     return (
         <>
-            {loading ? (
-                <Spinner animation="border" aria-live="polite" />
-            ) : error ? (
-                <div role="alert">{error}</div>
-            ) : (
+            {loading && <Spinner animation="border" aria-live="polite" />}
+            {error && <div role="alert">{error}</div>}
+
+            {data && (
                 <Table striped bordered hover {...getTableProps()} style={{ marginTop: '40px' }}>
                     <thead>
                         {headerGroups.map((headerGroup) => (

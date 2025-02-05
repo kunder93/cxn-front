@@ -2,7 +2,7 @@
 import React, { useRef, useState } from 'react'
 import { Formik, Form, FormikTouched, FormikErrors } from 'formik'
 import { Form as BootstrapForm, Spinner } from 'react-bootstrap'
-import { Button } from 'react-bootstrap'
+import { Button, Image } from 'react-bootstrap'
 import axios, { AxiosError } from 'axios'
 import { useAppSelector } from '../../store/hooks'
 import { UserProfileImage } from '../../store/types/userTypes'
@@ -14,7 +14,6 @@ import { UPLOAD_PROFILE_IMAGE_FILE_URL } from '../../resources/server_urls'
 import { FileInput } from '../../components/UserProfiles/ChessProfileFederate/Forms/Common/FormComponents'
 import { uploadFormValidationSchema } from './ProfileImage/FormValidations'
 import styled from 'styled-components'
-import Image from 'react-bootstrap/Image'
 
 export const SubmitButton = styled(Button)`
     @media (max-width: 768px) {
