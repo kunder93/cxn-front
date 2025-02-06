@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { Field, FieldArray, Form, Formik, FormikState } from 'formik'
+import { Field, FieldArray, Form, Formik, FormikState, ErrorMessage } from 'formik'
 import DatePicker, { registerLocale } from 'react-datepicker'
 import styled from 'styled-components'
 
 import Dropzone from 'react-dropzone'
 import { Form as BootstrapForm, Button, Spinner } from 'react-bootstrap'
-import { ErrorMessage } from 'formik'
 import { es } from 'date-fns/locale'
 import { AddBookValidationSchema } from './AddBookValidationSchema'
 import { useAppSelector } from 'store/hooks'
@@ -239,7 +238,9 @@ const AddBookForm: React.FC<AddBookFormProps> = ({ addBookFunction }) => {
                                         validateField('publishDate').then(() => setFieldTouched('publishDate', true))
                                     )
                                 }
-                                onSelect={() => void validateField('publishDate')}
+                                onSelect={() => async () => {
+                                    await validateField('publishDate')
+                                }}
                                 dateFormat={'dd/MM/yyyy'}
                                 className="form-control"
                                 locale="es"
@@ -317,8 +318,11 @@ const AddBookForm: React.FC<AddBookFormProps> = ({ addBookFunction }) => {
                                     onDrop={(acceptedFiles) => {
                                         const file = acceptedFiles[0]
                                         if (file instanceof File) {
-                                            void setFieldValue('imageFile', file)
-                                            setPreviewUrl(URL.createObjectURL(file)) // Generar URL de la imagen
+                                            setFieldValue('imageFile', file)
+                                                .then(() => setPreviewUrl(URL.createObjectURL(file))) // Generar URL de la imagen)
+                                                .catch((error) => {
+                                                    throw error
+                                                })
                                         }
                                     }}
                                     accept={{

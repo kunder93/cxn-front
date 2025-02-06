@@ -22,7 +22,7 @@ const LoadingMessage = styled.p`
 const LoadingTableSpinnerContainer = (): JSX.Element => {
     return (
         <LoadingContainer>
-            <LargeSpinner animation="border" role="status" />
+            <LargeSpinner animation="border" role="output" />
             <LoadingMessage>Cargando datos...</LoadingMessage>
         </LoadingContainer>
     )

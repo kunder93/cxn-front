@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Modal, ModalProps, Button, Spinner, Form as BootstrapForm } from 'react-bootstrap'
 import styled from 'styled-components'
 import { ActivityCategory, IActivity, IActivityForm } from './Types'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik'
 import Dropzone from 'react-dropzone'
 import { AddActivityValidationSchema } from './FormValidations'
 import axios, { AxiosError } from 'axios'
@@ -90,7 +90,6 @@ interface AddActivityModalFormProps extends ModalProps {
 const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddActivityModalFormProps) => {
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const { showNotification } = useNotificationContext()
-
     const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
     const initialValues: IActivityForm = {
@@ -100,6 +99,66 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
         startDate: null,
         endDate: null,
         category: ActivityCategory.TORNEO
+    }
+
+    const handleSubmit = (values: IActivityForm, formActions: FormikHelpers<IActivityForm>) => {
+        const formData = new FormData()
+
+        // Prepare the activity data to match AddActivityRequestData
+        const activityData = {
+            title: values.title,
+            description: values.description,
+            startDate: values.startDate?.toISOString() ?? '',
+            endDate: values.endDate?.toISOString() ?? '',
+            category: values.category ?? ''
+        }
+
+        // Add activity data as a JSON Blob to the FormData
+        const jsonBlob = new Blob([JSON.stringify(activityData)], { type: 'application/json' })
+        formData.append('data', jsonBlob)
+
+        // Append the image file if it exists
+        if (values.imageFile) {
+            formData.append('imageFile', values.imageFile)
+        }
+
+        axios
+            .post(ACTIVITIES_URL, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${userJwt}`
+                }
+            })
+            .then((/*response*/) => {
+                showNotification('Actividad creada', NotificationType.Success)
+                formActions.resetForm()
+                setPreviewUrl(null)
+                props.addActivity({
+                    title: values.title,
+                    description: values.description,
+                    startDate: values.startDate,
+                    endDate: values.endDate,
+                    category: values.category
+                })
+            })
+            .catch((error) => {
+                const err = error as AxiosError
+                // Use optional chaining to safely access the error response data
+                const errorMessages = err.response?.data
+                if (Array.isArray(errorMessages)) {
+                    // If errorMessages is an array, join them into a string
+                    showNotification(errorMessages.join(', '), NotificationType.Error)
+                } else if (errorMessages && typeof errorMessages === 'object') {
+                    // If errorMessages is an object (and not null)
+                    const formattedMessages = Object.values(errorMessages).join(', ')
+                    showNotification(formattedMessages, NotificationType.Error)
+                } else {
+                    // If no validation errors, display the error message
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+                    showNotification(error.message, NotificationType.Error)
+                }
+            })
+            .finally(() => formActions.setSubmitting(false))
     }
 
     return (
@@ -113,66 +172,10 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
             <Formik
                 validateOnMount
                 validateOnChange
+                validateOnBlur
                 initialValues={initialValues}
                 validationSchema={AddActivityValidationSchema}
-                onSubmit={(values, { resetForm }) => {
-                    const formData = new FormData()
-
-                    // Prepare the activity data to match AddActivityRequestData
-                    const activityData = {
-                        title: values.title,
-                        description: values.description,
-                        startDate: values.startDate?.toISOString() ?? '',
-                        endDate: values.endDate?.toISOString() ?? '',
-                        category: values.category ?? ''
-                    }
-
-                    // Add activity data as a JSON Blob to the FormData
-                    const jsonBlob = new Blob([JSON.stringify(activityData)], { type: 'application/json' })
-                    formData.append('data', jsonBlob)
-
-                    // Append the image file if it exists
-                    if (values.imageFile) {
-                        formData.append('imageFile', values.imageFile)
-                    }
-
-                    axios
-                        .post(ACTIVITIES_URL, formData, {
-                            headers: {
-                                'Content-Type': 'multipart/form-data',
-                                Authorization: `Bearer ${userJwt}`
-                            }
-                        })
-                        .then((/*response*/) => {
-                            showNotification('Actividad creada', NotificationType.Success)
-                            resetForm()
-                            setPreviewUrl(null)
-                            props.addActivity({
-                                title: values.title,
-                                description: values.description,
-                                startDate: values.startDate,
-                                endDate: values.endDate,
-                                category: values.category
-                            })
-                        })
-                        .catch((error) => {
-                            const err = error as AxiosError
-                            // Use optional chaining to safely access the error response data
-                            const errorMessages = err.response?.data
-                            if (Array.isArray(errorMessages)) {
-                                // If errorMessages is an array, join them into a string
-                                showNotification(errorMessages.join(', '), NotificationType.Error)
-                            } else if (errorMessages && typeof errorMessages === 'object') {
-                                // If errorMessages is an object (and not null)
-                                const formattedMessages = Object.values(errorMessages).join(', ')
-                                showNotification(formattedMessages, NotificationType.Error)
-                            } else {
-                                // If no validation errors, display the error message
-                                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-                                showNotification(error.message, NotificationType.Error)
-                            }
-                        })
-                }}
+                onSubmit={(values, actions) => handleSubmit(values, actions)}
             >
                 {({ setFieldValue, values, validateField, setFieldTouched, isValid, dirty, isSubmitting }) => {
                     return (
@@ -194,14 +197,37 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                 <ErrorContainer>
                                     <ErrorMessage name="title" component="div" />
                                 </ErrorContainer>
-                                <div>
+                                <BootstrapForm.Group>
                                     <BootstrapForm.Label htmlFor="imageFile">Imagen:</BootstrapForm.Label>
                                     <DropzoneContainer>
                                         <Dropzone
                                             onDrop={(acceptedFiles) => {
                                                 const file = acceptedFiles[0]
-                                                void setFieldValue('imageFile', file)
-                                                setPreviewUrl(file ? URL.createObjectURL(file) : null)
+                                                setPreviewUrl(null) // <- Añade esta línea
+
+                                                // Limpiar valores anteriores
+
+                                                setFieldValue('imageFile', null)
+                                                    .then(() => {
+                                                        setFieldValue('imageFile', file)
+                                                            .then(() =>
+                                                                validateField('imageFile')
+                                                                    .then(() => {
+                                                                        if (file) {
+                                                                            setFieldTouched('imageFile', true)
+                                                                                .then(() => setPreviewUrl(URL.createObjectURL(file)))
+                                                                                .catch((error) => console.log(error))
+                                                                        }
+                                                                    })
+                                                                    .catch((error) => {
+                                                                        throw error
+                                                                    })
+                                                            )
+                                                            .catch((error) => {
+                                                                throw error
+                                                            })
+                                                    })
+                                                    .catch(() => showNotification('Error cargando imagen.', NotificationType.Error))
                                             }}
                                             accept={{
                                                 'image/png': ['.png'],
@@ -211,21 +237,27 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                             }}
                                         >
                                             {({ getRootProps, getInputProps }) => (
-                                                <div {...getRootProps()} aria-label="Zona de carga de imagen de actividad">
-                                                    <input {...getInputProps()} id="imageFile" aria-label="Cargar imagen de actividad" />
-                                                    {previewUrl ? (
-                                                        <img src={previewUrl} alt="Vista previa de la imagen" />
-                                                    ) : (
-                                                        <p>Arrastra aquí la imagen de la actividad o haz clic para añadir una.</p>
-                                                    )}
-                                                </div>
+                                                <>
+                                                    <Field name="imageFile" style={{ display: 'none' }}></Field>
+
+                                                    <div {...getRootProps()} aria-label="Zona de carga de imagen de actividad">
+                                                        <input {...getInputProps()} id="imageFile" aria-label="Cargar imagen de actividad" />
+                                                        {previewUrl ? (
+                                                            <img src={previewUrl} alt="Vista previa de la imagen" />
+                                                        ) : (
+                                                            <p>Arrastra aquí la imagen de la actividad o haz clic para añadir una.</p>
+                                                        )}
+                                                    </div>
+                                                </>
                                             )}
                                         </Dropzone>
                                     </DropzoneContainer>
+
+                                    {/* Add explicit error display */}
                                     <ErrorContainer>
                                         <ErrorMessage name="imageFile" component="div" />
                                     </ErrorContainer>
-                                </div>
+                                </BootstrapForm.Group>
 
                                 <div className="mb-3">
                                     <BootstrapForm.Label htmlFor="description">Descripción:</BootstrapForm.Label>
@@ -249,12 +281,26 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                         <DatePicker
                                             id="startDate" // Added id attribute
                                             selected={values.startDate}
-                                            onChange={(date) =>
-                                                void setFieldValue('startDate', date).then(() =>
-                                                    validateField('startDate').then(() => setFieldTouched('startDate', true))
-                                                )
-                                            }
-                                            onSelect={() => void validateField('startDate')}
+                                            onChange={(date) => {
+                                                void (async () => {
+                                                    try {
+                                                        await setFieldValue('startDate', date)
+                                                        await validateField('startDate')
+                                                        await setFieldTouched('startDate', true)
+                                                    } catch (error) {
+                                                        console.error('Error updating startDate:', error)
+                                                    }
+                                                })()
+                                            }}
+                                            onSelect={() => {
+                                                void (async () => {
+                                                    try {
+                                                        await validateField('startDate')
+                                                    } catch (error) {
+                                                        console.error('Error validating field:', error)
+                                                    }
+                                                })()
+                                            }}
                                             showTimeSelect
                                             dateFormat="Pp"
                                             className="form-control"
@@ -276,11 +322,17 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                         <DatePicker
                                             id="endDate" // Added id attribute
                                             selected={values.endDate}
-                                            onChange={(date) =>
-                                                void setFieldValue('endDate', date).then(() =>
-                                                    validateField('endDate').then(() => setFieldTouched('endDate', true))
-                                                )
-                                            }
+                                            onChange={(date) => {
+                                                void (async () => {
+                                                    try {
+                                                        await setFieldValue('endDate', date)
+                                                        await validateField('endDate')
+                                                        await setFieldTouched('endDate', true)
+                                                    } catch (error) {
+                                                        console.error('Error updating endDate:', error)
+                                                    }
+                                                })()
+                                            }}
                                             showTimeSelect
                                             dateFormat="Pp"
                                             className="form-control"
@@ -307,8 +359,8 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                         className="form-control"
                                         aria-label="Categoría de la actividad"
                                     >
-                                        {Object.values(ActivityCategory).map((category, index) => (
-                                            <option value={category} key={index}>
+                                        {Object.values(ActivityCategory).map((category) => (
+                                            <option value={category} key={category}>
                                                 {category}
                                             </option>
                                         ))}
