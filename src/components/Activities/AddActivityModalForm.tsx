@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Modal, ModalProps, Button, Spinner, Form as BootstrapForm } from 'react-bootstrap'
 import styled from 'styled-components'
 import { ActivityCategory, IActivity, IActivityForm } from './Types'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik'
 import Dropzone from 'react-dropzone'
 import { AddActivityValidationSchema } from './FormValidations'
 import axios, { AxiosError } from 'axios'
@@ -90,7 +90,6 @@ interface AddActivityModalFormProps extends ModalProps {
 const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddActivityModalFormProps) => {
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const { showNotification } = useNotificationContext()
-
     const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
     const initialValues: IActivityForm = {
@@ -100,6 +99,66 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
         startDate: null,
         endDate: null,
         category: ActivityCategory.TORNEO
+    }
+
+    const handleSubmit = (values: IActivityForm, formActions: FormikHelpers<IActivityForm>) => {
+        const formData = new FormData()
+
+        // Prepare the activity data to match AddActivityRequestData
+        const activityData = {
+            title: values.title,
+            description: values.description,
+            startDate: values.startDate?.toISOString() ?? '',
+            endDate: values.endDate?.toISOString() ?? '',
+            category: values.category ?? ''
+        }
+
+        // Add activity data as a JSON Blob to the FormData
+        const jsonBlob = new Blob([JSON.stringify(activityData)], { type: 'application/json' })
+        formData.append('data', jsonBlob)
+
+        // Append the image file if it exists
+        if (values.imageFile) {
+            formData.append('imageFile', values.imageFile)
+        }
+
+        axios
+            .post(ACTIVITIES_URL, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${userJwt}`
+                }
+            })
+            .then((/*response*/) => {
+                showNotification('Actividad creada', NotificationType.Success)
+                formActions.resetForm()
+                setPreviewUrl(null)
+                props.addActivity({
+                    title: values.title,
+                    description: values.description,
+                    startDate: values.startDate,
+                    endDate: values.endDate,
+                    category: values.category
+                })
+            })
+            .catch((error) => {
+                const err = error as AxiosError
+                // Use optional chaining to safely access the error response data
+                const errorMessages = err.response?.data
+                if (Array.isArray(errorMessages)) {
+                    // If errorMessages is an array, join them into a string
+                    showNotification(errorMessages.join(', '), NotificationType.Error)
+                } else if (errorMessages && typeof errorMessages === 'object') {
+                    // If errorMessages is an object (and not null)
+                    const formattedMessages = Object.values(errorMessages).join(', ')
+                    showNotification(formattedMessages, NotificationType.Error)
+                } else {
+                    // If no validation errors, display the error message
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+                    showNotification(error.message, NotificationType.Error)
+                }
+            })
+            .finally(() => formActions.setSubmitting(false))
     }
 
     return (
@@ -116,65 +175,7 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                 validateOnBlur
                 initialValues={initialValues}
                 validationSchema={AddActivityValidationSchema}
-                onSubmit={(values, { resetForm, setSubmitting }) => {
-                    const formData = new FormData()
-
-                    // Prepare the activity data to match AddActivityRequestData
-                    const activityData = {
-                        title: values.title,
-                        description: values.description,
-                        startDate: values.startDate?.toISOString() ?? '',
-                        endDate: values.endDate?.toISOString() ?? '',
-                        category: values.category ?? ''
-                    }
-
-                    // Add activity data as a JSON Blob to the FormData
-                    const jsonBlob = new Blob([JSON.stringify(activityData)], { type: 'application/json' })
-                    formData.append('data', jsonBlob)
-
-                    // Append the image file if it exists
-                    if (values.imageFile) {
-                        formData.append('imageFile', values.imageFile)
-                    }
-
-                    axios
-                        .post(ACTIVITIES_URL, formData, {
-                            headers: {
-                                'Content-Type': 'multipart/form-data',
-                                Authorization: `Bearer ${userJwt}`
-                            }
-                        })
-                        .then((/*response*/) => {
-                            showNotification('Actividad creada', NotificationType.Success)
-                            resetForm()
-                            setPreviewUrl(null)
-                            props.addActivity({
-                                title: values.title,
-                                description: values.description,
-                                startDate: values.startDate,
-                                endDate: values.endDate,
-                                category: values.category
-                            })
-                        })
-                        .catch((error) => {
-                            const err = error as AxiosError
-                            // Use optional chaining to safely access the error response data
-                            const errorMessages = err.response?.data
-                            if (Array.isArray(errorMessages)) {
-                                // If errorMessages is an array, join them into a string
-                                showNotification(errorMessages.join(', '), NotificationType.Error)
-                            } else if (errorMessages && typeof errorMessages === 'object') {
-                                // If errorMessages is an object (and not null)
-                                const formattedMessages = Object.values(errorMessages).join(', ')
-                                showNotification(formattedMessages, NotificationType.Error)
-                            } else {
-                                // If no validation errors, display the error message
-                                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-                                showNotification(error.message, NotificationType.Error)
-                            }
-                        })
-                        .finally(() => setSubmitting(false))
-                }}
+                onSubmit={(values, actions) => handleSubmit(values, actions)}
             >
                 {({ setFieldValue, values, validateField, setFieldTouched, isValid, dirty, isSubmitting }) => {
                     return (
@@ -200,27 +201,33 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                     <BootstrapForm.Label htmlFor="imageFile">Imagen:</BootstrapForm.Label>
                                     <DropzoneContainer>
                                         <Dropzone
-                                            onDrop={async (acceptedFiles) => {
+                                            onDrop={(acceptedFiles) => {
                                                 const file = acceptedFiles[0]
-                                                try {
-                                                    // Limpiar valores anteriores
-                                                    setPreviewUrl(null) // <- Añade esta línea
-                                                    await setFieldValue('imageFile', null)
+                                                setPreviewUrl(null) // <- Añade esta línea
 
-                                                    // Establecer nuevo valor
-                                                    await setFieldValue('imageFile', file)
+                                                // Limpiar valores anteriores
 
-                                                    // Mostrar preview inmediatamente
-                                                    if (file) {
-                                                        setPreviewUrl(URL.createObjectURL(file))
-                                                    }
-
-                                                    // Validar después de actualizar
-                                                    await validateField('imageFile')
-                                                } catch (error) {
-                                                    console.error('Error handling file drop:', error)
-                                                }
-                                                setFieldTouched('imageFile', true)
+                                                setFieldValue('imageFile', null)
+                                                    .then(() => {
+                                                        setFieldValue('imageFile', file)
+                                                            .then(() =>
+                                                                validateField('imageFile')
+                                                                    .then(() => {
+                                                                        if (file) {
+                                                                            setFieldTouched('imageFile', true)
+                                                                                .then(() => setPreviewUrl(URL.createObjectURL(file)))
+                                                                                .catch((error) => console.log(error))
+                                                                        }
+                                                                    })
+                                                                    .catch((error) => {
+                                                                        throw error
+                                                                    })
+                                                            )
+                                                            .catch((error) => {
+                                                                throw error
+                                                            })
+                                                    })
+                                                    .catch(() => showNotification('Error cargando imagen.', NotificationType.Error))
                                             }}
                                             accept={{
                                                 'image/png': ['.png'],

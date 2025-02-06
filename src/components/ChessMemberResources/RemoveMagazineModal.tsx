@@ -35,12 +35,18 @@ const RemoveMagazineModal: React.FC<RemoveMagazineModalProps> = ({ handleCloseMo
                 </p>
                 {isLoading && (
                     <div className="d-flex justify-content-center">
-                        <Spinner animation="border" role="status" />
+                        <Spinner animation="border" role="output" />
                     </div>
                 )}
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="danger" onClick={handleRemoveClick} disabled={isLoading}>
+                <Button
+                    variant="danger"
+                    onClick={() => async () => {
+                        await handleRemoveClick()
+                    }}
+                    disabled={isLoading}
+                >
                     'Eliminar'
                 </Button>
                 <Button variant="secondary" onClick={handleCloseModal}>

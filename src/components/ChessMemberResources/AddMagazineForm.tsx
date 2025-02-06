@@ -206,12 +206,14 @@ export const AddMagazineForm: React.FC<AddMagazineFormProps> = ({ addMagazineFun
                         <DatePicker
                             id="publishDate" // Added id attribute
                             selected={values.publishDate}
-                            onChange={(date) =>
-                                void setFieldValue('publishDate', date).then(() =>
+                            onChange={(date) => async () => {
+                                await setFieldValue('publishDate', date).then(() =>
                                     validateField('publishDate').then(() => setFieldTouched('publishDate', true))
                                 )
-                            }
-                            onSelect={() => void validateField('publishDate')}
+                            }}
+                            onSelect={() => async () => {
+                                await validateField('publishDate')
+                            }}
                             dateFormat={'dd/MM/yyyy'}
                             className="form-control"
                             locale="es"
@@ -337,8 +339,11 @@ export const AddMagazineForm: React.FC<AddMagazineFormProps> = ({ addMagazineFun
                                 onDrop={(acceptedFiles) => {
                                     const file = acceptedFiles[0]
                                     if (file instanceof File) {
-                                        void setFieldValue('imageFile', file)
-                                        setPreviewUrl(URL.createObjectURL(file)) // Generar URL de la imagen
+                                        setFieldValue('imageFile', file)
+                                            .then(() => setPreviewUrl(URL.createObjectURL(file))) // Generar URL de la imagen))
+                                            .catch((error) => {
+                                                throw error
+                                            })
                                     }
                                 }}
                                 accept={{

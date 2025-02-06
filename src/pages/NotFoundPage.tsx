@@ -17,8 +17,8 @@ const NotFoundPage = (): JSX.Element => {
      *
      * This function is called when the user clicks the "Homepage" link.
      */
-    const redirectToHomePage = () => {
-        navigate(ROUTES.HOMEPAGE_ROUTE)
+    const redirectToHomePage = () => async () => {
+        await navigate(ROUTES.HOMEPAGE_ROUTE)
     }
 
     return (

@@ -35,12 +35,18 @@ const RemoveBookModal: React.FC<RemoveBookModalProps> = ({ handleCloseModal, rem
                 </p>
                 {loading && (
                     <div className="d-flex justify-content-center">
-                        <Spinner animation="border" role="status" />
+                        <Spinner animation="border" role="output" />
                     </div>
                 )}
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="danger" onClick={handleRemoveBook} disabled={loading}>
+                <Button
+                    variant="danger"
+                    onClick={() => async () => {
+                        await handleRemoveBook()
+                    }}
+                    disabled={loading}
+                >
                     {loading ? 'Eliminando...' : 'Eliminar'}
                 </Button>
                 <Button variant="secondary" onClick={handleCloseModal} disabled={loading}>
