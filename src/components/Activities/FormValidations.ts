@@ -1,12 +1,12 @@
 import * as Yup from 'yup'
 import { ActivityCategory } from './Types'
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
-const MAX_RESOLUTION = { width: 2000, height: 2000 }
-const VALID_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/jpg', 'image/avif', 'image/webp']
+export const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
+export const MAX_RESOLUTION = { width: 2000, height: 2000 }
+export const VALID_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/jpg', 'image/avif', 'image/webp']
 
 // Función para obtener las dimensiones de la imagen
-const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
+export const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
     return new Promise((resolve, reject) => {
         if (!file.type.startsWith('image/')) {
             reject(new Error('The file is not an image.'))
