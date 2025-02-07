@@ -2,7 +2,8 @@ import { test, expect } from '@playwright/test'
 
 test('Visit old people school section page.', async ({ page }) => {
     await page.goto('http://localhost:3000/')
-    await page.getByRole('link', { name: 'Adultos' }).click()
+    await page.locator('a').filter({ hasText: 'Escuela' }).click()
+    await page.getByRole('button', { name: 'Informacion clases adultos' }).click()
     await expect(page.getByRole('img', { name: 'Clase vacia' })).toBeVisible()
     await expect(page.locator('h1')).toContainText('Escuela adultos Círculo Xadrez Narón')
     await expect(page.getByRole('heading', { name: 'Escuela adultos Círculo' })).toBeVisible()
