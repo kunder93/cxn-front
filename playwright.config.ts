@@ -74,6 +74,7 @@ export default defineConfig({
     webServer: {
         command: 'npm run start', // Comando para iniciar la app
         url: 'http://127.0.0.1:3000', // URL donde la app estará disponible
-        reuseExistingServer: !process.env.CI // No reiniciar si ya está corriendo (en local)
+        reuseExistingServer: !process.env.CI, // No reiniciar si ya está corriendo (en local)
+        timeout: 180000
     }
 })
