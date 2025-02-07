@@ -67,7 +67,7 @@ test.describe('Footer Component Tests', () => {
             { text: 'Política de privacidad', href: '/privacypolicy' }
         ]
 
-        const legalContainer = page.locator('.sc-jzpMgQ.sc-cDGbcm.egpYAz.bykyGN.container')
+        const legalContainer = page.locator('#footer3Row')
         await expect(legalContainer).toBeVisible()
 
         for (const link of legalLinks) {
@@ -77,7 +77,7 @@ test.describe('Footer Component Tests', () => {
     })
 
     test('should display copyright notice', async ({ page }) => {
-        const copyright = page.locator('.sc-jzpMgQ.sc-eVKAyh.egpYAz.eplCrI.container p')
+        const copyright = page.locator('#footer4Row')
         await expect(copyright).toHaveText('© 2024 Círculo Xadrez Narón')
     })
 
