@@ -5,8 +5,8 @@ import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 import { Pagination, Navigation } from 'swiper/modules'
 import styled from 'styled-components'
-import { useFetchActivities } from './Hooks'
 import LoadingTableSpinnerContainer from 'components/Common/LoadingTableSpinnerContainer'
+import { IActivity } from './Types'
 
 const Wrapper = styled.div`
     background-color: #f9f9f9;
@@ -37,9 +37,13 @@ const NoActivitiesBox = styled.div`
     align-items: center;
 `
 
-const ActivitiesCarousel = (): JSX.Element => {
-    const { activities, error, loading } = useFetchActivities()
+interface ActivitiesCarouselProps {
+    activities: IActivity[]
+    error: string | null
+    loading: boolean
+}
 
+const ActivitiesCarousel: React.FC<ActivitiesCarouselProps> = ({ activities, error, loading }): JSX.Element => {
     if (loading) {
         return <LoadingTableSpinnerContainer />
     }

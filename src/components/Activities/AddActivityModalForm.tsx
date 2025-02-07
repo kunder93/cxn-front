@@ -181,7 +181,7 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                     return (
                         <Form>
                             <Modal.Header>
-                                <Modal.Title id="modalTitle">Crear Actividad</Modal.Title>
+                                <Modal.Title id="modalTitle">Crear actividad</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
                                 <BootstrapForm.Label htmlFor="title">Título:</BootstrapForm.Label>
@@ -203,31 +203,24 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                         <Dropzone
                                             onDrop={(acceptedFiles) => {
                                                 const file = acceptedFiles[0]
-                                                setPreviewUrl(null) // <- Añade esta línea
+                                                setPreviewUrl(null) // Clear previous preview
 
-                                                // Limpiar valores anteriores
+                                                const handleImageFile = async () => {
+                                                    try {
+                                                        await setFieldValue('imageFile', null) // Clear previous value
+                                                        await setFieldValue('imageFile', file)
+                                                        await validateField('imageFile')
+                                                        if (file) {
+                                                            await setFieldTouched('imageFile', true)
+                                                            setPreviewUrl(URL.createObjectURL(file))
+                                                        }
+                                                    } catch (error) {
+                                                        console.error('Error handling image file:', error)
+                                                        showNotification('Error cargando imagen.', NotificationType.Error)
+                                                    }
+                                                }
 
-                                                setFieldValue('imageFile', null)
-                                                    .then(() => {
-                                                        setFieldValue('imageFile', file)
-                                                            .then(() =>
-                                                                validateField('imageFile')
-                                                                    .then(() => {
-                                                                        if (file) {
-                                                                            setFieldTouched('imageFile', true)
-                                                                                .then(() => setPreviewUrl(URL.createObjectURL(file)))
-                                                                                .catch((error) => console.log(error))
-                                                                        }
-                                                                    })
-                                                                    .catch((error) => {
-                                                                        throw error
-                                                                    })
-                                                            )
-                                                            .catch((error) => {
-                                                                throw error
-                                                            })
-                                                    })
-                                                    .catch(() => showNotification('Error cargando imagen.', NotificationType.Error))
+                                                void handleImageFile() // Call the async function
                                             }}
                                             accept={{
                                                 'image/png': ['.png'],
