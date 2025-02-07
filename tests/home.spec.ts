@@ -1,4 +1,4 @@
-import { test, expect } from 'playwright-test-coverage'
+import { test, expect } from '@playwright/test'
 
 test('La página de inicio debe cargarse correctamente', async ({ page }) => {
     await page.goto('/') // Va a la página principal

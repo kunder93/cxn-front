@@ -37,6 +37,8 @@
   },
   "include": [
     "src",
-    ".eslintrc.js"
+    ".eslintrc.js",
+    "tests",
+    "playwright.config.ts"
   ]
 }
