@@ -16,25 +16,33 @@ import PaymentsManagerModal from './Payments/PaymentsManagerModal'
 const StyledContainer = styled(Container)`
     display: flex;
     justify-content: space-between;
-    padding: 2em;
+    padding: 1em;
     min-height: 100vh;
     background-color: #f8f9fa;
     border: 1px solid #dee2e6;
     border-radius: 5px;
     font-family: 'Montserrat', sans-serif;
+    box-sizing: border-box; // Add this to prevent overflow
 
     @media (max-width: 768px) {
         flex-direction: column;
-        padding: 1em;
+        padding: 0.5em;
+        margin: 0;
+        width: 100%;
+        overflow-x: hidden; // Prevent horizontal scroll
     }
 `
+
 const LeftColumn = styled.div`
     width: 70%;
     padding-right: 2em;
+    order: 1; // Default order
 
     @media (max-width: 768px) {
         width: 100%;
-        padding-right: 0;
+        margin-top: 2em;
+        padding: 0 0.5em;
+        order: 2; // Moves to second position on mobile
     }
 `
 
@@ -43,10 +51,13 @@ const RightColumn = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    order: 2; // Default order
 
     @media (max-width: 768px) {
         width: 100%;
-        margin-top: 1.5em;
+        margin-top: 1em;
+        padding: 0 0.5em;
+        order: 1; // Moves to first position on mobile
     }
 `
 
@@ -76,43 +87,65 @@ const ProfileImageContainer = styled.div`
 const ButtonRow = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    gap: 0.75em;
     width: 100%;
+    padding: 0 0.5em;
 
     button {
         width: 100%;
-        padding: 0.75em 1em;
+        padding: 0.75em; // Increased padding for better tap target
+        font-size: 170%; // Slightly larger font
+        font-weight: 600;
+        border-radius: 8px;
     }
 
     @media (max-width: 768px) {
         button {
-            padding: 0.5em 0.75em;
+            font-size: 1.4em;
+        }
+    }
+
+    @media (max-width: 480px) {
+        gap: 0.6em;
+
+        button {
+            font-size: 1.4em; // Keep font readable on small screens
+            padding: 0.9em; // Make buttons taller for better tap usability
         }
     }
 `
 
 const ProfileDataContainer = styled.div`
-    margin-top: 2em;
-    padding: 1.5em;
+    margin-top: 1em;
+    padding: 1em;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
 
     @media (max-width: 768px) {
-        padding: 1em;
-        margin-top: 1em;
+        padding: 0.5em;
+        margin-top: 0.5em;
+        width: 100%;
     }
 `
 
 const Title = styled.h1`
-    margin-bottom: 2em;
+    margin-bottom: 1em;
     color: #343a40;
     font-size: 2.5em;
     font-weight: 700;
+    padding: 0 0.5em;
 
     @media (max-width: 768px) {
-        font-size: 1.8em;
-        margin-bottom: 1.5em;
+        font-size: 1.5em;
+        margin-bottom: 0.75em;
+        text-align: center;
+        padding: 0 0.25em;
+    }
+
+    @media (max-width: 480px) {
+        font-size: 1.3em;
     }
 `
 const ProfileImage = styled(Image)`
@@ -141,7 +174,7 @@ const SocioRolePageDataTable = (): JSX.Element => {
     const isInitialProfileImage = profileImage?.url === '' && profileImage?.stored === false
 
     return (
-        <StyledContainer>
+        <StyledContainer id="My profile page container">
             {/* Left column for profile data */}
             <LeftColumn>
                 <Title>Información personal:</Title>

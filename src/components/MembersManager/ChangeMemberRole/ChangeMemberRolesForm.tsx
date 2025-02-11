@@ -1,8 +1,7 @@
 import React from 'react'
 import { Formik, Field, Form, FormikProps } from 'formik'
 import { UserRole } from '../../../store/types/userTypes'
-import { FormControl, FormGroup, FormLabel } from 'react-bootstrap'
-import { Form as BootstrapForm } from 'react-bootstrap'
+import { FormControl, FormGroup, FormLabel, Form as BootstrapForm } from 'react-bootstrap'
 import styled from 'styled-components'
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { CHANGE_MEMBER_ROLES_URL } from '../../../resources/server_urls'
@@ -86,26 +85,24 @@ const ChangeMemberRolesForm = ({ formikRef, initialFormData, updateLocalMemberRo
     return (
         <Formik innerRef={formikRef} initialValues={{ userRoles, email }} onSubmit={handleSubmit}>
             {({ values }) => (
-                <>
-                    <BootstrapForm as={Form}>
-                        <FormGroup>
-                            <FormLabel htmlFor="email" hidden>
-                                <>Email:</>
-                            </FormLabel>
-                            <FormControl as={Field} id="email" name="email" type="text" value={values.email} readOnly hidden />
-                        </FormGroup>
-                        <FormGroupTitle>Asignación de roles:</FormGroupTitle>
-                        <CheckBoxesGroup>
-                            {Object.values(UserRole).map((role) => (
-                                <CheckBoxLabel key={role}>
-                                    {role}
-                                    <Field type="checkbox" name="userRoles" value={role} />
-                                </CheckBoxLabel>
-                            ))}
-                        </CheckBoxesGroup>
-                        <FloatingNotificationA notification={notification} hideNotification={hideNotification} />
-                    </BootstrapForm>
-                </>
+                <BootstrapForm as={Form}>
+                    <FormGroup>
+                        <FormLabel htmlFor="email" hidden>
+                            Email:
+                        </FormLabel>
+                        <FormControl as={Field} id="email" name="email" type="text" value={values.email} readOnly hidden />
+                    </FormGroup>
+                    <FormGroupTitle>Asignación de roles:</FormGroupTitle>
+                    <CheckBoxesGroup>
+                        {Object.values(UserRole).map((role) => (
+                            <CheckBoxLabel key={role}>
+                                {role}
+                                <Field type="checkbox" name="userRoles" value={role} />
+                            </CheckBoxLabel>
+                        ))}
+                    </CheckBoxesGroup>
+                    <FloatingNotificationA notification={notification} hideNotification={hideNotification} />
+                </BootstrapForm>
             )}
         </Formik>
     )

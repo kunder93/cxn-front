@@ -1,8 +1,7 @@
 import { Field, FormikProps } from 'formik'
 import React from 'react'
 import { SignUpFormValues } from '../SignUpFormTypes'
-import { Col, Row } from 'react-bootstrap'
-import { Form as BootstrapForm } from 'react-bootstrap'
+import { Col, Row, Form as BootstrapForm } from 'react-bootstrap'
 import styled from 'styled-components'
 
 const FormRow = styled(Row)`

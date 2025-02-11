@@ -70,7 +70,7 @@ const ChessResources = (): JSX.Element => {
         },
         {
             title: 'Xadrez para todos V',
-            link: 'http://www.fegaxa.org/wp-content/uploads/2017/10/5.-AvanzadoVolumenI.pdf',
+            link: 'https://www.fegaxa.org/wp-content/uploads/2017/10/5.-AvanzadoVolumenI.pdf',
             category: 'Avanzado:',
             description: 'Continuación de Xadrez para todos IV.'
         },
@@ -83,19 +83,19 @@ const ChessResources = (): JSX.Element => {
         },
         {
             title: 'Xoga e aprende 2',
-            link: 'http://www.fegaxa.org/wp-content/uploads/2016/02/XogaEAprendeVolumenII1.pdf',
+            link: 'https://www.fegaxa.org/wp-content/uploads/2016/02/XogaEAprendeVolumenII1.pdf',
             category: 'Iniciación:',
             description: 'Libro destinado a los más pequeños.'
         },
         {
             title: 'Xoga e aprende 3',
-            link: 'http://www.fegaxa.org/wp-content/uploads/2016/02/XogaEAprendeVolumenIII1.pdf',
+            link: 'https://www.fegaxa.org/wp-content/uploads/2016/02/XogaEAprendeVolumenIII1.pdf',
             category: 'Iniciación:',
             description: 'Libro destinado a los más pequeños.'
         },
         {
             title: 'Xoga e aprende 4',
-            link: 'http://www.fegaxa.org/wp-content/uploads/2016/02/XogaEAprendeVolumenIV.pdf',
+            link: 'https://www.fegaxa.org/wp-content/uploads/2016/02/XogaEAprendeVolumenIV.pdf',
             category: 'Iniciación:',
             description: 'Libro destinado a los más pequeños.'
         }
