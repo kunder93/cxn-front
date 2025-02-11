@@ -19,9 +19,8 @@ const AddActivityIcon = styled(PiPlusSquareFill)`
 `
 
 const ActivitiesManager = () => {
-    const { addLocalActivity } = useFetchActivities()
     const [showModal, setShowModal] = useState(false)
-
+    const { activities, error, loading, addLocalActivity } = useFetchActivities()
     // Function to handle adding a new activity
     const handleAddActivity = (newActivity: IActivity) => {
         addLocalActivity(newActivity) // Add activity locally without fetching
@@ -32,7 +31,7 @@ const ActivitiesManager = () => {
         <div id="activities-manager">
             <AddActivityIcon onClick={() => setShowModal(true)} />
             <AddActivityModalForm show={showModal} onHide={() => setShowModal(false)} addActivity={handleAddActivity} />
-            <ActivitiesCarousel />
+            <ActivitiesCarousel activities={activities} error={error} loading={loading} />
         </div>
     )
 }
