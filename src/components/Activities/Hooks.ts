@@ -28,7 +28,9 @@ export const useFetchActivities = () => {
     }, [])
 
     useEffect(() => {
-        void fetchActivities()
+        fetchActivities().catch((error) => {
+            throw error
+        })
     }, [fetchActivities])
 
     const addLocalActivity = (activity: IActivity) => {

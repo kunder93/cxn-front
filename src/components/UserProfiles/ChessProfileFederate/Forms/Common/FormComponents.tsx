@@ -36,7 +36,13 @@ interface FileInputProps {
     errorMessage?: string
 }
 
-export const FileInput = ({ label, inputRef, onChange, isInvalid, errorMessage }: FileInputProps) => {
+export const FileInput = ({
+    label,
+    inputRef,
+    onChange,
+    isInvalid,
+    errorMessage // Receive the prop
+}: FileInputProps) => {
     const inputId = `file-input-${label.replace(/\s+/g, '-').toLowerCase()}`
     return (
         <Form.Group>
@@ -49,7 +55,11 @@ export const FileInput = ({ label, inputRef, onChange, isInvalid, errorMessage }
                 onChange={onChange}
                 isInvalid={isInvalid}
             />
-            {isInvalid && <Form.Control.Feedback type="invalid">{errorMessage}</Form.Control.Feedback>}
+            {isInvalid && (
+                <Form.Control.Feedback type="invalid">
+                    {errorMessage} {/* Display the error message here */}
+                </Form.Control.Feedback>
+            )}
         </Form.Group>
     )
 }

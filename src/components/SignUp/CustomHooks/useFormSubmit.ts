@@ -35,9 +35,9 @@ const useFormSubmit = () => {
             // Ensure successful response before proceeding
             if (response.status >= 200 && response.status < 300) {
                 // Navigate first to avoid UI flickering
-                void navigate(ROUTES.HOMEPAGE_ROUTE)
-                // Show notification after navigation
+                await navigate(ROUTES.HOMEPAGE_ROUTE)
                 showNotification('¡Registro exitoso!', NotificationType.Success)
+                // Show notification after navigation
             }
         } catch (error) {
             let errorMessage = 'Error: algo inesperado. Recarga o intentalo más tarde.'

@@ -170,7 +170,7 @@ const socialLinks = [
 
 const Footer: React.FC = () => (
     <FooterContainer>
-        <SpoonsorFooterContainer>
+        <SpoonsorFooterContainer id="footer1Row">
             {logos.map(({ Component, href, ariaLabel, large, ...props }) => (
                 <LinkStyle key={href} href={href} target="_blank" rel="noopener noreferrer" aria-label={ariaLabel} tabIndex={0}>
                     {Component === 'img' ? (
@@ -187,7 +187,7 @@ const Footer: React.FC = () => (
                 </LinkStyle>
             ))}
         </SpoonsorFooterContainer>
-        <CenteredContainer>
+        <CenteredContainer id="footer2Row">
             {socialLinks.map(({ Component, href, ariaLabel }) => (
                 <LinkStyle key={href} href={href} target="_blank" rel="noopener noreferrer" aria-label={ariaLabel} tabIndex={0}>
                     <SocialIcon>
@@ -196,7 +196,7 @@ const Footer: React.FC = () => (
                 </LinkStyle>
             ))}
         </CenteredContainer>
-        <SecondFooterContainer>
+        <SecondFooterContainer id="footer3Row">
             <StyledLink aria-label="Aviso legal" to={ROUTES.LEGAL_NOTICE}>
                 Aviso Legal
             </StyledLink>
@@ -204,7 +204,7 @@ const Footer: React.FC = () => (
                 Política de privacidad
             </StyledLink>
         </SecondFooterContainer>
-        <LastRowFooterContainer>
+        <LastRowFooterContainer id="footer4Row">
             <p>© 2024 Círculo Xadrez Narón</p>
         </LastRowFooterContainer>
     </FooterContainer>

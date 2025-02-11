@@ -95,6 +95,14 @@ const StyledButton = styled(Button)`
     // Make buttons more responsive for mobile
     @media (max-width: 768px) {
         width: 100%;
+        font-size: 1.4em;
+    }
+`
+
+const StyledCloseButton = styled(Button)`
+    @media (max-width: 768px) {
+        width: 100%;
+        font-size: 1.4em;
     }
 `
 
@@ -172,9 +180,9 @@ const PersonalImageButtonChanger = (): JSX.Element => {
                             'Cambiar'
                         )}
                     </StyledButton>
-                    <Button variant="danger" onClick={handleChangeProfileImage}>
+                    <StyledCloseButton variant="danger" onClick={handleChangeProfileImage}>
                         Cerrar
-                    </Button>
+                    </StyledCloseButton>
                 </ModalFooterStyled>
             </Modal>
         </>

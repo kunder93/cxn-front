@@ -30,6 +30,7 @@ const StyledFaCheckCircle = styled(FaCheckCircle)`
 const CloseModalButton = styled(Button)`
     @media (max-width: 768px) {
         width: 100%; /* Full width for mobile buttons */
+        font-size: 1.4em;
     }
 `
 

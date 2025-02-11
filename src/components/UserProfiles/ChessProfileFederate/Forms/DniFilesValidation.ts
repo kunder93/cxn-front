@@ -1,22 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { getImageDimensions, MAX_FILE_SIZE, MAX_RESOLUTION } from 'components/Activities/FormValidations'
 import * as Yup from 'yup'
-
-// Límite de tamaño y resolución
-const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
-const MAX_RESOLUTION = { width: 2000, height: 2000 }
-
-// Obtener dimensiones de la imagen
-const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
-    return new Promise((resolve, reject) => {
-        const img = new Image()
-        img.src = URL.createObjectURL(file)
-        img.onload = () => {
-            resolve({ width: img.width, height: img.height })
-        }
-        img.onerror = (error) => reject(error)
-    })
-}
 
 export const dniValidationSchema = Yup.object().shape({
     frontDni: Yup.mixed<File>()

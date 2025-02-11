@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { backGroundColor, backgroundImageUrl } from '../components/Common/CommonStyles'
 import usePageTitle from '../components/Common/hooks/usePageTitle'
 import ActivitiesCarousel from 'components/Activities/ActivitiesCarousel'
+import { useFetchActivities } from 'components/Activities/Hooks'
 
 const MainContainer = styled.div`
     background-color: ${backGroundColor};
@@ -35,11 +36,12 @@ const StyledContainer = styled(Container)``
  */
 const ActivitiesPage = (): JSX.Element => {
     usePageTitle('CXN Actividades')
+    const { activities, error, loading } = useFetchActivities()
     return (
         <MainContainer>
             <StyledContainer>
                 <PageTitle>{pageTitleMsg}</PageTitle>
-                <ActivitiesCarousel />
+                <ActivitiesCarousel activities={activities} error={error} loading={loading} />
             </StyledContainer>
         </MainContainer>
     )
