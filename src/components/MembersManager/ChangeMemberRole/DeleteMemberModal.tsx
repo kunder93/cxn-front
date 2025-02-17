@@ -1,7 +1,8 @@
+import { useState } from 'react'
 import axios, { AxiosError } from 'axios'
 import { NotificationType } from 'components/Common/hooks/useNotification'
 import { useNotificationContext } from 'components/Common/NotificationContext'
-import { Button, Modal, ModalProps } from 'react-bootstrap'
+import { Button, Modal, ModalProps, Spinner } from 'react-bootstrap'
 import { DELETE_USER_URL } from 'resources/server_urls'
 import { useAppSelector } from 'store/hooks'
 import styled from 'styled-components'
@@ -15,7 +16,7 @@ interface DeleteMemberModalProps extends ModalProps {
     memberName?: string
     memberFirstSurname?: string
     memberSecondSurname?: string
-    onDeleteSuccess?: (email: string) => void // Callback function for successful deletion
+    onDeleteSuccess?: (email: string) => void
 }
 
 const DeleteMemberModal = ({
@@ -26,6 +27,7 @@ const DeleteMemberModal = ({
     onDeleteSuccess,
     ...props
 }: DeleteMemberModalProps): JSX.Element => {
+    const [isDeleting, setIsDeleting] = useState(false)
     const { showNotification } = useNotificationContext()
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
 
@@ -35,6 +37,8 @@ const DeleteMemberModal = ({
             return
         }
 
+        setIsDeleting(true)
+
         try {
             await axios.delete(`${DELETE_USER_URL}/${memberEmail}`, {
                 headers: {
@@ -42,15 +46,13 @@ const DeleteMemberModal = ({
                 }
             })
             showNotification('Usuario eliminado correctamente.', NotificationType.Success)
-
-            // Trigger success callback
             onDeleteSuccess?.(memberEmail)
-
-            // Close modal after successful deletion
             props.onHide?.()
         } catch (error) {
             const axiosError = error as AxiosError
             showNotification(axiosError.message, NotificationType.Error)
+        } finally {
+            setIsDeleting(false)
         }
     }
 
@@ -68,8 +70,15 @@ const DeleteMemberModal = ({
                 </p>
             </Modal.Body>
             <StyledModalFooter>
-                <Button variant="danger" onClick={() => void handleDeleteMember()}>
-                    Eliminar permanente
+                <Button variant="danger" onClick={() => void handleDeleteMember()} disabled={isDeleting}>
+                    {isDeleting ? (
+                        <>
+                            <Spinner animation="border" size="sm" as="output" className="me-2" />
+                            Eliminando...
+                        </>
+                    ) : (
+                        'Eliminar permanente'
+                    )}
                 </Button>
 
                 <Button variant="secondary" onClick={props.onHide}>
