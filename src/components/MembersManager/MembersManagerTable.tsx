@@ -61,7 +61,7 @@ const ActionButtons: React.FC<{
         <Button variant="info" onClick={() => onEditRoleClick(row)}>
             <Gear aria-label="Modificar rol del socio" title="Editar roles" />
         </Button>
-        <Button variant="danger" onClick={() => onDeleteButtonClickHandler(row)}>
+        <Button variant="danger" onClick={() => onDeleteButtonClickHandler(row)} aria-label="Eliminar socio" title="Eliminar socio">
             <BsFillTrash3Fill />
         </Button>
     </ActionButtonsContainer>
@@ -217,7 +217,13 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
         <>
             <TableFilterContainer>
                 <FilterInputLabel htmlFor="filterInput">Busca socios:</FilterInputLabel>
-                <input type="text" value={globalFilterStatus ?? ''} onChange={(event) => setGlobalFilter(event.target.value)} aria-label="Buscar empresas" />
+                <input
+                    id="filterInput"
+                    type="text"
+                    value={globalFilterStatus ?? ''}
+                    onChange={(event) => setGlobalFilter(event.target.value)}
+                    aria-label="Buscar empresas"
+                />
                 <AmountRegistersBox>
                     Total de registros: {preGlobalFilteredRows.length} (Mostrando: {rows.length})
                 </AmountRegistersBox>
