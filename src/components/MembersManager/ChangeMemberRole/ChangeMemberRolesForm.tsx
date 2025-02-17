@@ -8,6 +8,7 @@ import { CHANGE_MEMBER_ROLES_URL } from '../../../resources/server_urls'
 import useNotification, { NotificationType } from '../../../components/Common/hooks/useNotification'
 import FloatingNotificationA from '../../../components/Common/FloatingNotificationA'
 import { useAppSelector } from '../../../store/hooks'
+import { renderUserRoles } from 'utility/userUtilities'
 
 const CheckBoxesGroup = styled(FormGroup)`
     display: flex;
@@ -96,7 +97,7 @@ const ChangeMemberRolesForm = ({ formikRef, initialFormData, updateLocalMemberRo
                     <CheckBoxesGroup>
                         {Object.values(UserRole).map((role) => (
                             <CheckBoxLabel key={role}>
-                                {role}
+                                {renderUserRoles([role as UserRole])}
                                 <Field type="checkbox" name="userRoles" value={role} />
                             </CheckBoxLabel>
                         ))}
