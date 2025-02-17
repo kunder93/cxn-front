@@ -5,6 +5,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as Yup from 'yup'
 import { SignUpFormValues } from '../../components/SignUp/SignUpFormTypes'
+import { format, subYears } from 'date-fns'
 
 const EMAIL_MAX_LENGTH = 40
 const PASSWORD_MAX_LENGTH = 30
@@ -52,7 +53,9 @@ export const SignUpFormValidationSchema: Yup.Schema<SignUpFormValues> = Yup.obje
     gender: Yup.string().required('Se necesita seleccionar.').oneOf(['male', 'female', 'other']).defined('Se necesita seleccionar.'),
     birthDate: Yup.date()
         .required('Se necesita una fecha de nacimiento.')
-        .max(new Date(), 'No debe exceder: ' + new Date().toString()),
+        .min(subYears(new Date(), 120), 'La fecha de nacimiento debe ser al menos de 120 años atrás.')
+        .max(new Date(), 'No debe exceder el: ' + format(new Date(), 'dd/MM/yyyy')),
+
     //Third step fields
     postalCode: Yup.string()
         .required('Código postal requerido.')
