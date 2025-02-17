@@ -16,6 +16,19 @@ import { es } from 'date-fns/locale'
 
 registerLocale('es', es)
 
+const ClearImageButton = styled(Button)`
+    min-height: 40px;
+    min-width: 130px;
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+    margin-top: 10px;
+    &:hover {
+        background-color: #c82333;
+        border-color: #c82333;
+    }
+`
+
 const AddActivityButton = styled(Button)`
     min-height: 50px;
     min-width: 130px;
@@ -245,6 +258,22 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                             )}
                                         </Dropzone>
                                     </DropzoneContainer>
+                                    <>
+                                        {previewUrl ? (
+                                            <ClearImageButton
+                                                type="button"
+                                                onClick={() => {
+                                                    setFieldValue('imageFile', null)
+                                                        .then(() => setPreviewUrl(null))
+                                                        .catch((error) => console.error(error))
+                                                }}
+                                            >
+                                                Limpiar imagen
+                                            </ClearImageButton>
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </>
 
                                     {/* Add explicit error display */}
                                     <ErrorContainer>
