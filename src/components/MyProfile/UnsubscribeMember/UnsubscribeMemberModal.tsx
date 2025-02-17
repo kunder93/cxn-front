@@ -1,8 +1,6 @@
-import { useRef } from 'react'
-import { Button, Modal, ModalProps } from 'react-bootstrap'
+import { Modal, ModalProps } from 'react-bootstrap'
 import styled from 'styled-components'
-import { FormikProps } from 'formik'
-import UnsubscribeMemberForm, { UnsubscribeMemberFormValues } from './UnsubscribeMemberForm'
+import UnsubscribeMemberForm from './UnsubscribeMemberForm'
 
 interface UnsubscribeMemberModalProps extends ModalProps {
     useremail: string
@@ -34,34 +32,6 @@ const ModalBody = styled(Modal.Body)`
     }
 `
 
-// Estilos para el pie del modal
-const ModalFooter = styled(Modal.Footer)`
-    justify-content: space-between !important;
-    background-color: #f1f1f1; /* Fondo claro para separar visualmente */
-
-    button {
-        transition:
-            background-color 0.3s ease,
-            transform 0.2s ease;
-        font-size: 1rem;
-        font-weight: 500;
-    }
-
-    button:hover {
-        transform: translateY(-2px); /* Animación sutil */
-    }
-
-    @media (max-width: 768px) {
-        flex-direction: column;
-        gap: 1em;
-
-        button {
-            width: 100%; /* Botones de ancho completo en móvil */
-            font-size: 1.4em;
-        }
-    }
-`
-
 // Estilos para el título del modal
 const ModalTitle = styled.h2`
     font-size: 1.8rem;
@@ -71,36 +41,6 @@ const ModalTitle = styled.h2`
     @media (max-width: 768px) {
         font-size: 1.5rem;
         text-align: center;
-    }
-`
-
-// Botón de confirmación estilizado
-const ConfirmButton = styled(Button)`
-    background-color: #28a745; /* Verde para confirmación */
-    border: none;
-
-    &:hover {
-        background-color: #218838;
-    }
-
-    &:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.5); /* Indicador de enfoque accesible */
-    }
-`
-
-// Botón de cierre estilizado
-const CloseButton = styled(Button)`
-    background-color: #dc3545; /* Rojo para acciones de cancelación */
-    border: none;
-
-    &:hover {
-        background-color: #c82333;
-    }
-
-    &:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.5); /* Indicador de enfoque accesible */
     }
 `
 
@@ -133,17 +73,11 @@ const UnsubscribeAdvertence = (): JSX.Element => {
 }
 
 const UnsubscribeMemberModal = (props: UnsubscribeMemberModalProps): JSX.Element => {
-    const formRef = useRef<FormikProps<UnsubscribeMemberFormValues>>(null)
-
-    /*************  ✨ Codeium Command ⭐  *************/
-    /**
-     * Submit the form programatically. This function is called when the
-     * confirm button is clicked.
-     */
-    /******  4389c26b-424c-4e7b-9deb-88730f039c75  *******/
-    const handleSubmit = () => {
-        if (formRef.current) {
-            formRef.current.handleSubmit()
+    // Function to close the modal
+    const closeModal = () => {
+        if (props.onHide) {
+            // Ensure onHide exists before invoking it
+            props.onHide()
         }
     }
 
@@ -156,12 +90,8 @@ const UnsubscribeMemberModal = (props: UnsubscribeMemberModalProps): JSX.Element
             </Modal.Header>
             <ModalBody>
                 <UnsubscribeAdvertence />
-                <UnsubscribeMemberForm formikRef={formRef} userEmail={props.useremail} />
+                <UnsubscribeMemberForm userEmail={props.useremail} closeModal={closeModal} />
             </ModalBody>
-            <ModalFooter>
-                <ConfirmButton onClick={handleSubmit}>Confirmar</ConfirmButton>
-                <CloseButton onClick={props.onHide}>Cerrar</CloseButton>
-            </ModalFooter>
         </Modal>
     )
 }
