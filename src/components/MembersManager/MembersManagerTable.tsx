@@ -83,13 +83,16 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
     const [warningModalVisible, setWarningModalVisible] = useState(false)
     const [warningRowData, setWarningRowData] = useState<UserProfile | null>(null)
 
-    const openWarningModal = useCallback((row: Row<UserProfile>) => {
-        setSelectedRow(data[row.index])
-        setSelectedRowIndex(row.index)
+    const openWarningModal = useCallback(
+        (row: Row<UserProfile>) => {
+            setSelectedRow(data[row.index])
+            setSelectedRowIndex(row.index)
 
-        setWarningRowData(data[row.index])
-        setWarningModalVisible(true)
-    }, [])
+            setWarningRowData(data[row.index])
+            setWarningModalVisible(true)
+        },
+        [data]
+    )
 
     const updateKindMember = useCallback(
         (newKindMember: KindMember) => {
@@ -122,6 +125,27 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
         setDeleteMemberModal(false) // Close the modal after deletion
     }, [])
 
+    const renderUserRolesCell = useCallback(
+        (row: Row<UserProfile>): JSX.Element => {
+            return (
+                <RoleCell>
+                    <div> {renderUserRoles(row.original.userRoles)}</div>
+                    {row.original.userRoles.length === 1 && row.original.userRoles[0] === UserRole.SOCIO_CANDIDATO && (
+                        <Button
+                            variant="link"
+                            onClick={() => openWarningModal(row)} // Pass the entire row to the modal
+                            style={{ padding: 0, border: 'none', background: 'none' }}
+                            aria-label="Candidato a socio"
+                        >
+                            <WarningCandidateIcon size={24} title="Candidato a socio" />
+                        </Button>
+                    )}
+                </RoleCell>
+            )
+        },
+        [openWarningModal]
+    )
+
     const columns: Column<UserProfile>[] = useMemo(
         () => [
             { Header: 'D.N.I.', accessor: 'dni' },
@@ -130,27 +154,11 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
             {
                 Header: 'Rol del socio',
                 accessor: 'userRoles',
-                Cell: (
-                    { row }: { row: Row<UserProfile> } // Use the Cell renderer to access the row
-                ) => (
-                    <RoleCell>
-                        <div> {renderUserRoles(row.original.userRoles)}</div>
-                        {row.original.userRoles.length === 1 && row.original.userRoles[0] === UserRole.SOCIO_CANDIDATO && (
-                            <Button
-                                variant="link"
-                                onClick={() => openWarningModal(row)} // Pass the entire row to the modal
-                                style={{ padding: 0, border: 'none', background: 'none' }}
-                                aria-label="Candidato a socio"
-                            >
-                                <WarningCandidateIcon size={24} title="Candidato a socio" />
-                            </Button>
-                        )}
-                    </RoleCell>
-                )
+                Cell: ({ row }) => renderUserRolesCell(row)
             },
             { Header: 'Estado', accessor: (d) => renderKindMember(d.kindMember) }
         ],
-        []
+        [renderUserRolesCell]
     )
 
     const InfoButtonClickHandler = useCallback(
@@ -188,6 +196,18 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
         [data]
     )
 
+    const renderActionButtons = (row: Row<UserProfile>): JSX.Element => {
+        return (
+            <ActionButtons
+                row={row}
+                onInfoClick={InfoButtonClickHandler}
+                onEditKindClick={EditKindMemberButtonClickHandler}
+                onEditRoleClick={EditMemberRoleButtonClickHandler}
+                onDeleteButtonClickHandler={DeleteMemberButtonClickHandler}
+            />
+        )
+    }
+
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, preGlobalFilteredRows, setGlobalFilter, state } = useTable<UserProfile>(
         { columns, data },
         useGlobalFilter,
@@ -198,16 +218,8 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
                 ...columns,
                 {
                     id: 'selection',
-                    Header: () => <>GESTIONAR</>,
-                    Cell: ({ row }) => (
-                        <ActionButtons
-                            row={row}
-                            onInfoClick={InfoButtonClickHandler}
-                            onEditKindClick={EditKindMemberButtonClickHandler}
-                            onEditRoleClick={EditMemberRoleButtonClickHandler}
-                            onDeleteButtonClickHandler={DeleteMemberButtonClickHandler}
-                        />
-                    )
+                    Header: <>GESTIONAR</>,
+                    Cell: ({ row }) => renderActionButtons(row)
                 }
             ])
         }
@@ -239,7 +251,12 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
                                     return (
                                         <th key={columnKey} {...restColumnProps}>
                                             {column.render('Header')}
-                                            <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
+                                            <span>
+                                                {(() => {
+                                                    if (!column.isSorted) return ''
+                                                    return column.isSortedDesc ? ' 🔽' : ' 🔼'
+                                                })()}
+                                            </span>
                                         </th>
                                     )
                                 })}
