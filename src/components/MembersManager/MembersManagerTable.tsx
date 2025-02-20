@@ -2,7 +2,6 @@ import React, { useMemo, useState, useCallback } from 'react'
 import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect, Row } from 'react-table'
 import { Button, Table } from 'react-bootstrap'
 import { Gear, InfoCircle, PersonGear } from 'react-bootstrap-icons'
-import MemberModalProfileInfo from './MemberModalProfileInfo'
 import ChangeKindMemberModal from './ChangeKindMember/ChangeKindMemberModal'
 import ChangeMemberRolesModal from './ChangeMemberRole/ChangeMemberRolesModal'
 import { KindMember, UserProfile, UserRole } from 'store/types/userTypes'
@@ -12,6 +11,7 @@ import { BsFillTrash3Fill } from 'react-icons/bs'
 import DeleteMemberModal from './ChangeMemberRole/DeleteMemberModal'
 import { IoIosWarning } from 'react-icons/io'
 import WarningAceptUserModal from './WarningAceptUserModal'
+import MemberModalProfileInfo from './ModalProfileInfo/MemberModalProfileInfo'
 
 const TableFilterContainer = styled.div`
     display: flex;

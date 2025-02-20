@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test'
 test('visit kids school section page', async ({ page }) => {
     await page.goto('http://localhost:3000/')
     await page.locator('a').filter({ hasText: 'Escuela' }).click()
-    await page.getByRole('button', { name: 'Informacion clases infantiles' }).click()
+    await page.getByRole('button', { name: 'Información clases infantiles' }).click()
     await expect(page.getByRole('img', { name: 'Clase vacia' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Escuela infantil Círculo' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Compartir nuestra pasión por' })).toBeVisible()
@@ -81,7 +81,7 @@ test('visit kids school section page', async ({ page }) => {
     await page
         .getByRole('textbox', { name: 'Mensaje:' })
         .fill(
-            'Este email es para solicitar informacion sobre las clases de ajedrez.\nTengo un niño de 10 años que queria apuntarse a las clases no sabe nada pero le gusta. Queria informacion de horarios precios y lugar.Gracias !'
+            'Este email es para solicitar Información sobre las clases de ajedrez.\nTengo un niño de 10 años que queria apuntarse a las clases no sabe nada pero le gusta. Queria Información de horarios precios y lugar.Gracias !'
         )
     await page.getByText('Solicita información:Asunto:').click()
     await expect(page.locator('form')).toContainText('El texto debe tener como máximo 200 caracteres')
@@ -124,7 +124,7 @@ test('visit kids school section page', async ({ page }) => {
     await page
         .getByRole('textbox', { name: 'Mensaje:' })
         .fill(
-            'Este email es para solicitar informacion sobre las clases de ajedrez.\nTengo un niño de 10 años que queria apuntarse a las clases no sabe nada pero le gusta. Queria informacion de horarios.'
+            'Este email es para solicitar Información sobre las clases de ajedrez.\nTengo un niño de 10 años que queria apuntarse a las clases no sabe nada pero le gusta. Queria Información de horarios.'
         )
     await expect(page.locator('form')).toMatchAriaSnapshot(`- button "Enviar"`)
     await page.getByRole('button', { name: 'Enviar' }).click()
