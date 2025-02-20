@@ -108,13 +108,14 @@ const UnsubscribeMemberForm = ({ userEmail, closeModal }: UnsubscribeMemberFormP
     }
 
     const handleSubmit = (
+        values: UnsubscribeMemberFormValues,
         resetForm: () => void, // Accept resetForm as a parameter
         setSubmitting: (isSubmitting: boolean) => void // To manage the form's submission state
     ) => {
         axios
             .patch(
                 UNSUBSCRIBE_URL,
-                {},
+                { password: values.currentPassword },
                 {
                     headers: {
                         Authorization: `Bearer ${userJwt}` // Include the JWT in the Authorization header
@@ -150,8 +151,8 @@ const UnsubscribeMemberForm = ({ userEmail, closeModal }: UnsubscribeMemberFormP
                     }
                     return errors
                 }}
-                onSubmit={(_, { resetForm, setSubmitting }) => {
-                    handleSubmit(resetForm, setSubmitting) // Pass resetForm and setSubmitting to handleSubmit
+                onSubmit={(values, { resetForm, setSubmitting }) => {
+                    handleSubmit(values, resetForm, setSubmitting) // Pass values to handleSubmit
                 }}
             >
                 {({ isValid, dirty, isSubmitting }) => (

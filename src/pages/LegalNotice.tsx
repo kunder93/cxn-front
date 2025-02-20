@@ -95,7 +95,7 @@ const LegalNotice = (): JSX.Element => {
             <p>CXN a través del sitio web no recopila ningún tipo de información personal a través de cookies.</p>
             <p>
                 <strong>Cookies de terceros:</strong> CXN utiliza un servicio 'Google Maps' para enseñar en una sección la situación geográfica del club. Esta
-                ventana utiliza cookies de terceros. Puede obtener informacion de las funciones de estas cookies en el sitio web:
+                ventana utiliza cookies de terceros. Puede obtener información de las funciones de estas cookies en el sitio web:
                 <a href="https://support.google.com/maps/answer/7576020?hl=es&sjid=6175177243193965021-EU#null" target="_blank" rel="noopener noreferrer">
                     <strong>Información para consumidores de Google Maps</strong>
                 </a>

@@ -126,7 +126,6 @@ const PasswordChangeForm = ({ formikRef, userEmail, setIsSubmitting, setFormIsVa
             .patch(
                 CHANGE_MEMBER_PASSWORD_URL,
                 {
-                    email: userEmail,
                     currentPassword: values.currentPassword,
                     newPassword: values.newPassword
                 },
