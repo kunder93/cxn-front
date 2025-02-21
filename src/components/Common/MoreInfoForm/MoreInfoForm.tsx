@@ -51,6 +51,7 @@ const MoreInfoForm = ({ initialTopic, formTitle, category }: Props): JSX.Element
                 topic: values.asunto,
                 message: values.texto
             })
+            showNotification('Se ha enviado correctamente, gracias. ', NotificationType.Success)
             //notify('Solicitud enviada correctamente', 'success')
             actions.resetForm()
         } catch (error) {

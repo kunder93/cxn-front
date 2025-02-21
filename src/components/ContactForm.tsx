@@ -92,6 +92,7 @@ const ContactForm = (): JSX.Element => {
 
         try {
             await axios.post(CHESS_QUESTION_URL, axiosData)
+            showNotification('Se ha enviado correctamente, gracias.', NotificationType.Success)
             actions.resetForm()
         } catch (error) {
             if (axios.isAxiosError(error)) {
