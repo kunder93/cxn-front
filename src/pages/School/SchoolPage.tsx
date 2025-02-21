@@ -125,6 +125,11 @@ const articlesData: ArticleInfo[] = [
 const SchoolPage = (): JSX.Element => {
     usePageTitle('CXN Escuela')
     const navigate = useNavigate()
+
+    async function handleNavigation(route: string): Promise<void> {
+        await navigate(route)
+    }
+
     return (
         <MainContainerStyled>
             <HeaderPicture>
@@ -140,7 +145,7 @@ const SchoolPage = (): JSX.Element => {
                     <ContentText>
                         {articlesData[0].title}
                         {articlesData[0].paragraph}
-                        <Button variant="info" onClick={() => navigate(ROUTES.SCHOOL_CHILDS)} aria-label="Información clases infantiles">
+                        <Button variant="info" onClick={() => void handleNavigation(ROUTES.SCHOOL_CHILDS)} aria-label="Información clases infantiles">
                             <InfoCircle color="black" size={infoCircleIconSize} />
                         </Button>
                     </ContentText>
@@ -149,7 +154,7 @@ const SchoolPage = (): JSX.Element => {
                     <ContentText>
                         {articlesData[1].title}
                         {articlesData[1].paragraph}
-                        <Button variant="info" onClick={() => navigate(ROUTES.SCHOOL_OLDS)} aria-label="Información clases adultos">
+                        <Button variant="info" onClick={() => void handleNavigation(ROUTES.SCHOOL_OLDS)} aria-label="Información clases adultos">
                             <InfoCircle color="black" size={infoCircleIconSize} />
                         </Button>
                     </ContentText>
@@ -160,7 +165,7 @@ const SchoolPage = (): JSX.Element => {
                     <ContentText>
                         {articlesData[2].title}
                         {articlesData[2].paragraph}
-                        <Button variant="info" onClick={() => navigate(ROUTES.SCHOOL_ONLINE)} aria-label="Información clases online">
+                        <Button variant="info" onClick={() => void handleNavigation(ROUTES.SCHOOL_ONLINE)} aria-label="Información clases online">
                             <InfoCircle color="black" size={infoCircleIconSize} />
                         </Button>
                     </ContentText>

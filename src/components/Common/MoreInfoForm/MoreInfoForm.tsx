@@ -5,8 +5,8 @@ import BootstrapForm from 'react-bootstrap/Form'
 import { Button, Spinner } from 'react-bootstrap'
 import { CHESS_QUESTION_URL } from '../../../resources/server_urls'
 import styled from 'styled-components'
-import { useNotification } from './useNotification'
-import FloatingNotification from './FloatingNotification'
+import { useNotificationContext } from '../NotificationContext'
+import { NotificationType } from '../hooks/useNotification'
 
 const FormTitleStyled = styled.span`
     font-size: 190%;
@@ -35,7 +35,7 @@ interface FormData {
 }
 
 const MoreInfoForm = ({ initialTopic, formTitle, category }: Props): JSX.Element => {
-    const { message, variant, showNotification, notify, closeNotification } = useNotification()
+    const { showNotification } = useNotificationContext()
 
     const initialValues: FormData = {
         texto: '',
@@ -51,66 +51,66 @@ const MoreInfoForm = ({ initialTopic, formTitle, category }: Props): JSX.Element
                 topic: values.asunto,
                 message: values.texto
             })
-            notify('Solicitud enviada correctamente', 'success')
+            //notify('Solicitud enviada correctamente', 'success')
             actions.resetForm()
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.content || 'Error: algo inesperado. Recarga o inténtalo más tarde.'
-            notify(errorMessage, 'danger')
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                showNotification('Error: Código: ' + error.code, NotificationType.Error)
+            } else {
+                showNotification('Error: algo inesperado. Recarga o inténtalo más tarde.', NotificationType.Error)
+            }
         } finally {
             actions.setSubmitting(false)
         }
     }
 
     return (
-        <>
-            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit} validateOnMount>
-                {({ touched, errors, isSubmitting, isValid }) => (
-                    <Form className="mt-4">
-                        <FormTitleStyled>{formTitle}</FormTitleStyled>
-                        <BootstrapForm.Group className="mb-3">
-                            <BootstrapForm.Label htmlFor="asunto">Asunto:</BootstrapForm.Label>
-                            <Field
-                                as={BootstrapForm.Control}
-                                type="text"
-                                id="asunto"
-                                name="asunto"
-                                className={touched.asunto && errors.asunto ? 'is-invalid' : ''}
-                                placeholder={initialTopic}
-                            />
-                            <ErrorMessage name="asunto" component="div" className="invalid-feedback" />
-                        </BootstrapForm.Group>
-                        <BootstrapForm.Group className="mb-3">
-                            <BootstrapForm.Label htmlFor="email">Email:</BootstrapForm.Label>
-                            <Field
-                                as={BootstrapForm.Control}
-                                type="email"
-                                id="email"
-                                name="email"
-                                className={touched.email && errors.email ? 'is-invalid' : ''}
-                                placeholder="Ingrese su email para responderle."
-                            />
-                            <ErrorMessage name="email" component="div" className="invalid-feedback" />
-                        </BootstrapForm.Group>
-                        <BootstrapForm.Group className="mb-3">
-                            <BootstrapForm.Label htmlFor="texto">Mensaje:</BootstrapForm.Label>
-                            <BootstrapForm.Control
-                                as={Field}
-                                component="textarea"
-                                id="texto"
-                                name="texto"
-                                className={touched.texto && errors.texto ? 'is-invalid' : ''}
-                                placeholder="Ingrese su mensaje"
-                            />
-                            <ErrorMessage name="texto" component="div" className="invalid-feedback" />
-                        </BootstrapForm.Group>
-                        <Button variant="success" type="submit" disabled={isSubmitting || !isValid}>
-                            {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Enviar'}
-                        </Button>
-                    </Form>
-                )}
-            </Formik>
-            {showNotification && <FloatingNotification message={message} variant={variant} onClose={closeNotification} />}
-        </>
+        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit} validateOnMount>
+            {({ touched, errors, isSubmitting, isValid }) => (
+                <Form className="mt-4" aria-busy={isSubmitting}>
+                    <FormTitleStyled>{formTitle}</FormTitleStyled>
+                    <BootstrapForm.Group className="mb-3">
+                        <BootstrapForm.Label htmlFor="asunto">Asunto:</BootstrapForm.Label>
+                        <Field
+                            as={BootstrapForm.Control}
+                            type="text"
+                            id="asunto"
+                            name="asunto"
+                            className={touched.asunto && errors.asunto ? 'is-invalid' : ''}
+                            placeholder={initialTopic}
+                        />
+                        <ErrorMessage name="asunto" component="div" className="invalid-feedback" />
+                    </BootstrapForm.Group>
+                    <BootstrapForm.Group className="mb-3">
+                        <BootstrapForm.Label htmlFor="email">Email:</BootstrapForm.Label>
+                        <Field
+                            as={BootstrapForm.Control}
+                            type="email"
+                            id="email"
+                            name="email"
+                            className={touched.email && errors.email ? 'is-invalid' : ''}
+                            placeholder="Ingrese su email para responderle."
+                        />
+                        <ErrorMessage name="email" component="div" className="invalid-feedback" />
+                    </BootstrapForm.Group>
+                    <BootstrapForm.Group className="mb-3">
+                        <BootstrapForm.Label htmlFor="texto">Mensaje:</BootstrapForm.Label>
+                        <BootstrapForm.Control
+                            as={Field}
+                            component="textarea"
+                            id="texto"
+                            name="texto"
+                            className={touched.texto && errors.texto ? 'is-invalid' : ''}
+                            placeholder="Ingrese su mensaje"
+                        />
+                        <ErrorMessage name="texto" component="div" className="invalid-feedback" />
+                    </BootstrapForm.Group>
+                    <Button variant="success" type="submit" disabled={isSubmitting || !isValid}>
+                        {isSubmitting ? <Spinner animation="border" size="sm" /> : 'Enviar'}
+                    </Button>
+                </Form>
+            )}
+        </Formik>
     )
 }
 
