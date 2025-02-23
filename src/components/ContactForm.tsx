@@ -4,10 +4,10 @@ import BootstrapForm from 'react-bootstrap/Form'
 import { Button, Spinner } from 'react-bootstrap'
 import styled from 'styled-components'
 
-import useNotification, { NotificationType } from './Common/hooks/useNotification'
-import FloatingNotificationA from './Common/FloatingNotificationA'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import { CHESS_QUESTION_URL } from '../resources/server_urls'
+import { useNotificationContext } from './Common/NotificationContext'
+import { NotificationType } from './Common/hooks/useNotification'
 
 /**
  * Interface defining the structure of the data to be submitted via Axios in the contact form.
@@ -28,12 +28,6 @@ export interface SubmitAxiosValues {
     topic: string
     message: string
 }
-
-// Styled components for error messages and form labels
-const ErrorMessageStyled = styled(ErrorMessage)`
-    color: red;
-    font-weight: bold;
-`
 
 const FiledTittle = styled(BootstrapForm.Label)`
     font-weight: 600;
@@ -73,7 +67,7 @@ interface FormData {
  * @returns {JSX.Element} The rendered ContactForm component.
  */
 const ContactForm = (): JSX.Element => {
-    const { notification, showNotification, hideNotification } = useNotification()
+    const { showNotification } = useNotificationContext()
 
     // Initial form values
     const initialValues = {
@@ -88,7 +82,7 @@ const ContactForm = (): JSX.Element => {
      * @param {FormData} values - The values submitted in the form.
      * @param {FormikHelpers<FormData>} actions - Formik helpers for form handling.
      */
-    const handleSubmit = (values: FormData, actions: FormikHelpers<FormData>) => {
+    const handleSubmit = async (values: FormData, actions: FormikHelpers<FormData>) => {
         const axiosData: SubmitAxiosValues = {
             email: values.email,
             category: 'GENERAL',
@@ -96,15 +90,19 @@ const ContactForm = (): JSX.Element => {
             message: values.messageContent
         }
 
-        axios
-            .post(CHESS_QUESTION_URL, axiosData)
-            .then(function () {
-                showNotification('Se ha enviado correctamente', NotificationType.Success)
-                actions.resetForm()
-            })
-            .catch(function (error: AxiosError) {
-                showNotification(error.message, NotificationType.Error)
-            })
+        try {
+            await axios.post(CHESS_QUESTION_URL, axiosData)
+            showNotification('Se ha enviado correctamente, gracias.', NotificationType.Success)
+            actions.resetForm()
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                showNotification('Error: Código: ' + error.code, NotificationType.Error)
+            } else {
+                showNotification('Error: algo inesperado. Recarga o inténtalo más tarde.', NotificationType.Error)
+            }
+        } finally {
+            actions.setSubmitting(false)
+        }
     }
 
     return (
@@ -112,16 +110,30 @@ const ContactForm = (): JSX.Element => {
             <h2>Formulario de contacto:</h2>
             <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit} validateOnMount={true}>
                 {(
-                    { isSubmitting, isValid, dirty } // Access dirty property from Formik
+                    { isSubmitting, isValid, dirty, errors, touched } // Access dirty property from Formik
                 ) => (
                     <Form>
                         <BootstrapForm.Group className="mb-3">
                             <FiledTittle htmlFor="email">Correo electrónico:</FiledTittle>
-                            <BootstrapForm.Control as={Field} type="email" name="email" id="email" placeholder="Tu correo electrónico!" />
-                            <ErrorMessageStyled name="email" component="div" className="" />
+                            <BootstrapForm.Control
+                                as={Field}
+                                type="email"
+                                name="email"
+                                id="email"
+                                placeholder="Tu correo electrónico!"
+                                className={errors.email && touched.email ? 'is-invalid' : ''}
+                            />
+                            <ErrorMessage name="email" component="div" className="invalid-feedback" />
                             <FiledTittle htmlFor="reason">Tema: / Razón:</FiledTittle>
-                            <BootstrapForm.Control as={Field} type="text" name="reason" id="reason" placeholder="Motivo del mensaje." />
-                            <ErrorMessageStyled name="reason" component="div" />
+                            <BootstrapForm.Control
+                                as={Field}
+                                type="text"
+                                name="reason"
+                                id="reason"
+                                placeholder="Motivo del mensaje."
+                                className={errors.reason && touched.reason ? 'is-invalid' : ''}
+                            />
+                            <ErrorMessage name="reason" component="div" className="invalid-feedback" />
                             <FiledTittle htmlFor="messageContent">Detalles:</FiledTittle>
                             <BootstrapForm.Control
                                 as={Field}
@@ -130,8 +142,9 @@ const ContactForm = (): JSX.Element => {
                                 name="messageContent"
                                 rows={4}
                                 placeholder="Escribe aquí el mensaje."
+                                className={errors.messageContent && touched.messageContent ? 'is-invalid' : ''}
                             />
-                            <ErrorMessageStyled name="messageContent" component="div" />
+                            <ErrorMessage name="messageContent" component="div" className="invalid-feedback" />
                         </BootstrapForm.Group>
                         <Button variant="success" type="submit" disabled={isSubmitting || !isValid || !dirty}>
                             {isSubmitting ? (
@@ -142,7 +155,6 @@ const ContactForm = (): JSX.Element => {
                                 'Enviar'
                             )}
                         </Button>
-                        <FloatingNotificationA notification={notification} hideNotification={hideNotification} />
                     </Form>
                 )}
             </Formik>

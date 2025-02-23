@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import axios, { AxiosError, AxiosResponse } from 'axios'
-import { Formik, Form, Field, FormikHelpers } from 'formik'
+import { Formik, Form, Field, FormikHelpers, ErrorMessage } from 'formik'
 import { LOGIN_URL } from '../resources/server_urls'
 import { useAppDispatch } from '../store/hooks'
 import { useNavigate } from 'react-router-dom'
@@ -8,7 +8,7 @@ import { setJwt } from '../store/slices/user'
 import { Button, Col, Spinner } from 'react-bootstrap'
 import { LogInValidationSchema } from '../pages/validation/FormValidationSchemas'
 import BootstrapForm from 'react-bootstrap/Form'
-import { ButtonRow, ErrorAlert, ErrorMessage, ErrorTriangle, FormStyledContainer, StyledRow } from './SignUpSingInCommonStyles'
+import { ButtonRow, ErrorAlert, ErrorTriangle, FormStyledContainer, StyledRow } from './SignUpSingInCommonStyles'
 import { ROUTES } from '../resources/routes-constants'
 
 /**
@@ -57,7 +57,7 @@ const LoginForm = (): JSX.Element => {
             const response: AxiosResponse<LoginAxiosResponse> = await axios.post(LOGIN_URL, values)
             dispatch(setJwt(response.data.jwt))
             actions.resetForm()
-            navigate(ROUTES.MYPROFILE_ROUTE)
+            await navigate(ROUTES.MYPROFILE_ROUTE)
         } catch (error) {
             const axiosError = error as AxiosError<{ content: string }>
             if (axiosError.response) {
@@ -87,12 +87,9 @@ const LoginForm = (): JSX.Element => {
                                     placeholder="Email"
                                     autoComplete="email"
                                     isInvalid={!!errors.email && touched.email}
+                                    className={errors.email && touched.email ? 'is-invalid' : ''}
                                 />
-                                {errors.email && touched.email && (
-                                    <ErrorMessage>
-                                        <strong>{errors.email}</strong>
-                                    </ErrorMessage>
-                                )}
+                                <ErrorMessage component="div" name="email" className="invalid-feedback"></ErrorMessage>
                             </Col>
                         </StyledRow>
                         <StyledRow>
@@ -106,12 +103,9 @@ const LoginForm = (): JSX.Element => {
                                     placeholder="Contraseña"
                                     autoComplete="current-password"
                                     isInvalid={!!errors.password && touched.password}
+                                    className={errors.password && touched.password ? 'is-invalid' : ''}
                                 />
-                                {errors.password && touched.password && (
-                                    <ErrorMessage>
-                                        <strong>{errors.password}</strong>
-                                    </ErrorMessage>
-                                )}
+                                <ErrorMessage component="div" name="password" className="invalid-feedback"></ErrorMessage>
                             </Col>
                         </StyledRow>
                         <ButtonRow>
@@ -119,7 +113,7 @@ const LoginForm = (): JSX.Element => {
                                 <Button type="submit" variant="success" size="lg" disabled={!dirty || !isValid || isSubmitting}>
                                     {isSubmitting ? (
                                         <>
-                                            <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> Accediendo...
+                                            <Spinner as="span" animation="border" size="sm" aria-hidden="true" /> <output>Accediendo...</output>
                                         </>
                                     ) : (
                                         'Acceder'

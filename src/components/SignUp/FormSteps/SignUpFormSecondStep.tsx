@@ -1,10 +1,10 @@
-import { Field, FormikProps } from 'formik'
+import { ErrorMessage, Field, FormikProps } from 'formik'
 import { Button, Col, Row } from 'react-bootstrap'
 import BootstrapForm from 'react-bootstrap/Form'
 import styled from 'styled-components'
 import { SignUpFormValues } from '../SignUpFormTypes'
 import FormField from '../Common/FormField'
-import { ButtonRow, ErrorMessage } from '../../SignUpSingInCommonStyles'
+import { ButtonRow } from '../../SignUpSingInCommonStyles'
 import { ResponsiveMainContainer } from './Styles/FormStepsCommonStyles'
 
 const FormRowFieldDateGender = styled(Row)`
@@ -50,21 +50,33 @@ const SignUpFormSecondStep = ({ formikProps, nextStepFunction, previousStepFunct
         <FormRowFieldDateGender>
             <Col>
                 <BootstrapForm.Label htmlFor="gender">Género:</BootstrapForm.Label>
-                <Field as={BootstrapForm.Select} id="gender" name="gender">
+                <Field
+                    as={BootstrapForm.Select}
+                    id="gender"
+                    name="gender"
+                    className={formikProps.touched.gender && formikProps.errors.gender ? 'is-invalid' : ''}
+                >
                     <option value="">Selecciona uno:</option>
                     <option value="male">Hombre</option>
                     <option value="female">Mujer</option>
                     <option value="other">Otro</option>
                 </Field>
                 <BootstrapForm.Text className="text-muted">Selecciona tu género</BootstrapForm.Text>
-                {formikProps.errors.gender && formikProps.touched.gender && <ErrorMessage>{formikProps.errors.gender}</ErrorMessage>}
+                <ErrorMessage component="div" name={'gender'} className="invalid-feedback"></ErrorMessage>
             </Col>
         </FormRowFieldDateGender>
         <FormRowFieldDateGender>
             <Col>
                 <BootstrapForm.Label htmlFor="birthDate">Fecha de nacimiento:</BootstrapForm.Label>
-                <Field as={BootstrapForm.Control} id="birthDate" type="date" name="birthDate" max={new Date().toISOString().split('T')[0]} />
-                {formikProps.errors.birthDate && formikProps.touched.birthDate && <ErrorMessage>{formikProps.errors.birthDate as string}</ErrorMessage>}
+                <Field
+                    as={BootstrapForm.Control}
+                    id="birthDate"
+                    type="date"
+                    name="birthDate"
+                    max={new Date().toISOString().split('T')[0]}
+                    className={formikProps.touched.birthDate && formikProps.errors.birthDate ? 'is-invalid' : ''}
+                />
+                <ErrorMessage component="div" name="birthDate" className="invalid-feedback"></ErrorMessage>
             </Col>
         </FormRowFieldDateGender>
         <ButtonRow>

@@ -1,7 +1,6 @@
-import React from 'react'
-import { Formik, Form, Field, ErrorMessage, FormikProps } from 'formik'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
 import styled from 'styled-components'
-import { Container, Row, Col, Form as BootstrapForm, FormGroup, FormLabel, FormControl } from 'react-bootstrap'
+import { Container, Row, Col, Form as BootstrapForm, FormGroup, FormLabel, FormControl, Button, Spinner } from 'react-bootstrap'
 import axios, { AxiosError } from 'axios'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
 import { UNSUBSCRIBE_URL } from 'resources/server_urls'
@@ -10,6 +9,65 @@ import { NotificationType } from 'components/Common/hooks/useNotification'
 import { useNavigate } from 'react-router'
 import { removeJwt } from 'store/slices/user'
 import { ROUTES } from 'resources/routes-constants'
+
+// Estilos para el pie del form
+const FormFooter = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between !important;
+    padding-top: 2em;
+    button {
+        transition:
+            background-color 0.3s ease,
+            transform 0.2s ease;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+
+    button:hover {
+        transform: translateY(-2px); /* Animación sutil */
+    }
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 1em;
+
+        button {
+            width: 100%; /* Botones de ancho completo en móvil */
+            font-size: 1.4em;
+        }
+    }
+`
+
+// Botón de confirmación estilizado
+const ConfirmButton = styled(Button)`
+    background-color: #28a745; /* Verde para confirmación */
+    border: none;
+
+    &:hover {
+        background-color: #218838;
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.5); /* Indicador de enfoque accesible */
+    }
+`
+
+// Botón de cierre estilizado
+const CloseButton = styled(Button)`
+    background-color: #dc3545; /* Rojo para acciones de cancelación */
+    border: none;
+
+    &:hover {
+        background-color: #c82333;
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.5); /* Indicador de enfoque accesible */
+    }
+`
 
 const StyledErrorMessage = styled(ErrorMessage)`
     color: red;
@@ -34,40 +92,41 @@ export interface UnsubscribeMemberFormValues {
 }
 
 export interface UnsubscribeMemberFormProps {
-    formikRef: React.RefObject<FormikProps<UnsubscribeMemberFormValues>>
     userEmail: string
+    closeModal: () => void
 }
 
-const UnsubscribeMemberForm = ({ formikRef, userEmail }: UnsubscribeMemberFormProps): JSX.Element => {
+const UnsubscribeMemberForm = ({ userEmail, closeModal }: UnsubscribeMemberFormProps): JSX.Element => {
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const { showNotification } = useNotificationContext()
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
 
-    const logoutHandler = () => {
+    const logoutHandler = async () => {
         dispatch(removeJwt())
-        navigate(ROUTES.HOMEPAGE_ROUTE)
+        await navigate(ROUTES.HOMEPAGE_ROUTE)
     }
 
     const handleSubmit = (
+        values: UnsubscribeMemberFormValues,
         resetForm: () => void, // Accept resetForm as a parameter
         setSubmitting: (isSubmitting: boolean) => void // To manage the form's submission state
     ) => {
         axios
             .patch(
                 UNSUBSCRIBE_URL,
-                {},
+                { password: values.currentPassword },
                 {
                     headers: {
                         Authorization: `Bearer ${userJwt}` // Include the JWT in the Authorization header
                     }
                 }
             )
-            .then(() => {
+            .then(async () => {
                 // Handle successful response (optional)
                 showNotification('Se ha dado de baja correctamente. ', NotificationType.Success)
                 resetForm()
-                logoutHandler()
+                await logoutHandler()
             })
             .catch((err) => {
                 const error = err as AxiosError
@@ -82,7 +141,6 @@ const UnsubscribeMemberForm = ({ formikRef, userEmail }: UnsubscribeMemberFormPr
     return (
         <StyledFormContainer>
             <Formik
-                innerRef={formikRef}
                 initialValues={{ currentPassword: '', confirmCurrentPassword: '' }}
                 validate={(values) => {
                     const errors: Partial<UnsubscribeMemberFormValues> = {}
@@ -93,11 +151,11 @@ const UnsubscribeMemberForm = ({ formikRef, userEmail }: UnsubscribeMemberFormPr
                     }
                     return errors
                 }}
-                onSubmit={(_, { resetForm, setSubmitting }) => {
-                    handleSubmit(resetForm, setSubmitting) // Pass resetForm and setSubmitting to handleSubmit
+                onSubmit={(values, { resetForm, setSubmitting }) => {
+                    handleSubmit(values, resetForm, setSubmitting) // Pass values to handleSubmit
                 }}
             >
-                {() => (
+                {({ isValid, dirty, isSubmitting }) => (
                     <BootstrapForm as={Form}>
                         <Field type="hidden" name="email" value={userEmail} readOnly autoComplete="username" />
                         <Row>
@@ -134,6 +192,21 @@ const UnsubscribeMemberForm = ({ formikRef, userEmail }: UnsubscribeMemberFormPr
                                 </FormGroup>
                             </Col>
                         </Row>
+
+                        <FormFooter>
+                            <ConfirmButton variant="success" type="submit" disabled={!isValid || !dirty || isSubmitting}>
+                                {isSubmitting ? (
+                                    <>
+                                        <Spinner animation="border" size="sm" /> Confirmando...
+                                    </>
+                                ) : (
+                                    'Confirmar'
+                                )}
+                            </ConfirmButton>
+                            <CloseButton variant="danger" onClick={() => closeModal()}>
+                                Cerrar
+                            </CloseButton>
+                        </FormFooter>
                     </BootstrapForm>
                 )}
             </Formik>

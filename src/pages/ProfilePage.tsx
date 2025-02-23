@@ -22,32 +22,81 @@ import { MembersResourcesPage } from './MembersResourcesPages'
 
 const MainPageContainer = styled.div`
     width: 100%;
-    height: auto;
-    min-height: 100%;
     display: grid;
-    grid-template-columns: 20% 80%; /* Define las columnas para sidebar y contenido */
+    grid-template-columns: minmax(240px, 20%) minmax(300px, 80%);
+    min-height: 100vh;
+    position: relative;
+    contain: content;
+    transition: all 0.3s ease-in-out;
 
     @media (max-width: 768px) {
         grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        min-height: calc(100vh - 56px);
     }
-`
-
-const SidebarWrapper = styled.div`
-    height: 100%;
 `
 
 const ProfileContent = styled.div`
     height: 100%;
     padding: 2rem;
+    overflow: auto;
+    transition: opacity 0.3s ease-in-out;
+    background: #ffffff;
+    position: relative;
 
     @media (max-width: 768px) {
+        padding: 1.5rem;
+        height: calc(100vh - 120px);
         padding-bottom: 4rem;
-        margin: 0;
-        padding: 0rem;
+    }
+`
+
+const SkeletonSidebar = styled.div`
+    background: #f8f9fa;
+    border-right: 1px solid #e9ecef;
+    padding: 1rem;
+    height: 100vh;
+
+    @media (max-width: 768px) {
+        display: none;
+    }
+`
+
+const SkeletonContent = styled.div`
+    padding: 2rem;
+    background: #fff;
+
+    &::after {
+        content: '';
+        display: block;
+        background: #f8f9fa;
+        height: 40px;
+        width: 60%;
+        margin-bottom: 1rem;
+        border-radius: 4px;
+        animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.5;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @media (max-width: 768px) {
+        padding: 1.5rem;
     }
 `
 
 const sectionComponents: Record<ProfileSection, React.FC<{ changePage: (section: ProfileSection) => void }>> = {
+    // ... keep your existing section components same as before ...
+
     [ProfileSection.UserPage]: SocioRolePage,
     [ProfileSection.ChessData]: ChessProfile,
     [ProfileSection.MemberCandidate]: MemberCandidate,
@@ -68,29 +117,46 @@ const ProfilePage = (): JSX.Element => {
     const [profilePage, setProfilePage] = useState<ProfileSection>(ProfileSection.UserPage)
     const [sidebarSection, setSidebarSection] = useState<ProfileSection>(ProfileSection.UserPage)
     const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 768)
-    // Ejecuta la petición asíncrona
-    /*const { loading, error } =*/ useFetchProfileImage()
+    const [isLoading, setIsLoading] = useState(true)
+
+    useFetchProfileImage()
     usePageTitle('CXN Menú de socio')
     useScrollTop(profilePage)
+
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth <= 768)
         window.addEventListener('resize', handleResize)
         return () => window.removeEventListener('resize', handleResize)
     }, [])
 
+    useEffect(() => {
+        // Simulate minimum loading time for smoother transition
+        const timer = setTimeout(() => {
+            setIsLoading(!userProfile && !error)
+        }, 300)
+
+        return () => clearTimeout(timer)
+    }, [userProfile, error])
+
     const changePage = (newSection: ProfileSection) => {
         setProfilePage(newSection)
     }
+
     const CurrentPageComponent = sectionComponents[profilePage]
 
     const renderProfileContent = () => {
-        if (error) {
-            return <p>{error}</p>
-        }
-        if (CurrentPageComponent) {
-            return <CurrentPageComponent changePage={changePage} />
-        }
+        if (error) return <p>{error}</p>
+        if (CurrentPageComponent) return <CurrentPageComponent changePage={changePage} />
         return null
+    }
+
+    if (isLoading) {
+        return (
+            <MainPageContainer>
+                <SkeletonSidebar />
+                <SkeletonContent />
+            </MainPageContainer>
+        )
     }
 
     return (
@@ -98,14 +164,12 @@ const ProfilePage = (): JSX.Element => {
             {userProfile && (
                 <>
                     {!isMobile ? (
-                        <SidebarWrapper>
-                            <Sidebar
-                                roles={userProfile.userRoles}
-                                setProfilePage={changePage}
-                                currentSection={sidebarSection}
-                                setSidebarSection={setSidebarSection}
-                            />
-                        </SidebarWrapper>
+                        <Sidebar
+                            roles={userProfile.userRoles}
+                            setProfilePage={changePage}
+                            currentSection={sidebarSection}
+                            setSidebarSection={setSidebarSection}
+                        />
                     ) : (
                         <UserProfileNavbar
                             roles={userProfile.userRoles}

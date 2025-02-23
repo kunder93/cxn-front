@@ -2,7 +2,6 @@ import axios, { AxiosRequestConfig, Method, AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
 import {
     CHESS_QUESTION_URL,
-    CHANGE_MEMBER_PASSWORD_URL,
     CHANGE_MEMBER_EMAIL_URL,
     CHANGE_MEMBER_ROLES_URL,
     CHANGE_KIND_MEMBER_URL,
@@ -18,7 +17,6 @@ import { LoginFormValues } from '../components/LoginForm'
 import { ChangeKindMemberValues } from '../components/MembersManager/ChangeKindMember/ChangeKindMemberForm'
 import { ChangeMemberRolesValues } from '../components/MembersManager/ChangeMemberRole/ChangeMemberRolesForm'
 import { ChangeEmailAxiosValues } from '../components/MyProfile/ChangeEmail/ChangeUserEmailResultAlert'
-import { ChangePasswordAxiosValues } from '../components/MyProfile/ChangePassword/ChangeUserPasswordResultAlert'
 import {
     IBook,
     ICountryData,
@@ -104,10 +102,6 @@ export interface CountriesListAxiosResponse {
 
 export const useAxiosGetChessQuestions = () => {
     return useAxios<IChessQuestionsList>(CHESS_QUESTION_URL)
-}
-
-export const useAxiosChangeUserPassword = (payload: ChangePasswordAxiosValues) => {
-    return useAxios<UserProfile, ChangePasswordAxiosValues>(CHANGE_MEMBER_PASSWORD_URL, 'PATCH', payload)
 }
 
 export const useAxiosChangeUserEmail = (payload: ChangeEmailAxiosValues) => {

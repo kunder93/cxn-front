@@ -4,9 +4,9 @@ import BootstrapForm from 'react-bootstrap/Form'
 import { SignUpFormStepProps, SignUpFormValues } from '../SignUpFormTypes'
 import { ICountryData, ISubCountryData } from '../../Types/Types'
 import { useAxiosGetCountriesList } from '../../../utility/CustomAxios'
-import { Field, FormikProps } from 'formik'
+import { ErrorMessage, Field, FormikProps } from 'formik'
 import useSubCountries from '../CustomHooks/useSubCountries'
-import { ButtonRow, ErrorMessage } from '../../SignUpSingInCommonStyles'
+import { ButtonRow } from '../../SignUpSingInCommonStyles'
 import FormField from '../Common/FormField'
 import { ResponsiveMainContainer } from './Styles/FormStepsCommonStyles'
 
@@ -131,25 +131,31 @@ const SignUpFormThirdStep = ({ formikProps, previousStepFunction, nextStepFuncti
             <Row className="mb-3">
                 <Col>
                     <BootstrapForm.Label>País:</BootstrapForm.Label>
-                    <Field as={BootstrapForm.Select} name="countryNumericCode" onChange={handleCountryChange}>
+                    <Field
+                        as={BootstrapForm.Select}
+                        name="countryNumericCode"
+                        onChange={handleCountryChange}
+                        className={formikProps.touched.countryNumericCode && formikProps.errors.countryNumericCode ? 'is-invalid' : ''}
+                    >
                         {countryOptions}
                     </Field>
-                    <BootstrapForm.Text className="text-muted">Selecciona el país</BootstrapForm.Text>
-                    {formikProps.errors.countryNumericCode && formikProps.touched.countryNumericCode && (
-                        <ErrorMessage>{formikProps.errors.countryNumericCode}</ErrorMessage>
-                    )}
+
+                    <ErrorMessage component="div" name="countryNumericCode" className="invalid-feedback"></ErrorMessage>
                 </Col>
             </Row>
             <Row className="mb-3">
                 <Col>
                     <BootstrapForm.Label>Provincia:</BootstrapForm.Label>
-                    <Field as={BootstrapForm.Select} name="countrySubdivisionName" onChange={handleSubCountryChange}>
+                    <Field
+                        as={BootstrapForm.Select}
+                        name="countrySubdivisionName"
+                        onChange={handleSubCountryChange}
+                        className={formikProps.touched.countrySubdivisionName && formikProps.errors.countrySubdivisionName ? 'is-invalid' : ''}
+                    >
                         {subCountryOptions}
                     </Field>
-                    <BootstrapForm.Text className="text-muted">Selecciona la provincia</BootstrapForm.Text>
-                    {formikProps.errors.countrySubdivisionName && formikProps.touched.countrySubdivisionName && (
-                        <ErrorMessage>{formikProps.errors.countrySubdivisionName}</ErrorMessage>
-                    )}
+
+                    <ErrorMessage component="div" name="countrySubdivisionName" className="invalid-feedback"></ErrorMessage>
                 </Col>
             </Row>
             <ButtonRow>

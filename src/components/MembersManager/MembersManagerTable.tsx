@@ -2,7 +2,6 @@ import React, { useMemo, useState, useCallback } from 'react'
 import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect, Row } from 'react-table'
 import { Button, Table } from 'react-bootstrap'
 import { Gear, InfoCircle, PersonGear } from 'react-bootstrap-icons'
-import MemberModalProfileInfo from './MemberModalProfileInfo'
 import ChangeKindMemberModal from './ChangeKindMember/ChangeKindMemberModal'
 import ChangeMemberRolesModal from './ChangeMemberRole/ChangeMemberRolesModal'
 import { KindMember, UserProfile, UserRole } from 'store/types/userTypes'
@@ -12,6 +11,7 @@ import { BsFillTrash3Fill } from 'react-icons/bs'
 import DeleteMemberModal from './ChangeMemberRole/DeleteMemberModal'
 import { IoIosWarning } from 'react-icons/io'
 import WarningAceptUserModal from './WarningAceptUserModal'
+import MemberModalProfileInfo from './ModalProfileInfo/MemberModalProfileInfo'
 
 const TableFilterContainer = styled.div`
     display: flex;
@@ -61,7 +61,7 @@ const ActionButtons: React.FC<{
         <Button variant="info" onClick={() => onEditRoleClick(row)}>
             <Gear aria-label="Modificar rol del socio" title="Editar roles" />
         </Button>
-        <Button variant="danger" onClick={() => onDeleteButtonClickHandler(row)}>
+        <Button variant="danger" onClick={() => onDeleteButtonClickHandler(row)} aria-label="Eliminar socio" title="Eliminar socio">
             <BsFillTrash3Fill />
         </Button>
     </ActionButtonsContainer>
@@ -83,13 +83,16 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
     const [warningModalVisible, setWarningModalVisible] = useState(false)
     const [warningRowData, setWarningRowData] = useState<UserProfile | null>(null)
 
-    const openWarningModal = useCallback((row: Row<UserProfile>) => {
-        setSelectedRow(data[row.index])
-        setSelectedRowIndex(row.index)
+    const openWarningModal = useCallback(
+        (row: Row<UserProfile>) => {
+            setSelectedRow(data[row.index])
+            setSelectedRowIndex(row.index)
 
-        setWarningRowData(data[row.index])
-        setWarningModalVisible(true)
-    }, [])
+            setWarningRowData(data[row.index])
+            setWarningModalVisible(true)
+        },
+        [data]
+    )
 
     const updateKindMember = useCallback(
         (newKindMember: KindMember) => {
@@ -122,6 +125,27 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
         setDeleteMemberModal(false) // Close the modal after deletion
     }, [])
 
+    const renderUserRolesCell = useCallback(
+        (row: Row<UserProfile>): JSX.Element => {
+            return (
+                <RoleCell>
+                    <div> {renderUserRoles(row.original.userRoles)}</div>
+                    {row.original.userRoles.length === 1 && row.original.userRoles[0] === UserRole.SOCIO_CANDIDATO && (
+                        <Button
+                            variant="link"
+                            onClick={() => openWarningModal(row)} // Pass the entire row to the modal
+                            style={{ padding: 0, border: 'none', background: 'none' }}
+                            aria-label="Candidato a socio"
+                        >
+                            <WarningCandidateIcon size={24} title="Candidato a socio" />
+                        </Button>
+                    )}
+                </RoleCell>
+            )
+        },
+        [openWarningModal]
+    )
+
     const columns: Column<UserProfile>[] = useMemo(
         () => [
             { Header: 'D.N.I.', accessor: 'dni' },
@@ -130,27 +154,11 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
             {
                 Header: 'Rol del socio',
                 accessor: 'userRoles',
-                Cell: (
-                    { row }: { row: Row<UserProfile> } // Use the Cell renderer to access the row
-                ) => (
-                    <RoleCell>
-                        <div> {renderUserRoles(row.original.userRoles)}</div>
-                        {row.original.userRoles.length === 1 && row.original.userRoles[0] === UserRole.SOCIO_CANDIDATO && (
-                            <Button
-                                variant="link"
-                                onClick={() => openWarningModal(row)} // Pass the entire row to the modal
-                                style={{ padding: 0, border: 'none', background: 'none' }}
-                                aria-label="Candidato a socio"
-                            >
-                                <WarningCandidateIcon size={24} title="Candidato a socio" />
-                            </Button>
-                        )}
-                    </RoleCell>
-                )
+                Cell: ({ row }) => renderUserRolesCell(row)
             },
             { Header: 'Estado', accessor: (d) => renderKindMember(d.kindMember) }
         ],
-        []
+        [renderUserRolesCell]
     )
 
     const InfoButtonClickHandler = useCallback(
@@ -188,6 +196,18 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
         [data]
     )
 
+    const renderActionButtons = (row: Row<UserProfile>): JSX.Element => {
+        return (
+            <ActionButtons
+                row={row}
+                onInfoClick={InfoButtonClickHandler}
+                onEditKindClick={EditKindMemberButtonClickHandler}
+                onEditRoleClick={EditMemberRoleButtonClickHandler}
+                onDeleteButtonClickHandler={DeleteMemberButtonClickHandler}
+            />
+        )
+    }
+
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, preGlobalFilteredRows, setGlobalFilter, state } = useTable<UserProfile>(
         { columns, data },
         useGlobalFilter,
@@ -198,16 +218,8 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
                 ...columns,
                 {
                     id: 'selection',
-                    Header: () => <>GESTIONAR</>,
-                    Cell: ({ row }) => (
-                        <ActionButtons
-                            row={row}
-                            onInfoClick={InfoButtonClickHandler}
-                            onEditKindClick={EditKindMemberButtonClickHandler}
-                            onEditRoleClick={EditMemberRoleButtonClickHandler}
-                            onDeleteButtonClickHandler={DeleteMemberButtonClickHandler}
-                        />
-                    )
+                    Header: <>GESTIONAR</>,
+                    Cell: ({ row }) => renderActionButtons(row)
                 }
             ])
         }
@@ -217,7 +229,13 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
         <>
             <TableFilterContainer>
                 <FilterInputLabel htmlFor="filterInput">Busca socios:</FilterInputLabel>
-                <input type="text" value={globalFilterStatus ?? ''} onChange={(event) => setGlobalFilter(event.target.value)} aria-label="Buscar empresas" />
+                <input
+                    id="filterInput"
+                    type="text"
+                    value={globalFilterStatus ?? ''}
+                    onChange={(event) => setGlobalFilter(event.target.value)}
+                    aria-label="Buscar empresas"
+                />
                 <AmountRegistersBox>
                     Total de registros: {preGlobalFilteredRows.length} (Mostrando: {rows.length})
                 </AmountRegistersBox>
@@ -233,7 +251,12 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
                                     return (
                                         <th key={columnKey} {...restColumnProps}>
                                             {column.render('Header')}
-                                            <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
+                                            <span>
+                                                {(() => {
+                                                    if (!column.isSorted) return ''
+                                                    return column.isSortedDesc ? ' 🔽' : ' 🔼'
+                                                })()}
+                                            </span>
                                         </th>
                                     )
                                 })}

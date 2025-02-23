@@ -1,4 +1,4 @@
-import { Field, FormikProps } from 'formik'
+import { ErrorMessage, Field, FormikProps } from 'formik'
 import React from 'react'
 import { SignUpFormValues } from '../SignUpFormTypes'
 import { Col, Row, Form as BootstrapForm } from 'react-bootstrap'
@@ -7,10 +7,6 @@ import styled from 'styled-components'
 const FormRow = styled(Row)`
     margin-bottom: 1em;
     margin-top: 1em !important;
-`
-
-const ErrorMessage = styled.div`
-    color: red;
 `
 
 interface FormFieldProps {
@@ -41,14 +37,19 @@ const FormField: React.FC<FormFieldProps> = React.memo(({ id, name, type, label,
     <FormRow>
         <FieldWrapper>
             <BootstrapForm.Label htmlFor={id}>{label}</BootstrapForm.Label>
-            <Field as={BootstrapForm.Control} id={id} name={name} type={type} placeholder={placeholder} autoComplete="new-password" aria-required="true" />
+            <Field
+                as={BootstrapForm.Control}
+                id={id}
+                name={name}
+                type={type}
+                placeholder={placeholder}
+                autoComplete="new-password"
+                aria-required="true"
+                className={formikProps.errors[name] && formikProps.touched[name] ? 'is-invalid' : ''}
+            />
         </FieldWrapper>
         <FieldWrapper>
-            {formikProps.errors[name] && formikProps.touched[name] && (
-                <ErrorMessage>
-                    <strong>{formikProps.errors[name] as string}</strong>
-                </ErrorMessage>
-            )}
+            <ErrorMessage name={name} component="div" className="invalid-feedback d-block"></ErrorMessage>
         </FieldWrapper>
     </FormRow>
 ))

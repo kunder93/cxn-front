@@ -16,6 +16,19 @@ import { es } from 'date-fns/locale'
 
 registerLocale('es', es)
 
+const ClearImageButton = styled(Button)`
+    min-height: 40px;
+    min-width: 130px;
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+    margin-top: 10px;
+    &:hover {
+        background-color: #c82333;
+        border-color: #c82333;
+    }
+`
+
 const AddActivityButton = styled(Button)`
     min-height: 50px;
     min-width: 130px;
@@ -92,14 +105,7 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
     const { showNotification } = useNotificationContext()
     const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
-    const initialValues: IActivityForm = {
-        title: '',
-        description: '',
-        imageFile: null,
-        startDate: null,
-        endDate: null,
-        category: ActivityCategory.TORNEO
-    }
+    const initialValues: IActivityForm = { title: '', description: '', imageFile: null, startDate: null, endDate: null, category: ActivityCategory.TORNEO }
 
     const handleSubmit = (values: IActivityForm, formActions: FormikHelpers<IActivityForm>) => {
         const formData = new FormData()
@@ -123,12 +129,7 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
         }
 
         axios
-            .post(ACTIVITIES_URL, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${userJwt}`
-                }
-            })
+            .post(ACTIVITIES_URL, formData, { headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${userJwt}` } })
             .then((/*response*/) => {
                 showNotification('Actividad creada', NotificationType.Success)
                 formActions.resetForm()
@@ -154,7 +155,6 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                     showNotification(formattedMessages, NotificationType.Error)
                 } else {
                     // If no validation errors, display the error message
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
                     showNotification(error.message, NotificationType.Error)
                 }
             })
@@ -245,6 +245,22 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                             )}
                                         </Dropzone>
                                     </DropzoneContainer>
+                                    <>
+                                        {previewUrl ? (
+                                            <ClearImageButton
+                                                type="button"
+                                                onClick={() => {
+                                                    setFieldValue('imageFile', null)
+                                                        .then(() => setPreviewUrl(null))
+                                                        .catch((error) => console.error(error))
+                                                }}
+                                            >
+                                                Limpiar imagen
+                                            </ClearImageButton>
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </>
 
                                     {/* Add explicit error display */}
                                     <ErrorContainer>
