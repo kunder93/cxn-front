@@ -1,41 +1,27 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable no-unused-vars */
-import React from 'react';
-import { Button, Col,  Container, Row } from 'react-bootstrap';
-import { Field, FieldArray, Form, Formik, FormikHelpers, ErrorMessage } from 'formik';
-import { IAuthor, IBook } from '../../Types/Types';
-import { LIBRARY_URL } from '../../../resources/server_urls';
-import axios, { isAxiosError } from 'axios';
-import BootstrapForm from 'react-bootstrap/Form';
-import { CreateBookValidationSchema } from '../../../pages/validation/FormValidationSchemas';
+import React from 'react'
+import { Button, Col, Container, Row } from 'react-bootstrap'
+import { Field, FieldArray, Form, Formik, FormikHelpers, ErrorMessage } from 'formik'
+import { IAuthor, IBook } from '../../Types/Types'
+import { LIBRARY_URL } from '../../../resources/server_urls'
+import axios, { isAxiosError } from 'axios'
+import BootstrapForm from 'react-bootstrap/Form'
+import { CreateBookValidationSchema } from '../../../pages/validation/FormValidationSchemas'
 
 interface CreateBookFormValues {
-    isbn: string;
-    title: string;
-    gender: string;
-    publish_year: Date;
-    language: string;
-    authorsList: IAuthor[];
+    isbn: string
+    title: string
+    gender: string
+    publish_year: Date
+    language: string
+    authorsList: IAuthor[]
 }
 
 interface AddBookFormProps {
-    updateBooksList: (book: IBook) => void;
+    updateBooksList: (book: IBook) => void
 }
 
-
 const AddBookForm: React.FC<AddBookFormProps> = () => {
-    const initialValues: CreateBookFormValues = {
-        isbn: '',
-        title: '',
-        gender: '',
-        publish_year: new Date(),
-        language: '',
-        authorsList: []
-    };
-
+    const initialValues: CreateBookFormValues = { isbn: '', title: '', gender: '', publish_year: new Date(), language: '', authorsList: [] }
 
     const handleSubmit = async (values: CreateBookFormValues, actions: FormikHelpers<CreateBookFormValues>) => {
         try {
@@ -46,30 +32,24 @@ const AddBookForm: React.FC<AddBookFormProps> = () => {
                 publishYear: values.publish_year,
                 language: values.language,
                 authorsList: values.authorsList
-            };
+            }
 
-            await axios.post<IBook>(LIBRARY_URL, bookData);
+            await axios.post<IBook>(LIBRARY_URL, bookData)
 
             //updateBooksList(bookData);
         } catch (error) {
-            if (isAxiosError(error)){
+            if (isAxiosError(error)) {
                 console.error(error)
-
             }
-         }
+        }
 
-        actions.resetForm();
-        actions.setSubmitting(false);
-    };
+        actions.resetForm()
+        actions.setSubmitting(false)
+    }
 
     return (
         <Container>
-            <Formik
-                initialValues={initialValues}
-                onSubmit={handleSubmit}
-                validationSchema={CreateBookValidationSchema}
-                validateOnChange={true}
-            >
+            <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={CreateBookValidationSchema} validateOnChange={true}>
                 {({ errors }) => (
                     <BootstrapForm as={Form}>
                         <Container as={BootstrapForm.Group}>
@@ -154,7 +134,7 @@ const AddBookForm: React.FC<AddBookFormProps> = () => {
                 )}
             </Formik>
         </Container>
-    );
-};
+    )
+}
 
-export default AddBookForm;
+export default AddBookForm

@@ -105,14 +105,7 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
     const { showNotification } = useNotificationContext()
     const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
-    const initialValues: IActivityForm = {
-        title: '',
-        description: '',
-        imageFile: null,
-        startDate: null,
-        endDate: null,
-        category: ActivityCategory.TORNEO
-    }
+    const initialValues: IActivityForm = { title: '', description: '', imageFile: null, startDate: null, endDate: null, category: ActivityCategory.TORNEO }
 
     const handleSubmit = (values: IActivityForm, formActions: FormikHelpers<IActivityForm>) => {
         const formData = new FormData()
@@ -136,12 +129,7 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
         }
 
         axios
-            .post(ACTIVITIES_URL, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${userJwt}`
-                }
-            })
+            .post(ACTIVITIES_URL, formData, { headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${userJwt}` } })
             .then((/*response*/) => {
                 showNotification('Actividad creada', NotificationType.Success)
                 formActions.resetForm()
@@ -167,7 +155,6 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                     showNotification(formattedMessages, NotificationType.Error)
                 } else {
                     // If no validation errors, display the error message
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
                     showNotification(error.message, NotificationType.Error)
                 }
             })

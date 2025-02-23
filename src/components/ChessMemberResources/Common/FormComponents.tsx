@@ -6,7 +6,6 @@ import Dropzone from 'react-dropzone'
 
 export interface GenericDateFieldProps<T> {
     publishDate: Date | null
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setFieldValue: (field: string, value: any, shouldValidate?: boolean) => Promise<void | FormikErrors<T>>
     setFieldTouched: (field: string, isTouched?: boolean, shouldValidate?: boolean) => Promise<void | FormikErrors<T>>
     validateField: (field: string) => Promise<void> | Promise<string | undefined>
@@ -83,7 +82,6 @@ export interface CoverImageDropzoneProps {
      * Formik’s setFieldValue function.
      * Use this to update the image file in your Formik state.
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setFieldValue: (field: string, value: any, shouldValidate?: boolean) => Promise<any>
     /**
      * The preview URL for the image.
@@ -148,12 +146,7 @@ export const CoverImageDropzone: React.FC<CoverImageDropzoneProps> = ({
             <DropzoneContainer>
                 <Dropzone
                     onDrop={handleDrop}
-                    accept={{
-                        'image/png': ['.png'],
-                        'image/jpeg': ['.jpeg', '.jpg'],
-                        'image/webp': ['.webp'],
-                        'image/avif': ['.avif']
-                    }}
+                    accept={{ 'image/png': ['.png'], 'image/jpeg': ['.jpeg', '.jpg'], 'image/webp': ['.webp'], 'image/avif': ['.avif'] }}
                 >
                     {({ getRootProps, getInputProps }) => (
                         <div {...getRootProps()} aria-label={dropzoneAriaLabel} aria-describedby="imageFileError">
