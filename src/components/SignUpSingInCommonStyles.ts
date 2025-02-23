@@ -58,10 +58,6 @@ export const ErrorTriangle = styled(ExclamationTriangle)`
     width: 10%;
 `
 
-export const ErrorMessage = styled.div`
-    color: red;
-`
-
 export const StyledRow = styled(Row)`
     padding-bottom: 1em;
 `

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Carousel from 'react-bootstrap/Carousel'
 import styled from 'styled-components'
 import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons'
@@ -18,20 +18,15 @@ const pieceUrls: Record<number, string> = {
 const carouselTitleMsg = 'Beneficios de el ajedrez en niños:'
 const nextButtonTitle = 'Siguiente'
 const previousButtonTitle = 'Anterior'
-/**
- * Enum type for navigate right or left slides in carousel.
- */
+
 enum IconDirection {
     Right = 'right',
     Left = 'left'
 }
 
-/**
- * Props interface for IconButton component.
- */
 interface IconButtonProps {
-    direction: IconDirection // Left or right direction
-    onClick: () => void // void function
+    direction: IconDirection
+    onClick: () => void
 }
 
 const IconButtonStyle = styled.button`
@@ -39,94 +34,78 @@ const IconButtonStyle = styled.button`
     background: none;
     cursor: pointer;
     margin-bottom: 2px;
-    /* Estilo de enfoque solo cuando se navega con el teclado */
     &:focus-visible {
-        outline: 4px solid blue !important; /* Establecemos un contorno azul de 4px */
+        outline: 4px solid blue !important;
     }
 `
 
-/**
- * IconButton component to represent a button with a chevron icon for carousel navigation.
- * @param {IconButtonProps} props - The component properties.
- */
 const IconButton = ({ direction, onClick }: IconButtonProps) => {
     const buttonTitle: string = direction === IconDirection.Right ? nextButtonTitle : previousButtonTitle
     return (
-        <IconButtonStyle onClick={onClick} aria-describedby={buttonTitle} type="button" aria-label={buttonTitle}>
+        <IconButtonStyle onClick={onClick} aria-label={buttonTitle} type="button">
             {direction === IconDirection.Right ? <ChevronRight size={24} /> : <ChevronLeft size={24} />}
         </IconButtonStyle>
     )
 }
 
-/**
- * Header for section where is carousel.
- */
 const CarouselSectionHeader = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: center;
 `
-/**
- * Style for header chess piece that is used for change carousel slice.
- */
+
 const ChessPieceStyled = styled.img`
     height: 100px;
 `
-/**
- * Style for carousel header title.
- */
+
 const CarouselTitle = styled.h3`
     font-size: 200%;
     align-self: center;
     flex-basis: 40%;
 `
 
-/**
- * Style for carousel transition.
- */
 const StyledCarousel = styled(Carousel)`
     background-color: ${carouselBackgroundSlideColor};
-    .carousel-item {
-        transition: margin-left 1s ease-in-out 0.4s;
-    }
+
+    overflow: hidden;
 `
 
-/**
- * Carousel.Item container used for stablish section and styles.
- */
 const CarouselItemContainerSection = styled.section`
     min-height: 350px;
+    position: relative;
 `
 
-/**
- * Style from icon image used into carousel body slice.
- */
 const IconStyle = styled.img`
     width: 130px;
     height: auto;
 `
 
-/**
- * Piece of text and subtitle to show into carousel slide.
- */
-interface benefit {
+interface Benefit {
     subtitle: string
     text: string
 }
 
-/**
- * Properties that one carousel item need have.
- */
 export interface CarouselItemMessage {
     IconUrl: IconOptions
     IconAlt: string
     title: string
-    benefit: benefit[]
+    benefit: Benefit[]
 }
 
 interface Props {
     benefits: CarouselItemMessage[]
 }
+
+const VisuallyHidden = styled.div`
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+`
 
 const ClassBenefitsCarousel = ({ benefits }: Props) => {
     const [index, setIndex] = useState(0)
@@ -138,33 +117,34 @@ const ClassBenefitsCarousel = ({ benefits }: Props) => {
     }
 
     const handleNextStep = () => handleStep(1)
-
     const handlePreviousStep = () => handleStep(-1)
 
     const currentPieceUrl = pieceUrls[index]
 
     return (
-        <section>
+        <section aria-label="Carousel de beneficios del ajedrez">
             <CarouselSectionHeader>
                 <CarouselTitle>{carouselTitleMsg}</CarouselTitle>
                 <IconButton direction={IconDirection.Left} onClick={handlePreviousStep} />
-                <ChessPieceStyled src={currentPieceUrl} title="Carousel chess piece" alt="piece changes like carousel content"></ChessPieceStyled>
+                <ChessPieceStyled src={currentPieceUrl} alt="" aria-hidden="true" />
                 <IconButton direction={IconDirection.Right} onClick={handleNextStep} />
             </CarouselSectionHeader>
 
-            <StyledCarousel fade={true} controls={false} indicators={false} interval={null} activeIndex={index}>
+            <VisuallyHidden aria-live="polite">
+                Slide {index + 1} of {totalItems}
+            </VisuallyHidden>
+
+            <StyledCarousel fade={false} controls={false} indicators={false} interval={4} activeIndex={index} className="slide">
                 {benefits.map((item, idx) => (
-                    <Carousel.Item key={`item-${idx}`}>
-                        <CarouselItemContainerSection key={`container-${idx}`}>
+                    <Carousel.Item key={`item-${item.title}`} aria-roledescription="slide" aria-label={`Slide ${idx + 1} of ${totalItems}`}>
+                        <CarouselItemContainerSection aria-live="polite">
                             <IconStyle src={item.IconUrl} alt={item.IconAlt} />
                             <h4>{item.title}</h4>
                             {item.benefit.map((benefit, pIdx) => (
-                                <React.Fragment key={`benefit-${idx}-${pIdx}`}>
-                                    <div>
-                                        <h5>{benefit.subtitle}</h5>
-                                        <h6>{benefit.text}</h6>
-                                    </div>
-                                </React.Fragment>
+                                <div key={`benefit-${idx}-${pIdx}`}>
+                                    <h5>{benefit.subtitle}</h5>
+                                    <p>{benefit.text}</p>
+                                </div>
                             ))}
                         </CarouselItemContainerSection>
                     </Carousel.Item>

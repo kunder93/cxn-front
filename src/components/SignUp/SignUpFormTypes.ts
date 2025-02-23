@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FormikProps } from 'formik'
 
 export enum FormSteps {

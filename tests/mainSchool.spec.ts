@@ -24,7 +24,7 @@ test('Visit main school section page.', async ({ page }) => {
     await expect(page.locator('section')).toContainText(
         'Las clases online son impartidas de forma individual o en pequeños grupos. Es preferible el uso de ordenador. Horario flexible.'
     )
-    await expect(page.getByRole('button', { name: 'Informacion clases infantiles' })).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Informacion clases adultos' })).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Informacion clases online' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Información clases infantiles' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Información clases adultos' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Información clases online' })).toBeVisible()
 })

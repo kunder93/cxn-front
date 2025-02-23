@@ -1,15 +1,25 @@
 import { useEffect, useMemo, useState, useCallback } from 'react'
 import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect, CellProps } from 'react-table'
-import { Button, Table, Spinner } from 'react-bootstrap'
-import { Trash3, Eye, EyeSlash } from 'react-bootstrap-icons'
+import { Button, Table, Spinner, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Trash3, Eye, EyeSlash, QuestionCircle } from 'react-bootstrap-icons'
 import axios, { AxiosError } from 'axios'
 import { format } from 'date-fns'
 import { IChessQuestion, IChessQuestionsList } from '../../utility/CustomAxios'
 import { CHESS_QUESTION_CHANGE_SEEN_STATE, CHESS_QUESTION_DELETE } from '../../resources/server_urls'
-import useNotification, { NotificationType } from '../../components/Common/hooks/useNotification'
-import FloatingNotificationA from '../../components/Common/FloatingNotificationA'
 import styled from 'styled-components'
 import { useAppSelector } from '../../store/hooks'
+import { useNotificationContext } from 'components/Common/NotificationContext'
+import { NotificationType } from 'components/Common/hooks/useNotification'
+
+interface FormattedDateCellProps extends CellProps<IChessQuestion> {} // Define props interface
+const FormattedDateCell = ({ value }: FormattedDateCellProps): JSX.Element => {
+    if (!value) {
+        // Handle potential null or undefined values
+        return <span>-</span> // Or some other default value
+    }
+    const formattedDate = format(new Date(value as string), 'dd-MM-yyyy - HH:mm')
+    return <span>{formattedDate}</span>
+}
 
 const TableFilterContainer = styled.div`
     display: flex;
@@ -34,7 +44,7 @@ const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): J
     const [data, setData] = useState<IChessQuestion[]>([])
     const [loadingRows, setLoadingRows] = useState<number[]>([])
     const [deletingRows, setDeletingRows] = useState<number[]>([])
-    const { notification, showNotification, hideNotification } = useNotification()
+    const { showNotification } = useNotificationContext()
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     useEffect(() => {
         setData(initialData.chessQuestionList)
@@ -58,7 +68,7 @@ const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): J
                     showNotification('Hubo un error al eliminar la pregunta: ' + axiosError.message, NotificationType.Error)
                 })
         },
-        [showNotification]
+        [showNotification, userJwt]
     )
 
     const handleDeleteButtonWrapper = useCallback(
@@ -91,14 +101,15 @@ const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): J
                 )
                 .then((response) => {
                     clone[rowIndex] = response.data
+                    showNotification('Se ha cambiado correctamente.', NotificationType.Success)
                     setData(clone)
                 })
-                .catch((error) => console.error(error))
+                .catch((error) => showNotification('Ha habido un error: ' + error, NotificationType.Error))
                 .finally(() => {
                     setLoadingRows((prevLoadingRows) => prevLoadingRows.filter((id) => id !== row.id))
                 })
         },
-        [data]
+        [data, showNotification, userJwt]
     )
 
     const columns: Column<IChessQuestion>[] = useMemo(
@@ -107,30 +118,41 @@ const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): J
             {
                 Header: 'Fecha',
                 accessor: 'date',
-                Cell: ({ value }: CellProps<IChessQuestion>) => {
-                    const formattedDate = format(new Date(value as string), 'dd-MM-yyyy - HH:mm')
-                    return <span>{formattedDate}</span>
-                }
+                Cell: FormattedDateCell
             },
             { Header: 'Categoria', accessor: 'category' },
             { Header: 'Título', accessor: 'topic' },
             { Header: 'Mensaje', accessor: 'message' },
             {
-                Header: 'Visto',
+                Header: (
+                    <>
+                        Visto
+                        <OverlayTrigger overlay={<Tooltip id="tooltip">Verde = visto | Rojo / Tachado = no visto</Tooltip>} placement="top">
+                            <QuestionCircle size={20} color="gray" style={{ marginLeft: '5px', cursor: 'pointer' }} />
+                        </OverlayTrigger>
+                    </>
+                ),
                 accessor: 'seen',
-                Cell: ({ row }: CellProps<IChessQuestion>) => (
-                    <div className="d-flex w-100">
-                        <Button className="w-100" variant="info" onClick={() => changeSeenState(row.index)} disabled={loadingRows.includes(row.original.id)}>
-                            {loadingRows.includes(row.original.id) ? (
-                                <Spinner animation="border" size="sm" />
-                            ) : row.original.seen ? (
-                                <Eye color="green" size={30} title="Visto" />
-                            ) : (
-                                <EyeSlash color="red" size={30} title="No visto" />
-                            )}
-                        </Button>
-                    </div>
-                )
+                Cell: ({ row }: CellProps<IChessQuestion>) => {
+                    const isLoading = loadingRows.includes(row.original.id)
+                    let buttonContent
+
+                    if (isLoading) {
+                        buttonContent = <Spinner animation="border" size="sm" />
+                    } else if (row.original.seen) {
+                        buttonContent = <Eye color="green" size={30} title="Visto" />
+                    } else {
+                        buttonContent = <EyeSlash color="red" size={30} title="No visto" />
+                    }
+
+                    return (
+                        <div className="d-flex w-100">
+                            <Button className="w-100" variant="info" onClick={() => changeSeenState(row.index)} disabled={isLoading}>
+                                {buttonContent}
+                            </Button>
+                        </div>
+                    )
+                }
             },
             {
                 id: 'deleteButton',
@@ -150,7 +172,6 @@ const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): J
                 )
             }
         ],
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [changeSeenState, loadingRows, deletingRows]
     )
 
@@ -172,8 +193,6 @@ const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): J
                     Total de registros: {preGlobalFilteredRows.length} (Mostrando: {rows.length})
                 </AmountRegistersBox>
             </TableFilterContainer>
-
-            <FloatingNotificationA notification={notification} hideNotification={hideNotification} />
             <Table striped bordered hover responsive {...getTableProps()}>
                 <thead>
                     {headerGroups.map((headerGroup) => {
