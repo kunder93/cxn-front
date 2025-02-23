@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useRef, useState } from 'react'
 import { Formik, Form, FormikTouched, FormikErrors } from 'formik'
-import { Form as BootstrapForm, Spinner } from 'react-bootstrap'
-import { Button, Image } from 'react-bootstrap'
+import { Form as BootstrapForm, Spinner, Button, Image } from 'react-bootstrap'
 import axios, { AxiosError } from 'axios'
 import { useAppSelector } from '../../store/hooks'
 import { UserProfileImage } from '../../store/types/userTypes'
@@ -58,9 +56,7 @@ interface ProfileImageFormValues {
     profileImage: File | null
 }
 
-const initialFormValues: ProfileImageFormValues = {
-    profileImage: null
-}
+const initialFormValues: ProfileImageFormValues = { profileImage: null }
 
 const ProfileImageUploadForm: React.FC = () => {
     const [profileImagePreview, setProfileImagePreview] = useState<string | null>(null)
@@ -79,10 +75,7 @@ const ProfileImageUploadForm: React.FC = () => {
 
         axios
             .patch<UserProfileImage>(UPLOAD_PROFILE_IMAGE_FILE_URL, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${userJwt}`
-                }
+                headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${userJwt}` }
             })
             .then((response) => {
                 const updatedUserProfileImage: UserProfileImage = response.data

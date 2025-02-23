@@ -1,21 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React, { useEffect, useMemo, useState } from 'react'
 import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'react-table'
 import axios from 'axios'
 import { Trash3 } from 'react-bootstrap-icons'
-import {  Button,  Table } from 'react-bootstrap'
+import { Button, Table } from 'react-bootstrap'
 import { IBook } from '../../Types/Types'
 import { LIBRARY_URL } from '../../../resources/server_urls'
 interface LibraryTableProps {
     data: IBook[]
 }
 
-
-const LibraryTable:React.FC<LibraryTableProps> = (props) => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+const LibraryTable: React.FC<LibraryTableProps> = (props) => {
     const [data, setData] = useState(useMemo(() => props.data, [])) //Caching data
     // data state is being updated when the props.data changes.
     useEffect(() => {
@@ -24,52 +18,29 @@ const LibraryTable:React.FC<LibraryTableProps> = (props) => {
 
     const columns: Column<IBook>[] = useMemo(
         () => [
-            {
-                Header: 'ISBN',
-                accessor: 'isbn'
-            },
-            {
-                Header: 'Titulo',
-                accessor: 'title'
-            },
-            {
-                Header: 'Genero',
-                accessor: 'gender'
-            },
-            {
-                Header: 'Fecha publicacion',
-                accessor: 'publishYear'
-            },
-            {
-                Header: 'Idioma',
-                accessor: 'language'
-            }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
+            { Header: 'ISBN', accessor: 'isbn' },
+            { Header: 'Titulo', accessor: 'title' },
+            { Header: 'Genero', accessor: 'gender' },
+            { Header: 'Fecha publicacion', accessor: 'publishYear' },
+            { Header: 'Idioma', accessor: 'language' }
         ],
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [data]
     )
 
     const DeleteButtonClickHandler = async (props: any) => {
-        // eslint-disable-next-line prefer-const
         let clone = [...data]
         const modifiedClone: IBook[] = clone.splice(props.row.index, 1)
         const row = modifiedClone[0]
         try {
             await axios.delete(LIBRARY_URL + '/' + row.isbn)
-            
             setData(clone)
         } catch (error: any) {
-      
             if (error.response?.data) {
                 // Request made and server responded
-               
             } else if (error.request) {
                 // The request was made but no response was received
-               
             } else {
                 // Something happened in setting up the request that triggered an Error
-               
             }
         }
     }
@@ -87,7 +58,6 @@ const LibraryTable:React.FC<LibraryTableProps> = (props) => {
                     Header: () => <div> OPTIONS</div>,
                     Cell: (tableProps: any) => (
                         <div>
-                            {/* eslint-disable-next-line @typescript-eslint/no-misused-promises*/}
                             <Button variant="danger" onClick={() => DeleteButtonClickHandler(tableProps)}>
                                 <Trash3 title="Borrar" />
                             </Button>
@@ -157,7 +127,6 @@ const LibraryTable:React.FC<LibraryTableProps> = (props) => {
                 <p> Total de registros: {preGlobalFilteredRows.length}</p>
             </div>
             <input type="text" value={state.globalFilter} onChange={(event) => setGlobalFilter(event.target.value)} />
-            
         </>
     )
 }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { Formik, Form, FormikState, FormikErrors, FormikTouched } from 'formik'
 import axios, { AxiosError } from 'axios'
@@ -30,10 +29,7 @@ const UpdateDniForm = ({ setFederateState, closeModal }: UpdateDniRequestFormPro
     const backDniInputRef = useRef<HTMLInputElement | null>(null)
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const { showNotification } = useNotificationContext()
-    const initialValues: DniFormValues = {
-        frontDni: null,
-        backDni: null
-    }
+    const initialValues: DniFormValues = { frontDni: null, backDni: null }
 
     const handleSubmit = (values: DniFormValues) => {
         const formData = new FormData()
@@ -45,12 +41,7 @@ const UpdateDniForm = ({ setFederateState, closeModal }: UpdateDniRequestFormPro
         }
 
         axios
-            .patch<FederateStateResponse>(UPDATE_DNI_URL, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${userJwt}`
-                }
-            })
+            .patch<FederateStateResponse>(UPDATE_DNI_URL, formData, { headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${userJwt}` } })
             .then((response) => {
                 setFederateState(response.data)
                 closeModal()
