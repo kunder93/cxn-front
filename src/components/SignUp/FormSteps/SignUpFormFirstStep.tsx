@@ -22,7 +22,7 @@ const isFirstStepNextButtonDisabled = (formikProps: FormikProps<SignUpFormValues
  * @param {SignUpFormStepProps} props - The component props.
  * @param {FormikProps<SignUpFormValues>} props.formikProps - The Formik props for managing form state.
  * @param {() => void} props.nextStepFunction - Function to move to the next step in the sign-up process.
- * @returns {JSX.Element} - A JSX element representing the first step of the sign-up form.
+ * @returns {React.JSX.Element} - A JSX element representing the first step of the sign-up form.
  */
 const SignUpFormFirstStep = ({ formikProps, nextStepFunction }: SignUpFormStepProps) => {
     return (

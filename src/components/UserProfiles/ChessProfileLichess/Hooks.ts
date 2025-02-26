@@ -24,7 +24,7 @@ export const useLichessProfile = (): { lichessProfile: LichessProfileResponse; l
             try {
                 const response = await axios.get<LichessProfileResponse>(GET_MY_LICHESS_PROFILE, {
                     headers: {
-                        Authorization: `Bearer ${userJwt}`
+                        Authorization: `Bearer ${userJwt ?? ''}`
                     }
                 })
                 setLichessProfile(response.data)
@@ -56,7 +56,7 @@ export const useLichessProfileNow = (fetchNow: number): { lichessProfile: Liches
             try {
                 const response = await axios.get<LichessProfileResponse>(GET_MY_LICHESS_PROFILE, {
                     headers: {
-                        Authorization: `Bearer ${userJwt}`
+                        Authorization: `Bearer ${userJwt ?? ''}`
                     }
                 })
                 setLichessProfile(response.data)
@@ -96,7 +96,7 @@ export const useLichessProfiles = (myLichessProfile: LichessProfileResponse) => 
             try {
                 const response = await axios.get<LichessProfileListResponse>(GET_ALL_LICHESS_PROFILES, {
                     headers: {
-                        Authorization: `Bearer ${userJwt}`
+                        Authorization: `Bearer ${userJwt ?? ''}`
                     }
                 })
                 setPlayers(response.data)

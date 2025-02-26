@@ -29,13 +29,13 @@ const NoQuestionsMessage = styled.p`
  * If no participants are found, a message indicating this is shown.
  *
  * @component
- * @returns {JSX.Element} The rendered TorneoInscripcionManager component.
+ * @returns {React.JSX.Element} The rendered TorneoInscripcionManager component.
  */
-const TorneoInscripcionManager = (): JSX.Element => {
+const TorneoInscripcionManager = (): React.JSX.Element => {
     const { data, error, loaded } = useAxiosGetAllTournamentParticipants()
 
     if (error) {
-        return <ErrorMessage variant="danger">Error: {error.message ?? 'Ocurrió un error al cargar los participantes del torneo.'}</ErrorMessage>
+        return <ErrorMessage variant="danger">Error: {error.message}</ErrorMessage>
     }
 
     if (!loaded) {

@@ -6,9 +6,9 @@ import Dropzone from 'react-dropzone'
 
 export interface GenericDateFieldProps<T> {
     publishDate: Date | null
-    setFieldValue: (field: string, value: any, shouldValidate?: boolean) => Promise<void | FormikErrors<T>>
+    setFieldValue: (field: string, value: Date | null, shouldValidate?: boolean) => Promise<void | FormikErrors<T>>
     setFieldTouched: (field: string, isTouched?: boolean, shouldValidate?: boolean) => Promise<void | FormikErrors<T>>
-    validateField: (field: string) => Promise<void> | Promise<string | undefined>
+    validateField: (field: string) => Promise<string | undefined> | Promise<void>
 }
 
 export function DateField<T>({ publishDate, setFieldValue, setFieldTouched, validateField }: Readonly<GenericDateFieldProps<T>>) {
@@ -21,7 +21,7 @@ export function DateField<T>({ publishDate, setFieldValue, setFieldTouched, vali
                 onChange={(date: Date | null) => {
                     void setFieldValue('publishDate', date)
                         .then(() => void setFieldTouched('publishDate', true))
-                        .catch((error) => {
+                        .catch((error: unknown) => {
                             console.error('Error setting/touching publishDate:', error)
                         })
                 }}
@@ -82,7 +82,7 @@ export interface CoverImageDropzoneProps {
      * Formik’s setFieldValue function.
      * Use this to update the image file in your Formik state.
      */
-    setFieldValue: (field: string, value: any, shouldValidate?: boolean) => Promise<any>
+    setFieldValue: (field: string, value: File | null, shouldValidate?: boolean) => Promise<void | FormikErrors<unknown>>
     /**
      * The preview URL for the image.
      * This is managed by the parent component.
@@ -125,7 +125,7 @@ export const CoverImageDropzone: React.FC<CoverImageDropzoneProps> = ({
                         onPreviewUrlChange(url)
                     }
                 })
-                .catch((error) => {
+                .catch((error: unknown) => {
                     console.error('Error setting image file:', error)
                     throw error
                 })

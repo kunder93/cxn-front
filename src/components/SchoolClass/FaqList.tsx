@@ -29,14 +29,14 @@ const Answer = styled.p`
  * This component shows a list with faq questions and answers.
  *
  * @param {Props} props - Component props. The list of pair question-answer
- * @returns {JSX.Element} - FAQ List with questions and answers
+ * @returns {React.JSX.Element} - FAQ List with questions and answers
  */
-const FaqList = ({ faqPairsQuestionAnswer }: Props): JSX.Element => {
+const FaqList = ({ faqPairsQuestionAnswer }: Props): React.JSX.Element => {
     return (
         <ListGroup as="ol">
             {faqPairsQuestionAnswer.map((pair, index) => (
-                <ListGroup.Item as={'li'} key={index}>
-                    <Question>{index + 1 + pair.question}</Question>
+                <ListGroup.Item as={'li'} key={pair.question}>
+                    <Question>{(index + 1).toString() + pair.question}</Question>
                     <Answer>{pair.answer}</Answer>
                 </ListGroup.Item>
             ))}

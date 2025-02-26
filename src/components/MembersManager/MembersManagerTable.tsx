@@ -52,16 +52,38 @@ const ActionButtons: React.FC<{
     onDeleteButtonClickHandler: (row: Row<UserProfile>) => void
 }> = ({ row, onInfoClick, onEditKindClick, onEditRoleClick, onDeleteButtonClickHandler }) => (
     <ActionButtonsContainer>
-        <Button variant="info" onClick={() => onInfoClick(row)}>
+        <Button
+            variant="info"
+            onClick={() => {
+                onInfoClick(row)
+            }}
+        >
             <InfoCircle aria-label="Datos completos" title="Información" />
         </Button>
-        <Button variant="info" onClick={() => onEditKindClick(row)}>
+        <Button
+            variant="info"
+            onClick={() => {
+                onEditKindClick(row)
+            }}
+        >
             <PersonGear aria-label="Modificar el estado del socio" title="Editar estado" />
         </Button>
-        <Button variant="info" onClick={() => onEditRoleClick(row)}>
+        <Button
+            variant="info"
+            onClick={() => {
+                onEditRoleClick(row)
+            }}
+        >
             <Gear aria-label="Modificar rol del socio" title="Editar roles" />
         </Button>
-        <Button variant="danger" onClick={() => onDeleteButtonClickHandler(row)} aria-label="Eliminar socio" title="Eliminar socio">
+        <Button
+            variant="danger"
+            onClick={() => {
+                onDeleteButtonClickHandler(row)
+            }}
+            aria-label="Eliminar socio"
+            title="Eliminar socio"
+        >
             <BsFillTrash3Fill />
         </Button>
     </ActionButtonsContainer>
@@ -71,7 +93,7 @@ interface Props {
     usersData: UserProfile[]
 }
 
-const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
+const MembersManagerTable = ({ usersData }: Props): React.JSX.Element => {
     const [data, setData] = useState<UserProfile[]>(useMemo(() => usersData, [usersData]))
     const [memberInfoModal, setMemberInfoModal] = useState(false)
     const [changeKindMemberModal, setChangeKindMemberModal] = useState(false)
@@ -126,14 +148,16 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
     }, [])
 
     const renderUserRolesCell = useCallback(
-        (row: Row<UserProfile>): JSX.Element => {
+        (row: Row<UserProfile>): React.JSX.Element => {
             return (
                 <RoleCell>
                     <div> {renderUserRoles(row.original.userRoles)}</div>
                     {row.original.userRoles.length === 1 && row.original.userRoles[0] === UserRole.SOCIO_CANDIDATO && (
                         <Button
                             variant="link"
-                            onClick={() => openWarningModal(row)} // Pass the entire row to the modal
+                            onClick={() => {
+                                openWarningModal(row)
+                            }} // Pass the entire row to the modal
                             style={{ padding: 0, border: 'none', background: 'none' }}
                             aria-label="Candidato a socio"
                         >
@@ -196,7 +220,7 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
         [data]
     )
 
-    const renderActionButtons = (row: Row<UserProfile>): JSX.Element => {
+    const renderActionButtons = (row: Row<UserProfile>): React.JSX.Element => {
         return (
             <ActionButtons
                 row={row}
@@ -233,7 +257,9 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
                     id="filterInput"
                     type="text"
                     value={globalFilterStatus ?? ''}
-                    onChange={(event) => setGlobalFilter(event.target.value)}
+                    onChange={(event) => {
+                        setGlobalFilter(event.target.value)
+                    }}
                     aria-label="Buscar empresas"
                 />
                 <AmountRegistersBox>
@@ -273,7 +299,7 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
                                 {row.cells.map((cell, cellIndex) => {
                                     const { key: cellKey, ...cellProps } = cell.getCellProps()
                                     return (
-                                        <td key={cellKey ?? cellIndex} {...cellProps}>
+                                        <td key={cellKey || cellIndex} {...cellProps}>
                                             {cell.render('Cell')}
                                         </td>
                                     )
@@ -286,11 +312,19 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
 
             {selectedRow && (
                 <>
-                    <MemberModalProfileInfo show={memberInfoModal} onHide={() => setMemberInfoModal(false)} row={selectedRow} />
+                    <MemberModalProfileInfo
+                        show={memberInfoModal}
+                        onHide={() => {
+                            setMemberInfoModal(false)
+                        }}
+                        row={selectedRow}
+                    />
                     <ChangeKindMemberModal
                         show={changeKindMemberModal}
                         updateKindMember={updateKindMember}
-                        onHide={() => setChangeKindMemberModal(false)}
+                        onHide={() => {
+                            setChangeKindMemberModal(false)
+                        }}
                         memberFirstSurname={selectedRow.firstSurname}
                         memberSecondSurname={selectedRow.secondSurname}
                         memberEmail={selectedRow.email}
@@ -301,23 +335,27 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
                     <ChangeMemberRolesModal
                         show={changeMemberRoleModal}
                         updateMemberRoles={updateMemberRoles}
-                        onHide={() => setChangeMemberRoleModal(false)}
-                        memberFirstSurname={selectedRow?.firstSurname ?? ''}
-                        memberSecondSurname={selectedRow?.secondSurname ?? ''}
-                        memberEmail={selectedRow?.email ?? ''}
-                        memberName={selectedRow?.name ?? ''}
-                        memberRoles={selectedRow?.userRoles ?? []}
+                        onHide={() => {
+                            setChangeMemberRoleModal(false)
+                        }}
+                        memberFirstSurname={selectedRow.firstSurname}
+                        memberSecondSurname={selectedRow.secondSurname}
+                        memberEmail={selectedRow.email}
+                        memberName={selectedRow.name}
+                        memberRoles={selectedRow.userRoles}
                         aria-label="Modal de cambio de roles de socio"
                     />
                     <DeleteMemberModal
                         show={deleteMemberModal}
                         updateMemberRoles={updateMemberRoles}
-                        onHide={() => setDeleteMemberModal(false)}
-                        memberFirstSurname={selectedRow?.firstSurname ?? ''}
-                        memberSecondSurname={selectedRow?.secondSurname ?? ''}
-                        memberEmail={selectedRow?.email ?? ''}
-                        memberName={selectedRow?.name ?? ''}
-                        memberRoles={selectedRow?.userRoles ?? []}
+                        onHide={() => {
+                            setDeleteMemberModal(false)
+                        }}
+                        memberFirstSurname={selectedRow.firstSurname}
+                        memberSecondSurname={selectedRow.secondSurname}
+                        memberEmail={selectedRow.email}
+                        memberName={selectedRow.name}
+                        memberRoles={selectedRow.userRoles}
                         aria-label="Modal para borrar definitivamente un socio."
                         onDeleteSuccess={deleteRow}
                     />
@@ -327,7 +365,9 @@ const MembersManagerTable = ({ usersData }: Props): JSX.Element => {
                 <WarningAceptUserModal
                     updateMemberRoles={updateMemberRoles}
                     show={warningModalVisible}
-                    onHide={() => setWarningModalVisible(false)}
+                    onHide={() => {
+                        setWarningModalVisible(false)
+                    }}
                     rowData={warningRowData}
                 />
             )}

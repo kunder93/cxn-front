@@ -51,7 +51,7 @@ export const MembersResourcesPage = () => {
             {/* Grupo de botones */}
             <ButtonGroup aria-label="Resource categories">
                 {categories.map((category, index) => (
-                    <Button key={index} variant={selectedCategory === category ? 'primary' : 'secondary'} onClick={() => handleCategoryClick(category)}>
+                    <Button key={index} variant={selectedCategory === category ? 'primary' : 'secondary'} onClick={() => { handleCategoryClick(category); }}>
                         {category}
                     </Button>
                 ))}

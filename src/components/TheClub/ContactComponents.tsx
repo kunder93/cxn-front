@@ -42,7 +42,7 @@ const ContactListContainer = styled(ListGroup)`
     }
 `
 
-const ContactContainer = (): JSX.Element => {
+const ContactContainer = (): React.JSX.Element => {
     return (
         <MainContactContainerStyled>
             <ContactFormWrapper>

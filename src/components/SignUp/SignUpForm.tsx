@@ -63,9 +63,9 @@ const initialValues: SignUpFormValues = {
  * It handles multi-step sign-up process and form validation.
  *
  * @component
- * @returns {JSX.Element} The rendered sign-up form component.
+ * @returns {React.JSX.Element} The rendered sign-up form component.
  */
-const SignUpForm = (): JSX.Element => {
+const SignUpForm = (): React.JSX.Element => {
     const { step, nextStep, previousStep } = useFormSteps(FormSteps.FirstStep)
     const handleSubmit = useFormSubmit()
 
@@ -74,7 +74,7 @@ const SignUpForm = (): JSX.Element => {
      *
      * @function
      * @param {FormikProps<SignUpFormValues>} formikProps - The Formik props.
-     * @returns {JSX.Element | null} The rendered step component or null.
+     * @returns {React.JSX.Element | null} The rendered step component or null.
      */
     const renderStepComponent = (formikProps: FormikProps<SignUpFormValues>) => {
         switch (step) {

@@ -14,7 +14,7 @@ import NavigationButton from './CommonComponents/NavigationButton'
  * @constant {ProfileMenuSection[]} sections
  * @type {ProfileMenuSection[]}
  * @property {string} key - A unique key for each section, used as the event key in the accordion.
- * @property {JSX.Element} icon - The icon associated with the section, displayed in the accordion header.
+ * @property {React.JSX.Element} icon - The icon associated with the section, displayed in the accordion header.
  * @property {string} title - The title of the section, shown in the accordion header.
  * @property {Object[]} buttons - An array of button objects for the section, allowing navigation to different management pages.
  * @property {ProfileSection} buttons.section - The section that the button navigates to when clicked.
@@ -52,7 +52,7 @@ const sections: ProfileMenuSection[] = [
  * @param {RolePageProps} props - The props for the component.
  * @param {function} props.changePage - A function to change the page based on the selected section.
  *
- * @returns {JSX.Element} The rendered component.
+ * @returns {React.JSX.Element} The rendered component.
  *
  * @example
  * // Usage

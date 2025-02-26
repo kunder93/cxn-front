@@ -47,7 +47,7 @@ const imageValidation = () =>
             try {
                 const img = await getImageDimensions(value)
                 return img.width <= MAX_RESOLUTION.width && img.height <= MAX_RESOLUTION.height
-            } catch (error) {
+            } catch {
                 return false
             }
         })

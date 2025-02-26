@@ -7,7 +7,7 @@ import { es } from 'date-fns/locale'
 import { AddBookValidationSchema } from './AddBookValidationSchema'
 import { useAppSelector } from 'store/hooks'
 import { useNotificationContext } from 'components/Common/NotificationContext'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import { RESOURCES_BOOK_URL } from 'resources/server_urls'
 import { NotificationType } from 'components/Common/hooks/useNotification'
 import { Book, IFormBook } from './Types'
@@ -38,21 +38,17 @@ const AddBookForm: React.FC<AddBookFormProps> = ({ addBookFunction }) => {
         imageFile: null
     }
 
-    const handleRemoveAuthor = (remove: (index: number) => void, index: number) => {
-        remove(index)
-    }
-
     const handleSubmit = (
         values: IFormBook,
         setSubmitting: (isSubmitting: boolean) => void,
-        resetForm: (nextState?: Partial<FormikState<IFormBook>> | undefined) => void
+        resetForm: (nextState?: Partial<FormikState<IFormBook>>) => void
     ) => {
         const formData = new FormData()
         const formattedPublishDate = values.publishDate
             ? `${String(values.publishDate.getDate()).padStart(2, '0')}/${String(values.publishDate.getMonth() + 1).padStart(
                   2,
                   '0'
-              )}/${values.publishDate.getFullYear()}`
+              )}/${values.publishDate.getFullYear().toLocaleString()}`
             : ''
 
         const bookData = {
@@ -77,7 +73,7 @@ const AddBookForm: React.FC<AddBookFormProps> = ({ addBookFunction }) => {
             .post(RESOURCES_BOOK_URL, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${userJwt}`
+                    Authorization: `Bearer ${userJwt ?? ''}`
                 }
             })
             .then(() => {
@@ -86,17 +82,12 @@ const AddBookForm: React.FC<AddBookFormProps> = ({ addBookFunction }) => {
                 resetForm()
                 setPreviewUrl(null)
             })
-            .catch((error) => {
+            .catch((error: unknown) => {
                 setSubmitting(false)
-                const err = error as AxiosError
-                const errorMessages = err.response?.data
-                if (Array.isArray(errorMessages)) {
-                    showNotification(errorMessages.join(', '), NotificationType.Error)
-                } else if (errorMessages && typeof errorMessages === 'object') {
-                    const formattedMessages = Object.values(errorMessages).join(', ')
-                    showNotification(formattedMessages, NotificationType.Error)
+                if (axios.isAxiosError(error)) {
+                    showNotification(error.message, NotificationType.Error)
                 } else {
-                    showNotification(error as string, NotificationType.Error)
+                    showNotification('Error inesperado.', NotificationType.Error)
                 }
             })
     }
@@ -108,7 +99,9 @@ const AddBookForm: React.FC<AddBookFormProps> = ({ addBookFunction }) => {
             validateOnChange
             initialValues={initialValues}
             validationSchema={AddBookValidationSchema}
-            onSubmit={(values, { resetForm, setSubmitting }) => handleSubmit(values, setSubmitting, resetForm)}
+            onSubmit={(values, { resetForm, setSubmitting }) => {
+                handleSubmit(values, setSubmitting, resetForm)
+            }}
         >
             {({ setFieldValue, values, validateField, setFieldTouched, isValid, dirty, errors, isSubmitting }) => (
                 <Form>
@@ -120,30 +113,47 @@ const AddBookForm: React.FC<AddBookFormProps> = ({ addBookFunction }) => {
                     <DateField publishDate={values.publishDate} setFieldValue={setFieldValue} setFieldTouched={setFieldTouched} validateField={validateField} />
 
                     <FieldArray name="authors">
-                        {({ push, remove }) => (
+                        {(arrayHelpers) => (
                             <div>
                                 <AuthorsHeaderWrapper>
                                     <BootstrapForm.Label className="form-label mb-3">Autores:</BootstrapForm.Label>
-                                    <Button type="button" variant="primary" className="mt-3" onClick={() => push({ firstName: '', lastName: '' })}>
+                                    <Button
+                                        type="button"
+                                        variant="primary"
+                                        className="mt-3"
+                                        onClick={() => {
+                                            arrayHelpers.push({ firstName: '', lastName: '' })
+                                        }}
+                                    >
                                         Añadir Autor
                                     </Button>
                                 </AuthorsHeaderWrapper>
+
                                 {errors.authors && <ErrorContainer>{Array.isArray(errors.authors) ? '' : errors.authors}</ErrorContainer>}
+
                                 {values.authors.map((_, index) => (
                                     <div
-                                        key={'author' + index.toString()}
+                                        key={`author-${index.toString()}`}
                                         className="border rounded p-3 mb-3 bg-light position-relative"
                                         style={{ boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)' }}
                                     >
                                         <p className="fw-bold mb-3">Autor {index + 1}</p>
-                                        <FormTextField label="Nombre del autor:" name={`authors[${index}].firstName`} placeholder="Nombre del autor." />
-                                        <FormTextField label="Apellido del autor:" name={`authors[${index}].lastName`} placeholder="Apellido del autor." />
+                                        <FormTextField
+                                            label="Nombre del autor:"
+                                            name={`authors[${index.toString()}].firstName`}
+                                            placeholder="Nombre del autor."
+                                        />
+                                        <FormTextField
+                                            label="Apellido del autor:"
+                                            name={`authors[${index.toString()}].lastName`}
+                                            placeholder="Apellido del autor."
+                                        />
                                         <Button
                                             variant="danger"
                                             type="button"
                                             className="position-absolute"
                                             style={{ top: '10px', right: '10px' }}
-                                            onClick={handleRemoveAuthor.bind(null, remove, index)}
+                                            onClick={() => arrayHelpers.remove(index)}
                                         >
                                             Eliminar
                                         </Button>

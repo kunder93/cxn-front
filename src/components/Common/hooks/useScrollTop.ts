@@ -1,6 +1,7 @@
+import { ProfileSection } from 'components/UserProfiles/SideBar'
 import { useEffect } from 'react'
 
-const useScrollTop = (dependency: any) => {
+const useScrollTop = (dependency: ProfileSection) => {
     useEffect(() => {
         const scrollToTop = () => {
             const element = document.getElementById('root')

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, ProgressBar } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 import { FormSteps } from '../SignUpFormTypes'
 import { ProgressBarIconsContainer } from '../SignUpFormStyles'
 import { Icon1Circle, Icon1CircleFill, Icon2Circle, Icon2CircleFill, Icon3Circle, Icon3CircleFill, Icon4Circle, Icon4CircleFill } from 'react-bootstrap-icons'
@@ -15,31 +15,29 @@ const FormStepBar: React.FC<{ step: FormSteps }> = ({ step }) => {
     const iconStyles = { width: '30px', height: '30px' }
 
     const icons = [
-        { regular: <Icon1Circle style={iconStyles} />, filled: <Icon1CircleFill style={iconStyles} /> },
-        { regular: <Icon2Circle style={iconStyles} />, filled: <Icon2CircleFill style={iconStyles} /> },
-        { regular: <Icon3Circle style={iconStyles} />, filled: <Icon3CircleFill style={iconStyles} /> },
-        { regular: <Icon4Circle style={iconStyles} />, filled: <Icon4CircleFill style={iconStyles} /> }
+        { id: 'icon1', regular: <Icon1Circle style={iconStyles} />, filled: <Icon1CircleFill style={iconStyles} /> },
+        { id: 'icon2', regular: <Icon2Circle style={iconStyles} />, filled: <Icon2CircleFill style={iconStyles} /> },
+        { id: 'icon3', regular: <Icon3Circle style={iconStyles} />, filled: <Icon3CircleFill style={iconStyles} /> },
+        { id: 'icon4', regular: <Icon4Circle style={iconStyles} />, filled: <Icon4CircleFill style={iconStyles} /> }
     ]
+
+    const stepProgressValue = stepProgress[step]
 
     return (
         <Container>
             <ProgressBarIconsContainer>
                 {icons.map((icon, index) => (
-                    <React.Fragment key={index}>{step === ((index + 1) as FormSteps) ? icon.filled : icon.regular}</React.Fragment>
+                    <React.Fragment key={icon.id}>{step.valueOf() === index + 1 ? icon.filled : icon.regular}</React.Fragment>
                 ))}
             </ProgressBarIconsContainer>
-            <ProgressBar
-                now={stepProgress[step]}
-                min={0}
-                max={100}
-                role="progressbar"
-                aria-label={`Progreso paso ${step} de 4`}
-                aria-labelledby={`Progreso paso ${step} de 4`}
-                visuallyHidden={false}
-                striped
-                animated
-                tabIndex={0}
-            />
+            <progress
+                value={stepProgressValue}
+                max="100"
+                aria-label={`Progreso paso ${step.toString()} de 4`}
+                className="form-step-progressbar" // Optional: for custom styling
+            >
+                {stepProgressValue}
+            </progress>
         </Container>
     )
 }

@@ -85,9 +85,9 @@ const Sidebar: React.FC<SidebarProps> = ({ roles, setProfilePage, currentSection
         setSidebarSection(section)
     }
 
-    const renderLink = (section: ProfileSection, icon: JSX.Element, label: string) => (
+    const renderLink = (section: ProfileSection, icon: React.JSX.Element, label: string) => (
         <li key={section}>
-            <a href="#" className={currentSection === section ? 'active' : ''} onClick={() => handleClick(section)}>
+            <a href="#" className={currentSection === section ? 'active' : ''} onClick={() => { handleClick(section); }}>
                 {icon} {label}
             </a>
         </li>

@@ -26,13 +26,13 @@ const NoQuestionsMessage = styled.p`
  * and shows a loading spinner or an error message based on the
  * loading state and the result of the API call.
  *
- * @returns {JSX.Element} The rendered Members Manager page.
+ * @returns {React.JSX.Element} The rendered Members Manager page.
  */
-const MembersManagerPage = (): JSX.Element => {
+const MembersManagerPage = (): React.JSX.Element => {
     const { data, error, loaded } = useAxiosGetAllUsersData()
 
     if (error) {
-        return <ErrorMessage variant="danger">Error: {error.message ?? 'Ocurrió un error al cargar las preguntas.'}</ErrorMessage>
+        return <ErrorMessage variant="danger">Error: {error.message}</ErrorMessage>
     }
 
     if (!loaded) {

@@ -17,7 +17,7 @@ interface ButtonComponentProps {
  *
  * @component
  * @param {ButtonComponentProps} props - The properties for the ButtonComponent.
- * @returns {JSX.Element} The rendered ButtonComponent.
+ * @returns {React.JSX.Element} The rendered ButtonComponent.
  */
 const NavigationButton: React.FC<ButtonComponentProps> = ({ section, text, hoveredButton, setHoveredButton, buttonIndex, changePage }) => {
     const buttonBaseStyle = {
@@ -39,9 +39,9 @@ const NavigationButton: React.FC<ButtonComponentProps> = ({ section, text, hover
     return (
         <Button
             style={buttonBaseStyle}
-            onClick={() => changePage(section)}
-            onMouseEnter={() => setHoveredButton(buttonIndex)}
-            onMouseLeave={() => setHoveredButton(null)}
+            onClick={() => { changePage(section); }}
+            onMouseEnter={() => { setHoveredButton(buttonIndex); }}
+            onMouseLeave={() => { setHoveredButton(null); }}
         >
             {text}
         </Button>

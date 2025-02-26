@@ -18,14 +18,15 @@ export const useCancelPayment = () => {
                 `${PAYMENT_URL}/${paymentId}/cancel`,
                 {},
                 {
-                    headers: { Authorization: `Bearer ${userJwt}` },
+                    headers: { Authorization: `Bearer ${userJwt ?? ''}` },
                     signal: AbortSignal.timeout(5000) // Auto-cancel after 5s
                 }
             )
-            return Promise.resolve(response.data)
+            return response.data // Return the resolved data directly
         } catch (err) {
+            const errorToThrow = err instanceof Error ? err : new Error('Error occurred while canceling payment')
             setError(err as AxiosError)
-            return Promise.reject(err)
+            throw errorToThrow // Ensure rejection is with an Error object
         } finally {
             setIsLoading(false)
         }
@@ -48,7 +49,7 @@ export const useConfirmPayment = () => {
                 `${PAYMENT_URL}/${paymentId}/pay`,
                 {},
                 {
-                    headers: { Authorization: `Bearer ${userJwt}` }
+                    headers: { Authorization: `Bearer ${userJwt ?? ''}` }
                 }
             )
             return response.data

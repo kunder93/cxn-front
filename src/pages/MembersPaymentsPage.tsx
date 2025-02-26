@@ -22,7 +22,7 @@ export const MembersPaymentsPage = () => {
     const { data, error, loaded } = useAxiosGetAllMembersPaymentsData()
 
     if (error) {
-        return <ErrorMessage variant="danger">Error: {error.message ?? 'Ocurrió un error al cargar las preguntas.'}</ErrorMessage>
+        return <ErrorMessage variant="danger">Error: {error.message}</ErrorMessage>
     }
     if (!loaded) {
         return <LoadingTableSpinnerContainer />

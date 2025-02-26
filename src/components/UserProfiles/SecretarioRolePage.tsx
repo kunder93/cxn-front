@@ -51,7 +51,7 @@ const sections: ProfileMenuSection[] = [
  * @component
  * @param {RolePageProps} props - The properties for the SecretarioRolePage component.
  * @param {function} props.changePage - A function to change the current page based on the selected section.
- * @returns {JSX.Element} The rendered SecretarioRolePage component.
+ * @returns {React.JSX.Element} The rendered SecretarioRolePage component.
  */
 const SecretarioRolePage: React.FC<RolePageProps> = ({ changePage }) => {
     const [hoveredButton, setHoveredButton] = useState<number | null>(null)

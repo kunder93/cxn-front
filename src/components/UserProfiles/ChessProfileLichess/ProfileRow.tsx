@@ -51,9 +51,9 @@ const StyledColValue = styled.div`
  * @param {Object} props - The component props.
  * @param {string} props.label - The label text to display.
  * @param {React.ReactNode} props.value - The value to display next to the label.
- * @returns {JSX.Element} The rendered ProfileRow component.
+ * @returns {React.JSX.Element} The rendered ProfileRow component.
  */
-const ProfileRow: React.FC<{ label: string; value: React.ReactNode }> = ({ label, value }: { label: string; value: React.ReactNode }): JSX.Element => (
+const ProfileRow: React.FC<{ label: string; value: React.ReactNode }> = ({ label, value }: { label: string; value: React.ReactNode }): React.JSX.Element => (
     <StyledRow>
         <StyledColLabel>{label}</StyledColLabel>
         <StyledColValue>{value}</StyledColValue>

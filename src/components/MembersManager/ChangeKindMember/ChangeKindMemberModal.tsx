@@ -8,11 +8,11 @@ import { FormikProps } from 'formik'
 import { Spinner } from 'react-bootstrap'
 
 interface ChangeKindMemberProps extends ModalProps {
-    memberEmail: string | undefined
-    memberName: string | undefined
-    memberFirstSurname: string | undefined
-    memberSecondSurname: string | undefined
-    kindMember: KindMember | undefined
+    memberEmail: string
+    memberName: string
+    memberFirstSurname: string
+    memberSecondSurname: string
+    kindMember: KindMember
     updateKindMember: (newKindMember: KindMember) => void
 }
 
@@ -46,17 +46,16 @@ const ChangeKindMemberModal: React.FC<ChangeKindMemberProps> = ({
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {kindMember && memberEmail && (
-                    <ChangeKindMemberForm
-                        formikRef={formRef}
-                        formData={{ email: memberEmail, kindMember: kindMember }}
-                        updateLocalKindMember={updateKindMember} setBlockButton={setBlockButton}     
-                        ></ChangeKindMemberForm>
-                )}
+                <ChangeKindMemberForm
+                    formikRef={formRef}
+                    formData={{ email: memberEmail, kindMember: kindMember }}
+                    updateLocalKindMember={updateKindMember}
+                    setBlockButton={setBlockButton}
+                ></ChangeKindMemberForm>
             </Modal.Body>
             <StyledModalFooter>
-                <Button variant="success" onClick={handleSubmit} >
-                {blockButton ? <Spinner animation="border" size="sm" /> : 'Cambiar'}
+                <Button variant="success" onClick={handleSubmit}>
+                    {blockButton ? <Spinner animation="border" size="sm" /> : 'Cambiar'}
                 </Button>
                 <Button variant="danger" onClick={props.onHide}>
                     Cerrar

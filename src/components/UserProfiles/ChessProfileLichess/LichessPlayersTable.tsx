@@ -108,7 +108,7 @@ const columns: Column<LichessProfileResponse>[] = [
  * @component
  * @param {Object} props - Component props
  * @param {LichessProfileResponse[]} props.data - Array of Lichess profile data to display in the table.
- * @returns {JSX.Element} A table displaying Lichess player information such as usernames, ELO ratings, and game statistics.
+ * @returns {React.JSX.Element} A table displaying Lichess player information such as usernames, ELO ratings, and game statistics.
  */
 const LichessPlayersTable: React.FC<{ data: LichessProfileResponse[] }> = ({ data }) => {
     // Hook to create table instance with column definitions and data

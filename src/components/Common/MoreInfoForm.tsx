@@ -103,7 +103,7 @@ interface MoreInfoFormProps {
     category: string
 }
 
-const MoreInfoForm = ({ initialTopic, formTitle, category }: MoreInfoFormProps): JSX.Element => {
+const MoreInfoForm = ({ initialTopic, formTitle, category }: MoreInfoFormProps): React.JSX.Element => {
     const { showNotification } = useNotificationContext()
 
     const initialValues: FormData = {

@@ -24,7 +24,7 @@ import ChessQuestionsManager from './pages/ChessQuestionsManager'
 import TorneoBases from './components/TorneoPromocion/TorneoBases'
 import TorneoCartel from './components/TorneoPromocion/TorneoCartel'
 import TorneoInscripcion from './components/TorneoPromocion/TorneoInscripcion'
-const RootComponent = (): JSX.Element => {
+const RootComponent = (): React.JSX.Element => {
     return (
         <ScrollTopWrapper>
             <Routes>

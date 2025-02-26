@@ -81,13 +81,13 @@ const ModalStyled = styled(Modal)`
         }
     }
 `
-const UploadProfileImageButton = (): JSX.Element => {
+const UploadProfileImageButton = (): React.JSX.Element => {
     const [activeModal, setActiveModal] = useState(false)
 
     return (
         <>
-            <StyledButton onClick={() => setActiveModal(true)}>Subir imagen propia</StyledButton>
-            <ModalStyled aria-labelledby="contained-modal-title-vcenter" centered show={activeModal} onHide={() => setActiveModal(false)}>
+            <StyledButton onClick={() => { setActiveModal(true); }}>Subir imagen propia</StyledButton>
+            <ModalStyled aria-labelledby="contained-modal-title-vcenter" centered show={activeModal} onHide={() => { setActiveModal(false); }}>
                 <ModalHeaderStyled closeButton>
                     <Modal.Title>Cambiar imagen de perfil:</Modal.Title>
                 </ModalHeaderStyled>
@@ -95,7 +95,7 @@ const UploadProfileImageButton = (): JSX.Element => {
                     <ImageUploadForm />
                 </ModalBodyStyled>
                 <ModalFooterStyled>
-                    <StyledCloseButton variant="danger" onClick={() => setActiveModal(false)}>
+                    <StyledCloseButton variant="danger" onClick={() => { setActiveModal(false); }}>
                         Cerrar
                     </StyledCloseButton>
                 </ModalFooterStyled>

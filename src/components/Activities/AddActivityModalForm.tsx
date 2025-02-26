@@ -1,18 +1,16 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Modal, ModalProps, Button, Spinner, Form as BootstrapForm } from 'react-bootstrap'
 import styled from 'styled-components'
 import { ActivityCategory, IActivity, IActivityForm } from './Types'
-import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
 import Dropzone from 'react-dropzone'
 import { AddActivityValidationSchema } from './FormValidations'
-import axios, { AxiosError } from 'axios'
-import { ACTIVITIES_URL } from 'resources/server_urls'
-import { useAppSelector } from 'store/hooks'
 import { useNotificationContext } from 'components/Common/NotificationContext'
 import { NotificationType } from 'components/Common/hooks/useNotification'
 import 'react-datepicker/dist/react-datepicker.css'
 import DatePicker, { registerLocale } from 'react-datepicker'
 import { es } from 'date-fns/locale'
+import { useAddActivity } from './Hooks'
 
 registerLocale('es', es)
 
@@ -101,65 +99,10 @@ interface AddActivityModalFormProps extends ModalProps {
 }
 
 const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddActivityModalFormProps) => {
-    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const { showNotification } = useNotificationContext()
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+    const { handleSubmit, previewUrl, setPreviewUrl } = useAddActivity(props.addActivity)
 
     const initialValues: IActivityForm = { title: '', description: '', imageFile: null, startDate: null, endDate: null, category: ActivityCategory.TORNEO }
-
-    const handleSubmit = (values: IActivityForm, formActions: FormikHelpers<IActivityForm>) => {
-        const formData = new FormData()
-
-        // Prepare the activity data to match AddActivityRequestData
-        const activityData = {
-            title: values.title,
-            description: values.description,
-            startDate: values.startDate?.toISOString() ?? '',
-            endDate: values.endDate?.toISOString() ?? '',
-            category: values.category ?? ''
-        }
-
-        // Add activity data as a JSON Blob to the FormData
-        const jsonBlob = new Blob([JSON.stringify(activityData)], { type: 'application/json' })
-        formData.append('data', jsonBlob)
-
-        // Append the image file if it exists
-        if (values.imageFile) {
-            formData.append('imageFile', values.imageFile)
-        }
-
-        axios
-            .post(ACTIVITIES_URL, formData, { headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${userJwt}` } })
-            .then((/*response*/) => {
-                showNotification('Actividad creada', NotificationType.Success)
-                formActions.resetForm()
-                setPreviewUrl(null)
-                props.addActivity({
-                    title: values.title,
-                    description: values.description,
-                    startDate: values.startDate,
-                    endDate: values.endDate,
-                    category: values.category
-                })
-            })
-            .catch((error) => {
-                const err = error as AxiosError
-                // Use optional chaining to safely access the error response data
-                const errorMessages = err.response?.data
-                if (Array.isArray(errorMessages)) {
-                    // If errorMessages is an array, join them into a string
-                    showNotification(errorMessages.join(', '), NotificationType.Error)
-                } else if (errorMessages && typeof errorMessages === 'object') {
-                    // If errorMessages is an object (and not null)
-                    const formattedMessages = Object.values(errorMessages).join(', ')
-                    showNotification(formattedMessages, NotificationType.Error)
-                } else {
-                    // If no validation errors, display the error message
-                    showNotification(error.message, NotificationType.Error)
-                }
-            })
-            .finally(() => formActions.setSubmitting(false))
-    }
 
     return (
         <CreateActivityModal
@@ -175,7 +118,7 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                 validateOnBlur
                 initialValues={initialValues}
                 validationSchema={AddActivityValidationSchema}
-                onSubmit={(values, actions) => handleSubmit(values, actions)}
+                onSubmit={handleSubmit}
             >
                 {({ setFieldValue, values, validateField, setFieldTouched, isValid, dirty, isSubmitting }) => {
                     return (
@@ -210,10 +153,9 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                                         await setFieldValue('imageFile', null) // Clear previous value
                                                         await setFieldValue('imageFile', file)
                                                         await validateField('imageFile')
-                                                        if (file) {
-                                                            await setFieldTouched('imageFile', true)
-                                                            setPreviewUrl(URL.createObjectURL(file))
-                                                        }
+
+                                                        await setFieldTouched('imageFile', true)
+                                                        setPreviewUrl(URL.createObjectURL(file))
                                                     } catch (error) {
                                                         console.error('Error handling image file:', error)
                                                         showNotification('Error cargando imagen.', NotificationType.Error)
@@ -251,8 +193,12 @@ const AddActivityModalForm: React.FC<AddActivityModalFormProps> = (props: AddAct
                                                 type="button"
                                                 onClick={() => {
                                                     setFieldValue('imageFile', null)
-                                                        .then(() => setPreviewUrl(null))
-                                                        .catch((error) => console.error(error))
+                                                        .then(() => {
+                                                            setPreviewUrl(null)
+                                                        })
+                                                        .catch(() => {
+                                                            console.error('Error found changing field value.')
+                                                        })
                                                 }}
                                             >
                                                 Limpiar imagen

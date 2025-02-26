@@ -50,14 +50,18 @@ const initiateOAuthFlow = async (
     try {
         await axios.post(`${BASE_URL}api/${email}/lichessAuth`, codeVerifier, {
             headers: {
-                Authorization: `Bearer ${userJwt}`,
+                Authorization: `Bearer ${userJwt ?? ''}`,
                 'Content-Type': 'text/plain'
             }
         })
         window.open(url, '_blank')
         setOAuthCompleted(true)
-    } catch (error) {
-        showNotification('Error: algo inesperado. Recarga o intentalo más tarde.', NotificationType.Error)
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+            showNotification('Error: ' + error.message, NotificationType.Error)
+        } else {
+            showNotification('Error al iniciar la autenticación con Lichess', NotificationType.Error)
+        }
     } finally {
         setIsLoading(false)
     }

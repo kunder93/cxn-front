@@ -1,7 +1,7 @@
 import usePageTitle from '../../components/Common/hooks/usePageTitle'
 import { Container } from 'react-bootstrap'
 
-const TorneoCartel = (): JSX.Element => {
+const TorneoCartel = (): React.JSX.Element => {
     usePageTitle('Cartel torneo')
     return (
         <Container>

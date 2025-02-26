@@ -140,7 +140,7 @@ const FederateInfo = ({
     dniLastUpdate: string
     setUploadDniform: Dispatch<SetStateAction<boolean>>
     autoRenew: boolean
-}): JSX.Element => {
+}): React.JSX.Element => {
     const [federateAutoRenew, setFederateAutoRenew] = useState(autoRenew)
     const userJwt = useAppSelector((state) => state.users.jwt)
     const { showNotification } = useNotificationContext()
@@ -154,9 +154,12 @@ const FederateInfo = ({
                 }
             })
             setFederateAutoRenew(response.data.autoRenew)
-        } catch (error) {
-            const errorMessage = axios.isAxiosError(error) ? error.message : 'Error inesperado, prueba más tarde.'
-            throw errorMessage
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(error.message) // Lanza un error con el mensaje de Axios
+            } else {
+                throw new Error('Error inesperado, prueba más tarde.') // Lanza un error con un mensaje personalizado
+            }
         }
     }, [userJwt])
 
@@ -169,12 +172,17 @@ const FederateInfo = ({
                         .then(() => {
                             showNotification('La renovación automática se ha cambiado correctamente.', NotificationType.Success)
                         })
-                        .catch((error) => {
-                            showNotification('Ha ocurrido un error: ' + error, NotificationType.Error)
+                        .catch(() => {
+                            showNotification('Ha ocurrido un error: ', NotificationType.Error)
                         })
                 }}
             />
-            <DniUpdate dniLastUpdate={dniLastUpdate} onDniUpdate={() => setUploadDniform(true)} />
+            <DniUpdate
+                dniLastUpdate={dniLastUpdate}
+                onDniUpdate={() => {
+                    setUploadDniform(true)
+                }}
+            />
         </SectionWrapper>
     )
 }

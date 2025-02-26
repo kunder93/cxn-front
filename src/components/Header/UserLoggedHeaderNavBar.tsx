@@ -80,32 +80,41 @@ const ProfileImageContainer = styled.div`
     padding-right: 0.5em;
 `
 
-const UserLoggedHeaderNavBar = (): JSX.Element => {
+const UserLoggedHeaderNavBar = (): React.JSX.Element => {
     const [imagePopOver, setImagePopOver] = useState(false)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const profileImage = useAppSelector((state) => state.users.profileImage) // Fetch profile image separately
     const userProfile: UserProfile = useAppSelector((state) => state.users.userProfile)
 
-    const logoutHandler = () => {
+    const logoutHandler = async () => {
         dispatch(removeJwt())
-        void navigate(ROUTES.HOMEPAGE_ROUTE)
+        try {
+            await navigate(ROUTES.HOMEPAGE_ROUTE)
+        } catch (error) {
+            console.error('Navigation error:', error)
+        }
     }
-    const isInitialProfileImage = profileImage?.url === '' && profileImage?.stored === false
+
+    const isInitialProfileImage = profileImage.url === '' && !profileImage.stored
+
+    const profileImageContent = isInitialProfileImage ? (
+        <UserProfileNotDefined />
+    ) : (
+        <UserProfileImage
+            src={profileImage.stored ? profileImage.file : profileImage.url || 'User/ProfileImagesExample/NoProfileImage.avif'}
+            onMouseEnter={() => {
+                setImagePopOver(true)
+            }}
+            onMouseLeave={() => {
+                setImagePopOver(false)
+            }}
+        />
+    )
 
     return (
         <StyledNav className="ms-auto">
-            <ProfileImageContainer>
-                {profileImage && !isInitialProfileImage ? (
-                    <UserProfileImage
-                        src={profileImage.stored ? profileImage.file : profileImage.url ? profileImage.url : 'User/ProfileImagesExample/NoProfileImage.avif'}
-                        onMouseEnter={() => setImagePopOver(true)}
-                        onMouseLeave={() => setImagePopOver(false)}
-                    />
-                ) : (
-                    <UserProfileNotDefined />
-                )}
-            </ProfileImageContainer>
+            <ProfileImageContainer>{profileImageContent}</ProfileImageContainer>
             {/* Dropdown for the user's name and logout option */}
             <Dropdown align="end">
                 <Dropdown.Toggle as="a" className="nav-link">
@@ -116,7 +125,13 @@ const UserLoggedHeaderNavBar = (): JSX.Element => {
                     <Dropdown.Item as={Link} to={ROUTES.MYPROFILE_ROUTE}>
                         Mi Perfil
                     </Dropdown.Item>
-                    <Dropdown.Item onClick={logoutHandler}>Salir</Dropdown.Item>
+                    <Dropdown.Item
+                        onClick={() => async () => {
+                            await logoutHandler()
+                        }}
+                    >
+                        Salir
+                    </Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
 

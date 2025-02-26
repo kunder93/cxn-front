@@ -31,7 +31,7 @@ export const ConfirmPaymentModal: React.FC<ConfirmPaymentModalProps> = ({ show, 
             onHide?.()
         } catch (err) {
             const axiosError = error ?? (err as AxiosError)
-            const message = (axiosError.response?.data as { message?: string })?.message ?? 'Error inesperado.'
+            const message = (axiosError.response?.data as { message?: string }).message ?? 'Error inesperado.'
             showNotification(message, NotificationType.Error)
         }
     }

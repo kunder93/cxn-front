@@ -22,7 +22,7 @@ export const useFederateRequest = () => {
             const response = await axios.post<FederateStateResponse>(FEDERATE_USER_URL, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${userJwt}`
+                    Authorization: `Bearer ${userJwt ?? ''}`
                 }
             })
 

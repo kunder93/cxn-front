@@ -21,7 +21,7 @@ interface LocationState {
  * TheClubPage component displays the club's information.
  * It uses the router's location state to determine which accordion item to open initially.
  *
- * @returns {JSX.Element} The rendered component.
+ * @returns {React.JSX.Element} The rendered component.
  */
 const TheClubPage: React.FC = () => {
     usePageTitle('CXN El club')

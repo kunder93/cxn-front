@@ -42,7 +42,7 @@ export const useFederateState = () => {
             try {
                 const response = await axios.get<FederateStateResponse>(FEDERATE_USER_URL, {
                     headers: {
-                        Authorization: `Bearer ${userJwt}`
+                        Authorization: `Bearer ${userJwt ?? ''}`
                     }
                 })
                 setFederateState(response.data)

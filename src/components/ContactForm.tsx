@@ -64,9 +64,9 @@ interface FormData {
  * a notification to inform the user about the result of the submission.
  *
  * @component
- * @returns {JSX.Element} The rendered ContactForm component.
+ * @returns {React.JSX.Element} The rendered ContactForm component.
  */
-const ContactForm = (): JSX.Element => {
+const ContactForm = (): React.JSX.Element => {
     const { showNotification } = useNotificationContext()
 
     // Initial form values
@@ -94,11 +94,11 @@ const ContactForm = (): JSX.Element => {
             await axios.post(CHESS_QUESTION_URL, axiosData)
             showNotification('Se ha enviado correctamente, gracias.', NotificationType.Success)
             actions.resetForm()
-        } catch (error) {
+        } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
-                showNotification('Error: Código: ' + error.code, NotificationType.Error)
+                showNotification('Error: Código: ' + error.message, NotificationType.Error)
             } else {
-                showNotification('Error: algo inesperado. Recarga o inténtalo más tarde.', NotificationType.Error)
+                showNotification('Error: algo inesperado.', NotificationType.Error)
             }
         } finally {
             actions.setSubmitting(false)

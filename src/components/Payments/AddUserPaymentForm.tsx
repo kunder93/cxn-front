@@ -72,13 +72,17 @@ const AddUserPaymentForm: React.FC<AddUserPaymentFormProps> = ({ closemodal, add
             try {
                 const response = await axios.get<IUsersListData>(GET_ALL_USERS_URL, {
                     headers: {
-                        Authorization: `Bearer ${userJwt}`
+                        Authorization: `Bearer ${userJwt ?? ''}`
                     }
                 })
                 setUsers(response.data.usersList)
                 setLoadedUsers(true)
-            } catch (err) {
-                setError('Error al cargar los usuarios.')
+            } catch (error: unknown) {
+                if (axios.isAxiosError(error)) {
+                    setError(error.message)
+                } else {
+                    setError('Error al cargar los usuarios.')
+                }
                 setLoadUsersError(true)
             }
         }
@@ -102,7 +106,7 @@ const AddUserPaymentForm: React.FC<AddUserPaymentFormProps> = ({ closemodal, add
             // Sending the payment request
             const response = await axios.post<ReceivedCreatedPayment>(MAKE_PYAMENT_URL, values, {
                 headers: {
-                    Authorization: `Bearer ${userJwt}`
+                    Authorization: `Bearer ${userJwt ?? ''}`
                 }
             })
 
@@ -146,18 +150,25 @@ const AddUserPaymentForm: React.FC<AddUserPaymentFormProps> = ({ closemodal, add
                                 isInvalid={formik.touched.userDni && !!formik.errors.userDni}
                                 disabled={!loadedUsers || loadUsersError} // Deshabilitar si no están cargados o hay error
                             >
-                                {/* Mostrar mensaje dinámico basado en el estado */}
-                                {!loadedUsers ? (
-                                    <option value="" disabled>
-                                        Cargando usuarios...
-                                    </option>
-                                ) : loadUsersError ? (
-                                    <option value="" disabled>
-                                        Error al cargar usuarios
-                                    </option>
-                                ) : (
-                                    <option value="">Seleccionar usuario</option>
-                                )}
+                                {/* Mostrar el mensaje dinámico basado en el estado */}
+                                {(() => {
+                                    if (loadUsersError) {
+                                        return (
+                                            <option value="" disabled>
+                                                Error al cargar usuarios
+                                            </option>
+                                        )
+                                    }
+                                    if (!loadedUsers) {
+                                        return (
+                                            <option value="" disabled>
+                                                Cargando usuarios...
+                                            </option>
+                                        )
+                                    }
+                                    return <option value="">Seleccionar usuario</option>
+                                })()}
+
                                 {/* Listar los usuarios si están cargados */}
                                 {loadedUsers &&
                                     users.map((user) => (
@@ -238,8 +249,10 @@ const AddUserPaymentForm: React.FC<AddUserPaymentFormProps> = ({ closemodal, add
                         <StyledSubmitButton type="submit" variant="primary" disabled={loading || !formik.isValid || !formik.dirty}>
                             {loading ? (
                                 <SpinnerTextWrapper>
-                                    <Spinner animation="border" role="status" />
-                                    Añadiendo...
+                                    <output>
+                                        <Spinner animation="border" />
+                                        Añadiendo...
+                                    </output>
                                 </SpinnerTextWrapper>
                             ) : (
                                 'Añadir Pago'

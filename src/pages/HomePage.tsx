@@ -264,7 +264,7 @@ const MemberActivitiesArticle3 = styled(MemberActivitiesArticle)`
     grid-area: memberActivitiesArticle3;
 `
 
-const HomePage = (): JSX.Element => {
+const HomePage = (): React.JSX.Element => {
     usePageTitle('Xadrez Narón')
     return (
         <MainContainerStyled>

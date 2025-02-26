@@ -112,7 +112,7 @@ const sectionComponents: Record<ProfileSection, React.FC<{ changePage: (section:
     [ProfileSection.MembersResources]: MembersResourcesPage
 }
 
-const ProfilePage = (): JSX.Element => {
+const ProfilePage = (): React.JSX.Element => {
     const { userProfile, error } = useUserProfile()
     const [profilePage, setProfilePage] = useState<ProfileSection>(ProfileSection.UserPage)
     const [sidebarSection, setSidebarSection] = useState<ProfileSection>(ProfileSection.UserPage)
@@ -124,9 +124,13 @@ const ProfilePage = (): JSX.Element => {
     useScrollTop(profilePage)
 
     useEffect(() => {
-        const handleResize = () => setIsMobile(window.innerWidth <= 768)
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768)
+        }
         window.addEventListener('resize', handleResize)
-        return () => window.removeEventListener('resize', handleResize)
+        return () => {
+            window.removeEventListener('resize', handleResize)
+        }
     }, [])
 
     useEffect(() => {
@@ -135,7 +139,9 @@ const ProfilePage = (): JSX.Element => {
             setIsLoading(!userProfile && !error)
         }, 300)
 
-        return () => clearTimeout(timer)
+        return () => {
+            clearTimeout(timer)
+        }
     }, [userProfile, error])
 
     const changePage = (newSection: ProfileSection) => {
@@ -146,8 +152,7 @@ const ProfilePage = (): JSX.Element => {
 
     const renderProfileContent = () => {
         if (error) return <p>{error}</p>
-        if (CurrentPageComponent) return <CurrentPageComponent changePage={changePage} />
-        return null
+        return <CurrentPageComponent changePage={changePage} />
     }
 
     if (isLoading) {

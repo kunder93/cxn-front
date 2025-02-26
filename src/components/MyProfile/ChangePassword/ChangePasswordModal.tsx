@@ -41,7 +41,7 @@ const ModalHeaderStyled = styled(Modal.Header)`
     border-bottom: 1px solid #0056b3;
 `
 
-const ChangePasswordModal = (props: ChangePasswordModalProps): JSX.Element => {
+const ChangePasswordModal = (props: ChangePasswordModalProps): React.JSX.Element => {
     const formRef = useRef<FormikProps<ChangePasswordFormValues>>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [formIsValid, setFormIsValid] = useState(false)

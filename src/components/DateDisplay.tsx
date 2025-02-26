@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react'
  * A React functional component that displays the current date and time,
  * updating every second.
  *
- * @returns {JSX.Element} The rendered component showing the current date and time.
+ * @returns {React.JSX.Element} The rendered component showing the current date and time.
  */
-const DateDisplay = (): JSX.Element => {
+const DateDisplay = (): React.JSX.Element => {
     const [date, setDate] = useState('')
 
     /**
@@ -24,7 +24,7 @@ const DateDisplay = (): JSX.Element => {
         }, 1000)
 
         // Cleanup function to clear the interval when the component unmounts
-        return () => clearInterval(interval)
+        return () => { clearInterval(interval); }
     }, [])
 
     return (

@@ -35,8 +35,6 @@ const AddBookForm: React.FC<AddBookFormProps> = () => {
             }
 
             await axios.post<IBook>(LIBRARY_URL, bookData)
-
-            //updateBooksList(bookData);
         } catch (error) {
             if (isAxiosError(error)) {
                 console.error(error)
@@ -50,7 +48,7 @@ const AddBookForm: React.FC<AddBookFormProps> = () => {
     return (
         <Container>
             <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={CreateBookValidationSchema} validateOnChange={true}>
-                {({ errors }) => (
+                {({ errors, values }) => (
                     <BootstrapForm as={Form}>
                         <Container as={BootstrapForm.Group}>
                             <Row>
@@ -91,33 +89,63 @@ const AddBookForm: React.FC<AddBookFormProps> = () => {
                             </Row>
 
                             <FieldArray name="authorsList">
-                                {({ push, remove, form }) => (
+                                {(arrayHelpers) => (
                                     <div>
-                                        {form.values.authorsList.map((_author: IAuthor, index: number) => (
-                                            <div className="row" key={index}>
+                                        {values.authorsList.map((_author: IAuthor, index: number) => (
+                                            <div className="row" key={_author.firstName + _author.lastName}>
                                                 <div className="col">
-                                                    <label htmlFor={`authorsList.${index}.firstName`}>Nombre</label>
-                                                    <Field name={`authorsList.${index}.firstName`} placeholder="Nombre del autor" type="text" />
-                                                    <ErrorMessage name={`authorsList.${index}.firstName`} component="div" className="field-error" />
+                                                    <label htmlFor={`authorsList.${index.toLocaleString()}.firstName`}>Nombre</label>
+                                                    <Field
+                                                        name={`authorsList.${index.toLocaleString()}.firstName`}
+                                                        placeholder="Nombre del autor"
+                                                        type="text"
+                                                    />
+                                                    <ErrorMessage
+                                                        name={`authorsList.${index.toLocaleString()}.firstName`}
+                                                        component="div"
+                                                        className="field-error"
+                                                    />
                                                 </div>
                                                 <div className="col">
-                                                    <label htmlFor={`authorsList.${index}.lastName`}>Apellidos</label>
-                                                    <Field name={`authorsList.${index}.lastName`} placeholder="Apellidos del autor" type="text" />
-                                                    <ErrorMessage name={`authorsList.${index}.lastName`} component="div" className="field-error" />
+                                                    <label htmlFor={`authorsList.${index.toLocaleString()}.lastName`}>Apellidos</label>
+                                                    <Field
+                                                        name={`authorsList.${index.toLocaleString()}.lastName`}
+                                                        placeholder="Apellidos del autor"
+                                                        type="text"
+                                                    />
+                                                    <ErrorMessage
+                                                        name={`authorsList.${index.toLocaleString()}.lastName`}
+                                                        component="div"
+                                                        className="field-error"
+                                                    />
                                                 </div>
                                                 <div className="col">
-                                                    <label htmlFor={`authorsList.${index}.nationality`}>Nacionalidad</label>
-                                                    <Field name={`authorsList.${index}.nationality`} placeholder="Nacionalidad del autor" type="text" />
-                                                    <ErrorMessage name={`authorsList.${index}.nationality`} component="div" className="field-error" />
+                                                    <label htmlFor={`authorsList.${index.toLocaleString()}.nationality`}>Nacionalidad</label>
+                                                    <Field
+                                                        name={`authorsList.${index.toLocaleString()}.nationality`}
+                                                        placeholder="Nacionalidad del autor"
+                                                        type="text"
+                                                    />
+                                                    <ErrorMessage
+                                                        name={`authorsList.${index.toLocaleString()}.nationality`}
+                                                        component="div"
+                                                        className="field-error"
+                                                    />
                                                 </div>
                                                 <div className="col">
-                                                    <Button type="button" className="secondary" onClick={() => remove(index)}>
+                                                    <Button type="button" className="secondary" onClick={() => arrayHelpers.remove(index)}>
                                                         X
                                                     </Button>
                                                 </div>
                                             </div>
                                         ))}
-                                        <Button type="button" className="secondary" onClick={() => push({ firstName: '', lastName: '', nationality: '' })}>
+                                        <Button
+                                            type="button"
+                                            className="secondary"
+                                            onClick={() => {
+                                                arrayHelpers.push({ firstName: '', lastName: '', nationality: '' })
+                                            }}
+                                        >
                                             Añadir autor
                                         </Button>
                                     </div>
