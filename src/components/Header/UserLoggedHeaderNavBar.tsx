@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Dropdown, Nav } from 'react-bootstrap'
 import { PersonCircle } from 'react-bootstrap-icons'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { removeJwt } from '../../store/slices/user'
+import { removeJwt, removeUserProfile } from '../../store/slices/user'
 import { ROUTES } from '../../resources/routes-constants'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
@@ -88,11 +88,13 @@ const UserLoggedHeaderNavBar = (): React.JSX.Element => {
     const userProfile: UserProfile = useAppSelector((state) => state.users.userProfile)
 
     const logoutHandler = async () => {
-        dispatch(removeJwt())
         try {
+            dispatch(removeJwt())
+            dispatch(removeUserProfile())
             await navigate(ROUTES.HOMEPAGE_ROUTE)
         } catch (error) {
-            console.error('Navigation error:', error)
+            console.error('Logout failed:', error)
+            // Consider showing an error notification to the user
         }
     }
 
@@ -125,13 +127,7 @@ const UserLoggedHeaderNavBar = (): React.JSX.Element => {
                     <Dropdown.Item as={Link} to={ROUTES.MYPROFILE_ROUTE}>
                         Mi Perfil
                     </Dropdown.Item>
-                    <Dropdown.Item
-                        onClick={() => async () => {
-                            await logoutHandler()
-                        }}
-                    >
-                        Salir
-                    </Dropdown.Item>
+                    <Dropdown.Item onClick={logoutHandler as unknown as (e: React.MouseEvent) => void}>Salir</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
 
