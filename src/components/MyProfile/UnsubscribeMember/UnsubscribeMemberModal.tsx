@@ -59,7 +59,7 @@ const WarningContainer = styled.div`
     }
 `
 
-const UnsubscribeAdvertence = (): JSX.Element => {
+const UnsubscribeAdvertence = (): React.JSX.Element => {
     return (
         <WarningContainer>
             <p>
@@ -72,7 +72,7 @@ const UnsubscribeAdvertence = (): JSX.Element => {
     )
 }
 
-const UnsubscribeMemberModal = (props: UnsubscribeMemberModalProps): JSX.Element => {
+const UnsubscribeMemberModal = (props: UnsubscribeMemberModalProps): React.JSX.Element => {
     // Function to close the modal
     const closeModal = () => {
         if (props.onHide) {

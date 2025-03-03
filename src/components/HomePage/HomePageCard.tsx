@@ -90,14 +90,14 @@ const HomePageCard: React.FC<HomePageCardProps> = (props) => {
     const [showModal, setShowModal] = React.useState(false)
     const [modalContent, setModalContent] = React.useState<ReactElement | null>(null)
 
-    function buttonClickHandler(buttonProps: MyButtonProps): void {
+    async function buttonClickHandler(buttonProps: MyButtonProps): Promise<void> {
         switch (buttonProps.buttonAction) {
             case ButtonOptions.MODAL:
                 setShowModal(true)
                 setModalContent(buttonProps.component ?? null)
                 break
             case ButtonOptions.NAVIGATION:
-                navigate(buttonProps.navigationUrl ?? '')
+                await navigate(buttonProps.navigationUrl ?? '') // Await navigate to ensure the promise resolves
                 break
             default:
                 break
@@ -110,15 +110,23 @@ const HomePageCard: React.FC<HomePageCardProps> = (props) => {
                 <CardHeaderImage variant="top" src={props.imageSrc} alt={props.imageAlt} loading="lazy" />
                 <StyledCardBody>
                     <StyledCardBodyTitle>{props.cardTitle}</StyledCardBodyTitle>
-                    {props.cardText.map((text, index) => (
-                        <StyledCardText key={index}>{text}</StyledCardText>
+                    {props.cardText.map((text) => (
+                        <StyledCardText key={text}>{text}</StyledCardText>
                     ))}
                 </StyledCardBody>
                 <CardFooter>
-                    {props.buttonProps.map((button, index) => (
+                    {props.buttonProps.map((button) => (
                         <StyledFooterButton
-                            key={index}
-                            onClick={() => buttonClickHandler(button)}
+                            key={button.buttonText}
+                            onClick={() => {
+                                buttonClickHandler(button)
+                                    .then(() => {
+                                        // Optionally handle success
+                                    })
+                                    .catch((error: unknown) => {
+                                        console.error('Error handling button click:', error)
+                                    })
+                            }}
                             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#af9919')}
                             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#857415')}
                         >
@@ -130,7 +138,9 @@ const HomePageCard: React.FC<HomePageCardProps> = (props) => {
 
             <HomePageCardModal
                 show={showModal}
-                closeModal={() => setShowModal(false)}
+                closeModal={() => {
+                    setShowModal(false)
+                }}
                 modalContentComponent={modalContent ?? null} // Content for render inner modal.
                 ariaLabel={props.modalAriaLabel}
             />

@@ -45,10 +45,22 @@ const LibraryManagerPage: React.FC = () => {
 
     return (
         <div>
-            <Button onClick={() => setModalShow(true)}>Añadir libro</Button>
+            <Button
+                onClick={() => {
+                    setModalShow(true)
+                }}
+            >
+                Añadir libro
+            </Button>
 
             {loaded && data && <LibraryTable data={booksList} />}
-            <CreateBookModal show={modalShow} onHide={() => setModalShow(false)} updateBooksList={updateBooksList} />
+            <CreateBookModal
+                show={modalShow}
+                onHide={() => {
+                    setModalShow(false)
+                }}
+                updateBooksList={updateBooksList}
+            />
         </div>
     )
 }

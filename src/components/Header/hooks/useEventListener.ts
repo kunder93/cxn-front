@@ -10,15 +10,19 @@ const useEventListener = (eventName: string, handler: (event: Event) => void, el
 
     useEffect(() => {
         //el elemento soporta addEventListener
-        const isSupported = element && 'addEventListener' in element
+        const isSupported = 'addEventListener' in element
         if (!isSupported) return
 
         // event listener llama a la referencia del handler
         const eventListener: EventListener = (event: Event) => savedHandler.current?.(event)
 
         // Agregar evento
-        const addEventListener = (evt: string, listener: EventListener) => element.addEventListener(evt, listener)
-        const removeEventListener = (evt: string, listener: EventListener) => element.removeEventListener(evt, listener)
+        const addEventListener = (evt: string, listener: EventListener) => {
+            element.addEventListener(evt, listener)
+        }
+        const removeEventListener = (evt: string, listener: EventListener) => {
+            element.removeEventListener(evt, listener)
+        }
 
         addEventListener(eventName, eventListener)
 

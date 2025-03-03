@@ -11,7 +11,8 @@ import {
     GET_ALL_TOURNAMENT_PARTICIPANTS,
     GET_ALL_USERS_PAYMENTS_URL,
     GET_USER_PAYMENTS_URL,
-    GET_USER_PROFILE_URL
+    GET_USER_PROFILE_URL,
+    PAYMENT_URL
 } from '../resources/server_urls'
 import { LoginFormValues } from '../components/LoginForm'
 import { ChangeKindMemberValues } from '../components/MembersManager/ChangeKindMember/ChangeKindMemberForm'
@@ -35,7 +36,7 @@ interface AxiosResponseData<T> {
     error: AxiosError | null
 }
 
-const useAxios = <T, P = unknown>(url: string, method: Method = 'GET', payload?: P | null) => {
+const useAxios = <T>(url: string, method: Method = 'GET', payload?: unknown) => {
     const userJwt = useAppSelector<string>((state) => state.users.jwt)
     const [response, setResponse] = useState<AxiosResponseData<T>>({
         data: null,
@@ -105,19 +106,19 @@ export const useAxiosGetChessQuestions = () => {
 }
 
 export const useAxiosChangeUserEmail = (payload: ChangeEmailAxiosValues) => {
-    return useAxios<UserProfile, ChangeEmailAxiosValues>(CHANGE_MEMBER_EMAIL_URL, 'PATCH', payload)
+    return useAxios<UserProfile>(CHANGE_MEMBER_EMAIL_URL, 'PATCH', payload)
 }
 
 export const useAxiosChangeMemberRoles = (payload: ChangeMemberRolesValues) => {
-    return useAxios<UserProfile, ChangeMemberRolesValues>(CHANGE_MEMBER_ROLES_URL, 'PATCH', payload)
+    return useAxios<UserProfile>(CHANGE_MEMBER_ROLES_URL, 'PATCH', payload)
 }
 
 export const useAxiosChangeKindMember = (payload: ChangeKindMemberValues) => {
-    return useAxios<UserProfile, ChangeKindMemberValues>(CHANGE_KIND_MEMBER_URL, 'PATCH', payload)
+    return useAxios<UserProfile>(CHANGE_KIND_MEMBER_URL, 'PATCH', payload)
 }
 
 export const useAxiosGetSubCountriesList = (countryNumericCode: number) => {
-    return useAxios<SubCountriesListAxiosResponse>(`${GET_SUBCOUNTRIES_URL}/${countryNumericCode}`)
+    return useAxios<SubCountriesListAxiosResponse>(`${GET_SUBCOUNTRIES_URL}/${countryNumericCode.toString()}`)
 }
 
 export const useAxiosGetCountriesList = () => {
@@ -125,7 +126,7 @@ export const useAxiosGetCountriesList = () => {
 }
 
 export const useAxiosPostLogin = (url: string, payload: LoginFormValues) => {
-    return useAxios<string, LoginFormValues>(url, 'POST', payload)
+    return useAxios<string>(url, 'POST', payload)
 }
 
 export const useAxiosGetAllUsersData = () => {
@@ -148,6 +149,10 @@ export const useAxiosGetUserPayments = (userDni: string) => {
     return useAxios<IPaymentDetails[]>(GET_USER_PAYMENTS_URL + userDni)
 }
 
+export const useAxiosGetOwnPayments = () => {
+    return useAxios<IPaymentDetails[]>(PAYMENT_URL)
+}
+
 export const useAxiosGetUserData = (userDni: string) => {
     const [data, setData] = useState<UserProfile | null>(null)
     const [loaded, setLoaded] = useState(false)
@@ -157,7 +162,7 @@ export const useAxiosGetUserData = (userDni: string) => {
         let isMounted = true
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${GET_USER_PROFILE_URL}/${userDni}`, {
+                const response = await axios.get<UserProfile>(`${GET_USER_PROFILE_URL}/${userDni}`, {
                     headers: { Authorization: 'Bearer ' + userJwt }
                 })
                 if (isMounted) {

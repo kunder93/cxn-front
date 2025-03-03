@@ -24,9 +24,9 @@ const NoQuestionsMessage = styled.p`
  * Manages and displays chess questions submitted by visitors on the website.
  *
  * @component
- * @returns {JSX.Element} The rendered ChessQuestionsManager component.
+ * @returns {React.JSX.Element} The rendered ChessQuestionsManager component.
  */
-const ChessQuestionsManager = (): JSX.Element => {
+const ChessQuestionsManager = (): React.JSX.Element => {
     const { data, error, loaded } = useAxiosGetChessQuestions()
     const [chessQuestionsList, setChessQuestionsList] = useState<IChessQuestionsList>({ chessQuestionList: [] })
 
@@ -37,7 +37,7 @@ const ChessQuestionsManager = (): JSX.Element => {
     }, [loaded, data])
 
     if (error) {
-        return <ErrorMessage variant="danger">Error: {error.message ?? 'Ocurrió un error al cargar las preguntas.'}</ErrorMessage>
+        return <ErrorMessage variant="danger">Error: {error.message}</ErrorMessage>
     }
 
     if (!loaded) {
@@ -47,7 +47,7 @@ const ChessQuestionsManager = (): JSX.Element => {
     return (
         <>
             <Title>Gestión de preguntas realizadas por visitantes de la web:</Title>
-            {chessQuestionsList?.chessQuestionList.length ? (
+            {chessQuestionsList.chessQuestionList.length ? (
                 <ChessQuestionsTable data={chessQuestionsList} />
             ) : (
                 <NoQuestionsMessage>No hay preguntas disponibles.</NoQuestionsMessage>

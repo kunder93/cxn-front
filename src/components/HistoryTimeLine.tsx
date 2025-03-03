@@ -26,7 +26,7 @@ interface TimelineProps {
  * Timeline component that displays a list of events.
  *
  * @param {TimelineProps} props - The props for the Timeline component.
- * @returns {JSX.Element} The rendered Timeline component.
+ * @returns {React.JSX.Element} The rendered Timeline component.
  */
 const Timeline = ({ events }: TimelineProps) => {
     return (

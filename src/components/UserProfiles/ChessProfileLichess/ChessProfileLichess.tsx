@@ -89,7 +89,7 @@ const ChessProfileLichess: React.FC = () => {
                 {},
                 {
                     headers: {
-                        Authorization: `Bearer ${userJwt}`
+                        Authorization: `Bearer ${userJwt ?? ''}`
                     }
                 }
             )

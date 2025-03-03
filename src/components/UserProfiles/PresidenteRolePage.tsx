@@ -40,9 +40,9 @@ const sections: ProfileMenuSection[] = [
  *
  * @component
  * @param {PresidentRolePageProps} props - The properties for the PresidenteRolePage.
- * @returns {JSX.Element} The rendered PresidenteRolePage component.
+ * @returns {React.JSX.Element} The rendered PresidenteRolePage component.
  */
-const PresidenteRolePage: React.FC<RolePageProps> = ({ changePage }: { changePage: (section: ProfileSection) => void }): JSX.Element => {
+const PresidenteRolePage: React.FC<RolePageProps> = ({ changePage }: { changePage: (section: ProfileSection) => void }): React.JSX.Element => {
     const [hoveredButton, setHoveredButton] = useState<number | null>(null)
 
     return (

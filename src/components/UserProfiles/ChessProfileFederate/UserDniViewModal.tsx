@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { FaDownload } from 'react-icons/fa'
 
 // Componentes estilizados
-const ImageContainer = styled.div`
+const ImageContainer = styled.fieldset`
     display: flex;
     justify-content: center;
     gap: 20px;
@@ -94,21 +94,24 @@ interface DniImageCardProps {
 }
 
 const DniImageCard: React.FC<DniImageCardProps> = ({ imageData, label, userDni, onDownload, onExpand }) => {
-    const handleKeyPress = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter') onExpand()
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            onExpand()
+        }
     }
 
     return (
         <DniCard>
-            <DniImage
-                src={`data:image/png;base64,${imageData}`}
-                alt={`${label} del DNI ${userDni}`}
+            <button
                 onClick={onExpand}
-                role="button"
+                type="button" // Use a <button> element directly
                 tabIndex={0}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyDown}
                 aria-label={`Ampliar imagen del ${label}`}
-            />
+                style={{ background: 'none', border: 'none', padding: 0 }} // Remove default button styles if needed
+            >
+                <DniImage src={`data:image/png;base64,${imageData}`} alt={`${label} del DNI ${userDni}`} aria-label={`Ampliar imagen del ${label}`} />
+            </button>
             <LabelContainer>
                 <DownloadButton onClick={onDownload} aria-label={`Descargar ${label}`}>
                     <FaDownload aria-hidden="true" />
@@ -140,20 +143,28 @@ export const UserDniViewModal: React.FC<UserDniViewModalProps> = ({ userDni, sho
 
         return (
             <>
-                <ImageContainer role="group" aria-label="Imágenes del documento">
+                <ImageContainer aria-label="Imágenes del documento">
                     <DniImageCard
                         imageData={dniImages.frontImage}
                         label="Anverso"
                         userDni={userDni}
-                        onDownload={() => handleDownload(dniImages.frontImage, 'anverso')}
-                        onExpand={() => setExpandedImage(`data:image/png;base64,${dniImages.frontImage}`)}
+                        onDownload={() => {
+                            handleDownload(dniImages.frontImage, 'anverso')
+                        }}
+                        onExpand={() => {
+                            setExpandedImage(`data:image/png;base64,${dniImages.frontImage}`)
+                        }}
                     />
                     <DniImageCard
                         imageData={dniImages.backImage}
                         label="Reverso"
                         userDni={userDni}
-                        onDownload={() => handleDownload(dniImages.backImage, 'reverso')}
-                        onExpand={() => setExpandedImage(`data:image/png;base64,${dniImages.backImage}`)}
+                        onDownload={() => {
+                            handleDownload(dniImages.backImage, 'reverso')
+                        }}
+                        onExpand={() => {
+                            setExpandedImage(`data:image/png;base64,${dniImages.backImage}`)
+                        }}
                     />
                 </ImageContainer>
                 <ExitButton variant="secondary" onClick={onHide} aria-label="Cerrar visor de DNI">
@@ -172,8 +183,8 @@ export const UserDniViewModal: React.FC<UserDniViewModalProps> = ({ userDni, sho
                 <Modal.Body>
                     {isLoading && (
                         <div className="text-center" aria-live="polite">
-                            <Spinner animation="border" role="status">
-                                <span className="visually-hidden">Cargando imágenes...</span>
+                            <Spinner animation="border">
+                                <output aria-live="polite">Cargando imágenes...</output>
                             </Spinner>
                         </div>
                     )}
@@ -188,7 +199,14 @@ export const UserDniViewModal: React.FC<UserDniViewModalProps> = ({ userDni, sho
                 </Modal.Body>
             </Modal>
 
-            <Modal show={!!expandedImage} onHide={() => setExpandedImage(null)} centered aria-labelledby="expanded-image-title">
+            <Modal
+                show={!!expandedImage}
+                onHide={() => {
+                    setExpandedImage(null)
+                }}
+                centered
+                aria-labelledby="expanded-image-title"
+            >
                 <Modal.Header closeButton>
                     <Modal.Title id="expanded-image-title">DNI {userDni} - Vista ampliada</Modal.Title>
                 </Modal.Header>

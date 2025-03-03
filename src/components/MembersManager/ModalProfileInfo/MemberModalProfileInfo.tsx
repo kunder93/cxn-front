@@ -11,7 +11,7 @@ interface MemberModalProfileInfoProps extends ModalProps {
     row: UserProfile | undefined
 }
 
-const MemberModalProfileInfo = (props: MemberModalProfileInfoProps): JSX.Element => {
+const MemberModalProfileInfo = (props: MemberModalProfileInfoProps): React.JSX.Element => {
     return (
         <>
             {props.row ? (

@@ -2,7 +2,7 @@ import LoginForm from '../components/LoginForm'
 import { MainContainer } from '../components/SignUpSingInCommonStyles'
 import usePageTitle from '../components/Common/hooks/usePageTitle'
 
-const LoginPage = (): JSX.Element => {
+const LoginPage = (): React.JSX.Element => {
     usePageTitle('CXN Entrar como socio')
 
     return (

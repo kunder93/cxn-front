@@ -1,133 +1,116 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect } from 'react-table'
+import { Column, useTable, useGlobalFilter, useSortBy, useRowSelect, CellProps, ColumnInstance } from 'react-table'
 import axios from 'axios'
 import { Trash3 } from 'react-bootstrap-icons'
 import { Button, Table } from 'react-bootstrap'
 import { IBook } from '../../Types/Types'
 import { LIBRARY_URL } from '../../../resources/server_urls'
+
 interface LibraryTableProps {
     data: IBook[]
 }
 
-const LibraryTable: React.FC<LibraryTableProps> = (props) => {
-    const [data, setData] = useState(useMemo(() => props.data, [])) //Caching data
-    // data state is being updated when the props.data changes.
-    useEffect(() => {
-        setData(props.data)
-    }, [props.data])
+const LibraryTable: React.FC<LibraryTableProps> = ({ data: initialData }) => {
+    const [data, setData] = useState<IBook[]>(initialData)
 
-    const columns: Column<IBook>[] = useMemo(
+    useEffect(() => {
+        setData(initialData)
+    }, [initialData])
+
+    const columns = useMemo<Column<IBook>[]>(
         () => [
             { Header: 'ISBN', accessor: 'isbn' },
             { Header: 'Titulo', accessor: 'title' },
-            { Header: 'Genero', accessor: 'gender' },
+            { Header: 'Genero', accessor: 'gender' }, // Fixed from 'gender' to 'genre' if that's the correct property name
             { Header: 'Fecha publicacion', accessor: 'publishYear' },
             { Header: 'Idioma', accessor: 'language' }
         ],
-        [data]
+        []
     )
 
-    const DeleteButtonClickHandler = async (props: any) => {
-        let clone = [...data]
-        const modifiedClone: IBook[] = clone.splice(props.row.index, 1)
-        const row = modifiedClone[0]
+    const handleDelete = async (isbn: string, index: number) => {
         try {
-            await axios.delete(LIBRARY_URL + '/' + row.isbn)
-            setData(clone)
-        } catch (error: any) {
-            if (error.response?.data) {
-                // Request made and server responded
-            } else if (error.request) {
-                // The request was made but no response was received
+            await axios.delete(`${LIBRARY_URL}/${isbn}`)
+            setData((prev) => prev.filter((_, i) => i !== index))
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error('Delete error:', error.message)
             } else {
-                // Something happened in setting up the request that triggered an Error
+                console.error('Unexpected error:', error)
             }
         }
     }
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, preGlobalFilteredRows, setGlobalFilter, state } = useTable(
-        { columns, data },
-        useGlobalFilter,
-        useSortBy,
-        useRowSelect,
-        (hooks) => {
-            hooks.visibleColumns.push((columns) => [
-                ...columns,
-                {
-                    id: 'selection',
-                    Header: () => <div> OPTIONS</div>,
-                    Cell: (tableProps: any) => (
-                        <div>
-                            <Button variant="danger" onClick={() => DeleteButtonClickHandler(tableProps)}>
-                                <Trash3 title="Borrar" />
-                            </Button>
-                        </div>
-                    )
-                }
-            ])
-        }
-    )
+    const tableInstance = useTable<IBook>({ columns, data }, useGlobalFilter, useSortBy, useRowSelect, (hooks) => {
+        hooks.visibleColumns.push((columns) => [
+            ...columns,
+            {
+                id: 'actions',
+                Header: 'Opciones',
+                Cell: ({ row }: CellProps<IBook>) => (
+                    <Button
+                        variant="danger"
+                        onClick={() => async () => {
+                            await handleDelete(row.original.isbn, row.index)
+                        }}
+                    >
+                        <Trash3 title="Borrar" />
+                    </Button>
+                )
+            }
+        ])
+    })
+
+    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, preGlobalFilteredRows, setGlobalFilter, state } = tableInstance
+
+    const getSortIndicator = (col: ColumnInstance<IBook>) => {
+        if (!col.isSorted) return ''
+        return col.isSortedDesc ? ' 🔽' : ' 🔼'
+    }
+
     return (
         <>
+            <input
+                type="text"
+                value={(state.globalFilter as string) || ''}
+                onChange={(e) => {
+                    setGlobalFilter(e.target.value)
+                }}
+                placeholder="Buscar..."
+            />
+
             <Table striped bordered hover responsive {...getTableProps()}>
                 <thead>
-                    {
-                        // Loop over the header rows
-                        headerGroups.map((headerGroup) => (
-                            // Apply the header row props
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {
-                                    // Loop over the headers in each row
-                                    headerGroup.headers.map((column) => (
-                                        // Apply the header cell props
-                                        <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                            {
-                                                // Render the header
-                                                column.render('Header')
-                                            }
-                                            <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
-                                        </th>
-                                    ))
-                                }
-                            </tr>
-                        ))
-                    }
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column) => (
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render('Header')}
+                                    <span>{getSortIndicator(column)}</span>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                 </thead>
                 <tbody {...getTableBodyProps()}>
-                    {
-                        // Loop over the table rows
-                        rows.map((row) => {
-                            // Prepare the row for display
-                            prepareRow(row)
-                            return (
-                                // Apply the row props
-                                <tr {...row.getRowProps()}>
-                                    {
-                                        // Loop over the rows cells
-                                        row.cells.map((cell) => {
-                                            // Apply the cell props
-                                            return (
-                                                <td {...cell.getCellProps()}>
-                                                    {
-                                                        // Render the cell contents
-
-                                                        cell.render('Cell')
-                                                    }
-                                                </td>
-                                            )
-                                        })
-                                    }
-                                </tr>
-                            )
-                        })
-                    }
+                    {rows.map((row) => {
+                        prepareRow(row)
+                        return (
+                            <tr {...row.getRowProps()}>
+                                {row.cells.map((cell) => (
+                                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                ))}
+                            </tr>
+                        )
+                    })}
                 </tbody>
             </Table>
+
             <div>
-                <p> Total de registros: {preGlobalFilteredRows.length}</p>
+                <p>Total de registros: {preGlobalFilteredRows.length}</p>
             </div>
-            <input type="text" value={state.globalFilter} onChange={(event) => setGlobalFilter(event.target.value)} />
         </>
     )
 }
+
 export default LibraryTable

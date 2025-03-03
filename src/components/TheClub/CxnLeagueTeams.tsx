@@ -92,7 +92,7 @@ const WrapperStyled = styled.div`
  * - A list of team information cards.
  * - Footer with league start and end dates.
  *
- * @returns {JSX.Element} - A React component that displays the teams in the league and their details.
+ * @returns {React.JSX.Element} - A React component that displays the teams in the league and their details.
  */
 const CxnLeagueTeams: React.FC = () => {
     const leagueStartDate = 'Febrero'

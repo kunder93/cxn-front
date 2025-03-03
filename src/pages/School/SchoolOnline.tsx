@@ -123,7 +123,7 @@ const accordionData: BenefitsAccordionProps = {
     chessQuestionsFormCategory: 'CLASES ONLINE'
 }
 
-const SchoolOnline = (): JSX.Element => {
+const SchoolOnline = (): React.JSX.Element => {
     usePageTitle('CXN Escuela online')
     return (
         <MainContainerStyled>

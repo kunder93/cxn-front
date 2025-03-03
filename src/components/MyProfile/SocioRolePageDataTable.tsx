@@ -167,11 +167,11 @@ const ProfileActionButtonsContainer = styled.div`
     }
 `
 
-const SocioRolePageDataTable = (): JSX.Element => {
+const SocioRolePageDataTable = (): React.JSX.Element => {
     const { modalType, openModal, closeModal } = useModal()
     const userProfile: UserProfile = useAppSelector((state) => state.users.userProfile)
     const profileImage = useAppSelector((state) => state.users.profileImage) // Fetch profile image separately
-    const isInitialProfileImage = profileImage?.url === '' && profileImage?.stored === false
+    const isInitialProfileImage = profileImage.url === '' && !(profileImage.stored)
 
     return (
         <StyledContainer id="My profile page container">
@@ -210,16 +210,16 @@ const SocioRolePageDataTable = (): JSX.Element => {
                 <ProfileActionButtonsContainer>
                     <ButtonRow>
                         <PersonalImageButtonChanger />
-                        <Button onClick={() => openModal('email')} variant="secondary">
+                        <Button onClick={() => { openModal('email'); }} variant="secondary">
                             Cambiar correo
                         </Button>
-                        <Button onClick={() => openModal('password')} variant="secondary">
+                        <Button onClick={() => { openModal('password'); }} variant="secondary">
                             Cambiar contraseña
                         </Button>
-                        <Button onClick={() => openModal('unsubscribe')} variant="danger">
+                        <Button onClick={() => { openModal('unsubscribe'); }} variant="danger">
                             Darse de baja
                         </Button>
-                        <Button onClick={() => openModal('payments')} variant="info">
+                        <Button onClick={() => { openModal('payments'); }} variant="info">
                             Sección de pagos
                         </Button>
                     </ButtonRow>

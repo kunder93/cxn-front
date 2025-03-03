@@ -116,8 +116,12 @@ const ClassBenefitsCarousel = ({ benefits }: Props) => {
         setIndex(newIndex)
     }
 
-    const handleNextStep = () => handleStep(1)
-    const handlePreviousStep = () => handleStep(-1)
+    const handleNextStep = () => {
+        handleStep(1)
+    }
+    const handlePreviousStep = () => {
+        handleStep(-1)
+    }
 
     const currentPieceUrl = pieceUrls[index]
 
@@ -136,12 +140,16 @@ const ClassBenefitsCarousel = ({ benefits }: Props) => {
 
             <StyledCarousel fade={false} controls={false} indicators={false} interval={4} activeIndex={index} className="slide">
                 {benefits.map((item, idx) => (
-                    <Carousel.Item key={`item-${item.title}`} aria-roledescription="slide" aria-label={`Slide ${idx + 1} of ${totalItems}`}>
+                    <Carousel.Item
+                        key={`item-${item.title}`}
+                        aria-roledescription="slide"
+                        aria-label={`Slide ${(idx + 1).toString()} of ${totalItems.toString()}`}
+                    >
                         <CarouselItemContainerSection aria-live="polite">
                             <IconStyle src={item.IconUrl} alt={item.IconAlt} />
                             <h4>{item.title}</h4>
                             {item.benefit.map((benefit, pIdx) => (
-                                <div key={`benefit-${idx}-${pIdx}`}>
+                                <div key={`benefit-${idx.toString()}-${pIdx.toString()}`}>
                                     <h5>{benefit.subtitle}</h5>
                                     <p>{benefit.text}</p>
                                 </div>

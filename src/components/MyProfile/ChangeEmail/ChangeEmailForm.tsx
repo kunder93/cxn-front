@@ -122,9 +122,12 @@ const ChangeEmailForm: React.FC<ChangeEmailFormProps> = ({ initialEmail, setButt
                         showNotification('¡Correo cambiado!', NotificationType.Success)
                         await navigate('/')
                     })
-                    .catch((error) => {
-                        // Caso de envío erróneo
-                        showNotification('Error: ' + error, NotificationType.Error)
+                    .catch((error: unknown) => {
+                        if (axios.isAxiosError(error)) {
+                            showNotification('Error: ' + error.message, NotificationType.Error)
+                        } else {
+                            showNotification('Error inesperado.', NotificationType.Error)
+                        }
                     })
                     .finally(() => {
                         setSubmitting(false)

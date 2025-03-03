@@ -55,34 +55,66 @@ const UserProfileNavbar: React.FC<NavbarProps> = ({ roles, currentSection, setPr
 
     return (
         <NavbarContainer>
-            <a href="#" className={currentSection === ProfileSection.UserPage ? 'active' : ''} onClick={() => handleClick(ProfileSection.UserPage)}>
+            <a
+                href="#"
+                className={currentSection === ProfileSection.UserPage ? 'active' : ''}
+                onClick={() => {
+                    handleClick(ProfileSection.UserPage)
+                }}
+            >
                 <BsPerson />
                 <span>Personal</span>
             </a>
             {roles.includes(UserRole.SOCIO) && (
-                <a href="#" className={currentSection === ProfileSection.ChessData ? 'active' : ''} onClick={() => handleClick(ProfileSection.ChessData)}>
+                <a
+                    href="#"
+                    className={currentSection === ProfileSection.ChessData ? 'active' : ''}
+                    onClick={() => {
+                        handleClick(ProfileSection.ChessData)
+                    }}
+                >
                     <FaChessKnight />
                     <span>Ajedrez</span>
                 </a>
             )}
             {roles.includes(UserRole.ADMIN) && (
                 <>
-                    <a href="#" className={currentSection === ProfileSection.President ? 'active' : ''} onClick={() => handleClick(ProfileSection.President)}>
+                    <a
+                        href="#"
+                        className={currentSection === ProfileSection.President ? 'active' : ''}
+                        onClick={() => {
+                            handleClick(ProfileSection.President)
+                        }}
+                    >
                         <BsPeople />
                         <span>Presidente</span>
                     </a>
-                    <a href="#" className={currentSection === ProfileSection.Tesorero ? 'active' : ''} onClick={() => handleClick(ProfileSection.Tesorero)}>
+                    <a
+                        href="#"
+                        className={currentSection === ProfileSection.Tesorero ? 'active' : ''}
+                        onClick={() => {
+                            handleClick(ProfileSection.Tesorero)
+                        }}
+                    >
                         <BsCalendar />
                         <span>Tesorero</span>
                     </a>
-                    <a href="#" className={currentSection === ProfileSection.Secretario ? 'active' : ''} onClick={() => handleClick(ProfileSection.Secretario)}>
+                    <a
+                        href="#"
+                        className={currentSection === ProfileSection.Secretario ? 'active' : ''}
+                        onClick={() => {
+                            handleClick(ProfileSection.Secretario)
+                        }}
+                    >
                         <BsCalendar />
                         <span>Secretario</span>
                     </a>
                     <a
                         href="#"
                         className={currentSection === ProfileSection.MemberCandidate ? 'active' : ''}
-                        onClick={() => handleClick(ProfileSection.MemberCandidate)}
+                        onClick={() => {
+                            handleClick(ProfileSection.MemberCandidate)
+                        }}
                     >
                         <BsClipboardData />
                         <span>Candidato</span>
@@ -93,7 +125,9 @@ const UserProfileNavbar: React.FC<NavbarProps> = ({ roles, currentSection, setPr
                 <a
                     href="#"
                     className={currentSection === ProfileSection.MemberCandidate ? 'active' : ''}
-                    onClick={() => handleClick(ProfileSection.MemberCandidate)}
+                    onClick={() => {
+                        handleClick(ProfileSection.MemberCandidate)
+                    }}
                 >
                     <BsClipboardData />
                     <span>Candidato</span>
@@ -101,11 +135,23 @@ const UserProfileNavbar: React.FC<NavbarProps> = ({ roles, currentSection, setPr
             )}
             {roles.includes(UserRole.PRESIDENTE) && (
                 <>
-                    <a href="#" className={currentSection === ProfileSection.President ? 'active' : ''} onClick={() => handleClick(ProfileSection.President)}>
+                    <a
+                        href="#"
+                        className={currentSection === ProfileSection.President ? 'active' : ''}
+                        onClick={() => {
+                            handleClick(ProfileSection.President)
+                        }}
+                    >
                         <BsPeople />
                         <span>Presidente</span>
                     </a>
-                    <a href="#" className={currentSection === ProfileSection.ChessData ? 'active' : ''} onClick={() => handleClick(ProfileSection.ChessData)}>
+                    <a
+                        href="#"
+                        className={currentSection === ProfileSection.ChessData ? 'active' : ''}
+                        onClick={() => {
+                            handleClick(ProfileSection.ChessData)
+                        }}
+                    >
                         <FaChessKnight />
                         <span>Ajedrez</span>
                     </a>

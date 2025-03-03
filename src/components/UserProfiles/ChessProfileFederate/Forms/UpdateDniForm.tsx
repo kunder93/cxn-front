@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { Formik, Form, FormikState, FormikErrors, FormikTouched } from 'formik'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import { Form as BootstrapForm, Spinner } from 'react-bootstrap'
 import { dniValidationSchema } from './DniFilesValidation'
 import { ButtonsWrapper, ResetButton, SubmitButton } from './Common/styles'
@@ -22,7 +22,7 @@ interface UpdateDniRequestFormProps {
     closeModal: () => void
 }
 
-const UpdateDniForm = ({ setFederateState, closeModal }: UpdateDniRequestFormProps): JSX.Element => {
+const UpdateDniForm = ({ setFederateState, closeModal }: UpdateDniRequestFormProps): React.JSX.Element => {
     const [frontDniPreview, setFrontDniPreview] = useState<string | null>(null)
     const [backDniPreview, setBackDniPreview] = useState<string | null>(null)
     const frontDniInputRef = useRef<HTMLInputElement | null>(null)
@@ -41,19 +41,24 @@ const UpdateDniForm = ({ setFederateState, closeModal }: UpdateDniRequestFormPro
         }
 
         axios
-            .patch<FederateStateResponse>(UPDATE_DNI_URL, formData, { headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${userJwt}` } })
+            .patch<FederateStateResponse>(UPDATE_DNI_URL, formData, {
+                headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${userJwt ?? ''}` }
+            })
             .then((response) => {
                 setFederateState(response.data)
                 closeModal()
                 showNotification('El DNI se ha actualizado correctamente.', NotificationType.Success)
             })
-            .catch((error) => {
-                const axiosError = error as AxiosError
-                showNotification('Ha sucedido un error, inténtelo más tarde. Error: ' + axiosError.message, NotificationType.Error)
+            .catch((error: unknown) => {
+                if (axios.isAxiosError(error)) {
+                    showNotification('Ha sucedido un error: ' + error.message, NotificationType.Error)
+                } else {
+                    showNotification('Ha sucedido un error inesperado. ', NotificationType.Error)
+                }
             })
     }
 
-    const resetFormAndImages = (resetForm: (nextState?: Partial<FormikState<DniFormValues>> | undefined) => void) => {
+    const resetFormAndImages = (resetForm: (nextState?: Partial<FormikState<DniFormValues>>) => void) => {
         resetForm()
         setFrontDniPreview(null)
         setBackDniPreview(null)
@@ -78,7 +83,7 @@ const UpdateDniForm = ({ setFederateState, closeModal }: UpdateDniRequestFormPro
         event: React.ChangeEvent<HTMLInputElement>,
         setFieldValue: (field: string, value: File | null, shouldValidate?: boolean) => Promise<void>,
         setTouched: (touched: FormikTouched<DniFormValues>) => void,
-        validateForm: () => Promise<any>,
+        validateForm: () => Promise<FormikErrors<DniFormValues>>,
         field: keyof DniFormValues,
         setPreview: React.Dispatch<React.SetStateAction<string | null>>
     ) => {
@@ -109,16 +114,16 @@ const UpdateDniForm = ({ setFederateState, closeModal }: UpdateDniRequestFormPro
                             <FileInput
                                 label="Anverso del DNI:"
                                 inputRef={frontDniInputRef}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                     handleFileChange(
                                         event,
                                         setFieldValue as (field: string, value: File | null) => Promise<void>,
-                                        setTouched, // Pasa `setTouched` directamente
+                                        () => setTouched, // Pasa `setTouched` directamente
                                         validateForm,
                                         'frontDni',
                                         setFrontDniPreview
                                     )
-                                }
+                                }}
                                 isInvalid={!!errors.frontDni && touched.frontDni}
                                 errorMessage={errors.frontDni}
                             />
@@ -126,16 +131,16 @@ const UpdateDniForm = ({ setFederateState, closeModal }: UpdateDniRequestFormPro
                             <FileInput
                                 label="Reverso del DNI:"
                                 inputRef={backDniInputRef}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                     handleFileChange(
                                         event,
                                         setFieldValue as (field: string, value: File | null) => Promise<void>,
-                                        setTouched, // Pasa `setTouched` directamente
+                                        () => setTouched, // Pasa `setTouched` directamente
                                         validateForm,
                                         'backDni',
                                         setBackDniPreview
                                     )
-                                }
+                                }}
                                 isInvalid={!!errors.backDni && touched.backDni}
                                 errorMessage={errors.backDni}
                             />
@@ -156,7 +161,12 @@ const UpdateDniForm = ({ setFederateState, closeModal }: UpdateDniRequestFormPro
                                         'Actualizar DNI'
                                     )}
                                 </SubmitButton>
-                                <ResetButton variant="secondary" onClick={() => resetFormAndImages(resetForm)}>
+                                <ResetButton
+                                    variant="secondary"
+                                    onClick={() => {
+                                        resetFormAndImages(resetForm)
+                                    }}
+                                >
                                     Restablecer formulario
                                 </ResetButton>
                             </ButtonsWrapper>

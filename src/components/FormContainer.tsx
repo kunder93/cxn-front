@@ -14,9 +14,9 @@ interface FormContainerProps {
  * A container component that wraps its children with Bootstrap styling.
  *
  * @param {FormContainerProps} props - The props for the FormContainer component.
- * @returns {JSX.Element} The rendered FormContainer component.
+ * @returns {React.JSX.Element} The rendered FormContainer component.
  */
-const FormContainer: React.FC<FormContainerProps> = ({ children }: FormContainerProps): JSX.Element => {
+const FormContainer: React.FC<FormContainerProps> = ({ children }: FormContainerProps): React.JSX.Element => {
     return (
         <Container className="py-3">
             <Row className="justify-content-md-center">

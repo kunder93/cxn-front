@@ -5,7 +5,7 @@ const LocationContainer = styled.div`
     height: 300px;
 `
 
-const LocationComponent = (): JSX.Element => {
+const LocationComponent = (): React.JSX.Element => {
     return (
         <LocationContainer>
             <iframe

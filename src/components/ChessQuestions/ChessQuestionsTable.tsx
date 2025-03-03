@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useCallback } from 'react'
 import { Column, useTable, useSortBy, useGlobalFilter, useRowSelect, CellProps } from 'react-table'
 import { Button, Table, Spinner, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { Trash3, Eye, EyeSlash, QuestionCircle } from 'react-bootstrap-icons'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import { format } from 'date-fns'
 import { IChessQuestion, IChessQuestionsList } from '../../utility/CustomAxios'
 import { CHESS_QUESTION_CHANGE_SEEN_STATE, CHESS_QUESTION_DELETE } from '../../resources/server_urls'
@@ -11,8 +11,7 @@ import { useAppSelector } from '../../store/hooks'
 import { useNotificationContext } from 'components/Common/NotificationContext'
 import { NotificationType } from 'components/Common/hooks/useNotification'
 
-interface FormattedDateCellProps extends CellProps<IChessQuestion> {} // Define props interface
-const FormattedDateCell = ({ value }: FormattedDateCellProps): JSX.Element => {
+const FormattedDateCell = ({ value }: CellProps<IChessQuestion>): React.JSX.Element => {
     if (!value) {
         // Handle potential null or undefined values
         return <span>-</span> // Or some other default value
@@ -40,7 +39,7 @@ interface ChessQuestionsTableProps {
     data: IChessQuestionsList
 }
 
-const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): JSX.Element => {
+const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): React.JSX.Element => {
     const [data, setData] = useState<IChessQuestion[]>([])
     const [loadingRows, setLoadingRows] = useState<number[]>([])
     const [deletingRows, setDeletingRows] = useState<number[]>([])
@@ -53,19 +52,22 @@ const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): J
     const handleDeleteButton = useCallback(
         (id: number, onDeleteSuccess: (id: number) => void) => {
             axios
-                .delete(`${CHESS_QUESTION_DELETE}/${id}`, {
+                .delete(`${CHESS_QUESTION_DELETE}/${id.toString()}`, {
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userJwt}`
+                        Authorization: `Bearer ${userJwt ?? ''}`
                     }
                 })
                 .then(() => {
                     onDeleteSuccess(id)
                     showNotification('Pregunta eliminada correctamente', NotificationType.Success)
                 })
-                .catch((error) => {
-                    const axiosError = error as AxiosError
-                    showNotification('Hubo un error al eliminar la pregunta: ' + axiosError.message, NotificationType.Error)
+                .catch((error: unknown) => {
+                    if (axios.isAxiosError(error)) {
+                        showNotification('Hubo un error al eliminar la pregunta: ' + error.message, NotificationType.Error)
+                    } else {
+                        showNotification('Hubo un error al eliminar la pregunta', NotificationType.Error)
+                    }
                 })
         },
         [showNotification, userJwt]
@@ -95,7 +97,7 @@ const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): J
                     {
                         headers: {
                             'Content-Type': 'application/json',
-                            Authorization: `Bearer ${userJwt}`
+                            Authorization: `Bearer ${userJwt ?? ''}`
                         }
                     }
                 )
@@ -104,7 +106,13 @@ const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): J
                     showNotification('Se ha cambiado correctamente.', NotificationType.Success)
                     setData(clone)
                 })
-                .catch((error) => showNotification('Ha habido un error: ' + error, NotificationType.Error))
+                .catch((error: unknown) => {
+                    if (axios.isAxiosError(error)) {
+                        showNotification('Ha habido un error: ' + error.message, NotificationType.Error)
+                    } else {
+                        showNotification('Ha habido un error', NotificationType.Error)
+                    }
+                })
                 .finally(() => {
                     setLoadingRows((prevLoadingRows) => prevLoadingRows.filter((id) => id !== row.id))
                 })
@@ -147,7 +155,14 @@ const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): J
 
                     return (
                         <div className="d-flex w-100">
-                            <Button className="w-100" variant="info" onClick={() => changeSeenState(row.index)} disabled={isLoading}>
+                            <Button
+                                className="w-100"
+                                variant="info"
+                                onClick={() => {
+                                    changeSeenState(row.index)
+                                }}
+                                disabled={isLoading}
+                            >
                                 {buttonContent}
                             </Button>
                         </div>
@@ -163,7 +178,9 @@ const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): J
                         <Button
                             className="w-100"
                             variant="danger"
-                            onClick={() => handleDeleteButtonWrapper(row.original.id)}
+                            onClick={() => {
+                                handleDeleteButtonWrapper(row.original.id)
+                            }}
                             disabled={deletingRows.includes(row.original.id)}
                         >
                             {deletingRows.includes(row.original.id) ? <Spinner animation="border" size="sm" /> : <Trash3 size={30} title="Borrar" />}
@@ -188,7 +205,14 @@ const ChessQuestionsTable = ({ data: initialData }: ChessQuestionsTableProps): J
         <>
             <TableFilterContainer>
                 <FilterInputLabel htmlFor="filterInput">Busca empresas:</FilterInputLabel>
-                <input type="text" value={globalFilterStatus ?? ''} onChange={(event) => setGlobalFilter(event.target.value)} aria-label="Buscar empresas" />
+                <input
+                    type="text"
+                    value={globalFilterStatus ?? ''}
+                    onChange={(event) => {
+                        setGlobalFilter(event.target.value)
+                    }}
+                    aria-label="Buscar empresas"
+                />
                 <AmountRegistersBox>
                     Total de registros: {preGlobalFilteredRows.length} (Mostrando: {rows.length})
                 </AmountRegistersBox>

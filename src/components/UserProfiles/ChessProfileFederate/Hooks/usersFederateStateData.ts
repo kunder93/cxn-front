@@ -27,7 +27,7 @@ const useFederateStateUsersData = () => {
         const fetchFederateData = async () => {
             try {
                 const response = await axios.get<FederateStateExtendedResponseList>(GET_ALL_FEDERATE_STATE_MEMBERS, {
-                    headers: { Authorization: `Bearer ${userJwt}` }
+                    headers: { Authorization: `Bearer ${userJwt ?? ''}` }
                 })
                 setData(response.data)
             } catch (err) {

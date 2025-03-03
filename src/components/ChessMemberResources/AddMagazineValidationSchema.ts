@@ -29,12 +29,12 @@ export const AddMagazineValidationSchema = Yup.object().shape({
     issn: Yup.string().required('Es necesario un ISSN.').matches(ISSN_REGEX, `El ISSN debe contener exactamente 8 dígitos sin guiones.`),
     title: Yup.string()
         .required('Es necesario un título.')
-        .min(TITLE_MIN_LENGTH, `El título debe contener al menos ${TITLE_MIN_LENGTH} caracteres.`)
-        .max(TITLE_MAX_LENGTH, `El título no debe exceder los ${TITLE_MAX_LENGTH} caracteres.`),
+        .min(TITLE_MIN_LENGTH, `El título debe contener al menos ${TITLE_MIN_LENGTH.toLocaleString()} caracteres.`)
+        .max(TITLE_MAX_LENGTH, `El título no debe exceder los ${TITLE_MAX_LENGTH.toLocaleString()} caracteres.`),
     publisher: Yup.string()
         .required('Es necesario un editorial.')
-        .min(PUBLISHER_MIN_LENGTH, `El editorial debe contener al menos ${PUBLISHER_MIN_LENGTH} caracteres.`)
-        .max(PUBLISHER_MAX_LENGTH, `El editorial no debe exceder los ${PUBLISHER_MAX_LENGTH} caracteres.`),
+        .min(PUBLISHER_MIN_LENGTH, `El editorial debe contener al menos ${PUBLISHER_MIN_LENGTH.toLocaleString()} caracteres.`)
+        .max(PUBLISHER_MAX_LENGTH, `El editorial no debe exceder los ${PUBLISHER_MAX_LENGTH.toLocaleString()} caracteres.`),
     editionNumber: Yup.number()
         .required('Es necesario un número de edición.')
         .min(1, 'El número de edición debe ser mayor a 0.')
@@ -45,12 +45,12 @@ export const AddMagazineValidationSchema = Yup.object().shape({
         .max(PAGES_AMOUNT_MAX, 'El número de edición no debe exceder los 1000.'),
     description: Yup.string()
         .required('Es necesaria una descripción.')
-        .min(DESCRIPTION_MIN_LENGTH, `La descripción debe ser de al menos ${DESCRIPTION_MIN_LENGTH} caracteres.`)
-        .max(DESCRIPTION_MAX_LENGTH, `La descripción no debe exceder los ${DESCRIPTION_MAX_LENGTH} caracteres.`),
+        .min(DESCRIPTION_MIN_LENGTH, `La descripción debe ser de al menos ${DESCRIPTION_MIN_LENGTH.toLocaleString()} caracteres.`)
+        .max(DESCRIPTION_MAX_LENGTH, `La descripción no debe exceder los ${DESCRIPTION_MAX_LENGTH.toLocaleString()} caracteres.`),
     language: Yup.string()
         .required('Es necesario un idioma.')
-        .min(LANGUAGE_MIN_LENGTH, `El idioma debe contener al menos ${LANGUAGE_MIN_LENGTH} caracteres.`)
-        .max(LANGUAGE_MAX_LENGTH, `El idioma no debe exceder los ${LANGUAGE_MAX_LENGTH} caracteres.`),
+        .min(LANGUAGE_MIN_LENGTH, `El idioma debe contener al menos ${LANGUAGE_MIN_LENGTH.toLocaleString()} caracteres.`)
+        .max(LANGUAGE_MAX_LENGTH, `El idioma no debe exceder los ${LANGUAGE_MAX_LENGTH.toLocaleString()} caracteres.`),
     publishDate: Yup.date()
         .required('Es necesaria una fecha.')
         .typeError('La fecha no es válida.')
@@ -61,23 +61,21 @@ export const AddMagazineValidationSchema = Yup.object().shape({
             Yup.object().shape({
                 firstName: Yup.string()
                     .required('Es necesario un nombre.')
-                    .min(AUTHOR_FIRST_NAME_MIN_LENGTH, `El nombre debe contener al menos ${AUTHOR_FIRST_NAME_MIN_LENGTH} caracteres.`)
-                    .max(AUTHOR_FIRST_NAME_MAX_LENGTH, `El nombre no debe exceder los ${AUTHOR_FIRST_NAME_MAX_LENGTH} caracteres.`),
+                    .min(AUTHOR_FIRST_NAME_MIN_LENGTH, `El nombre debe contener al menos ${AUTHOR_FIRST_NAME_MIN_LENGTH.toLocaleString()} caracteres.`)
+                    .max(AUTHOR_FIRST_NAME_MAX_LENGTH, `El nombre no debe exceder los ${AUTHOR_FIRST_NAME_MAX_LENGTH.toLocaleString()} caracteres.`),
                 lastName: Yup.string()
                     .required('Es necesario un apellido.')
-                    .min(AUTHOR_LAST_NAME_MIN_LENGTH, `El apellido debe contener al menos ${AUTHOR_LAST_NAME_MIN_LENGTH} caracteres.`)
-                    .max(AUTHOR_LAST_NAME_MAX_LENGTH, `El apellido no debe exceder los ${AUTHOR_LAST_NAME_MAX_LENGTH} caracteres.`)
+                    .min(AUTHOR_LAST_NAME_MIN_LENGTH, `El apellido debe contener al menos ${AUTHOR_LAST_NAME_MIN_LENGTH.toLocaleString()} caracteres.`)
+                    .max(AUTHOR_LAST_NAME_MAX_LENGTH, `El apellido no debe exceder los ${AUTHOR_LAST_NAME_MAX_LENGTH.toLocaleString()} caracteres.`)
             })
         )
-        .min(AUTHOR_MIN_AMOUNT, `Debe haber al menos ${AUTHOR_MIN_AMOUNT} autor.`)
-        .max(AUTHOR_MAX_AMOUNT, `No puede haber más de ${AUTHOR_MAX_AMOUNT} autores.`),
+        .min(AUTHOR_MIN_AMOUNT, `Debe haber al menos ${AUTHOR_MIN_AMOUNT.toLocaleString()} autor.`)
+        .max(AUTHOR_MAX_AMOUNT, `No puede haber más de ${AUTHOR_MAX_AMOUNT.toLocaleString()} autores.`),
 
     imageFile: Yup.mixed()
         .required('La imagen de portada es obligatoria.')
-        .test('fileSize', 'El archivo debe ser menor a 10MB.', (value) => value && (value as File).size <= 10 * 1024 * 1024)
-        .test(
-            'fileType',
-            'El formato de archivo no es válido. Se permiten PNG, JPEG, WEBP, AVIF.',
-            (value) => value && ['image/png', 'image/jpeg', 'image/webp', 'image/avif'].includes((value as File).type)
+        .test('fileSize', 'El archivo debe ser menor a 10MB.', (value) => (value as File).size <= 10 * 1024 * 1024)
+        .test('fileType', 'El formato de archivo no es válido. Se permiten PNG, JPEG, WEBP, AVIF.', (value) =>
+            ['image/png', 'image/jpeg', 'image/webp', 'image/avif'].includes((value as File).type)
         )
 })

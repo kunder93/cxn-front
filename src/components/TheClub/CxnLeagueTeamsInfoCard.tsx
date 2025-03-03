@@ -28,7 +28,7 @@ interface ITeamCard {
  * The teams' information is stored in an array and mapped to generate individual
  * cards for each team, displaying the team name, division, and a description.
  *
- * @returns {JSX.Element} - A React component that renders a list of teams as cards.
+ * @returns {React.JSX.Element} - A React component that renders a list of teams as cards.
  */
 const CxnLeagueTeamsInfoCard: React.FC = () => {
     // List of teams and their corresponding information.

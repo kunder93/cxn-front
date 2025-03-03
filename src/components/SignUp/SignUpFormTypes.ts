@@ -66,7 +66,6 @@ export interface FormConditionsModalProps {
     userAceptanceOption: UserAceptanceModalOption
     show: boolean
     onClose: () => void
-    props?: any
 }
 
 // Interfaz para el contenido del error de la respuesta

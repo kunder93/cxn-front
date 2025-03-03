@@ -25,8 +25,12 @@ const useFederateData = (userDni?: string) => {
                     }
                 })
                 setFederateData(response.data)
-            } catch (err) {
-                setError('Error fetching federate data')
+            } catch (err: unknown) {
+                if (axios.isAxiosError(err)) {
+                    setError('Error: ' + err.message)
+                } else {
+                    setError('Error fetching federate data')
+                }
             } finally {
                 setLoading(false)
             }

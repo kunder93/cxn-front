@@ -32,9 +32,9 @@ const StyledContainer = styled(Container)``
  * This component fetches and renders multiple activity cards,
  * along with a title for the page.
  *
- * @returns {JSX.Element} The rendered Activities page component.
+ * @returns {React.JSX.Element} The rendered Activities page component.
  */
-const ActivitiesPage = (): JSX.Element => {
+const ActivitiesPage = (): React.JSX.Element => {
     usePageTitle('CXN Actividades')
     const { activities, error, loading } = useFetchActivities()
     return (
