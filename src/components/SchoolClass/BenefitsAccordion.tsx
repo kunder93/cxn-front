@@ -28,7 +28,7 @@ const BenefitsAccordion = ({
     faqList,
     photosData,
     chessQuestionsFormCategory
-}: BenefitsAccordionProps): JSX.Element => {
+}: BenefitsAccordionProps): React.JSX.Element => {
     const chessBenefitsHeaderMsg = 'Beneficios del ajedrez:'
     const contactHeaderMsg = 'Contacto'
     const faqHeaderMsg = 'Preguntas frecuentes:'

@@ -68,7 +68,7 @@ interface DirectivaCardProps {
  * Displays their role, name, and image.
  *
  * @param {DirectivaCardProps} props - The props for the component.
- * @returns {JSX.Element} The rendered card component for a directive member.
+ * @returns {React.JSX.Element} The rendered card component for a directive member.
  */
 const DirectivaCard: React.FC<DirectivaCardProps> = ({ title, person, imageSrc, imageAlt }) => (
     <CardStyled>
@@ -86,7 +86,7 @@ const DirectivaCard: React.FC<DirectivaCardProps> = ({ title, person, imageSrc, 
  * DirectivaComponent is a container component that renders a list of DirectivaCard components.
  * It displays the directive team of the club using a responsive grid layout.
  *
- * @returns {JSX.Element} The container with all directive members' cards.
+ * @returns {React.JSX.Element} The container with all directive members' cards.
  */
 const DirectivaComponent: React.FC = () => {
     // Data for directive members including title, name, and image details

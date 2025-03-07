@@ -36,7 +36,7 @@ const FederateRequestForm: React.FC<FederateRequestFormProps> = ({ setFederateSt
         autoRenewal: false
     }
 
-    const resetFormAndImages = (resetForm: (nextState?: Partial<FormikState<DniFormValues>> | undefined) => void) => {
+    const resetFormAndImages = (resetForm: (nextState?: Partial<FormikState<DniFormValues>>) => void) => {
         resetForm()
         setFrontDniPreview(null)
         setBackDniPreview(null)
@@ -55,7 +55,7 @@ const FederateRequestForm: React.FC<FederateRequestFormProps> = ({ setFederateSt
             setFederateState(response)
             closeModal()
             showNotification('Petición de federarse realizada correctamente, Gracias!', NotificationType.Success)
-        } catch (err) {
+        } catch {
             const errorMessage = error?.message ?? 'Error al procesar la solicitud'
             showNotification(`Error al subir las imágenes: ${errorMessage}`, NotificationType.Error)
         }
@@ -99,7 +99,7 @@ const FederateRequestForm: React.FC<FederateRequestFormProps> = ({ setFederateSt
                             <FileInput
                                 label="Anverso del DNI:"
                                 inputRef={frontDniInputRef}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                     handleFileChange(
                                         event,
                                         setFieldValue as (field: string, value: File | null) => Promise<void>,
@@ -108,7 +108,7 @@ const FederateRequestForm: React.FC<FederateRequestFormProps> = ({ setFederateSt
                                         'frontDni',
                                         setFrontDniPreview
                                     )
-                                }
+                                }}
                                 isInvalid={!!errors.frontDni && touched.frontDni}
                                 errorMessage={errors.frontDni}
                             />
@@ -116,7 +116,7 @@ const FederateRequestForm: React.FC<FederateRequestFormProps> = ({ setFederateSt
                             <FileInput
                                 label="Reverso del DNI:"
                                 inputRef={backDniInputRef}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                     handleFileChange(
                                         event,
                                         setFieldValue as (field: string, value: File | null) => Promise<void>,
@@ -125,7 +125,7 @@ const FederateRequestForm: React.FC<FederateRequestFormProps> = ({ setFederateSt
                                         'backDni',
                                         setBackDniPreview
                                     )
-                                }
+                                }}
                                 isInvalid={!!errors.backDni && touched.backDni}
                                 errorMessage={errors.backDni}
                             />
@@ -157,7 +157,13 @@ const FederateRequestForm: React.FC<FederateRequestFormProps> = ({ setFederateSt
                                     )}
                                 </SubmitButton>
 
-                                <ResetButton variant="secondary" type="button" onClick={() => resetFormAndImages(resetForm)}>
+                                <ResetButton
+                                    variant="secondary"
+                                    type="button"
+                                    onClick={() => {
+                                        resetFormAndImages(resetForm)
+                                    }}
+                                >
                                     Reestablecer
                                 </ResetButton>
                             </ButtonsWrapper>

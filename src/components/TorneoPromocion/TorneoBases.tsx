@@ -69,7 +69,7 @@ const Anchor = styled(Link)`
     }
 `
 
-const TorneoBases = (): JSX.Element => {
+const TorneoBases = (): React.JSX.Element => {
     usePageTitle('Bases torneo')
     return (
         <StyledContainer>

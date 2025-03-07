@@ -28,7 +28,7 @@ interface NoFederateInfoProps {
     setFederateState: React.Dispatch<React.SetStateAction<FederateStateResponse>>
 }
 
-const NoFederateInfo = ({ setFederateState }: NoFederateInfoProps): JSX.Element => {
+const NoFederateInfo = ({ setFederateState }: NoFederateInfoProps): React.JSX.Element => {
     const [showFederateModal, setShowFederateModal] = useState(false)
 
     return (
@@ -56,16 +56,16 @@ const NoFederateInfo = ({ setFederateState }: NoFederateInfoProps): JSX.Element 
                 El proceso tarda varios días, por favor, sea paciente. En caso de que no actualicemos el estado en una semana, póngase en contacto con nosotros.
                 Si necesita federarse con urgencia, ponte en contacto con nuestro equipo a través de los medios de contacto que proporciona la web.
             </p>
-            <FederateRequestButton variant="success" onClick={() => setShowFederateModal(true)}>
+            <FederateRequestButton variant="success" onClick={() => { setShowFederateModal(true); }}>
                 Quiero federarme
             </FederateRequestButton>
-            <Modal show={showFederateModal} onHide={() => setShowFederateModal(false)} centered aria-labelledby="federate-modal-title">
+            <Modal show={showFederateModal} onHide={() => { setShowFederateModal(false); }} centered aria-labelledby="federate-modal-title">
                 <StyledModalHeader id="federate-modal-title">Federarse</StyledModalHeader>
                 <Modal.Body>
-                    <FederateRequestForm setFederateState={setFederateState} closeModal={() => setShowFederateModal(false)} />
+                    <FederateRequestForm setFederateState={setFederateState} closeModal={() => { setShowFederateModal(false); }} />
                 </Modal.Body>
                 <Modal.Footer>
-                    <CloseModalButton variant="danger" onClick={() => setShowFederateModal(false)}>
+                    <CloseModalButton variant="danger" onClick={() => { setShowFederateModal(false); }}>
                         Cerrar
                     </CloseModalButton>
                 </Modal.Footer>

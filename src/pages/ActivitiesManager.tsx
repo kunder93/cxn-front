@@ -29,8 +29,8 @@ const ActivitiesManager = () => {
 
     return (
         <div id="activities-manager">
-            <AddActivityIcon onClick={() => setShowModal(true)} />
-            <AddActivityModalForm show={showModal} onHide={() => setShowModal(false)} addActivity={handleAddActivity} />
+            <AddActivityIcon onClick={() => { setShowModal(true); }} />
+            <AddActivityModalForm show={showModal} onHide={() => { setShowModal(false); }} addActivity={handleAddActivity} />
             <ActivitiesCarousel activities={activities} error={error} loading={loading} />
         </div>
     )

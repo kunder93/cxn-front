@@ -1,8 +1,12 @@
 // hooks/useFetchActivities.ts
 import { useState, useCallback, useEffect } from 'react'
 import axios, { AxiosError } from 'axios'
-import { IActivity } from 'components/Activities/Types'
+import { IActivity, IActivityForm } from 'components/Activities/Types'
 import { ACTIVITIES_URL } from 'resources/server_urls'
+import { useNotificationContext } from 'components/Common/NotificationContext'
+import { useAppSelector } from 'store/hooks'
+import { FormikHelpers } from 'formik'
+import { NotificationType } from 'components/Common/hooks/useNotification'
 
 export const useFetchActivities = () => {
     const [activities, setActivities] = useState<IActivity[]>([])
@@ -28,7 +32,7 @@ export const useFetchActivities = () => {
     }, [])
 
     useEffect(() => {
-        fetchActivities().catch((error) => {
+        fetchActivities().catch((error: unknown) => {
             throw error
         })
     }, [fetchActivities])
@@ -80,7 +84,7 @@ export const useActivityImage = (activity: IActivity) => {
                 const response = await axios.get<ArrayBuffer>(`${ACTIVITIES_URL}/${activity.title}/image`, {
                     responseType: 'arraybuffer'
                 })
-                const contentType = (response.headers['content-type'] as string) ?? 'image/jpeg'
+                const contentType = (response.headers['content-type'] as string) || 'image/jpeg'
                 if (response.status === 204) {
                     // Use category-based default image
                     setImage(getDefaultImage(activity.category))
@@ -103,4 +107,57 @@ export const useActivityImage = (activity: IActivity) => {
     }, [activity])
 
     return { loading, image, error }
+}
+
+export const useAddActivity = (addActivity: (activity: IActivity) => void) => {
+    const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
+    const { showNotification } = useNotificationContext()
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+
+    const handleSubmit = async (values: IActivityForm, formActions: FormikHelpers<IActivityForm>) => {
+        const formData = new FormData()
+
+        const activityData = {
+            title: values.title,
+            description: values.description,
+            startDate: values.startDate?.toISOString() ?? '',
+            endDate: values.endDate?.toISOString() ?? '',
+            category: values.category ?? ''
+        }
+
+        const jsonBlob = new Blob([JSON.stringify(activityData)], { type: 'application/json' })
+        formData.append('data', jsonBlob)
+
+        if (values.imageFile) {
+            formData.append('imageFile', values.imageFile)
+        }
+
+        try {
+            const activityyData = {
+                title: values.title,
+                description: values.description,
+                startDate: values.startDate ?? new Date(), // Asegurar que sea Date
+                endDate: values.endDate ?? new Date(), // Asegurar que sea Date
+                category: values.category ?? null
+            }
+
+            await axios.post(ACTIVITIES_URL, formData, {
+                headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${userJwt ?? ''}` }
+            })
+            showNotification('Actividad creada', NotificationType.Success)
+            formActions.resetForm()
+            setPreviewUrl(null)
+            addActivity(activityyData)
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                showNotification('Error:' + err.message, NotificationType.Error)
+            } else {
+                showNotification('Unexpected error.', NotificationType.Error)
+            }
+        } finally {
+            formActions.setSubmitting(false)
+        }
+    }
+
+    return { handleSubmit, previewUrl, setPreviewUrl }
 }

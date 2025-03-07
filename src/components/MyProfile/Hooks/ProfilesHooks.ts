@@ -19,23 +19,25 @@ export const useFetchProfileImage = () => {
             try {
                 const response = await axios.get<UserProfileImage>(OBTAIN_PROFILE_IMAGE_URL, {
                     headers: {
-                        Authorization: `Bearer ${userJwt}`
+                        Authorization: `Bearer ${userJwt ?? ''}`
                     }
                 })
 
-                if (response.data) {
-                    const profileImageData: UserProfileImage = {
-                        imageExtension: response.data.imageExtension,
-                        stored: response.data.stored,
-                        url: response.data.url,
-                        file: response.data.file // Si es necesario
-                    }
-
-                    // Actualiza el estado en el store
-                    dispatch(setProfileImage(profileImageData))
+                const profileImageData: UserProfileImage = {
+                    imageExtension: response.data.imageExtension,
+                    stored: response.data.stored,
+                    url: response.data.url,
+                    file: response.data.file // Si es necesario
                 }
-            } catch (err) {
-                setError('Error al obtener la imagen de perfil')
+
+                // Actualiza el estado en el store
+                dispatch(setProfileImage(profileImageData))
+            } catch (err: unknown) {
+                if (axios.isAxiosError(err)) {
+                    setError('Error: ' + err.message)
+                } else {
+                    setError('Error al obtener la imagen de perfil')
+                }
             } finally {
                 setLoading(false)
             }

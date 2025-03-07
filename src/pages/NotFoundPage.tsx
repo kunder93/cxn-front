@@ -7,9 +7,9 @@ import { ROUTES } from '../resources/routes-constants'
  * This component informs users that the requested page was not found
  * and provides a link to redirect them back to the homepage.
  *
- * @returns {JSX.Element} The rendered 404 Not Found page.
+ * @returns {React.JSX.Element} The rendered 404 Not Found page.
  */
-const NotFoundPage = (): JSX.Element => {
+const NotFoundPage = (): React.JSX.Element => {
     const navigate = useNavigate()
 
     /**

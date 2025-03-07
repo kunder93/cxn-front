@@ -68,7 +68,16 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = (props) => {
                 />
             </ModalBody>
             <ModalFooterStyled>
-                <Button variant="success" type="button" disabled={!buttonIsAvaliable || isSubmitting} onClick={() => submitForm && submitForm()}>
+                <Button
+                    variant="success"
+                    type="button"
+                    disabled={!buttonIsAvaliable || isSubmitting}
+                    onClick={() => {
+                        if (submitForm) {
+                            submitForm()
+                        }
+                    }}
+                >
                     {isSubmitting ? (
                         <>
                             <Spinner animation="border" size="sm" aria-hidden="true" /> <output>Cambiando...</output>

@@ -46,7 +46,7 @@ const useFormSubmit = () => {
                 // Type the error response explicitly
                 const axiosError = error as AxiosError<AxiosErrorResponseData>
                 // Type-safe access with optional chaining and type guard
-                const serverError = typeof axiosError.response?.data?.content === 'string' ? axiosError.response.data.content : undefined
+                const serverError = typeof axiosError.response?.data.content === 'string' ? axiosError.response.data.content : undefined
                 errorMessage = serverError ?? (axiosError.request ? 'Error: no hay respuesta del servidor.' : 'Error: algo inesperado')
             }
             showNotification(errorMessage, NotificationType.Error)

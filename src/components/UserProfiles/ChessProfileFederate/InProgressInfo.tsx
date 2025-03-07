@@ -1,4 +1,4 @@
-const InProgressInfo = (): JSX.Element => {
+const InProgressInfo = (): React.JSX.Element => {
     return (
         <section>
             <p>

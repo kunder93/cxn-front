@@ -110,12 +110,12 @@ const AccordionItemFederateInfo: React.FC<AccordionItemFederateInfoProps> = ({ u
                         <span>Renovación automática: {renderAutoRenewState(federateData?.autoRenew ?? false)}</span>
                         <FederateStateDataRow>
                             <span>DNI Fecha última actualización: {federateData?.dniLastUpdate ?? 'No disponible'}</span>
-                            <Button size="sm" variant="primary" onClick={() => setDniModal(true)}>
+                            <Button size="sm" variant="primary" onClick={() => { setDniModal(true); }}>
                                 Ver DNI
                             </Button>
                         </FederateStateDataRow>
 
-                        <UserDniViewModal show={dniModal} onHide={() => setDniModal(false)} userDni={userDni} />
+                        <UserDniViewModal show={dniModal} onHide={() => { setDniModal(false); }} userDni={userDni} />
                     </>
                 ) : (
                     <span>NO ESTÁ FEDERADO</span>

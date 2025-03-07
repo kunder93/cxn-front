@@ -37,9 +37,9 @@ const MainContainer = styled(Container)`
  * It sets the page title and displays legal information about the organization.
  *
  * @component
- * @returns {JSX.Element} The rendered legal notice page.
+ * @returns {React.JSX.Element} The rendered legal notice page.
  */
-const LegalNotice = (): JSX.Element => {
+const LegalNotice = (): React.JSX.Element => {
     usePageTitle('CXN Aviso legal')
 
     return (

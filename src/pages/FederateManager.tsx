@@ -70,7 +70,7 @@ const FederateStateCell: React.FC<{ state: FederateState; dni: string; isLoading
     )
 }
 
-export const FederateManager = (): JSX.Element => {
+export const FederateManager = (): React.JSX.Element => {
     const { data, loading, error } = useFederateStateUsersData()
     const { confirmCancelFederate, isLoading: isActionLoading } = useFederateActions()
     const [federateStateMembersList, setFederateStateMembersList] = useState<FederateStateExtendedResponse[]>([])
@@ -78,9 +78,7 @@ export const FederateManager = (): JSX.Element => {
     const [selectedDni, setSelectedDni] = useState<string | null>(null)
 
     useEffect(() => {
-        if (data?.federateStateMembersList) {
-            setFederateStateMembersList(data.federateStateMembersList)
-        }
+        setFederateStateMembersList(data.federateStateMembersList)
     }, [data])
 
     // **Optimized Action Handler**
@@ -159,34 +157,41 @@ export const FederateManager = (): JSX.Element => {
             {loading && <Spinner animation="border" aria-live="polite" />}
             {error && <div role="alert">{error}</div>}
 
-            {data && (
-                <Table striped bordered hover {...getTableProps()} style={{ marginTop: '40px' }}>
-                    <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
-                                {headerGroup.headers.map((column) => (
-                                    <th {...column.getHeaderProps()} key={column.id}>
-                                        {column.render('Header')}
-                                    </th>
+            <Table striped bordered hover {...getTableProps()} style={{ marginTop: '40px' }}>
+                <thead>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+                            {headerGroup.headers.map((column) => (
+                                <th {...column.getHeaderProps()} key={column.id}>
+                                    {column.render('Header')}
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
+                </thead>
+                <tbody {...getTableBodyProps()}>
+                    {rows.map((row) => {
+                        prepareRow(row)
+                        return (
+                            <tr {...row.getRowProps()} key={row.id}>
+                                {row.cells.map((cell) => (
+                                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                                 ))}
                             </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map((row) => {
-                            prepareRow(row)
-                            return (
-                                <tr {...row.getRowProps()} key={row.id}>
-                                    {row.cells.map((cell) => (
-                                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                                    ))}
-                                </tr>
-                            )
-                        })}
-                    </tbody>
-                </Table>
+                        )
+                    })}
+                </tbody>
+            </Table>
+
+            {selectedDni && (
+                <UserDniViewModal
+                    show={dniModal}
+                    onHide={() => {
+                        setDniModal(false)
+                    }}
+                    userDni={selectedDni}
+                />
             )}
-            {selectedDni && <UserDniViewModal show={dniModal} onHide={() => setDniModal(false)} userDni={selectedDni} />}
         </>
     )
 }

@@ -30,7 +30,7 @@ const FirstBlockContainer = styled.div`
  * HeaderInfoClubBar component displays the title and important information about the club.
  * It includes the foundation year and the number of members.
  *
- * @returns {JSX.Element} The rendered header information for the club.
+ * @returns {React.JSX.Element} The rendered header information for the club.
  */
 const HeaderInfoClubBar: React.FC = () => {
     return (

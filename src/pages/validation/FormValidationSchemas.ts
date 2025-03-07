@@ -10,16 +10,16 @@ const FIRSTSURNAME_MAX_LENGTH = 20
 const SECONDSURNAME_MAX_LENGTH = 20
 const POSTALCODE_MAX_LENGTH = 10
 
-export const SignUpFormValidationSchema: Yup.Schema<SignUpFormValues> = Yup.object({
+export const SignUpFormValidationSchema: Yup.ObjectSchema<SignUpFormValues> = Yup.object({
     //First step fields
     email: Yup.string()
         .email('Se requiere un email válido.')
         .required('Se requiere un email.')
-        .max(EMAIL_MAX_LENGTH, 'El email no debe contener más de ' + EMAIL_MAX_LENGTH + ' caracteres.'),
+        .max(EMAIL_MAX_LENGTH, 'El email no debe contener más de ' + EMAIL_MAX_LENGTH.toLocaleString() + ' caracteres.'),
     password: Yup.string()
         .required('Se require una contraseña.')
-        .max(PASSWORD_MAX_LENGTH, 'La contraseña no debe contener mas de ' + PASSWORD_MAX_LENGTH + ' caracteres.')
-        .min(PASSWORD_MIN_LENGTH, 'La contraseña debe contener minimo ' + PASSWORD_MIN_LENGTH + ' caracteres'),
+        .max(PASSWORD_MAX_LENGTH, 'La contraseña no debe contener mas de ' + PASSWORD_MAX_LENGTH.toLocaleString() + ' caracteres.')
+        .min(PASSWORD_MIN_LENGTH, 'La contraseña debe contener minimo ' + PASSWORD_MIN_LENGTH.toLocaleString() + ' caracteres'),
     confirmPassword: Yup.string()
         .oneOf([Yup.ref('password')], 'Debe coincidir con la contraseña.')
         .required('Se requiere volver a escribir la contraseña.'),
@@ -29,7 +29,7 @@ export const SignUpFormValidationSchema: Yup.Schema<SignUpFormValues> = Yup.obje
         .matches(/^\d{8}[A-Za-z]$/, 'DNI formato no válido.')
         .test('valid-dni', 'La letra del DNI no es válida para este número.', (value) => {
             if (!value) return false
-            const dniNumber: any = value.slice(0, -1)
+            const dniNumber = parseInt(value.slice(0, -1), 10)
             const dniLetter = value.slice(-1).toUpperCase()
             const letterIndex = 'TRWAGMYFPDXBNJZSQVHLCKE'.indexOf(dniLetter)
             const calculatedLetter = 'TRWAGMYFPDXBNJZSQVHLCKE'[dniNumber % 23]
@@ -38,13 +38,13 @@ export const SignUpFormValidationSchema: Yup.Schema<SignUpFormValues> = Yup.obje
         }),
     name: Yup.string()
         .required('Se requiere un nombre.')
-        .max(NAME_MAX_LENGTH, 'El nombre puede contener máximo ' + NAME_MAX_LENGTH + ' caracteres.'),
+        .max(NAME_MAX_LENGTH, 'El nombre puede contener máximo ' + NAME_MAX_LENGTH.toLocaleString() + ' caracteres.'),
     firstSurname: Yup.string()
         .required('Se requiere el primer apellido.')
-        .max(FIRSTSURNAME_MAX_LENGTH, 'El primer apellido puede contener máximo ' + FIRSTSURNAME_MAX_LENGTH + ' caracteres.'),
+        .max(FIRSTSURNAME_MAX_LENGTH, 'El primer apellido puede contener máximo ' + FIRSTSURNAME_MAX_LENGTH.toLocaleString() + ' caracteres.'),
     secondSurname: Yup.string()
         .required('Se requiere el segundo apellido.')
-        .max(SECONDSURNAME_MAX_LENGTH, 'El segundo apellido puede contener máximo ' + SECONDSURNAME_MAX_LENGTH + ' caracteres'),
+        .max(SECONDSURNAME_MAX_LENGTH, 'El segundo apellido puede contener máximo ' + SECONDSURNAME_MAX_LENGTH.toLocaleString() + ' caracteres'),
     gender: Yup.string().required('Se necesita seleccionar.').oneOf(['male', 'female', 'other']).defined('Se necesita seleccionar.'),
     birthDate: Yup.date()
         .required('Se necesita una fecha de nacimiento.')
@@ -54,7 +54,7 @@ export const SignUpFormValidationSchema: Yup.Schema<SignUpFormValues> = Yup.obje
     //Third step fields
     postalCode: Yup.string()
         .required('Código postal requerido.')
-        .max(POSTALCODE_MAX_LENGTH, 'No debe exeder ' + POSTALCODE_MAX_LENGTH + ' caracteres.'),
+        .max(POSTALCODE_MAX_LENGTH, 'No debe exeder ' + POSTALCODE_MAX_LENGTH.toLocaleString() + ' caracteres.'),
     apartmentNumber: Yup.string().required('Número apartamento requerido.'),
     building: Yup.string().required('Casa o edificio requerido.'),
     street: Yup.string().required('Calle requerida.'),

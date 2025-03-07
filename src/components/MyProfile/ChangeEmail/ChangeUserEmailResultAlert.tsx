@@ -24,10 +24,15 @@ const ChangeUserEmailResultAlert: React.FC<IChangeKindMemberSubmitResultAlert> =
     const dispatch = useAppDispatch()
     const { data, error, loaded } = useAxiosChangeUserEmail(formData)
 
-    const logoutHandler = useCallback(() => {
+    // Mark logoutHandler as async and await navigation inside a try/catch block.
+    const logoutHandler = useCallback(async () => {
         dispatch(removeJwt())
         dispatch(removeUserProfile())
-        void navigate(ROUTES.LOGIN_ROUTE)
+        try {
+            await navigate(ROUTES.LOGIN_ROUTE)
+        } catch (err) {
+            console.error('Navigation error:', err)
+        }
     }, [dispatch, navigate])
 
     useEffect(() => {
@@ -42,20 +47,27 @@ const ChangeUserEmailResultAlert: React.FC<IChangeKindMemberSubmitResultAlert> =
         const timer = setTimeout(() => {
             closeFunction(false)
             if (!error && data) {
-                logoutHandler()
+                // Call logoutHandler and handle its promise
+                logoutHandler().catch((err: unknown) => {
+                    console.error('Logout handler error:', err)
+                })
             }
         }, 5000)
 
-        return () => clearTimeout(timer)
+        return () => {
+            clearTimeout(timer)
+        }
     }, [closeFunction, data, error, logoutHandler])
 
-    const alertContent = !loaded ? (
-        <Spinner animation="border" variant="primary" />
-    ) : error ? (
-        `Hubo un error al procesar la solicitud: ${error.message}`
-    ) : (
-        `Se ha cambiado el email a: ${data?.email}, vuelve a entrar en tu cuenta.`
-    )
+    // Extract the nested ternary logic into an independent statement
+    let alertContent: React.ReactNode
+    if (!loaded) {
+        alertContent = <Spinner animation="border" variant="primary" />
+    } else if (error) {
+        alertContent = `Hubo un error al procesar la solicitud: ${error.message}`
+    } else {
+        alertContent = `Se ha cambiado el email a: ${data?.email ?? 'desconocido'}, vuelve a entrar en tu cuenta.`
+    }
 
     return (
         <Collapse in={visibleParam}>

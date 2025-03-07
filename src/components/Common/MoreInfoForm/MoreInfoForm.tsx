@@ -34,7 +34,7 @@ interface FormData {
     email: string
 }
 
-const MoreInfoForm = ({ initialTopic, formTitle, category }: Props): JSX.Element => {
+const MoreInfoForm = ({ initialTopic, formTitle, category }: Props): React.JSX.Element => {
     const { showNotification } = useNotificationContext()
 
     const initialValues: FormData = {
@@ -56,7 +56,7 @@ const MoreInfoForm = ({ initialTopic, formTitle, category }: Props): JSX.Element
             actions.resetForm()
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                showNotification('Error: Código: ' + error.code, NotificationType.Error)
+                showNotification('Error: ' + error.message, NotificationType.Error)
             } else {
                 showNotification('Error: algo inesperado. Recarga o inténtalo más tarde.', NotificationType.Error)
             }

@@ -34,45 +34,33 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
     const [cancelModalShow, setCancelModalShow] = useState(false)
     const [showCreatePaymentModal, setShowCreatePaymentModal] = useState(false)
     // Memoize the modal handlers to avoid unnecessary re-creations
-    const handleCloseModal = useCallback(() => setModalShow(false), [])
-    const handleCloseCancelModal = useCallback(() => setCancelModalShow(false), [])
+    const handleCloseModal = useCallback(() => {
+        setModalShow(false)
+    }, [])
+    const handleCloseCancelModal = useCallback(() => {
+        setCancelModalShow(false)
+    }, [])
     const [managedTableData, setManagedTableData] = useState<IUsersListPaymentsData>(data)
 
     // Función para añadir una nueva fila de pago
     const addPaymentRow = useCallback((userDni: string, payment: IPaymentDetails) => {
-        // Verificar si el DNI ya tiene pagos registrados, si no, crear un nuevo array
-        setManagedTableData((prevData) => {
-            const updatedData = { ...prevData }
-
-            // Si ya existen pagos para ese DNI, añadir el nuevo pago
-            if (updatedData[userDni]) {
-                updatedData[userDni].push(payment)
-            } else {
-                // Si no existen pagos, crear un array con el nuevo pago
-                updatedData[userDni] = [payment]
-            }
-
-            return updatedData
-        })
+        setManagedTableData((prevData) => ({
+            ...prevData,
+            [userDni]: [...(prevData[userDni] ?? []), payment]
+        }))
     }, [])
 
     const updatePaymentState = useCallback((userDni: string, paymentId: string, newState: PaymentsState) => {
         setManagedTableData((prevData) => {
             const updatedData = { ...prevData }
-
-            // Check if the user exists
-            if (updatedData[userDni]) {
-                const paymentIndex = updatedData[userDni].findIndex((payment) => payment.id === paymentId)
-
-                // If the payment exists, update its state
-                if (paymentIndex !== -1) {
-                    updatedData[userDni][paymentIndex] = {
-                        ...updatedData[userDni][paymentIndex],
-                        state: newState
-                    }
+            // Since updatedData[userDni] is guaranteed to exist, no need for a conditional check
+            const paymentIndex = updatedData[userDni].findIndex((payment) => payment.id === paymentId)
+            if (paymentIndex !== -1) {
+                updatedData[userDni][paymentIndex] = {
+                    ...updatedData[userDni][paymentIndex],
+                    state: newState
                 }
             }
-
             return updatedData
         })
     }, [])
@@ -99,7 +87,9 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
         setCancelModalShow(true)
     }, [])
 
-    const handleCloseCreatePaymentModal = useCallback(() => setShowCreatePaymentModal(false), [])
+    const handleCloseCreatePaymentModal = useCallback(() => {
+        setShowCreatePaymentModal(false)
+    }, [])
 
     const generateRowColor = useCallback((state: PaymentsState) => {
         switch (state) {
@@ -188,7 +178,9 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
                     <>
                         {row.original.state === PaymentsState.UNPAID && (
                             <button
-                                onClick={() => handleCancelPayment(row)}
+                                onClick={() => {
+                                    handleCancelPayment(row)
+                                }}
                                 style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                                 aria-label={`Cancelar pago con ID ${row.original.id}`}
                                 title={`Cancelar pago con ID ${row.original.id}`}
@@ -200,7 +192,9 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
 
                         {row.original.state === PaymentsState.UNPAID && (
                             <button
-                                onClick={() => openConfirmModal(row)}
+                                onClick={() => {
+                                    openConfirmModal(row)
+                                }}
                                 style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                                 aria-label={`Marcar como pagado, ID ${row.original.id}`}
                                 title={`Marcar como pagado, ID ${row.original.id}`}
@@ -225,7 +219,9 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
         <>
             <AddUserPayment>
                 <button
-                    onClick={() => setShowCreatePaymentModal(true)}
+                    onClick={() => {
+                        setShowCreatePaymentModal(true)
+                    }}
                     title="Añadir pago a socio"
                     style={{ background: 'none', border: 'none', cursor: 'pointer', margin: 0, padding: 0 }}
                     aria-label="Añadir pago a socio"
@@ -236,9 +232,9 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
             <Table striped bordered hover size="sm" {...getTableProps()}>
                 <thead>
                     {headerGroups.map((headerGroup, headerIndex) => (
-                        <tr {...headerGroup.getHeaderGroupProps()} key={headerIndex}>
+                        <tr {...headerGroup.getHeaderGroupProps()} key={headerIndex.toString()}>
                             {headerGroup.headers.map((column, columnIndex) => (
-                                <th {...column.getHeaderProps()} key={`${headerIndex}-${columnIndex}`}>
+                                <th {...column.getHeaderProps()} key={`${headerIndex.toString()}-${columnIndex.toString()}`}>
                                     {column.render('Header')}
                                 </th>
                             ))}
@@ -249,7 +245,7 @@ const PaymentTable: React.FC<PaymentTableProps> = ({ data }) => {
                     {rows.map((row, rowIndex) => {
                         prepareRow(row)
                         return (
-                            <tr {...row.getRowProps()} key={rowIndex} className={generateRowColor(row.original.state)}>
+                            <tr {...row.getRowProps()} key={rowIndex.toString()} className={generateRowColor(row.original.state)}>
                                 {row.cells.map((cell) => {
                                     const { key, ...cellProps } = cell.getCellProps() // Extract `key` from props
                                     return (

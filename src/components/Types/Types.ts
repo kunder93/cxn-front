@@ -35,7 +35,7 @@ export interface ISubCountriesList {
 }
 
 export interface IBook {
-    isbn: number
+    isbn: string
     title: string
     gender: string
     publishYear: Date
@@ -105,4 +105,4 @@ export interface ReceivedCreatedPayment extends IPaymentDetails {
     userDni: string
 }
 
-export interface IUsersListPaymentsData extends Record<string, IPaymentDetails[]> {}
+export type IUsersListPaymentsData = Record<string, IPaymentDetails[]>

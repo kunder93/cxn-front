@@ -33,7 +33,7 @@ export const CancelPaymentModal: React.FC<CancelPaymentModalProps> = ({ show, on
         } catch (err) {
             const axiosError = error ?? (err as AxiosError)
             const defaultMsg = 'Error inesperado, intentalo más tarde.'
-            const message = (axiosError.response?.data as { message?: string })?.message ?? defaultMsg
+            const message = (axiosError.response?.data as { message?: string }).message ?? defaultMsg
             showNotification(message, NotificationType.Error)
         }
     }

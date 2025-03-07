@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Button, Modal, ModalProps, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { useTable, Column, CellProps } from 'react-table'
 import styled from 'styled-components'
-import { useAxiosGetUserPayments } from 'utility/CustomAxios'
+import { useAxiosGetOwnPayments } from 'utility/CustomAxios'
 import { formatCurrency, translatePaymentCategory, translatePaymentState } from 'utility/paymentsUtilities'
 
 interface TruncatedCellProps {
@@ -114,14 +114,18 @@ interface PaymentsManagerModalProps extends ModalProps {
     secondsurname: string
 }
 
-const PaymentsManagerModal = (props: PaymentsManagerModalProps): JSX.Element => {
-    const { data, error, loaded } = useAxiosGetUserPayments(props.userdni)
+const PaymentsManagerModal = (props: PaymentsManagerModalProps): React.JSX.Element => {
+    const { data, error, loaded } = useAxiosGetOwnPayments()
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
 
     useEffect(() => {
-        const handleResize = () => setIsMobile(window.innerWidth <= 768)
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768)
+        }
         window.addEventListener('resize', handleResize)
-        return () => window.removeEventListener('resize', handleResize)
+        return () => {
+            window.removeEventListener('resize', handleResize)
+        }
     }, [])
 
     const generateRowColor = useCallback((state: PaymentsState) => {

@@ -121,11 +121,11 @@ const MagazinesViewer: React.FC = () => {
                 Header: () => <ActionsHeader>Acciones</ActionsHeader>,
                 Cell: ({ row }: CellProps<Magazine>) => (
                     <ActionsCell>
-                        <OptionButton variant="info" onClick={() => handleShowModal(row.original)}>
+                        <OptionButton variant="info" onClick={() => { handleShowModal(row.original); }}>
                             Ver Detalles
                         </OptionButton>
                         {shouldShow && (
-                            <OptionButton variant="danger" onClick={() => handleShowRemoveMagazineModal(row.original)}>
+                            <OptionButton variant="danger" onClick={() => { handleShowRemoveMagazineModal(row.original); }}>
                                 Borrar
                             </OptionButton>
                         )}
@@ -162,12 +162,12 @@ const MagazinesViewer: React.FC = () => {
 
                     {/* Action Buttons and Search Bar */}
                     <TableActionsRow>
-                        {shouldShow && <AddMagazineIcon size={44} onClick={() => setAddMagazineModal(true)} />}
+                        {shouldShow && <AddMagazineIcon size={44} onClick={() => { setAddMagazineModal(true); }} />}
                         <FormControl
                             type="text"
                             placeholder="Buscar..."
                             value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onChange={(e) => { setSearchQuery(e.target.value); }}
                             className="mb-3"
                         />
                     </TableActionsRow>
@@ -205,7 +205,7 @@ const MagazinesViewer: React.FC = () => {
                         <MagazinesDetailsModal showModal={showModal} handleCloseModal={handleCloseModal} selectedMagazine={selectedMagazine} />
                     )}
                     {addMagazineModal && (
-                        <AddMagazineModal addMagazineFunction={addMagazine} showModal={addMagazineModal} handleCloseModal={() => setAddMagazineModal(false)} />
+                        <AddMagazineModal addMagazineFunction={addMagazine} showModal={addMagazineModal} handleCloseModal={() => { setAddMagazineModal(false); }} />
                     )}
                     {selectedMagazine && (
                         <RemoveMagazineModal

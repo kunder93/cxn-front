@@ -5,14 +5,14 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { setProfileImage } from '../../store/slices/user'
 import { UserProfileImage } from '../../store/types/userTypes'
 import styled from 'styled-components'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import { UPDATE_PROFILE_IMAGE_URL } from '../../resources/server_urls'
 import UploadProfileImageButton from './UploadProfileImageButton'
 import { useNotificationContext } from '../../components/Common/NotificationContext'
 import { NotificationType } from '../../components/Common/hooks/useNotification'
 
 // Sample image URLs
-const imageUrlList: string[] = Array.from({ length: 16 }, (_, i) => `/User/ProfileImagesExample/Image${i + 1}.webp`)
+const imageUrlList: string[] = Array.from({ length: 16 }, (_, i) => `/User/ProfileImagesExample/Image${(i + 1).toString()}.webp`)
 
 const ImageStyled = styled(Image)<{ selected: boolean }>`
     padding: 0.33em;
@@ -106,7 +106,7 @@ const StyledCloseButton = styled(Button)`
     }
 `
 
-const PersonalImageButtonChanger = (): JSX.Element => {
+const PersonalImageButtonChanger = (): React.JSX.Element => {
     const [changeProfileImage, setChangeProfileImage] = React.useState(false)
     const [selectedImage, setSelectedImage] = React.useState<string | null>(null) // Track selected image
     const { showNotification } = useNotificationContext()
@@ -133,7 +133,7 @@ const PersonalImageButtonChanger = (): JSX.Element => {
                     {
                         headers: {
                             'Content-Type': 'application/json',
-                            Authorization: `Bearer ${userJwt}`
+                            Authorization: `Bearer ${userJwt ?? ''}`
                         }
                     }
                 )
@@ -143,9 +143,9 @@ const PersonalImageButtonChanger = (): JSX.Element => {
                     dispatch(setProfileImage(updatedUserProfileImage))
                     setLoading(false) // Set loading to false after successful update
                 })
-                .catch((error) => {
+                .catch((error: unknown) => {
                     setLoading(false) // Set loading to false after error
-                    if (error instanceof AxiosError) {
+                    if (axios.isAxiosError(error)) {
                         showNotification('Error al actualizar la imagen de perfil: ' + error.message, NotificationType.Error)
                     } else {
                         showNotification('Ocurrió un error inesperado.', NotificationType.Error)
@@ -163,8 +163,16 @@ const PersonalImageButtonChanger = (): JSX.Element => {
                 <ModalHeaderStyled closeButton>Selecciona una de las imágenes:</ModalHeaderStyled>
                 <ModalBodyStyled>
                     <ImagesContainer>
-                        {imageUrlList.map((url, index) => (
-                            <ImageStyled key={index} src={url} thumbnail selected={selectedImage === url} onClick={() => handleImageSelect(url)} />
+                        {imageUrlList.map((url) => (
+                            <ImageStyled
+                                key={url}
+                                src={url}
+                                thumbnail
+                                selected={selectedImage === url}
+                                onClick={() => {
+                                    handleImageSelect(url)
+                                }}
+                            />
                         ))}
                     </ImagesContainer>
                 </ModalBodyStyled>
@@ -173,7 +181,9 @@ const PersonalImageButtonChanger = (): JSX.Element => {
                     <StyledButton variant="success" onClick={handleChangeProfileImagePersist} disabled={!selectedImage || loading}>
                         {loading ? (
                             <>
-                                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                                <output>
+                                    <Spinner as="span" animation="border" size="sm" aria-hidden="true" />
+                                </output>
                                 &nbsp;Cambiando...
                             </>
                         ) : (

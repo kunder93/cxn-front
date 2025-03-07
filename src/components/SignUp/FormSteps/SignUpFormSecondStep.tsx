@@ -39,9 +39,9 @@ export interface SecondStepFormData {
  * This component collects user details such as DNI, name, surnames, gender, and birth date.
  *
  * @param {SecondStepFormData} props - The props for the component.
- * @returns {JSX.Element} The rendered component.
+ * @returns {React.JSX.Element} The rendered component.
  */
-const SignUpFormSecondStep = ({ formikProps, nextStepFunction, previousStepFunction }: SecondStepFormData): JSX.Element => (
+const SignUpFormSecondStep = ({ formikProps, nextStepFunction, previousStepFunction }: SecondStepFormData): React.JSX.Element => (
     <ResponsiveMainContainer>
         <FormField id="dni" name="dni" type="text" label="DNI:" placeholder="Tu DNI" formikProps={formikProps} />
         <FormField id="name" name="name" type="text" label="Nombre:" placeholder="Tu nombre" formikProps={formikProps} />

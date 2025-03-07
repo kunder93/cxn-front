@@ -29,7 +29,7 @@ const useLichessProfile = (userDni: string) => {
                 if (isMounted) {
                     setLichessProfile(response.data)
                 }
-            } catch (err) {
+            } catch {
                 if (isMounted) {
                     setError('Error fetching federate data')
                 }

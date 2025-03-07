@@ -75,15 +75,17 @@ const ProfileImageUploadForm: React.FC = () => {
 
         axios
             .patch<UserProfileImage>(UPLOAD_PROFILE_IMAGE_FILE_URL, formData, {
-                headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${userJwt}` }
+                headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${userJwt ?? ''}` }
             })
             .then((response) => {
                 const updatedUserProfileImage: UserProfileImage = response.data
-                profileImagePreview && (updatedUserProfileImage.file = profileImagePreview)
+                if (profileImagePreview) {
+                    updatedUserProfileImage.file = profileImagePreview
+                }
                 showNotification('Imagen de perfil actualizada', NotificationType.Success)
                 dispatch(setProfileImage(updatedUserProfileImage))
             })
-            .catch((error) => {
+            .catch((error: unknown) => {
                 if (error instanceof AxiosError) {
                     showNotification('Error al actualizar la imagen de perfil: ' + error.message, NotificationType.Error)
                 } else {
@@ -107,7 +109,7 @@ const ProfileImageUploadForm: React.FC = () => {
         event: React.ChangeEvent<HTMLInputElement>,
         setFieldValue: (field: string, value: File | null, shouldValidate?: boolean) => Promise<void>,
         setTouched: (touched: FormikTouched<ProfileImageFormValues>) => void,
-        validateForm: () => Promise<any>,
+        validateForm: () => Promise<FormikErrors<ProfileImageFormValues>>,
         field: keyof ProfileImageFormValues,
         setPreview: React.Dispatch<React.SetStateAction<string | null>>
     ) => {
@@ -129,7 +131,7 @@ const ProfileImageUploadForm: React.FC = () => {
                     <FileInput
                         label="Imagen del perfil:"
                         inputRef={profileImageInputRef}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                             handleFileChange(
                                 event,
                                 setFieldValue as (field: string, value: File | null) => Promise<void>,
@@ -138,7 +140,7 @@ const ProfileImageUploadForm: React.FC = () => {
                                 'profileImage',
                                 setProfileImagePreview
                             )
-                        }
+                        }}
                         isInvalid={!!errors.profileImage && touched.profileImage}
                         errorMessage={errors.profileImage}
                     />
