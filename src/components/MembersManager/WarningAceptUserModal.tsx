@@ -42,7 +42,7 @@ const WarningAceptUserModal: React.FC<WarningAceptUserModalProps> = ({ show, onH
                 {}, // An empty request body for the PATCH request
                 {
                     headers: {
-                        Authorization: `Bearer ${userJwt}`
+                        Authorization: `Bearer ${userJwt ?? ''}`
                     }
                 }
             )
@@ -50,7 +50,10 @@ const WarningAceptUserModal: React.FC<WarningAceptUserModalProps> = ({ show, onH
             // Update the user's roles after a successful response
             updateMemberRoles([UserRole.SOCIO])
 
-            showNotification('Usuario ' + rowData?.name + ' ' + rowData?.firstSurname + ' ' + 'aceptado como socio !', NotificationType.Success)
+            showNotification(
+                'Usuario ' + (rowData?.name ?? '') + ' ' + (rowData?.firstSurname ?? '') + ' ' + (rowData?.secondSurname ?? '') + ' aceptado como socio!',
+                NotificationType.Success
+            )
             onHide() // Close the modal after success
         } catch (error) {
             const axErr = error as AxiosError
@@ -65,41 +68,39 @@ const WarningAceptUserModal: React.FC<WarningAceptUserModalProps> = ({ show, onH
             </Modal.Header>
             <Modal.Body>
                 {rowData ? (
-                    <>
-                        <Formik initialValues={{ userDni: rowData.dni }} onSubmit={handleAcceptMember}>
-                            {({ isSubmitting }) => (
-                                <Form>
-                                    <BootstrapForm.Group controlId="userDni">
-                                        <BootstrapForm.Label>DNI del usuario:</BootstrapForm.Label>
-                                        <Field
-                                            name="userDni"
-                                            type="text"
-                                            className="form-control"
-                                            disabled // Read-only, as it's pre-filled
-                                        />
-                                    </BootstrapForm.Group>
-                                    <p>
-                                        <strong>Nombre:</strong> {`${rowData.name} ${rowData.firstSurname} ${rowData.secondSurname}`}
-                                    </p>
-                                    <p>
-                                        <strong>Email:</strong> {rowData.email}
-                                    </p>
-                                    <p>Puede aceptar la solicitud de este usuario presionando el botón "Aceptar".</p>
-                                    <div className="mt-3">
-                                        <Button type="submit" variant="success" disabled={isSubmitting}>
-                                            {isSubmitting ? (
-                                                <SpinnerTextWrapper>
-                                                    <Spinner size="sm"></Spinner>Cargando...
-                                                </SpinnerTextWrapper>
-                                            ) : (
-                                                <>Aceptar petición</>
-                                            )}
-                                        </Button>
-                                    </div>
-                                </Form>
-                            )}
-                        </Formik>
-                    </>
+                    <Formik initialValues={{ userDni: rowData.dni }} onSubmit={handleAcceptMember}>
+                        {({ isSubmitting }) => (
+                            <Form>
+                                <BootstrapForm.Group controlId="userDni">
+                                    <BootstrapForm.Label>DNI del usuario:</BootstrapForm.Label>
+                                    <Field
+                                        name="userDni"
+                                        type="text"
+                                        className="form-control"
+                                        disabled // Read-only, as it's pre-filled
+                                    />
+                                </BootstrapForm.Group>
+                                <p>
+                                    <strong>Nombre:</strong> {`${rowData.name} ${rowData.firstSurname} ${rowData.secondSurname}`}
+                                </p>
+                                <p>
+                                    <strong>Email:</strong> {rowData.email}
+                                </p>
+                                <p>Puede aceptar la solicitud de este usuario presionando el botón "Aceptar".</p>
+                                <div className="mt-3">
+                                    <Button type="submit" variant="success" disabled={isSubmitting}>
+                                        {isSubmitting ? (
+                                            <SpinnerTextWrapper>
+                                                <Spinner size="sm"></Spinner>Cargando...
+                                            </SpinnerTextWrapper>
+                                        ) : (
+                                            <>Aceptar petición</>
+                                        )}
+                                    </Button>
+                                </div>
+                            </Form>
+                        )}
+                    </Formik>
                 ) : (
                     <p>No se encontraron detalles del usuario.</p>
                 )}

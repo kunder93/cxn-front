@@ -41,7 +41,7 @@ const Heading = styled.h2`
     }
 `
 
-const ChessProfileFederate = (): JSX.Element => {
+const ChessProfileFederate = (): React.JSX.Element => {
     const [federateStatus, setFederateState] = useState<FederateStateResponse>(noFederateState)
     const [uploadDniform, setUploadDniform] = useState(false)
     const currentYear = new Date().getFullYear()
@@ -107,13 +107,13 @@ const ChessProfileFederate = (): JSX.Element => {
                 </Accordion.Item>
             </Accordion>
 
-            <Modal show={uploadDniform} onHide={() => setUploadDniform(false)} centered>
+            <Modal show={uploadDniform} onHide={() => { setUploadDniform(false); }} centered>
                 <StyledModalHeader>Actualizar DNI</StyledModalHeader>
                 <Modal.Body>
-                    <UpdateDniForm setFederateState={setFederateState} closeModal={() => setUploadDniform(false)} />
+                    <UpdateDniForm setFederateState={setFederateState} closeModal={() => { setUploadDniform(false); }} />
                 </Modal.Body>
                 <Modal.Footer>
-                    <CloseModalButton variant="danger" onClick={() => setUploadDniform(false)}>
+                    <CloseModalButton variant="danger" onClick={() => { setUploadDniform(false); }}>
                         Cerrar
                     </CloseModalButton>
                 </Modal.Footer>

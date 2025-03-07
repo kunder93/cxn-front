@@ -31,9 +31,12 @@ export const useBookCover = (isbn: string | null, jwtToken: string | null) => {
                         setIsLoading(false)
                     }
                 })
-                .catch((err) => {
-                    console.error('Error fetching book cover:', err)
-                    setError('Failed to load image')
+                .catch((err: unknown) => {
+                    if (axios.isAxiosError(err)) {
+                        setError('Failed to load image: ' + err.message)
+                    } else {
+                        setError('Failed to load image')
+                    }
                     setIsLoading(false)
                 })
         }
@@ -54,7 +57,7 @@ export const useMagazineImageLoader = (issn: string | undefined, jwtToken: strin
             axios
                 .get(`${RESOURCES_MAGAZINE_URL}/${issn}/coverImage`, {
                     headers: {
-                        Authorization: `Bearer ${jwtToken}`
+                        Authorization: `Bearer ${jwtToken ?? ''}`
                     },
                     responseType: 'blob'
                 })
@@ -66,7 +69,7 @@ export const useMagazineImageLoader = (issn: string | undefined, jwtToken: strin
                         setIsLoading(false)
                     }
                 })
-                .catch((error) => {
+                .catch((error: unknown) => {
                     console.error('Error loading Magazine cover image:', error)
                     setError('Failed to load the cover image. Please try again later.')
                     setIsLoading(false) // Stop loading even in case of an error
@@ -114,7 +117,7 @@ export const useMagazines = () => {
         try {
             // Make the API call to remove the magazine
             await axios.delete(`${RESOURCES_MAGAZINE_URL}/${magazine.issn}`, {
-                headers: { Authorization: `Bearer ${userJwt}` }
+                headers: { Authorization: `Bearer ${userJwt ?? ''}` }
             })
 
             // Remove the magazine from the state
@@ -172,7 +175,7 @@ export const useFetchBooks = () => {
         try {
             // Make the API call to remove the book (you may need to adjust this to your actual endpoint)
             await axios.delete(`${RESOURCES_BOOK_URL}/${book.isbn}`, {
-                headers: { Authorization: `Bearer ${userJwt}` }
+                headers: { Authorization: `Bearer ${userJwt ?? ''}` }
             })
 
             // Remove the book from the state

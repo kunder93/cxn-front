@@ -1,7 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import styled from 'styled-components'
 import { Container, Row, Col, Form as BootstrapForm, FormGroup, FormLabel, FormControl, Button, Spinner } from 'react-bootstrap'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import { useAppDispatch, useAppSelector } from 'store/hooks'
 import { UNSUBSCRIBE_URL } from 'resources/server_urls'
 import { useNotificationContext } from 'components/Common/NotificationContext'
@@ -96,7 +96,7 @@ export interface UnsubscribeMemberFormProps {
     closeModal: () => void
 }
 
-const UnsubscribeMemberForm = ({ userEmail, closeModal }: UnsubscribeMemberFormProps): JSX.Element => {
+const UnsubscribeMemberForm = ({ userEmail, closeModal }: UnsubscribeMemberFormProps): React.JSX.Element => {
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const { showNotification } = useNotificationContext()
     const dispatch = useAppDispatch()
@@ -118,7 +118,7 @@ const UnsubscribeMemberForm = ({ userEmail, closeModal }: UnsubscribeMemberFormP
                 { password: values.currentPassword },
                 {
                     headers: {
-                        Authorization: `Bearer ${userJwt}` // Include the JWT in the Authorization header
+                        Authorization: `Bearer ${userJwt ?? ''}` // Include the JWT in the Authorization header
                     }
                 }
             )
@@ -128,10 +128,12 @@ const UnsubscribeMemberForm = ({ userEmail, closeModal }: UnsubscribeMemberFormP
                 resetForm()
                 await logoutHandler()
             })
-            .catch((err) => {
-                const error = err as AxiosError
-                // Handle errors
-                showNotification('Error: ' + error.message, NotificationType.Error)
+            .catch((err: unknown) => {
+                if (axios.isAxiosError(err)) {
+                    showNotification('Error: ' + err.message, NotificationType.Error)
+                } else {
+                    showNotification('Error inesperado.', NotificationType.Error)
+                }
             })
             .finally(() => {
                 setSubmitting(false) // Ensure the submission state is reset
@@ -203,7 +205,12 @@ const UnsubscribeMemberForm = ({ userEmail, closeModal }: UnsubscribeMemberFormP
                                     'Confirmar'
                                 )}
                             </ConfirmButton>
-                            <CloseButton variant="danger" onClick={() => closeModal()}>
+                            <CloseButton
+                                variant="danger"
+                                onClick={() => {
+                                    closeModal()
+                                }}
+                            >
                                 Cerrar
                             </CloseButton>
                         </FormFooter>

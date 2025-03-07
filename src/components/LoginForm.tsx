@@ -31,9 +31,9 @@ interface LoginAxiosResponse {
 /**
  * LoginForm component allowing users to log in with their email and password.
  *
- * @returns {JSX.Element} The rendered LoginForm component.
+ * @returns {React.JSX.Element} The rendered LoginForm component.
  */
-const LoginForm = (): JSX.Element => {
+const LoginForm = (): React.JSX.Element => {
     const initialValues: LoginFormValues = { email: '', password: '' }
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
@@ -42,7 +42,7 @@ const LoginForm = (): JSX.Element => {
     /**
      * Closes the alert by resetting the alert message state.
      */
-    const closeAlert = () => setAlertMessage('')
+    const closeAlert = () => { setAlertMessage(''); }
 
     /**
      * Handles the form submission.

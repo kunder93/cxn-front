@@ -7,7 +7,7 @@ const PdfWrapper = styled.embed`
     border-radius: 2%;
 `
 
-const EstatutosPDF = (): JSX.Element => {
+const EstatutosPDF = (): React.JSX.Element => {
     return <PdfWrapper src={estatutosSrc} width={'100%'} height={'800px'} />
 }
 

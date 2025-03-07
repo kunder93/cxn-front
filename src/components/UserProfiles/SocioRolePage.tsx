@@ -1,6 +1,6 @@
 import SocioRolePageDataTable from '../../components/MyProfile/SocioRolePageDataTable'
 
-const SocioRolePage = (): JSX.Element => {
+const SocioRolePage = (): React.JSX.Element => {
     return <SocioRolePageDataTable></SocioRolePageDataTable>
 }
 

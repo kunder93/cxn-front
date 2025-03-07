@@ -19,7 +19,7 @@ export const useFederateActions = () => {
                 { userDni },
                 {
                     headers: {
-                        Authorization: `Bearer ${userJwt}`,
+                        Authorization: `Bearer ${userJwt ?? ''}`,
                         'Content-Type': 'application/json'
                     }
                 }

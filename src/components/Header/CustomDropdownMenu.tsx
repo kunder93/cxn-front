@@ -47,14 +47,14 @@ const CustomDropdownMenu: React.FC<DropdownMenuProps> = ({ title, route, menuIte
         }
     }, [])
 
-    const handleTitleClick = useCallback(() => {
+    const handleTitleClick = useCallback(async () => {
         onNavItemClick()
-        navigate(route)
+        await navigate(route)
     }, [navigate, onNavItemClick, route])
 
     const menuItemsComponents = useMemo(() => {
-        return menuItems.map((item, index) => (
-            <Dropdown.Item key={index} as={Link} to={item.href} state={{ accordionItemToOpen: item.accordionItemToOpen }} onClick={handleItemClick}>
+        return menuItems.map((item) => (
+            <Dropdown.Item key={item.text} as={Link} to={item.href} state={{ accordionItemToOpen: item.accordionItemToOpen }} onClick={handleItemClick}>
                 {item.text}
             </Dropdown.Item>
         ))
@@ -64,13 +64,18 @@ const CustomDropdownMenu: React.FC<DropdownMenuProps> = ({ title, route, menuIte
         <MobileNavDropdown
             ref={dropdownRef}
             title={
-                <StyledDropdownTitle aria-label="Desplegable con enlace" role="heading" aria-level={1} onClick={handleTitleClick}>
-                    {' '}
-                    {title}{' '}
+                <StyledDropdownTitle
+                    as="h2"
+                    aria-label="Desplegable con enlace"
+                    onClick={() => {
+                        handleTitleClick().catch((error: unknown) => {
+                            console.error('Navigation error:', error)
+                        })
+                    }}
+                >
+                    {title}
                 </StyledDropdownTitle>
             }
-            // onMouseEnter={handleMouseOver}
-            //onMouseLeave={handleMouseLeave}
             show={showDropdown}
             onToggle={toggleDropdown}
             onClick={handleMouseOver}
@@ -81,7 +86,16 @@ const CustomDropdownMenu: React.FC<DropdownMenuProps> = ({ title, route, menuIte
         <NavDropdown
             ref={dropdownRef}
             title={
-                <StyledDropdownTitle aria-label="Desplegable con enlace" role="heading" aria-level={1} onClick={handleTitleClick} tabIndex={0}>
+                <StyledDropdownTitle
+                    as="h2"
+                    aria-label="Desplegable con enlace"
+                    onClick={() => {
+                        handleTitleClick().catch((error: unknown) => {
+                            console.error('Navigation error:', error)
+                        })
+                    }}
+                    tabIndex={0}
+                >
                     {title}
                 </StyledDropdownTitle>
             }

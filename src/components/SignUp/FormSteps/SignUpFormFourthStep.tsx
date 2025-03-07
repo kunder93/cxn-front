@@ -59,7 +59,7 @@ interface CheckBoxWithLabelProps {
  * A checkbox input with an associated label.
  *
  * @param {CheckBoxWithLabelProps} props - The props for the component.
- * @returns {JSX.Element} The rendered checkbox and label.
+ * @returns {React.JSX.Element} The rendered checkbox and label.
  */
 const CheckBoxWithLabel = ({ name, label }: CheckBoxWithLabelProps) => (
     <CheckBoxContainer>
@@ -97,12 +97,12 @@ interface ModalButtonRowProps {
  * A button that opens a modal when clicked.
  *
  * @param {ModalButtonRowProps} props - The props for the component.
- * @returns {JSX.Element} The rendered button in a row.
+ * @returns {React.JSX.Element} The rendered button in a row.
  */
 const ModalButtonRow = ({ label, modalOption, onClick }: ModalButtonRowProps) => (
     <StyledRow>
         <Col>
-            <Button variant="link" onClick={() => onClick(modalOption)}>
+            <Button variant="link" onClick={() => { onClick(modalOption); }}>
                 {label}
             </Button>
         </Col>
@@ -114,13 +114,13 @@ const ModalButtonRow = ({ label, modalOption, onClick }: ModalButtonRowProps) =>
  *
  * @param {SignUpFormStepProps} formikProps - The Formik props for managing form state.
  * @param {Function} previousStepFunction - Function to navigate to the previous step.
- * @returns {JSX.Element} The rendered fourth step of the sign-up form.
+ * @returns {React.JSX.Element} The rendered fourth step of the sign-up form.
  */
 const SignUpFormFourthStep = ({ formikProps, previousStepFunction }: SignUpFormStepProps) => {
     const [selectedAceptanceOption, setSelectedAceptanceOption] = useState<UserAceptanceModalOption>(UserAceptanceModalOption.CesionDatos)
     const [userAceptanceModalOpen, setUserAceptanceModalOpen] = useState(false)
 
-    const handleUserAceptanceModalClose = useCallback(() => setUserAceptanceModalOpen(false), [])
+    const handleUserAceptanceModalClose = useCallback(() => { setUserAceptanceModalOpen(false); }, [])
 
     const handleModalOpen = useCallback((option: UserAceptanceModalOption) => {
         setSelectedAceptanceOption(option)

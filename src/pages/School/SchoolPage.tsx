@@ -122,7 +122,7 @@ const articlesData: ArticleInfo[] = [
     }
 ]
 
-const SchoolPage = (): JSX.Element => {
+const SchoolPage = (): React.JSX.Element => {
     usePageTitle('CXN Escuela')
     const navigate = useNavigate()
 

@@ -3,7 +3,7 @@ import { Button, Container } from 'react-bootstrap'
 import styled from 'styled-components'
 import SectionRow from './ChangePassword/SectionRow'
 import ChangeEmailModal from './ChangeEmail/ChangeEmailModal'
-import { UserProfile } from 'store/types/userTypes'
+import { UserProfile, UserRole } from 'store/types/userTypes'
 import { renderGenderValues, renderKindMember, renderUserRoles } from '../../utility/userUtilities'
 import UnsubscribeMemberModal from './UnsubscribeMember/UnsubscribeMemberModal'
 import ChangePasswordModal from './ChangePassword/ChangePasswordModal'
@@ -167,11 +167,21 @@ const ProfileActionButtonsContainer = styled.div`
     }
 `
 
-const SocioRolePageDataTable = (): JSX.Element => {
+const SocioRolePageDataTable = (): React.JSX.Element => {
     const { modalType, openModal, closeModal } = useModal()
     const userProfile: UserProfile = useAppSelector((state) => state.users.userProfile)
     const profileImage = useAppSelector((state) => state.users.profileImage) // Fetch profile image separately
-    const isInitialProfileImage = profileImage?.url === '' && profileImage?.stored === false
+    const isInitialProfileImage = profileImage.url === '' && !profileImage.stored
+
+    let profileImageSrc: string
+
+    if (profileImage.stored && profileImage.file) {
+        profileImageSrc = profileImage.file
+    } else if (profileImage.url) {
+        profileImageSrc = profileImage.url
+    } else {
+        profileImageSrc = 'User/ProfileImagesExample/NoProfileImage.avif'
+    }
 
     return (
         <StyledContainer id="My profile page container">
@@ -197,31 +207,47 @@ const SocioRolePageDataTable = (): JSX.Element => {
                     {isInitialProfileImage ? (
                         <PersonBoundingBox size={150} /> // Custom size for icon
                     ) : (
-                        <ProfileImage
-                            src={
-                                profileImage.stored ? profileImage.file : profileImage.url ? profileImage.url : 'User/ProfileImagesExample/NoProfileImage.avif'
-                            }
-                            alt="Imagen de perfil"
-                            rounded
-                        />
+                        <ProfileImage src={profileImageSrc} alt="Imagen de perfil" rounded />
                     )}
                 </ProfileImageContainer>
 
                 <ProfileActionButtonsContainer>
                     <ButtonRow>
                         <PersonalImageButtonChanger />
-                        <Button onClick={() => openModal('email')} variant="secondary">
+                        <Button
+                            onClick={() => {
+                                openModal('email')
+                            }}
+                            variant="secondary"
+                        >
                             Cambiar correo
                         </Button>
-                        <Button onClick={() => openModal('password')} variant="secondary">
+                        <Button
+                            onClick={() => {
+                                openModal('password')
+                            }}
+                            variant="secondary"
+                        >
                             Cambiar contraseña
                         </Button>
-                        <Button onClick={() => openModal('unsubscribe')} variant="danger">
+                        <Button
+                            onClick={() => {
+                                openModal('unsubscribe')
+                            }}
+                            variant="danger"
+                        >
                             Darse de baja
                         </Button>
-                        <Button onClick={() => openModal('payments')} variant="info">
-                            Sección de pagos
-                        </Button>
+                        {!userProfile.userRoles.includes(UserRole.SOCIO_CANDIDATO) && (
+                            <Button
+                                onClick={() => {
+                                    openModal('payments')
+                                }}
+                                variant="info"
+                            >
+                                Sección de pagos
+                            </Button>
+                        )}
                     </ButtonRow>
                 </ProfileActionButtonsContainer>
             </RightColumn>

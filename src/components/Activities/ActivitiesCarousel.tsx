@@ -43,7 +43,7 @@ interface ActivitiesCarouselProps {
     loading: boolean
 }
 
-const ActivitiesCarousel: React.FC<ActivitiesCarouselProps> = ({ activities, error, loading }): JSX.Element => {
+const ActivitiesCarousel: React.FC<ActivitiesCarouselProps> = ({ activities, error, loading }): React.JSX.Element => {
     if (loading) {
         return <LoadingTableSpinnerContainer />
     }
@@ -56,7 +56,7 @@ const ActivitiesCarousel: React.FC<ActivitiesCarouselProps> = ({ activities, err
         )
     }
 
-    if (!activities || activities.length === 0) {
+    if (activities.length === 0) {
         return (
             <NoActivitiesBox>
                 <h2>No hay actividades disponibles</h2>

@@ -13,9 +13,9 @@ const StyledModalFooter = styled(Modal.Footer)`
 
 interface DeleteMemberModalProps extends ModalProps {
     memberEmail: string
-    memberName?: string
-    memberFirstSurname?: string
-    memberSecondSurname?: string
+    memberName: string
+    memberFirstSurname: string
+    memberSecondSurname: string
     onDeleteSuccess?: (email: string) => void
 }
 
@@ -26,7 +26,7 @@ const DeleteMemberModal = ({
     memberSecondSurname,
     onDeleteSuccess,
     ...props
-}: DeleteMemberModalProps): JSX.Element => {
+}: DeleteMemberModalProps): React.JSX.Element => {
     const [isDeleting, setIsDeleting] = useState(false)
     const { showNotification } = useNotificationContext()
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)

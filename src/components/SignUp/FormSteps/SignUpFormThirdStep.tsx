@@ -35,7 +35,7 @@ const isThirdStepNextButtonDisabled = ({ errors }: FormikProps<SignUpFormValues>
  * @param {SignUpFormStepProps} formikProps - The Formik props for managing form state and validation.
  * @param {Function} previousStepFunction - Function to navigate to the previous step.
  * @param {Function} nextStepFunction - Function to navigate to the next step.
- * @returns {JSX.Element} - The rendered component.
+ * @returns {React.JSX.Element} - The rendered component.
  */
 const SignUpFormThirdStep = ({ formikProps, previousStepFunction, nextStepFunction }: SignUpFormStepProps) => {
     const [selectedCountryNumber, setSelectedCountry] = useState<number | undefined>()
@@ -72,7 +72,7 @@ const SignUpFormThirdStep = ({ formikProps, previousStepFunction, nextStepFuncti
     /**
      * Generates options for the country select field.
      *
-     * @returns {JSX.Element} - The options for the country select field.
+     * @returns {React.JSX.Element} - The options for the country select field.
      */
     const countryOptions = useMemo(() => {
         if (countriesList.loaded && countriesList.data) {
@@ -93,7 +93,7 @@ const SignUpFormThirdStep = ({ formikProps, previousStepFunction, nextStepFuncti
     /**
      * Generates options for the sub-country (province) select field.
      *
-     * @returns {JSX.Element} - The options for the sub-country select field.
+     * @returns {React.JSX.Element} - The options for the sub-country select field.
      */
     const subCountryOptions = useMemo(() => {
         if (subCountriesLoading) {

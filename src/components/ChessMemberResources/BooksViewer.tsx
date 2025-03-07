@@ -71,11 +71,11 @@ const BooksViewer = () => {
                 Header: () => <ActionsHeader>Detalles</ActionsHeader>,
                 Cell: ({ row }: CellProps<Book>) => (
                     <ActionsCell>
-                        <OptionButton variant="info" onClick={() => openModal('details', row.original)}>
+                        <OptionButton variant="info" onClick={() => { openModal('details', row.original); }}>
                             Ver más
                         </OptionButton>
                         {hasAccess && (
-                            <OptionButton variant="danger" onClick={() => openModal('remove', row.original)}>
+                            <OptionButton variant="danger" onClick={() => { openModal('remove', row.original); }}>
                                 Borrar
                             </OptionButton>
                         )}
@@ -96,8 +96,8 @@ const BooksViewer = () => {
             <FilterCheckboxList filters={filters} onChange={handleFilterChange} />
 
             <TableActionsRow>
-                {hasAccess && <AddBookIcon size={44} onClick={() => openModal('add')} />}
-                <FormControl type="text" placeholder="Buscar..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="mb-3" />
+                {hasAccess && <AddBookIcon size={44} onClick={() => { openModal('add'); }} />}
+                <FormControl type="text" placeholder="Buscar..." value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); }} className="mb-3" />
             </TableActionsRow>
 
             <Table {...getTableProps()} striped bordered hover>

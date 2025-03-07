@@ -1,6 +1,6 @@
 import { Container } from 'react-bootstrap'
 
-export const CesionDatosContainer = (): JSX.Element => {
+export const CesionDatosContainer = (): React.JSX.Element => {
     return (
         <Container>
             <p>

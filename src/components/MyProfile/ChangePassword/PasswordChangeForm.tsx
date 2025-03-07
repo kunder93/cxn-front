@@ -116,7 +116,7 @@ const InnerPasswordChangeForm: React.FC<{
     )
 }
 
-const PasswordChangeForm = ({ formikRef, userEmail, setIsSubmitting, setFormIsValid }: ChangePasswordFormProps): JSX.Element => {
+const PasswordChangeForm = ({ formikRef, userEmail, setIsSubmitting, setFormIsValid }: ChangePasswordFormProps): React.JSX.Element => {
     const userJwt = useAppSelector<string | null>((state) => state.users.jwt)
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
@@ -130,7 +130,7 @@ const PasswordChangeForm = ({ formikRef, userEmail, setIsSubmitting, setFormIsVa
                     newPassword: values.newPassword
                 },
                 {
-                    headers: { Authorization: 'Bearer ' + userJwt }
+                    headers: { Authorization: `Bearer ${userJwt ?? ''}` }
                 }
             )
             .then(async () => {
@@ -139,8 +139,12 @@ const PasswordChangeForm = ({ formikRef, userEmail, setIsSubmitting, setFormIsVa
                 dispatch(removeJwt())
                 await navigate('/')
             })
-            .catch((error) => {
-                showNotification('Error: ' + error, NotificationType.Error)
+            .catch((error: unknown) => {
+                if (axios.isAxiosError(error)) {
+                    showNotification('Error: ' + error.message, NotificationType.Error)
+                } else {
+                    showNotification('Error inesperado.', NotificationType.Error)
+                }
             })
             .finally(() => {
                 setSubmitting(false)

@@ -7,7 +7,7 @@ import store from './store/store'
 import { BrowserRouter } from 'react-router-dom'
 import { NotificationProvider } from './components/Common/NotificationContext'
 
-const App = (): JSX.Element => {
+const App = (): React.JSX.Element => {
     return (
         <Provider store={store}>
             <BrowserRouter>

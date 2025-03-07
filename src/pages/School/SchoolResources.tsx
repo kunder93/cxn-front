@@ -2,6 +2,7 @@ import usePageTitle from '../../components/Common/hooks/usePageTitle'
 import { backGroundColor, backgroundImageUrl, mainContentContainerBackgroundColor } from '../../components/Common/CommonStyles'
 import { Container, Table } from 'react-bootstrap'
 import styled from 'styled-components'
+import React from 'react'
 
 const StyledTable = styled(Table)`
     td:first-child {
@@ -41,7 +42,7 @@ const ResourceLinkStyled = styled.a`
     }
 `
 
-const ChessResources = (): JSX.Element => {
+const ChessResources = (): React.JSX.Element => {
     usePageTitle('CXN Recursos didácticos.')
     const resources: Resource[] = [
         {
@@ -77,7 +78,7 @@ const ChessResources = (): JSX.Element => {
 
         {
             title: 'Xoga e aprende 1',
-            link: 'http://www.fegaxa.org/wp-content/uploads/2016/02/XogaEAprendeVolumenI1.pdf',
+            link: 'https://www.fegaxa.org/wp-content/uploads/2016/02/XogaEAprendeVolumenI1.pdf',
             category: 'Iniciación:',
             description: 'Libro destinado a los más pequeños.'
         },
@@ -102,17 +103,17 @@ const ChessResources = (): JSX.Element => {
     ]
 
     // Agrupar los recursos por categorías
-    const groupedResources: Record<string, Resource[]> = resources.reduce(
-        (acc, resource) => {
-            const { category } = resource
-            if (!acc[category]) {
-                acc[category] = []
-            }
-            acc[category].push(resource)
-            return acc
-        },
-        {} as Record<string, Resource[]>
-    ) // Se define un tipo para el objeto inicial
+    const groupedResources: Record<string, Resource[]> = resources.reduce<Record<string, Resource[]>>((acc, resource) => {
+        const { category } = resource
+
+        // Using modern Object.hasOwn() method
+        if (!(category in acc)) {
+            acc[category] = []
+        }
+
+        acc[category].push(resource)
+        return acc
+    }, {})
 
     return (
         <MainContainer>

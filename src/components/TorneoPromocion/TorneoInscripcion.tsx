@@ -3,7 +3,7 @@ import { Formik, Field, Form as FormikForm, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import styled from 'styled-components'
 import usePageTitle from '../../components/Common/hooks/usePageTitle'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import { TOURNAMENT_PARTICIPANTS_URL } from '../../resources/server_urls'
 import { useNotificationContext } from '../../components/Common/NotificationContext'
 import { NotificationType } from '../../components/Common/hooks/useNotification'
@@ -96,14 +96,14 @@ const validationSchema = Yup.object({
     birthDate: Yup.date()
         .required('La fecha de nacimiento es obligatoria')
         .test('valid-category', 'La fecha de nacimiento no coincide con la categoría seleccionada', function (value) {
-            const { category } = this.parent as { category: string }
-            if (!value || !category) return true // Si no hay fecha o categoría, no validar
-            const year = value.getFullYear()
+            const { category } = this.parent as { category?: string }
+
+            if (!category) return true // Si no hay categoría, no validar
+
             const selectedCategory = categories.find((c) => c.value === category)
             if (!selectedCategory) return false
 
-            // La fecha de nacimiento debe ser posterior o igual al mínimo año permitido para la categoría seleccionada
-            return year >= selectedCategory.minYear
+            return value.getFullYear() >= selectedCategory.minYear
         }),
     category: Yup.string()
         .oneOf(
@@ -113,7 +113,7 @@ const validationSchema = Yup.object({
         .required('La categoría es obligatoria')
 })
 
-const TournamentRegistration = (): JSX.Element => {
+const TournamentRegistration = (): React.JSX.Element => {
     usePageTitle('Inscripción torneo')
     const { showNotification } = useNotificationContext()
 
@@ -129,24 +129,26 @@ const TournamentRegistration = (): JSX.Element => {
                 onSubmit={(values, actions) => {
                     const formattedValues = {
                         ...values,
-                        byes: values.byes.length > 0 ? values.byes.join(' ') : '' // Convertir el array de byes a una cadena
+                        byes: values.byes.length > 0 ? values.byes.join(' ') : '' // Convert array to string
                     }
+
                     axios
                         .post(TOURNAMENT_PARTICIPANTS_URL, formattedValues)
                         .then(() => {
                             showNotification('Inscripción realizada correctamente.', NotificationType.Success)
                             actions.resetForm()
                         })
-                        .catch((error) => {
-                            const axiosError = error as AxiosError
-                            if (axiosError?.response?.data) {
-                                showNotification(axiosError.message, NotificationType.Error)
-                            } else if (axiosError.request) {
-                                showNotification('Error: no hay respuesta.', NotificationType.Error)
+                        .catch((error: unknown) => {
+                            if (axios.isAxiosError(error)) {
+                                if (error.response?.data) {
+                                    showNotification(error.message, NotificationType.Error)
+                                } else if (error.request) {
+                                    showNotification('Error: no hay respuesta.', NotificationType.Error)
+                                }
                             } else {
-                                showNotification('Error: algo inesperado. Recarga o intentalo más tarde.', NotificationType.Error)
+                                showNotification('Error: algo inesperado. Recarga o inténtalo más tarde.', NotificationType.Error)
                             }
-                        })
+                        }) // <-- Corrected the misplaced closing parenthesis
                         .finally(() => {
                             actions.setSubmitting(false)
                         })
@@ -267,7 +269,8 @@ const TournamentRegistration = (): JSX.Element => {
                                 <Button variant="success" disabled={isSubmitting || !isValid || !dirty} type="submit">
                                     {isSubmitting ? (
                                         <>
-                                            <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> Añadiendo...
+                                            <Spinner as="span" animation="border" size="sm" aria-hidden="true" />
+                                            <output> Añadiendo... </output>
                                         </>
                                     ) : (
                                         'Enviar'

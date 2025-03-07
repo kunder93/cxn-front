@@ -133,7 +133,7 @@ const accordionData: BenefitsAccordionProps = {
     chessQuestionsFormCategory: 'CLASES ADULTOS'
 }
 
-const SchoolOld = (): JSX.Element => {
+const SchoolOld = (): React.JSX.Element => {
     usePageTitle('CXN Escuela adultos')
     return (
         <MainContainerStyled>

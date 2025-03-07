@@ -19,13 +19,13 @@ interface Button {
  *
  * @interface ProfileMenuSection
  * @property {string} key - A unique key for the section.
- * @property {JSX.Element} icon - The icon displayed for the section.
+ * @property {React.JSX.Element} icon - The icon displayed for the section.
  * @property {string} title - The title of the section.
  * @property {Button[]} buttons - An array of buttons associated with the section.
  */
 export interface ProfileMenuSection {
     key: string
-    icon: JSX.Element
+    icon: React.JSX.Element
     title: string
     buttons: Button[]
 }

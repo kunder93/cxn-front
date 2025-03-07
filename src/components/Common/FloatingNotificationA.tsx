@@ -15,7 +15,7 @@ interface IFloatingNotificationA {
     hideNotification: () => void
 }
 
-const FloatingNotificationA = ({ notification, hideNotification }: IFloatingNotificationA): JSX.Element => {
+const FloatingNotificationA = ({ notification, hideNotification }: IFloatingNotificationA): React.JSX.Element => {
     const handleExited = () => {
         hideNotification()
     }

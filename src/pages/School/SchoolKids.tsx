@@ -163,7 +163,7 @@ function openPdfWindow() {
     window.open(pdfUrl, '_blank')
 }
 
-const SchoolKids = (): JSX.Element => {
+const SchoolKids = (): React.JSX.Element => {
     usePageTitle('CXN Escuela infantil')
     return (
         <MainContainerStyled>

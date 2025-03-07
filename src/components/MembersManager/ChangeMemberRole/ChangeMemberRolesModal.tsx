@@ -11,9 +11,9 @@ const StyledModalFooter = styled(Modal.Footer)`
 
 interface ChangeMemberRolesModalProps extends ModalProps {
     memberEmail: string
-    memberName: string | undefined
-    memberFirstSurname: string | undefined
-    memberSecondSurname: string | undefined
+    memberName: string
+    memberFirstSurname: string
+    memberSecondSurname: string
     memberRoles: UserRole[]
     updateMemberRoles: (newUserRoles: UserRole[]) => void
 }
@@ -26,7 +26,7 @@ const ChangeMemberRolesModal = ({
     memberRoles,
     updateMemberRoles,
     ...props
-}: ChangeMemberRolesModalProps): JSX.Element => {
+}: ChangeMemberRolesModalProps): React.JSX.Element => {
     // Formik form ref for use submit when click Button.
     const formRef = React.useRef<FormikProps<ChangeMemberRolesValues>>(null)
     const [blockButton, setBlockButton] = React.useState(false)

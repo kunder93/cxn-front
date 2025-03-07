@@ -29,7 +29,7 @@ export const useDniImages = (userDni: string): UseDniImagesResult => {
                 const response = await axios.get<DniImages>(`${GET_USER_DNI_URL}/dni/${userDni}`, {
                     responseType: 'json',
                     headers: {
-                        Authorization: `Bearer ${userJwt}`
+                        Authorization: `Bearer ${userJwt ?? ''}`
                     }
                 })
 

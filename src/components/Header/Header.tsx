@@ -75,9 +75,15 @@ const CollapsibleNavigationBar: React.FC = () => {
 
     const navbarRef = useRef<HTMLDivElement>(null)
 
-    const handleToggle = () => setExpanded(!expanded)
-    const handleNavItemClick = () => setExpanded(false)
-    const handleNavbarBrandClick = () => setExpanded(false)
+    const handleToggle = () => {
+        setExpanded(!expanded)
+    }
+    const handleNavItemClick = () => {
+        setExpanded(false)
+    }
+    const handleNavbarBrandClick = () => {
+        setExpanded(false)
+    }
 
     const handleClickOutside = (event: MouseEvent) => {
         if (navbarRef.current && !navbarRef.current.contains(event.target as Node)) {

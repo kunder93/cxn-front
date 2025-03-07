@@ -19,7 +19,7 @@ const LoadingMessage = styled.p`
     font-size: 1.5rem; /* Ajusta el tamaño del mensaje */
     color: #333;
 `
-const LoadingTableSpinnerContainer = (): JSX.Element => {
+const LoadingTableSpinnerContainer = (): React.JSX.Element => {
     return (
         <LoadingContainer>
             <LargeSpinner animation="border" role="output" />

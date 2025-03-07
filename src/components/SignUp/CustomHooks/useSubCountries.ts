@@ -16,11 +16,11 @@ const useSubCountries = (countryNumber?: number) => {
 
             const fetchSubCountries = async () => {
                 try {
-                    const response = await axios.get<ISubCountriesList>(`${GET_SUBCOUNTRIES_URL}/${countryNumber}`)
+                    const response = await axios.get<ISubCountriesList>(`${GET_SUBCOUNTRIES_URL}/${countryNumber.toString()}`)
                     if (isMounted) {
                         setSubCountriesList(response.data)
                     }
-                } catch (error) {
+                } catch {
                     if (isMounted) {
                         setError('Error fetching subcountries')
                     }

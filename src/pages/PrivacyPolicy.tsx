@@ -25,9 +25,9 @@ const MainContainer = styled(Container)`
  * Displays the privacy policy, terms of data protection, and contact information for Círculo Xadrez Naron (CXN).
  *
  * @component
- * @returns {JSX.Element} A React component that renders the privacy policy page content.
+ * @returns {React.JSX.Element} A React component that renders the privacy policy page content.
  */
-const PrivacyPolicy = (): JSX.Element => {
+const PrivacyPolicy = (): React.JSX.Element => {
     usePageTitle('CXN Política de privacidad')
     return (
         <MainContainer>
