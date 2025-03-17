@@ -27,7 +27,8 @@ const initialState: UserState = {
             city: '',
             countryName: '',
             subCountryName: ''
-        }
+        },
+        teamName: null
     }
 }
 
