@@ -19,6 +19,7 @@ import { FederateManager } from './FederateManager'
 import ActivitiesManager from './ActivitiesManager'
 import { MembersPaymentsPage } from './MembersPaymentsPage'
 import { MembersResourcesPage } from './MembersResourcesPages'
+import ChessLeaguePage from './ChessLeaguePage'
 
 const MainPageContainer = styled.div`
     width: 100%;
@@ -109,7 +110,8 @@ const sectionComponents: Record<ProfileSection, React.FC<{ changePage: (section:
     [ProfileSection.FederateManager]: FederateManager,
     [ProfileSection.ActivitiesManager]: ActivitiesManager,
     [ProfileSection.MembersPaymentsManager]: MembersPaymentsPage,
-    [ProfileSection.MembersResources]: MembersResourcesPage
+    [ProfileSection.MembersResources]: MembersResourcesPage,
+    [ProfileSection.LeaguePage]: ChessLeaguePage
 }
 
 const ProfilePage = (): React.JSX.Element => {

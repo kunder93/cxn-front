@@ -24,6 +24,7 @@ export interface UserData {
     birthDate: string
     kindMember: KindMember
     userRoles: UserRole[]
+    teamName: string | null
 }
 export interface UserProfileImage {
     imageExtension: string // New field for image extension
