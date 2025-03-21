@@ -85,3 +85,5 @@ export const GET_USER_DNI_URL = BASE_URL + 'api/user/federate'
 export const LICHESS_PROFILE_URL = BASE_URL + 'api/getLichessProfile'
 
 export const CHESS_TEAMS_URL = BASE_URL + 'api/team'
+
+export const USER_TEAM_PREFERENCES = BASE_URL + 'api/team/preference'

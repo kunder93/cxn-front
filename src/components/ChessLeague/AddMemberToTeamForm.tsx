@@ -39,7 +39,9 @@ const AddMemberToTeamForm: React.FC<AddMemberToTeamFormProps> = (props) => {
     const { users, loadedUsers, loadUsersError } = useGetAllUsers()
 
     // Filtra usuarios disponibles: sin asignar a un equipo y que no estén ya en el equipo local
-    const availableUsers = loadedUsers ? users.filter((user) => user.teamName == null && !teamMembers.find((member) => member.email === user.email)) : []
+    const availableUsers = loadedUsers
+        ? users.filter((user) => user.assignedTeamName == null && !teamMembers.find((member) => member.email === user.email))
+        : []
 
     return (
         <Formik
