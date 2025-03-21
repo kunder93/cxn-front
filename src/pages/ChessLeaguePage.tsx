@@ -4,12 +4,45 @@ import { useTeams } from 'components/ChessLeague/Hooks/useTeams'
 import RemoveMemberFromTeamModal from 'components/ChessLeague/RemoveMemberFromTeamModal'
 import RemoveTeamModal from 'components/ChessLeague/RemoveTeamModal'
 import { TeamWithMembers, TeamMember } from 'components/ChessLeague/types'
+import UserTeamPreferencesTable from 'components/ChessLeague/UserTeamPreferencesTable'
 import React from 'react'
 import { Accordion, Button, ListGroup } from 'react-bootstrap'
 import { FaTrash, FaUserPlus } from 'react-icons/fa'
 import { ImCross } from 'react-icons/im'
-import { useAppSelector } from 'store/hooks'
+import { useAppDispatch, useAppSelector } from 'store/hooks'
 import { UserRole } from 'store/types/userTypes'
+import axios from 'axios'
+import { USER_TEAM_PREFERENCES } from 'resources/server_urls'
+import { setPreferredTeamName } from 'store/slices/user'
+import { useNotificationContext } from 'components/Common/NotificationContext'
+import { NotificationType } from 'components/Common/hooks/useNotification'
+import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io'
+import { shallowEqual } from 'react-redux'
+import styled from 'styled-components'
+import { PiPlusSquareFill } from 'react-icons/pi'
+import { FederateState } from 'components/UserProfiles/ChessProfileFederate/Hooks/getFederateState'
+
+const CreateTeamButtonWrapper = styled.div``
+const AddPaymentIcon = styled(PiPlusSquareFill)`
+    fill: blue;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    &:hover {
+        transform: scale(1.2);
+    }
+`
+
+interface SetPreferredTeamResponse {
+    dni: string
+    email: string
+    name: string
+    firstSurname: string
+    secondSurname: string
+    gender: string
+    birthDate: string
+    assignedTeam: string | null
+    preferredTeam: string | null
+}
 
 const ChessLeaguePage = () => {
     const [createTeamModal, setCreateTeamModal] = React.useState(false)
@@ -19,22 +52,33 @@ const ChessLeaguePage = () => {
     const [selectedTeam, setSelectedTeam] = React.useState<TeamWithMembers | null>(null)
     const [selectedMemberForRemove, setSelectedMemberForRemove] = React.useState<TeamMember | null>(null)
     const { teams, addTeam, removeTeam, addMemberToTeam, removeMemberFromTeam } = useTeams()
-    const userProfile = useAppSelector((state) => state.users.userProfile)
-    return (
-        <>
-            {(userProfile.userRoles.includes(UserRole.PRESIDENTE) ||
-                userProfile.userRoles.includes(UserRole.ADMIN) ||
-                userProfile.userRoles.includes(UserRole.SECRETARIO)) && (
-                <Button
-                    variant="success"
-                    onClick={() => {
-                        setCreateTeamModal(true)
-                    }}
-                >
-                    Crear equipo
-                </Button>
-            )}
+    const userProfile = useAppSelector((state) => state.users.userProfile, shallowEqual)
+    const jwt = useAppSelector((state) => state.users.jwt)
+    const dispatch = useAppDispatch()
+    const { showNotification } = useNotificationContext()
+    console.log(userProfile)
+    const handleSetPreferredTeam = (team: TeamWithMembers) => {
+        axios
+            .patch<SetPreferredTeamResponse>(USER_TEAM_PREFERENCES + '/' + team.name, {}, { headers: { Authorization: `Bearer ${jwt}` } })
+            .then((response) => {
+                console.log(response)
+                dispatch(setPreferredTeamName(response.data.preferredTeam))
+            })
+            .catch((error: unknown) => {
+                if (axios.isAxiosError(error)) {
+                    const errorMessage = error.message || 'Error desconocido en la petición'
+                    showNotification(`Error al establecer el equipo preferido: ${errorMessage}`, NotificationType.Error)
+                } else {
+                    showNotification('Error inesperado al establecer el equipo preferido', NotificationType.Error)
+                }
+            })
+    }
 
+    return userProfile.federateState === FederateState.FEDERATE ||
+        userProfile.userRoles.includes(UserRole.PRESIDENTE) ||
+        userProfile.userRoles.includes(UserRole.ADMIN) ||
+        userProfile.userRoles.includes(UserRole.SECRETARIO) ? (
+        <div>
             {createTeamModal && (
                 <CreateTeamModal
                     show={createTeamModal}
@@ -57,6 +101,23 @@ const ChessLeaguePage = () => {
 
             <div>
                 <h1>Equipos liga gallega:</h1>
+                {(userProfile.userRoles.includes(UserRole.PRESIDENTE) ||
+                    userProfile.userRoles.includes(UserRole.ADMIN) ||
+                    userProfile.userRoles.includes(UserRole.SECRETARIO)) && (
+                    <CreateTeamButtonWrapper>
+                        <button
+                            onClick={() => {
+                                setCreateTeamModal(true)
+                            }}
+                            title="Crear equipo de liga."
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', margin: 0, padding: 0 }}
+                            aria-label="Crear equipo de liga."
+                        >
+                            <AddPaymentIcon size={60} />
+                        </button>
+                    </CreateTeamButtonWrapper>
+                )}
+
                 <Accordion>
                     {teams.map((team) => (
                         <Accordion.Item key={team.name} eventKey={team.name}>
@@ -93,6 +154,16 @@ const ChessLeaguePage = () => {
                                         </Button>
                                     </>
                                 )}
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => {
+                                        setSelectedTeam(team)
+                                        handleSetPreferredTeam(team)
+                                    }}
+                                    className="ms-2"
+                                >
+                                    {userProfile.preferredTeamName == team.name ? <IoMdHeart /> : <IoMdHeartEmpty />}
+                                </Button>
 
                                 <ListGroup numbered variant="flush" className="mt-3">
                                     {team.members.length > 0 && <span>Integrantes:</span>}
@@ -140,7 +211,13 @@ const ChessLeaguePage = () => {
                     memberEmail={selectedMemberForRemove ? selectedMemberForRemove.email : ''}
                 />
             </div>
-        </>
+
+            {(userProfile.userRoles.includes(UserRole.PRESIDENTE) ||
+                userProfile.userRoles.includes(UserRole.ADMIN) ||
+                userProfile.userRoles.includes(UserRole.SECRETARIO)) && <UserTeamPreferencesTable></UserTeamPreferencesTable>}
+        </div>
+    ) : (
+        <div>Debes estar federado para unirte a equipos de liga.</div>
     )
 }
 

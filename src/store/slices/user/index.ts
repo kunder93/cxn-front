@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { KindMember, UserProfile, UserProfileImage, UserRole, UserState } from '../../../store/types/userTypes'
+import { FederateState } from 'components/UserProfiles/ChessProfileFederate/Hooks/getFederateState'
 
 const initialState: UserState = {
     jwt: '',
@@ -28,7 +29,9 @@ const initialState: UserState = {
             countryName: '',
             subCountryName: ''
         },
-        teamName: null
+        assignedTeamName: null,
+        preferredTeamName: null,
+        federateState: FederateState.NO_FEDERATE
     }
 }
 
@@ -58,10 +61,17 @@ const userSlice = createSlice({
         },
         removeProfileImage: (state) => {
             state.profileImage = initialState.profileImage // Reset profile image
+        },
+        setAssignedTeamName: (state, action: PayloadAction<string | null>) => {
+            state.userProfile.assignedTeamName = action.payload
+        },
+        setPreferredTeamName: (state, action: PayloadAction<string | null>) => {
+            state.userProfile.preferredTeamName = action.payload
         }
     }
 })
 
-export const { setJwt, removeJwt, setUserProfile, removeUserProfile, setProfileImage, removeProfileImage } = userSlice.actions
+export const { setJwt, removeJwt, setUserProfile, removeUserProfile, setProfileImage, removeProfileImage, setAssignedTeamName, setPreferredTeamName } =
+    userSlice.actions
 
 export default userSlice.reducer
