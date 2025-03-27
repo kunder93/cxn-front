@@ -14,7 +14,7 @@ import {
     GET_USER_PROFILE_URL,
     PAYMENT_URL
 } from '../resources/server_urls'
-import { LoginFormValues } from '../components/LoginForm'
+import { LoginFormValues } from '../components/login/LoginForm'
 import { ChangeKindMemberValues } from '../components/MembersManager/ChangeKindMember/ChangeKindMemberForm'
 import { ChangeMemberRolesValues } from '../components/MembersManager/ChangeMemberRole/ChangeMemberRolesForm'
 import { ChangeEmailAxiosValues } from '../components/MyProfile/ChangeEmail/ChangeUserEmailResultAlert'

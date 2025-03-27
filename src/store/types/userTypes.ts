@@ -1,3 +1,5 @@
+import { FederateState } from 'components/UserProfiles/ChessProfileFederate/Hooks/getFederateState'
+
 export enum UserRole {
     SOCIO = 'ROLE_SOCIO',
     ADMIN = 'ROLE_ADMIN',
@@ -24,6 +26,9 @@ export interface UserData {
     birthDate: string
     kindMember: KindMember
     userRoles: UserRole[]
+    assignedTeamName: string | null
+    preferredTeamName: string | null
+    federateState: FederateState
 }
 export interface UserProfileImage {
     imageExtension: string // New field for image extension
