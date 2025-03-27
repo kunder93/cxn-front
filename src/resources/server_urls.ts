@@ -83,3 +83,11 @@ export const RESOURCES_MAGAZINE_URL = BASE_URL + 'api/resources/magazine'
 export const GET_USER_DNI_URL = BASE_URL + 'api/user/federate'
 
 export const LICHESS_PROFILE_URL = BASE_URL + 'api/getLichessProfile'
+
+export const CHESS_TEAMS_URL = BASE_URL + 'api/team'
+
+export const USER_TEAM_PREFERENCES = BASE_URL + 'api/team/preference'
+
+export const FORGOT_PASSWORD_SEND_TOKEM_EMAIL_URL = BASE_URL + 'api/ott/my-generate-url'
+
+export const SET_NEW_PASSWORD_URL = BASE_URL + 'api/ott/my-generate-url/password/reset'
