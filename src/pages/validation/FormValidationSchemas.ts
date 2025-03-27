@@ -2,13 +2,13 @@ import * as Yup from 'yup'
 import { SignUpFormValues } from '../../components/SignUp/SignUpFormTypes'
 import { format, subYears } from 'date-fns'
 
-const EMAIL_MAX_LENGTH = 40
-const PASSWORD_MAX_LENGTH = 30
-const PASSWORD_MIN_LENGTH = 6
-const NAME_MAX_LENGTH = 20
-const FIRSTSURNAME_MAX_LENGTH = 20
-const SECONDSURNAME_MAX_LENGTH = 20
-const POSTALCODE_MAX_LENGTH = 10
+export const EMAIL_MAX_LENGTH = 40
+export const PASSWORD_MAX_LENGTH = 30
+export const PASSWORD_MIN_LENGTH = 6
+export const NAME_MAX_LENGTH = 20
+export const FIRSTSURNAME_MAX_LENGTH = 20
+export const SECONDSURNAME_MAX_LENGTH = 20
+export const POSTALCODE_MAX_LENGTH = 10
 
 export const SignUpFormValidationSchema: Yup.ObjectSchema<SignUpFormValues> = Yup.object({
     //First step fields

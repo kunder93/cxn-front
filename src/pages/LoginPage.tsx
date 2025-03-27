@@ -1,4 +1,4 @@
-import LoginForm from '../components/LoginForm'
+import LoginForm from '../components/login/LoginForm'
 import { MainContainer } from '../components/SignUpSingInCommonStyles'
 import usePageTitle from '../components/Common/hooks/usePageTitle'
 
