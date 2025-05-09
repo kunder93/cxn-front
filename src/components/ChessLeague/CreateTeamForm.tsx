@@ -7,6 +7,9 @@ import * as Yup from 'yup'
 import { ButtonsWrapper } from 'components/UserProfiles/ChessProfileFederate/Forms/Common/styles'
 import styled from 'styled-components'
 
+/**
+ * Wrapper to style the spinner output layout when the form is submitting.
+ */
 const SpinnerTextWrapper = styled.div`
     output {
         display: flex;
@@ -15,19 +18,49 @@ const SpinnerTextWrapper = styled.div`
     }
 `
 
+/**
+ * Styled submit button with full width and minimum size constraints.
+ */
 const StyledSubmitButton = styled(Button)`
-    width: 100%; /* Ocupa todo el ancho */
+    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: center; /* Centra el contenido */
+    justify-content: center;
     min-height: 50px;
     min-width: 150px;
 `
 
+/**
+ * Props for the {@link CreateTeamForm} component.
+ */
 interface CreateTeamFormProps {
+    /**
+     * Function to call when the form is submitted.
+     * It receives the team name, category, and description.
+     *
+     * @param name - The name of the team.
+     * @param category - The category of the team.
+     * @param description - The description of the team.
+     */
     addTeam: (name: string, category: string, description: string) => Promise<void>
 }
 
+/**
+ * A form component to create a new league team.
+ *
+ * This component uses Formik for form state management and validation,
+ * and Yup for schema validation. On successful submission, it calls the `addTeam` function
+ * and displays a success or error notification depending on the result.
+ *
+ * @param props - The {@link CreateTeamFormProps} with an `addTeam` callback.
+ *
+ * @returns A form with fields for name, description, and category, along with a submit button.
+ *
+ * @example
+ * ```tsx
+ * <CreateTeamForm addTeam={(name, category, desc) => api.createTeam(name, category, desc)} />
+ * ```
+ */
 const CreateTeamForm: React.FC<CreateTeamFormProps> = ({ addTeam }) => {
     const initialValues: Team = { name: '', description: '', category: '' }
     const { showNotification } = useNotificationContext()
@@ -44,7 +77,7 @@ const CreateTeamForm: React.FC<CreateTeamFormProps> = ({ addTeam }) => {
             initialValues={initialValues}
             onSubmit={async (values, actions) => {
                 try {
-                    await addTeam(values.name, values.category, values.description) // Usa addTeam
+                    await addTeam(values.name, values.category, values.description)
                     showNotification('Equipo creado exitosamente.', NotificationType.Success)
                     actions.resetForm()
                 } catch {
