@@ -22,7 +22,14 @@ import styled from 'styled-components'
 import { PiPlusSquareFill } from 'react-icons/pi'
 import { FederateState } from 'components/UserProfiles/ChessProfileFederate/Hooks/getFederateState'
 
-const CreateTeamButtonWrapper = styled.div``
+/**
+ * Styled icon component used to visually represent the action of creating a team.
+ *
+ * This icon:
+ * - Has a blue fill color.
+ * - Shows a pointer cursor on hover.
+ * - Scales up slightly when hovered to emphasize interactivity.
+ */
 const AddPaymentIcon = styled(PiPlusSquareFill)`
     fill: blue;
     cursor: pointer;
@@ -32,15 +39,38 @@ const AddPaymentIcon = styled(PiPlusSquareFill)`
     }
 `
 
+/**
+ * Interface representing the structure of the API response when a user
+ * sets or updates their preferred team.
+ *
+ * This response is returned by the `PATCH /user-team-preferences/:teamName` endpoint.
+ */
 interface SetPreferredTeamResponse {
+    /** The user's DNI (national identification number) */
     dni: string
+
+    /** The user's email address */
     email: string
+
+    /** The user's first name */
     name: string
+
+    /** The user's first surname */
     firstSurname: string
+
+    /** The user's second surname */
     secondSurname: string
+
+    /** The user's gender */
     gender: string
+
+    /** The user's date of birth in ISO 8601 format */
     birthDate: string
+
+    /** The team currently assigned to the user (can be null) */
     assignedTeam: string | null
+
+    /** The team the user has selected as preferred (can be null) */
     preferredTeam: string | null
 }
 
@@ -65,10 +95,6 @@ interface SetPreferredTeamResponse {
  *
  * @returns The complete chess league management interface or an access restriction message.
  *
- * @example
- * ```tsx
- * <Route path="/liga" element={<ChessLeaguePage />} />
- * ```
  */
 const ChessLeaguePage = () => {
     // Modals state
@@ -99,7 +125,6 @@ const ChessLeaguePage = () => {
         axios
             .patch<SetPreferredTeamResponse>(USER_TEAM_PREFERENCES + '/' + team.name, {}, { headers: { Authorization: `Bearer ${jwt}` } })
             .then((response) => {
-                console.log(response)
                 dispatch(setPreferredTeamName(response.data.preferredTeam))
             })
             .catch((error: unknown) => {
@@ -121,153 +146,148 @@ const ChessLeaguePage = () => {
 
     if (!isAuthorized) {
         return <div>Debes estar federado para unirte a equipos de liga.</div>
-    }
-
-    return userProfile.federateState === FederateState.FEDERATE ||
-        userProfile.userRoles.includes(UserRole.PRESIDENTE) ||
-        userProfile.userRoles.includes(UserRole.ADMIN) ||
-        userProfile.userRoles.includes(UserRole.SECRETARIO) ? (
-        <div>
-            {createTeamModal && (
-                <CreateTeamModal
-                    show={createTeamModal}
-                    onHide={() => {
-                        setCreateTeamModal(false)
-                    }}
-                    addTeam={addTeam}
-                />
-            )}
-            {removeTeamModal && selectedTeam && (
-                <RemoveTeamModal
-                    show={removeTeamModal}
-                    onHide={() => {
-                        setRemoveTeamModal(false)
-                    }}
-                    selectedTeam={selectedTeam}
-                    removeTeam={removeTeam}
-                />
-            )}
-
+    } else {
+        return (
             <div>
-                <h1>Equipos liga gallega CXN</h1>
-                {(userProfile.userRoles.includes(UserRole.PRESIDENTE) ||
-                    userProfile.userRoles.includes(UserRole.ADMIN) ||
-                    userProfile.userRoles.includes(UserRole.SECRETARIO)) && (
-                    <CreateTeamButtonWrapper>
-                        <button
-                            onClick={() => {
-                                setCreateTeamModal(true)
-                            }}
-                            title="Crear equipo de liga."
-                            style={{ background: 'none', border: 'none', cursor: 'pointer', margin: 0, padding: 0 }}
-                            aria-label="Crear equipo de liga."
-                        >
-                            <AddPaymentIcon size={60} />
-                        </button>
-                    </CreateTeamButtonWrapper>
+                {createTeamModal && (
+                    <CreateTeamModal
+                        show={createTeamModal}
+                        onHide={() => {
+                            setCreateTeamModal(false)
+                        }}
+                        addTeam={addTeam}
+                    />
+                )}
+                {removeTeamModal && selectedTeam && (
+                    <RemoveTeamModal
+                        show={removeTeamModal}
+                        onHide={() => {
+                            setRemoveTeamModal(false)
+                        }}
+                        selectedTeam={selectedTeam}
+                        removeTeam={removeTeam}
+                    />
                 )}
 
-                <Accordion>
-                    {teams.map((team) => (
-                        <Accordion.Item key={team.name} eventKey={team.name}>
-                            <Accordion.Header>
-                                {team.name} - {team.category}
-                            </Accordion.Header>
-                            <Accordion.Body>
-                                <>
-                                    <span>Descripción:</span>
-                                    <p>{team.description}</p>
-                                </>
-                                {(userProfile.userRoles.includes(UserRole.PRESIDENTE) ||
-                                    userProfile.userRoles.includes(UserRole.ADMIN) ||
-                                    userProfile.userRoles.includes(UserRole.SECRETARIO)) && (
+                <div>
+                    <h1>Equipos liga gallega CXN</h1>
+                    {(userProfile.userRoles.includes(UserRole.PRESIDENTE) ||
+                        userProfile.userRoles.includes(UserRole.ADMIN) ||
+                        userProfile.userRoles.includes(UserRole.SECRETARIO)) && (
+                        <div>
+                            <button
+                                onClick={() => {
+                                    setCreateTeamModal(true)
+                                }}
+                                title="Crear equipo de liga."
+                                style={{ background: 'none', border: 'none', cursor: 'pointer', margin: 0, padding: 0 }}
+                                aria-label="Crear equipo de liga."
+                            >
+                                <AddPaymentIcon size={60} />
+                            </button>
+                        </div>
+                    )}
+
+                    <Accordion>
+                        {teams.map((team) => (
+                            <Accordion.Item key={team.name} eventKey={team.name}>
+                                <Accordion.Header>
+                                    {team.name} - {team.category}
+                                </Accordion.Header>
+                                <Accordion.Body>
                                     <>
-                                        <Button
-                                            variant="primary"
-                                            onClick={() => {
-                                                setSelectedTeam(team)
-                                                setAddMemberModal(true)
-                                            }}
-                                        >
-                                            <FaUserPlus />
-                                        </Button>
-                                        <Button
-                                            variant="danger"
-                                            onClick={() => {
-                                                setSelectedTeam(team)
-                                                setRemoveTeamModal(true)
-                                            }}
-                                            className="ms-2"
-                                        >
-                                            <FaTrash />
-                                        </Button>
+                                        <span>Descripción:</span>
+                                        <p>{team.description}</p>
                                     </>
-                                )}
-                                <Button
-                                    variant="secondary"
-                                    onClick={() => {
-                                        setSelectedTeam(team)
-                                        handleSetPreferredTeam(team)
-                                    }}
-                                    className="ms-2"
-                                >
-                                    {userProfile.preferredTeamName == team.name ? <IoMdHeart /> : <IoMdHeartEmpty />}
-                                </Button>
+                                    {(userProfile.userRoles.includes(UserRole.PRESIDENTE) ||
+                                        userProfile.userRoles.includes(UserRole.ADMIN) ||
+                                        userProfile.userRoles.includes(UserRole.SECRETARIO)) && (
+                                        <>
+                                            <Button
+                                                variant="primary"
+                                                onClick={() => {
+                                                    setSelectedTeam(team)
+                                                    setAddMemberModal(true)
+                                                }}
+                                            >
+                                                <FaUserPlus />
+                                            </Button>
+                                            <Button
+                                                variant="danger"
+                                                onClick={() => {
+                                                    setSelectedTeam(team)
+                                                    setRemoveTeamModal(true)
+                                                }}
+                                                className="ms-2"
+                                            >
+                                                <FaTrash />
+                                            </Button>
+                                        </>
+                                    )}
+                                    <Button
+                                        variant="secondary"
+                                        onClick={() => {
+                                            setSelectedTeam(team)
+                                            handleSetPreferredTeam(team)
+                                        }}
+                                        className="ms-2"
+                                    >
+                                        {userProfile.preferredTeamName == team.name ? <IoMdHeart /> : <IoMdHeartEmpty />}
+                                    </Button>
 
-                                <ListGroup numbered variant="flush" className="mt-3">
-                                    {team.members.length > 0 && <span>Integrantes:</span>}
-                                    {team.members.map((member) => (
-                                        <ListGroup.Item key={member.dni}>
-                                            {member.name} {member.firstSurname} {member.secondSurname} - {member.email}{' '}
-                                            {(userProfile.userRoles.includes(UserRole.PRESIDENTE) ||
-                                                userProfile.userRoles.includes(UserRole.ADMIN) ||
-                                                userProfile.userRoles.includes(UserRole.SECRETARIO)) && (
-                                                <Button
-                                                    variant="danger"
-                                                    size="sm"
-                                                    onClick={() => {
-                                                        // Seleccionamos el equipo y el miembro a eliminar
-                                                        setSelectedTeam(team)
-                                                        setSelectedMemberForRemove(member)
-                                                        setRemoveMemberFromTeamModal(true)
-                                                    }}
-                                                >
-                                                    <ImCross />
-                                                </Button>
-                                            )}
-                                        </ListGroup.Item>
-                                    ))}
-                                </ListGroup>
-                            </Accordion.Body>
-                        </Accordion.Item>
-                    ))}
-                </Accordion>
-                <AddMemberTeamModal
-                    show={addMemberModal}
-                    onHide={() => {
-                        setAddMemberModal(false)
-                    }}
-                    team={selectedTeam}
-                    addMemberToTeam={addMemberToTeam}
-                />
-                <RemoveMemberFromTeamModal
-                    show={removeMemberFromTeamModal}
-                    onHide={() => {
-                        setRemoveMemberFromTeamModal(false)
-                    }}
-                    team={selectedTeam}
-                    removeMemberFromTeam={removeMemberFromTeam}
-                    memberEmail={selectedMemberForRemove ? selectedMemberForRemove.email : ''}
-                />
+                                    <ListGroup numbered variant="flush" className="mt-3">
+                                        {team.members.length > 0 && <span>Integrantes:</span>}
+                                        {team.members.map((member) => (
+                                            <ListGroup.Item key={member.dni}>
+                                                {member.name} {member.firstSurname} {member.secondSurname} - {member.email}{' '}
+                                                {(userProfile.userRoles.includes(UserRole.PRESIDENTE) ||
+                                                    userProfile.userRoles.includes(UserRole.ADMIN) ||
+                                                    userProfile.userRoles.includes(UserRole.SECRETARIO)) && (
+                                                    <Button
+                                                        variant="danger"
+                                                        size="sm"
+                                                        onClick={() => {
+                                                            // Seleccionamos el equipo y el miembro a eliminar
+                                                            setSelectedTeam(team)
+                                                            setSelectedMemberForRemove(member)
+                                                            setRemoveMemberFromTeamModal(true)
+                                                        }}
+                                                    >
+                                                        <ImCross />
+                                                    </Button>
+                                                )}
+                                            </ListGroup.Item>
+                                        ))}
+                                    </ListGroup>
+                                </Accordion.Body>
+                            </Accordion.Item>
+                        ))}
+                    </Accordion>
+                    <AddMemberTeamModal
+                        show={addMemberModal}
+                        onHide={() => {
+                            setAddMemberModal(false)
+                        }}
+                        team={selectedTeam}
+                        addMemberToTeam={addMemberToTeam}
+                    />
+                    <RemoveMemberFromTeamModal
+                        show={removeMemberFromTeamModal}
+                        onHide={() => {
+                            setRemoveMemberFromTeamModal(false)
+                        }}
+                        team={selectedTeam}
+                        removeMemberFromTeam={removeMemberFromTeam}
+                        memberEmail={selectedMemberForRemove ? selectedMemberForRemove.email : ''}
+                    />
+                </div>
+
+                {(userProfile.userRoles.includes(UserRole.PRESIDENTE) ||
+                    userProfile.userRoles.includes(UserRole.ADMIN) ||
+                    userProfile.userRoles.includes(UserRole.SECRETARIO)) && <UserTeamPreferencesTable></UserTeamPreferencesTable>}
             </div>
-
-            {(userProfile.userRoles.includes(UserRole.PRESIDENTE) ||
-                userProfile.userRoles.includes(UserRole.ADMIN) ||
-                userProfile.userRoles.includes(UserRole.SECRETARIO)) && <UserTeamPreferencesTable></UserTeamPreferencesTable>}
-        </div>
-    ) : (
-        <div>Debes estar federado para unirte a equipos de liga.</div>
-    )
+        )
+    }
 }
 
 export default ChessLeaguePage
