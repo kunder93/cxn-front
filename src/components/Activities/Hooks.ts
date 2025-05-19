@@ -1,7 +1,7 @@
 // hooks/useFetchActivities.ts
 import { useState, useCallback, useEffect } from 'react'
 import axios, { AxiosError } from 'axios'
-import { IActivity, IActivityForm } from 'components/Activities/Types'
+import { ActivitiesList, IActivity, IActivityForm } from 'components/Activities/Types'
 import { ACTIVITIES_URL } from 'resources/server_urls'
 import { useNotificationContext } from 'components/Common/NotificationContext'
 import { useAppSelector } from 'store/hooks'
@@ -9,14 +9,14 @@ import { FormikHelpers } from 'formik'
 import { NotificationType } from 'components/Common/hooks/useNotification'
 
 export const useFetchActivities = () => {
-    const [activities, setActivities] = useState<IActivity[]>([])
+    const [activities, setActivities] = useState<ActivitiesList>([])
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
 
     const fetchActivities = useCallback(async () => {
         setLoading(true)
         try {
-            const response = await axios.get<IActivity[]>(ACTIVITIES_URL, {
+            const response = await axios.get<ActivitiesList>(ACTIVITIES_URL, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -41,12 +41,17 @@ export const useFetchActivities = () => {
         setActivities((prev) => [...prev, activity])
     }
 
+    const removeLocalActivity = (activityTitle: string) => {
+        setActivities((prevActivities) => prevActivities.filter((activity) => activity.title !== activityTitle))
+    }
+
     return {
         activities,
         error,
         loading,
         refetch: fetchActivities,
-        addLocalActivity
+        addLocalActivity,
+        removeLocalActivity
     }
 }
 
