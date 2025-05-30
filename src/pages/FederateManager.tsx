@@ -76,6 +76,7 @@ export const FederateManager = (): React.JSX.Element => {
     const [federateStateMembersList, setFederateStateMembersList] = useState<FederateStateExtendedResponse[]>([])
     const [dniModal, setDniModal] = useState(false)
     const [selectedDni, setSelectedDni] = useState<string | null>(null)
+    const [loadingByDni, setLoadingByDni] = useState<Record<string, boolean>>({})
 
     useEffect(() => {
         setFederateStateMembersList(data.federateStateMembersList)
@@ -84,11 +85,14 @@ export const FederateManager = (): React.JSX.Element => {
     // **Optimized Action Handler**
     const handleConfirmCancel = useCallback(
         async (userDni: string) => {
+            setLoadingByDni((prev) => ({ ...prev, [userDni]: true }))
             try {
                 const updatedMember = await confirmCancelFederate(userDni)
                 setFederateStateMembersList((prevList) => prevList.map((member) => (member.dni === userDni ? { ...updatedMember, dni: userDni } : member)))
             } catch (error) {
                 console.error('Error updating federate state:', error)
+            } finally {
+                setLoadingByDni((prev) => ({ ...prev, [userDni]: false }))
             }
         },
         [confirmCancelFederate]
@@ -113,7 +117,7 @@ export const FederateManager = (): React.JSX.Element => {
                     <FederateStateCell
                         state={value}
                         dni={row.original.dni}
-                        isLoading={isActionLoading}
+                        isLoading={!!loadingByDni[row.original.dni]}
                         onAction={() => void handleConfirmCancel(row.original.dni)}
                     />
                 )
