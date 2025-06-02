@@ -31,7 +31,8 @@ const initialState: UserState = {
         },
         assignedTeamName: null,
         preferredTeamName: null,
-        federateState: FederateState.NO_FEDERATE
+        federateState: FederateState.NO_FEDERATE,
+        unsubscribeDate: null // Fecha de baja, inicialmente nula
     }
 }
 
