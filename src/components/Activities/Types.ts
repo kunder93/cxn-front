@@ -15,6 +15,8 @@ export interface IActivity {
     category: ActivityCategory | null
 }
 
+export type ActivitiesList = IActivity[]
+
 export interface IActivityForm extends IActivity {
     imageFile: File | null
 }

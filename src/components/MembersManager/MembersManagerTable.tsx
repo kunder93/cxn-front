@@ -10,8 +10,9 @@ import { renderKindMember, renderUserRoles } from '../../utility/userUtilities'
 import { BsFillTrash3Fill } from 'react-icons/bs'
 import DeleteMemberModal from './ChangeMemberRole/DeleteMemberModal'
 import { IoIosWarning } from 'react-icons/io'
-import WarningAceptUserModal from './WarningAceptUserModal'
 import MemberModalProfileInfo from './ModalProfileInfo/MemberModalProfileInfo'
+import UnsubscribeInfoModal from './UnsubscribeInfoModal'
+import WarningAceptUserModal from './WarningAceptUserModal'
 
 const TableFilterContainer = styled.div`
     display: flex;
@@ -40,6 +41,12 @@ const ActionButtonsContainer = styled.div`
 
 const WarningCandidateIcon = styled(IoIosWarning)`
     color: orange;
+    min-width: 14px;
+    min-height: 14px;
+`
+
+const WarningUnsubscribeIcon = styled(IoIosWarning)`
+    color: red;
     min-width: 14px;
     min-height: 14px;
 `
@@ -101,9 +108,14 @@ const MembersManagerTable = ({ usersData }: Props): React.JSX.Element => {
     const [deleteMemberModal, setDeleteMemberModal] = useState(false)
     const [selectedRow, setSelectedRow] = useState<UserProfile | undefined>()
     const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null)
-
+    const [unsubscribeInfoModal, setUnsubscribeInfoModal] = useState(false)
     const [warningModalVisible, setWarningModalVisible] = useState(false)
     const [warningRowData, setWarningRowData] = useState<UserProfile | null>(null)
+
+    const openUnsubscribeInfoModal = useCallback((row: UserProfile) => {
+        setSelectedRow(row)
+        setUnsubscribeInfoModal(true)
+    }, [])
 
     const openWarningModal = useCallback(
         (row: Row<UserProfile>) => {
@@ -159,7 +171,7 @@ const MembersManagerTable = ({ usersData }: Props): React.JSX.Element => {
                                 openWarningModal(row)
                             }} // Pass the entire row to the modal
                             style={{ padding: 0, border: 'none', background: 'none' }}
-                            aria-label="Candidato a socio"
+                            aria-label="Aceptar como socio"
                         >
                             <WarningCandidateIcon size={24} title="Candidato a socio" />
                         </Button>
@@ -180,7 +192,26 @@ const MembersManagerTable = ({ usersData }: Props): React.JSX.Element => {
                 accessor: 'userRoles',
                 Cell: ({ row }) => renderUserRolesCell(row)
             },
-            { Header: 'Estado', accessor: (d) => renderKindMember(d.kindMember) }
+            {
+                Header: 'Estado',
+                accessor: (d) => (
+                    <>
+                        {renderKindMember(d.kindMember)}
+                        {d.unsubscribeDate && (
+                            <Button
+                                variant="link"
+                                onClick={() => {
+                                    openUnsubscribeInfoModal(d)
+                                }} // Pass the entire row to the modal
+                                style={{ padding: 0, border: 'none', background: 'none' }}
+                                aria-label="Información del proceso de baja"
+                            >
+                                <WarningUnsubscribeIcon size={24} title="Información del proceso de baja" />
+                            </Button>
+                        )}
+                    </>
+                )
+            }
         ],
         [renderUserRolesCell]
     )
@@ -369,6 +400,15 @@ const MembersManagerTable = ({ usersData }: Props): React.JSX.Element => {
                         setWarningModalVisible(false)
                     }}
                     rowData={warningRowData}
+                />
+            )}
+            {unsubscribeInfoModal && selectedRow && (
+                <UnsubscribeInfoModal
+                    show={unsubscribeInfoModal}
+                    onHide={() => {
+                        setUnsubscribeInfoModal(false)
+                    }}
+                    rowData={selectedRow}
                 />
             )}
         </>
