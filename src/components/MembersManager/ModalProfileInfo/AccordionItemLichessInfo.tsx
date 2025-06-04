@@ -8,6 +8,7 @@ import { MdError } from 'react-icons/md'
 
 import useLichessProfile from '../Hooks/useLichessProfile'
 import { Game } from 'components/UserProfiles/ChessProfileLichess/lichess'
+import { format, parseISO } from 'date-fns'
 
 const NoLichessProfileIcon = styled(RxCrossCircled)`
     color: red;
@@ -82,6 +83,9 @@ const AccordionItemLichessInfo: React.FC<AccordionItemLichessInfoProps> = ({ use
             return <IsLichessProfileIcon />
         }
     }
+    const formatDateTime = (isoDate: string): string => {
+        return format(parseISO(isoDate), "dd/MM/yyyy 'a las' HH:mm")
+    }
 
     return (
         <Accordion.Item {...props}>
@@ -100,7 +104,7 @@ const AccordionItemLichessInfo: React.FC<AccordionItemLichessInfoProps> = ({ use
                                 {lichessProfile.lichessUserName}
                             </ProfileLink>
                         </div>
-                        <div className="text-muted">Última actualización: {lichessProfile.lastUpdate}</div>
+                        <div className="text-muted">Última actualización: {formatDateTime(lichessProfile.lastUpdate)}</div>
 
                         {/* Tabla de modalidades */}
                         <Table striped bordered hover size="sm">

@@ -1,16 +1,16 @@
 import React from 'react'
 import { Modal, ModalProps, Button, Spinner, Form as BootstrapForm } from 'react-bootstrap'
 import styled from 'styled-components'
-import { ActivityCategory, IActivity, IActivityForm } from './Types'
+import { ActivityCategory, IActivity, IActivityForm } from '../Types'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import Dropzone from 'react-dropzone'
-import { AddActivityValidationSchema } from './FormValidations'
+import { AddActivityValidationSchema } from '../FormValidations'
 import { useNotificationContext } from 'components/Common/NotificationContext'
 import { NotificationType } from 'components/Common/hooks/useNotification'
 import 'react-datepicker/dist/react-datepicker.css'
 import DatePicker, { registerLocale } from 'react-datepicker'
 import { es } from 'date-fns/locale'
-import { useAddActivity } from './Hooks'
+import { useAddActivity } from '../Hooks'
 
 registerLocale('es', es)
 

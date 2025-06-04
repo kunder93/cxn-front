@@ -29,6 +29,7 @@ export interface UserData {
     assignedTeamName: string | null
     preferredTeamName: string | null
     federateState: FederateState
+    unsubscribeDate: string | null
 }
 export interface UserProfileImage {
     imageExtension: string // New field for image extension

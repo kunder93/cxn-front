@@ -1,28 +1,43 @@
-FROM node:23.1-alpine3.20 AS build
+FROM node:23.1-alpine3.20 AS base
 WORKDIR /app
-# Copy only the package files first for caching `npm install` step
+
+ARG NODE_ENV=production
+ENV NODE_ENV=$NODE_ENV
+
+# Copiar package.json y lock para cache
 COPY package.json package-lock.json ./
-RUN npm install --production
 
-# Copy the rest of the source files
+# Instalar dependencias según entorno
+RUN if [ "$NODE_ENV" = "production" ]; then \
+      npm ci --omit=dev; \
+    else \
+      npm ci; \
+    fi
+
+# Copiar código
 COPY . .
-RUN npm run build
 
-FROM nginx:stable-alpine
-EXPOSE 80
-EXPOSE 443
-# Copia el archivo de configuración de Nginx
+# Si es producción, hacer build
+RUN if [ "$NODE_ENV" = "production" ]; then npm run build; fi
+
+# === Etapa final para producción ===
+FROM nginx:1.25.3-alpine AS production
 COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
 COPY ./nginx/common.conf /etc/nginx/conf.d/common.conf
 COPY ./nginx/ssl_common.conf /etc/nginx/conf.d/ssl_common.conf
-# Copia los certificados SSL/TLS solo si la variable de entorno COPY_CERTIFICATES está establecida en "true"
-ARG COPY_CERTIFICATES=false
-RUN if [ "$COPY_CERTIFICATES" = "true" ]; then \
-  mkdir -p /etc/nginx/certs/xadreznaron.es /etc/nginx/certs/www.xadreznaron.es && \
-  cp /certificates/xadreznaron.es/fullchain.pem /etc/nginx/certs/xadreznaron.es/ && \
-  cp /certificates/xadreznaron.es/privkey.pem /etc/nginx/certs/xadreznaron.es/ && \
-  cp /certificates/www.xadreznaron.es/fullchain.pem /etc/nginx/certs/www.xadreznaron.es/ && \
-  cp /certificates/www.xadreznaron.es/privkey.pem /etc/nginx/certs/www.xadreznaron.es/; \
-  fi
+COPY --from=base /app/build /usr/share/nginx/html
+EXPOSE 80
+EXPOSE 443
+CMD ["nginx", "-g", "daemon off;"]
 
-COPY --from=build /app/build /usr/share/nginx/html
+# === Etapa final para desarrollo ===
+FROM node:23.1-alpine3.20 AS development
+WORKDIR /app
+COPY --from=base /app /app
+EXPOSE 3000
+CMD ["npm", "start"]
+
+# === Selección final de imagen según NODE_ENV ===
+FROM production AS final
+ARG NODE_ENV=production
+RUN echo "Selected build for NODE_ENV=$NODE_ENV"
