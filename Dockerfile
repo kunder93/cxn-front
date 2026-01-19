@@ -21,7 +21,7 @@ COPY . .
 RUN if [ "$NODE_ENV" = "production" ]; then npm run build; fi
 
 # === Etapa final para producción ===
-FROM nginx:1.25.3-alpine AS production
+FROM nginx:1.29.4-alpine AS production
 COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
 COPY ./nginx/common.conf /etc/nginx/conf.d/common.conf
 COPY ./nginx/ssl_common.conf /etc/nginx/conf.d/ssl_common.conf
